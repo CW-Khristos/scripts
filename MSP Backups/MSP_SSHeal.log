@@ -1,0 +1,158 @@
+
+7/26/2018 12:18:55 PM - STARTING MSP_SSHEAL
+
+7/26/2018 12:18:55 PM	 - CHECKING MSP BACKUP STATUS
+7/26/2018 12:18:56 PM			Idle
+
+7/26/2018 12:18:56 PM		 - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS
+7/26/2018 12:18:58 PM			The Volume Shadow Copy service is starting.
+7/26/2018 12:18:58 PM			The Volume Shadow Copy service was started successfully.
+7/26/2018 12:19:01 PM			vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+7/26/2018 12:19:01 PM			(C) Copyright 2001-2005 Microsoft Corp.
+7/26/2018 12:19:01 PM			Writer name: 'Task Scheduler Writer'
+7/26/2018 12:19:01 PM			blnTSK : True
+7/26/2018 12:19:01 PM			   Writer Id: {d61d61c8-d73a-4eee-8cdd-f6f9786b7124}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {1bddd48e-5052-49db-9b07-b96f96727e6b}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'VSS Metadata Store Writer'
+7/26/2018 12:19:01 PM			   Writer Id: {75dfb225-e2e4-4d39-9ac9-ffaff65ddf06}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {088e7a7d-09a8-4cc6-a609-ad90e75ddc93}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'Performance Counters Writer'
+7/26/2018 12:19:01 PM			   Writer Id: {0bada1de-01a9-4625-8278-69e735f39dd2}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {f0086dda-9efc-47c5-8eb6-a944c3d09381}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'System Writer'
+7/26/2018 12:19:01 PM			blnCSVC : True
+7/26/2018 12:19:01 PM			   Writer Id: {e8132975-6f93-4464-a53e-1050253ae220}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {2cd38983-9458-44ec-905d-96f14f4e33e5}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'ASR Writer'
+7/26/2018 12:19:01 PM			blnVSS : True
+7/26/2018 12:19:01 PM			   Writer Id: {be000cbe-11fe-4426-9c58-531aa6355fc4}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {1b5f6bea-ef83-4b27-a59a-f603b20040d0}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'Shadow Copy Optimization Writer'
+7/26/2018 12:19:01 PM			blnVSS : True
+7/26/2018 12:19:01 PM			   Writer Id: {4dc3bdd4-ab48-4d07-adb0-3bee2926fd7f}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {216fb9ec-a07f-49c1-94ed-77d0d673efd0}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'Registry Writer'
+7/26/2018 12:19:01 PM			blnVSS : True
+7/26/2018 12:19:01 PM			   Writer Id: {afbab4a2-367d-4d15-a586-71dbb18f8485}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {76115c07-592b-4212-92d9-3a982877981b}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'COM+ REGDB Writer'
+7/26/2018 12:19:01 PM			blnVSS : True
+7/26/2018 12:19:01 PM			   Writer Id: {542da469-d3e1-473c-9f4f-7847f01fc64f}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {8955afee-e9cc-4d4e-b1da-2bd377c608f8}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'WMI Writer'
+7/26/2018 12:19:01 PM			blnWMI : True
+7/26/2018 12:19:01 PM			   Writer Id: {a6ad56c2-b509-4e6c-bb19-49d8f43532f0}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {03d51570-cd42-4e6f-b6ba-46ea04292198}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'BITS Writer'
+7/26/2018 12:19:01 PM			blnBIT : True
+7/26/2018 12:19:01 PM			   Writer Id: {4969d978-be47-48b0-b100-f328f07ac1e0}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {9c9a912e-68d2-4fa3-a3cd-b8c986962661}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'IIS Config Writer'
+7/26/2018 12:19:01 PM			blnAHS : True
+7/26/2018 12:19:01 PM			   Writer Id: {2a40fd15-dfca-4aa8-a654-1f8c654603f6}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {2835393c-1c59-4df9-952a-79da9b4e4e31}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:01 PM			Writer name: 'TermServLicensing'
+7/26/2018 12:19:01 PM			blnRDP : True
+7/26/2018 12:19:01 PM			   Writer Id: {5382579c-98df-47a7-ac6c-98a6d7106e09}
+7/26/2018 12:19:01 PM			   Writer Instance Id: {2d76eeed-b422-4a6d-9ef7-50dc1d3011cf}
+7/26/2018 12:19:01 PM			   State: [1] Stable
+7/26/2018 12:19:01 PM			   Last error: No error
+7/26/2018 12:19:02 PM		 - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS
+7/26/2018 12:19:04 PM			vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+7/26/2018 12:19:04 PM			(C) Copyright 2001-2005 Microsoft Corp.
+7/26/2018 12:19:04 PM			Writer name: 'Task Scheduler Writer'
+7/26/2018 12:19:04 PM			blnTSK : True
+7/26/2018 12:19:04 PM			   Writer Id: {d61d61c8-d73a-4eee-8cdd-f6f9786b7124}
+7/26/2018 12:19:04 PM			   Writer Instance Id: {1bddd48e-5052-49db-9b07-b96f96727e6b}
+7/26/2018 12:19:04 PM			   State: [1] Stable
+7/26/2018 12:19:04 PM			   Last error: No error
+7/26/2018 12:19:04 PM			Writer name: 'VSS Metadata Store Writer'
+7/26/2018 12:19:05 PM			   Writer Id: {75dfb225-e2e4-4d39-9ac9-ffaff65ddf06}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {088e7a7d-09a8-4cc6-a609-ad90e75ddc93}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'Performance Counters Writer'
+7/26/2018 12:19:05 PM			   Writer Id: {0bada1de-01a9-4625-8278-69e735f39dd2}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {f0086dda-9efc-47c5-8eb6-a944c3d09381}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'System Writer'
+7/26/2018 12:19:05 PM			blnCSVC : True
+7/26/2018 12:19:05 PM			   Writer Id: {e8132975-6f93-4464-a53e-1050253ae220}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {2cd38983-9458-44ec-905d-96f14f4e33e5}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'ASR Writer'
+7/26/2018 12:19:05 PM			blnVSS : True
+7/26/2018 12:19:05 PM			   Writer Id: {be000cbe-11fe-4426-9c58-531aa6355fc4}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {1b5f6bea-ef83-4b27-a59a-f603b20040d0}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'Registry Writer'
+7/26/2018 12:19:05 PM			blnVSS : True
+7/26/2018 12:19:05 PM			   Writer Id: {afbab4a2-367d-4d15-a586-71dbb18f8485}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {76115c07-592b-4212-92d9-3a982877981b}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'BITS Writer'
+7/26/2018 12:19:05 PM			blnBIT : True
+7/26/2018 12:19:05 PM			   Writer Id: {4969d978-be47-48b0-b100-f328f07ac1e0}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {9c9a912e-68d2-4fa3-a3cd-b8c986962661}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'IIS Config Writer'
+7/26/2018 12:19:05 PM			blnAHS : True
+7/26/2018 12:19:05 PM			   Writer Id: {2a40fd15-dfca-4aa8-a654-1f8c654603f6}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {2835393c-1c59-4df9-952a-79da9b4e4e31}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'Shadow Copy Optimization Writer'
+7/26/2018 12:19:05 PM			blnVSS : True
+7/26/2018 12:19:05 PM			   Writer Id: {4dc3bdd4-ab48-4d07-adb0-3bee2926fd7f}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {216fb9ec-a07f-49c1-94ed-77d0d673efd0}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'COM+ REGDB Writer'
+7/26/2018 12:19:05 PM			blnVSS : True
+7/26/2018 12:19:05 PM			   Writer Id: {542da469-d3e1-473c-9f4f-7847f01fc64f}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {8955afee-e9cc-4d4e-b1da-2bd377c608f8}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'WMI Writer'
+7/26/2018 12:19:05 PM			blnWMI : True
+7/26/2018 12:19:05 PM			   Writer Id: {a6ad56c2-b509-4e6c-bb19-49d8f43532f0}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {03d51570-cd42-4e6f-b6ba-46ea04292198}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:05 PM			Writer name: 'TermServLicensing'
+7/26/2018 12:19:05 PM			blnRDP : True
+7/26/2018 12:19:05 PM			   Writer Id: {5382579c-98df-47a7-ac6c-98a6d7106e09}
+7/26/2018 12:19:05 PM			   Writer Instance Id: {2d76eeed-b422-4a6d-9ef7-50dc1d3011cf}
+7/26/2018 12:19:05 PM			   State: [1] Stable
+7/26/2018 12:19:05 PM			   Last error: No error
+7/26/2018 12:19:06 PM			VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS
+7/26/2018 12:19:06 PM			Starting backup for SystemState datasource.
+
+7/26/2018 12:19:06 PM - MSP_SSHEAL COMPLETE
