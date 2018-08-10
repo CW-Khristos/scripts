@@ -67,7 +67,7 @@ if (instr(1, strIDL, "Idle")) then                         ''BACKUPS NOT IN PROG
   call HOOK ("net start VSS")
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
-  wscript.sleep 1000
+  wscript.sleep 1500
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
   ''CHECK VSS WRITERS AFTER RESTART
@@ -75,7 +75,7 @@ if (instr(1, strIDL, "Idle")) then                         ''BACKUPS NOT IN PROG
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
-  wscript.sleep 1000
+  wscript.sleep 1500
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
   ''RE-RUN SYSTEM STATE BACKUPS
