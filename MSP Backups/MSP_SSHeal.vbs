@@ -5,9 +5,11 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
-dim objFSO, objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH
-dim errRET, strIDL, strTMP, arrTMP, strIN
+dim objFSO, objLOG, objHOOK, objXML
+dim errRET, strVER, strIDL, strTMP, arrTMP, strIN
+''VERSION
+strVER = 1
 ''VSS WRITER FLAGS
 dim blnSQL, blnTSK, blnVSS, blnWMI
 dim blnAHS, blnBIT, blnCSVC, blnRDP, blnRUN
@@ -22,13 +24,6 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-''CHECK EXECUTION METHOD OF SCRIPT
-strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
-if (strIN <> "cscript.exe") Then
-  objOUT.write vbnewline & "SCRIPT LAUNCHED VIA EXPLORER, EXECUTING SCRIPT VIA CSCRIPT..."
-  objWSH.run "cscript.exe //nologo " & chr(34) & Wscript.ScriptFullName & chr(34)
-  wscript.quit
-end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then      ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHeal", true
@@ -40,8 +35,32 @@ else                                                  ''LOGFILE NEEDS TO BE CREA
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
 end if
+''CHECK EXECUTION METHOD OF SCRIPT
+strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
+if (strIN <> "cscript.exe") Then
+	''needs to save and pass arguments
+  objOUT.write vbnewline & "SCRIPT LAUNCHED VIA EXPLORER, EXECUTING SCRIPT VIA CSCRIPT..."
+  objWSH.run "cscript.exe //nologo " & chr(34) & Wscript.ScriptFullName & chr(34)
+  wscript.quit
+end if
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
+''AUTOMATIC UPDATE
+set objXML = createobject("MSXML2.DOMDocument")
+objXML.async = false
+if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml")
+set colVER = objXML.getElementsByTagName("SCRIPTS")
+for each objSCR in colVER.childnodes
+	if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+		if (cint(objSCR.nodetext) > cint(strVER)) then
+			''call update
+			objOUT.write vbnewline & now & " - UPDATING MSP_SSHEAL : " & objSCR.nodetext & vbnewline
+			objLOG.write vbnewline & now & " - UPDATING MSP_SSHEAL : " & objSCR.nodetext & vbnewline
+			call CLEANUP()
+		end if
+	end if
+next
+
 ''CHECK MSP BACKUP STATUS
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
