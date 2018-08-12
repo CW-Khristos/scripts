@@ -6,10 +6,10 @@
 'on error resume next
 ''SCRIPT VARIABLES
 dim objIN, objOUT, objARG, objWSH
-dim objFSO, objLOG, objHOOK, objXML
+dim objFSO, objLOG, objHOOK, objXML, objHTTP
 dim errRET, strVER, strIDL, strTMP, arrTMP, strIN
 ''VERSION
-strVER = 1
+strVER = 2
 ''VSS WRITER FLAGS
 dim blnSQL, blnTSK, blnVSS, blnWMI
 dim blnAHS, blnBIT, blnCSVC, blnRDP, blnRUN
@@ -25,12 +25,12 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then      ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHeal", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
-else                                                  ''LOGFILE NEEDS TO BE CREATED
+else                                                ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
@@ -45,40 +45,19 @@ if (strIN <> "cscript.exe") Then
 end if
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-''AUTOMATIC UPDATE
-set objXML = createobject("MSXML2.DOMDocument")
-objXML.async = false
-if objXML.load("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/version.xml")
-set colVER = objXML.getElementsByTagName("SCRIPTS")
-for each objSCR in colVER.childnodes
-	if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-		if (cint(objSCR.nodetext) > cint(strVER)) then
-			''call update
-			objOUT.write vbnewline & now & " - UPDATING MSP_SSHEAL : " & objSCR.nodetext & vbnewline
-			objLOG.write vbnewline & now & " - UPDATING MSP_SSHEAL : " & objSCR.nodetext & vbnewline
-			call CLEANUP()
-		end if
-	end if
-next
-
-''CHECK MSP BACKUP STATUS
+''AUTOMATIC UPDATE, MSP_SSHEAL.VBS,#2
+call CHKAU()
+''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS,#2
+call CLEANUP()
+''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
-''C:\ProgramData\MXB\Backup Manager\StatusReport.xml
-''C:\ProgramData\MXB\Backup Manager\SessionReport.xml
 set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
-'while (not objHOOK.stdout.atendofstream)
-'  strIDL = objHOOK.stdout.readline
-'  if (strIDL <> vbnullstring) then
-'    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-'    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-'  end if
-'wend
 strIDL = objHOOK.stdout.readall
 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
-if (instr(1, strIDL, "Idle")) then                         ''BACKUPS NOT IN PROGRESS
+if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
   ''DEFAULT RESTART OF VSS
@@ -97,16 +76,15 @@ if (instr(1, strIDL, "Idle")) then                         ''BACKUPS NOT IN PROG
   wscript.sleep 1500
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
-  ''RE-RUN SYSTEM STATE BACKUPS
-  if (blnRUN) then
+  if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
     call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
-  elseif (not blnRUN) then
+  elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE, WILL NOT RUN SYSTEM STATE BACKUPS" 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE, WILL NOT RUN SYSTEM STATE BACKUPS"
   end if
-elseif (instr(1, strIDL, "Idle") = 0) then                         ''BACKUPS IN PROGRESS
+elseif (instr(1, strIDL, "Idle") = 0) then					''BACKUPS IN PROGRESS
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
   errRET = 1
@@ -115,20 +93,9 @@ end if
 call CLEANUP()
 
 ''SUB-ROUTINES
-sub CHKVSS()
+sub CHKVSS()																				''CHECK VSS WRITER STATUSES
   set objHOOK = objWSH.exec("vssadmin list writers")
-  'while (not objHOOK.stdout.atendofstream)
-  '  strTMP = objHOOK.stdout.readline
-  '  if (strTMP <> vbnullstring) then
-  '    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strTMP
-  '    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strTMP
-  '  end if
-  'wend
   strTMP = objHOOK.stdout.readall
-  'if (strTMP <> vbnullstring) then
-  '  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strTMP 
-  '  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strTMP 
-  'end if  
   set objHOOK = nothing  
   arrTMP = split(strTMP, vbnewline)
   for intTMP = 0 to ubound(arrTMP)
@@ -253,7 +220,7 @@ sub CHKVSS()
   end if  
 end sub
 
-sub VSSSVC()                                                                                ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   if ((not (blnAHS)) and (not (blnBIT)) and (not (blnCSVC)) and (not (blnRDP)) and _
     (not (blnSQL)) and (not (blnTSK)) and (not (blnVSS)) and (not (blnWMI))) then
@@ -305,26 +272,49 @@ sub VSSSVC()                                                                    
   end if
 end sub
 
-sub HOOK(strCMD)                                      ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS,#2
+	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	set objXML = createobject("Microsoft.XMLDOM")
+	objXML.async = false
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/version.xml") then
+		set colVER = objXML.documentelement
+		for each objSCR in colVER.ChildNodes
+			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+				if (cint(objSCR.text) > cint(strVER)) then
+					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+					end if
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+				end if
+			end if
+		next
+	end if
+	set colVER = nothing
+	set objXML = nothing
+end sub
+
+sub HOOK(strCMD)                              			''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   on error resume next
-  'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
   set objHOOK = objWSH.exec(strCMD)
-  'while (objHOOK.status = 0)
-    while (not objHOOK.stdout.atendofstream)
-      strIN = objHOOK.stdout.readline
-      if (strIN <> vbnullstring) then
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-      end if
-    wend
-    wscript.sleep 10
-  'wend
+	while (not objHOOK.stdout.atendofstream)
+		strIN = objHOOK.stdout.readline
+		if (strIN <> vbnullstring) then
+			objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+			objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+		end if
+	wend
+	wscript.sleep 10
   strIN = objHOOK.stdout.readall
   if (strIN <> vbnullstring) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
   end if
-  'errRET = objHOOK.exitcode
   set objHOOK = nothing
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
@@ -334,10 +324,47 @@ sub HOOK(strCMD)                                      ''CALL HOOK TO MONITOR OUT
   end if
 end sub
 
-sub CLEANUP()                                         ''SCRIPT CLEANUP
-  if (errRET = 0) then         ''MSP_SSHEAL COMPLETED SUCCESSFULLY
+sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FROM URL
+  strSAV = vbnullstring
+  ''SET DOWNLOAD PATH
+  strSAV = "C:\temp\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
+  if objFSO.fileexists(strSAV) then
+    objFSO.deletefile(strSAV)
+  end if
+  if (objHTTP.status = 200) then
+    dim objStream
+    set objStream = createobject("ADODB.Stream")
+    with objStream
+      .Type = 1 'adTypeBinary
+      .Open
+      .Write objHTTP.ResponseBody
+      .SaveToFile strSAV
+      .Close
+    end with
+    set objStream = nothing
+  end if
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists(strSAV) then
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    set objHTTP = nothing
+  end if
+  if (err.number <> 0) then
+    errRET = 2
+  end if
+end sub
+
+sub CLEANUP()                                 			''SCRIPT CLEANUP
+  if (errRET = 0) then         											''MSP_SSHEAL COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
-  elseif (errRET <> 0) then    ''MSP_SSHEAL FAILED
+  elseif (errRET <> 0) then    											''MSP_SSHEAL FAILED
     objOUT.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_SSHEAL", "FAILURE")
@@ -353,5 +380,5 @@ sub CLEANUP()                                         ''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit errRET
+  wscript.quit err.number
 end sub
