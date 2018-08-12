@@ -48,7 +48,7 @@ objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE
 set objXML = createobject("MSXML2.DOMDocument")
 objXML.async = false
-if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml")
+if objXML.load("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/version.xml")
 set colVER = objXML.getElementsByTagName("SCRIPTS")
 for each objSCR in colVER.childnodes
 	if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
