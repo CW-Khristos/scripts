@@ -47,8 +47,6 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS,#2
 call CHKAU()
-''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS,#2
-call CLEANUP()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
