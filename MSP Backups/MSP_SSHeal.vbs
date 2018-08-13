@@ -5,10 +5,12 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
+dim errRET, strVER
+dim strIDL, strTMP, arrTMP, strIN
+''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
-dim objFSO, objLOG, objHOOK, objXML, objHTTP
-dim errRET, strVER, strIDL, strTMP, arrTMP, strIN
-''VERSION
+dim objFSO, objLOG, objHOOK, objHTTP, objXML
+''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2
 strVER = 2
 ''VSS WRITER FLAGS
 dim blnSQL, blnTSK, blnVSS, blnWMI
@@ -45,8 +47,10 @@ if (strIN <> "cscript.exe") Then
 end if
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-''AUTOMATIC UPDATE, MSP_SSHEAL.VBS,#2
+''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2
 call CHKAU()
+''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS, REF #2
+call CLEANUP()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -270,25 +274,36 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
   end if
 end sub
 
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS,#2
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	''SCRIPT OBJECT FOR PARSING XML
 	set objXML = createobject("Microsoft.XMLDOM")
+	''FORCE SYNCHRONOUS
 	objXML.async = false
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/version.xml") then
+	''LOAD SCRIPT VERSIONS DATABASE XML
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
+			''LOCATE CURRENTLY RUNNING SCRIPT
 			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+				''CHECK LATEST VERSION
 				if (cint(objSCR.text) > cint(strVER)) then
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
 					if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
 						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
 					end if
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					''DOWNLOAD LATEST VERSION OF SCRIPT
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					''RUN LATEST VERSION
+					objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+					''END SCRIPT
+					call CLEANUP()
 				end if
 			end if
 		next
