@@ -4,14 +4,17 @@
 ''RUN ON LOCAL DEVICE WITH ADMINISTRATIVE PRIVILEGES
 ''COMPUTER RENAME WILL REQUIRE REBOOT AND RE-RUN OF SCRIPT
 ''CURRENTLY ONLY CREATES / UPDATES LOCAL RMMTECH USER
+''VARIABLES ACCEPTING PARAMETERS - CONFIGURES SNMP TRAP AND COMMUNITY STRING
+'dim strMOD, strTRP, strSNMP
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-''STANDARD VARIABLES
-dim errRET
-dim objIN, objOUT, objARG, objWSH, objFSO, objLOG, objHOOK
-''VARIABLES ACCEPTING PARAMETERS - CONFIGURES SNMP TRAP AND COMMUNITY STRING
-'dim strMOD, strTRP, strSNMP
+dim errRET, strVER
+''SCRIPT OBJECTS
+dim objLOG, objHOOK, objHTTP, objXML
+dim objIN, objOUT, objARG, objWSH, objFSO
+''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -30,13 +33,13 @@ if (objFSO.fileexists("C:\temp\auto_planv2")) then      ''LOGFILE EXISTS
   set objLOG = objFSO.createtextfile("C:\temp\auto_planv2")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\auto_planv2", 8)
-else                                                  ''LOGFILE NEEDS TO BE CREATED
+else                                                  	''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\auto_planv2")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\auto_planv2", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS - REQUIRES (AT LEAST) 2 ARGUMENTS
-if (wscript.arguments.count > 0) then                 ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                 	''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next
@@ -50,6 +53,8 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
+''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2
+call CHKAU()
 ''------------
 ''STAGE1
 ''CHANGE ACTIVE POWER PLAN
@@ -69,19 +74,25 @@ strSEL = objIN.readline
 ''DEFAULT NO REBOOT
 blnRBT = false
 if (ucase(strSEL) = "Y") then
-  objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
-  objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
+  objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & _
+		"RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
+  objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & _
+		"RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
   strNEWPC = objIN.readline
   if (strNEWPC <> vbnullstring) then
     set colCOMP = objWMI.execquery ("select * from Win32_ComputerSystem")
     for each objCOMP in colCOMP
       intERR = objCOMP.rename(strNEWPC)
       if (intERR <> 0) then
-        objOUT.write vbnewline & vbtab & " - ERROR RENAMING COMPUTER : " & strNEWPC & vbnewline & vbtab & "PLEASE RESTART AND TRY AGAIN / CHECK PERMISSIONS"
-        objLOG.write vbnewline & vbtab & " - ERROR RENAMING COMPUTER : " & strNEWPC & vbnewline & vbtab & "PLEASE RESTART AND TRY AGAIN / CHECK PERMISSIONS"
+        objOUT.write vbnewline & vbtab & " - ERROR RENAMING COMPUTER : " & strNEWPC & vbnewline & vbtab & _
+					"PLEASE RESTART AND TRY AGAIN / CHECK PERMISSIONS"
+        objLOG.write vbnewline & vbtab & " - ERROR RENAMING COMPUTER : " & strNEWPC & vbnewline & vbtab & _
+					"PLEASE RESTART AND TRY AGAIN / CHECK PERMISSIONS"
       elseif (intERR = 0) then
-        objOUT.write vbnewline & vbtab & " - SUCCESSFULLY RENAMED COMPUTER : " & strNEWPC & vbnewline & vbtab & "COMPUTER WILL NOW RESTART, PLEASE RUN SCRIPT AGAIN AND SKIP THIS STEP"
-        objLOG.write vbnewline & vbtab & " - SUCCESSFULLY RENAMED COMPUTER : " & strNEWPC & vbnewline & vbtab & "COMPUTER WILL NOW RESTART, PLEASE RUN SCRIPT AGAIN AND SKIP THIS STEP"
+        objOUT.write vbnewline & vbtab & " - SUCCESSFULLY RENAMED COMPUTER : " & strNEWPC & vbnewline & vbtab & _
+					"COMPUTER WILL NOW RESTART, PLEASE RUN SCRIPT AGAIN AND SKIP THIS STEP"
+        objLOG.write vbnewline & vbtab & " - SUCCESSFULLY RENAMED COMPUTER : " & strNEWPC & vbnewline & vbtab & _
+					"COMPUTER WILL NOW RESTART, PLEASE RUN SCRIPT AGAIN AND SKIP THIS STEP"
         blnRBT = true
       end if
     next
@@ -110,7 +121,8 @@ if (strPWD = vbnullstring) then
       ''CREATE RMMTECH USER
       objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
       objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
-      call HOOK("net user " & chr(34) & "RMMTech" & chr(34) & " " & chr(34) & strPWD & chr(34) & "  /add /active:yes /expires:never /passwordchg:yes /passwordreq:yes /Y")
+      call HOOK("net user " & chr(34) & "RMMTech" & chr(34) & " " & chr(34) & strPWD & chr(34) & _
+				"  /add /active:yes /expires:never /passwordchg:yes /passwordreq:yes /Y")
       ''SET PASSWORD TO NEVER EXPIRE
       objOUT.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
       objLOG.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
@@ -128,8 +140,6 @@ if (strPWD = vbnullstring) then
       set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
       while (not objEXEC.stdout.atendofstream)
         strIN = objEXEC.stdout.readline
-        'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-        'objLOG.write vbnewline & now & vbtab & vbtab & strIN
         if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, ","))) then
           if ((trim(split(strIN, ",")(1)) <> vbnullstring) and (trim(split(strIN, ",")(1)) <> "Name")) then
             redim preserve colUSR(intUSR + 1)
@@ -217,24 +227,35 @@ if ((strTRP <> vbnullstring) and (strSNMP <> vbnullstring)) then
   ''ADD SNMP REGISTRY VALUES
   objOUT.write vbnewline & now & vbtab & "ADDING SNMP CONFIGURATIONS"
   objLOG.write vbnewline & now & vbtab & "ADDING SNMP CONFIGURATIONS"
-  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /v EnableAuthenticationTraps /t REG_DWORD /d 0 /f")
-  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration" & chr(34) & " /f")
-  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /f")
-  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\ValidCommunities" & chr(34) & " /v " & strSNMP & " /t REG_DWORD /d 4 /f")
+  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & _
+		" /v EnableAuthenticationTraps /t REG_DWORD /d 0 /f")
+  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration" & chr(34) & _
+		" /f")
+  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration\" & _
+		strSNMP & chr(34) & " /f")
+  call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\ValidCommunities" & chr(34) & _
+		" /v " & strSNMP & " /t REG_DWORD /d 4 /f")
   if (instr(1, strTRP, ",")) then ''HANDLE MULTIPLE SNMP TRAP AGENTS
     arrTRP = split(strTRP, ",")
     for intTRP = 0 to ubound(arrTRP)
       if (arrTRP(intTRP) <> vbnullstring) then
-      wscript.echo "reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f"
-        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
-        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
-        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
+				'wscript.echo "reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & _
+				'	" /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f"
+        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & _
+					" /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
+        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & _
+					" /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
+        call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & _
+					strSNMP & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
       end if
     next
   else  ''HANDLE SINGLE SNMP TRAP AGENT
-    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
-    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v 2 /t REG_SZ /d " & strTRP & " /f")
-    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
+    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & _
+			" /v 1 /t REG_SZ /d " & strTRP & " /f")
+    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & _
+			" /v 2 /t REG_SZ /d " & strTRP & " /f")
+    call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & _
+			strSNMP & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
   end if
   objOUT.write vbnewline & now & vbtab & "SNMP CONFIGURATIONS COMPLETED"
   objLOG.write vbnewline & now & vbtab & "SNMP CONFIGURATIONS COMPLETED"
@@ -252,7 +273,8 @@ end if
 ''STAGE5 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
 ''INSTALL WINDOWS AGENT - REQUIRES 'STRCID', 'STRCNAM'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
 ''http://ilmcw.dyndns.biz/downloadFileServlet.download?relativePathToFile=%2Fdownload%2Frepository%2F669519631%2FWindows+Agent.msi
-''msiexec /i "c:\temp\windows agent.msi" /qn CUSTOMERID=487 CUSTOMERNAME="Intermodal Logistics" SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\install.log ALLUSERS=2
+''msiexec /i "c:\temp\windows agent.msi" /qn CUSTOMERID=487 CUSTOMERNAME="Intermodal Logistics" SERVERPROTOCOL=https & _
+''SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\install.log ALLUSERS=2
 if (strAGT = vbnullstring) then
   objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?"
   objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?"
@@ -274,8 +296,8 @@ if (strAGT = vbnullstring) then
       ''INSTALL WINDOWS AGENT
       objOUT.write vbnewline & now & vbtab & vbtab & " - INSTALLING WINDOWS AGENT"
       objLOG.write vbnewline & now & vbtab & vbtab & " - INSTALLING WINDOWS AGENT"
-      call HOOK("msiexec /i " & chr(34) & "c:\temp\windows agent.msi" & chr(34) & " /qn CUSTOMERID=" & strCID & " CUSTOMERNAME=" & chr(34) & strCNAM & chr(34) & _
-        "  SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\install.log ALLUSERS=2")
+      call HOOK("msiexec /i " & chr(34) & "c:\temp\windows agent.msi" & chr(34) & " /qn CUSTOMERID=" & strCID & " CUSTOMERNAME=" & _
+				chr(34) & strCNAM & chr(34) & "  SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\install.log ALLUSERS=2")
     end if
   end if
 end if
@@ -286,8 +308,9 @@ strCNAM = vbnullstring
 ''STAGE6 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS - NEED DOMAIN / WORKGROUP SELECTION
 ''INSTALL PROBE - REQUIRES 'STRCID', 'STRCNAM', 'STRDMN', 'STRDUSR', 'STRDPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
 ''http://ilmcw.dyndns.biz/downloadFileServlet.download?relativePathToFile=%2Fdownload%2Frepository%2F679064808%2FWindows+Software+Probe.msi
-''msiexec /i "c:\temp\windows software probe.msi" /qn CUSTOMERID=231 CUSTOMERNAME="Teabo & Sons Stucco" SERVERPROTOCOL="HTTPS://" SERVERADDRESS="ilmcw.dyndns.biz" SERVERPORT=443
-''PROBETYPE="Workgroup_Windows" AGENTDOMAIN=".\" AGENTUSERNAME="RMMTech" AGENTPASSWORD="RMMP@$$w0rD"
+''msiexec /i "c:\temp\windows software probe.msi" /qn CUSTOMERID=231 CUSTOMERNAME="Teabo & Sons Stucco" & _
+''SERVERPROTOCOL="HTTPS://" SERVERADDRESS="ilmcw.dyndns.biz" SERVERPORT=443 PROBETYPE="Workgroup_Windows" & _ 
+''AGENTDOMAIN=".\" AGENTUSERNAME="RMMTech" AGENTPASSWORD=""
 if (strPRB = vbnullstring) then
   objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?"
   objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?"
@@ -322,18 +345,64 @@ if (strPRB = vbnullstring) then
         ''INSTALL WINDOWS PROBE
         objOUT.write vbnewline & now & vbtab & vbtab & " - INSTALLING WINDOWS PROBE"
         objLOG.write vbnewline & now & vbtab & vbtab & " - INSTALLING WINDOWS PROBE"
-        call HOOK("msiexec /i " & chr(34) & "c:\temp\windows software probe.msi" & chr(34) & " /qn CUSTOMERID=" & strCID & " CUSTOMERNAME=" & chr(34) & strCNAM & chr(34) & _
-          " SERVERPROTOCOL=" & chr(34) & "HTTPS://" & chr(34) & " SERVERADDRESS=" & chr(34) & "ilmcw.dyndns.biz" & chr(34) & " SERVERPORT=443" & " PROBETYPE=" & chr(34) & "Workgroup_Windows" & chr(34) & _
-          " AGENTDOMAIN=" & chr(34) & strDMN & chr(34) & " AGENTUSERNAME=" & chr(34) & strDUSR & chr(34) & " AGENTPASSWORD=" & chr(34) & strDPWD & chr(34) & " /l*v c:\temp\probe_install.log ALLUSERS=2")
+        call HOOK("msiexec /i " & chr(34) & "c:\temp\windows software probe.msi" & chr(34) & " /qn CUSTOMERID=" & strCID & " CUSTOMERNAME=" & _
+					chr(34) & strCNAM & chr(34) & " SERVERPROTOCOL=" & chr(34) & "HTTPS://" & chr(34) & " SERVERADDRESS=" & chr(34) & "ilmcw.dyndns.biz" & chr(34) & _
+					" SERVERPORT=443" & " PROBETYPE=" & chr(34) & "Network_Windows" & chr(34) & " AGENTDOMAIN=" & chr(34) & strDMN & chr(34) & " AGENTUSERNAME=" & _
+					chr(34) & strDUSR & chr(34) & " AGENTPASSWORD=" & chr(34) & strDPWD & chr(34) & " /l*v c:\temp\probe_install.log ALLUSERS=2")
     end if
   end if
 end if
 ''CLEANUP
-call CLEANUP
+call CLEANUP()
 ''END SCRIPT
 ''------------
 
 ''SUB-ROUTINES
+sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	''SCRIPT OBJECT FOR PARSING XML
+	set objXML = createobject("Microsoft.XMLDOM")
+	''FORCE SYNCHRONOUS
+	objXML.async = false
+	''LOAD SCRIPT VERSIONS DATABASE XML
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+		set colVER = objXML.documentelement
+		for each objSCR in colVER.ChildNodes
+			''LOCATE CURRENTLY RUNNING SCRIPT
+			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+				''CHECK LATEST VERSION
+				if (cint(objSCR.text) > cint(strVER)) then
+					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+					if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+					end if
+					''DOWNLOAD LATEST VERSION OF SCRIPT
+					call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/auto_plan.vbs", wscript.scriptname)
+					''RUN LATEST VERSION
+					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+						for x = 0 to (wscript.arguments.count - 1)
+							strTMP = strTMP & " " & objARG.item(x)
+						next
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+					end if
+					''END SCRIPT
+					call CLEANUP()
+				end if
+			end if
+		next
+	end if
+	set colVER = nothing
+	set objXML = nothing
+end sub
+
 sub FILEDL(strURL, strFILE)                           ''CALL HOOK TO DOWNLOAD FILE FROM URL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
@@ -342,23 +411,6 @@ sub FILEDL(strURL, strFILE)                           ''CALL HOOK TO DOWNLOAD FI
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
-  ''SET N-CENTRAL CREDENTIALS, IF NEEDED
-  'if ((instr(1, strURL, "ilmcw.dyndns.biz") or instr(1, strURL, "sis.n-able.com"))) then
-  '  if ((strNUSR = vbnullstring) or (strNPWD = vbnullstring)) then
-  '    objOUT.write vbnewline & vbnewline & vbtab & vbtab & "N-CENTRAL ADDRESS, PLEASE ENTER N-CENTRAL USERNAME : "
-  '    objLOG.write vbnewline & vbnewline & vbtab & vbtab & "N-CENTRAL ADDRESS, PLEASE ENTER N-CENTRAL USERNAME : "
-  '    strNUSR = objIN.readline
-  '    objOUT.write vbnewline & vbtab & vbtab & "N-CENTRAL ADDRESS, PLEASE ENTER N-CENTRAL PASSWORD : "
-  '    objLOG.write vbnewline & vbtab & vbtab & "N-CENTRAL ADDRESS, PLEASE ENTER N-CENTRAL PASSWORD : "
-  '    strNPWD = objIN.readline
-  '  end if
-  '  if ((strNUSR <> vbnullstring) and (strNPWD <> vbnullstring)) then
-  '    objHTTP.setcredentials strNUSR, strNPWD, 0
-  '  end if
-  'end if
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
@@ -381,38 +433,49 @@ sub FILEDL(strURL, strFILE)                           ''CALL HOOK TO DOWNLOAD FI
   if objFSO.fileexists(strSAV) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    set objHTTP = nothing
+  end if
+	set objHTTP = nothing
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    errRET = 2
+		err.clear
   end if
 end sub
 
 sub HOOK(strCMD)                                      ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   on error resume next
-  'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
   set objHOOK = objWSH.exec(strCMD)
-  'while (objHOOK.status = 0)
-    while (not objHOOK.stdout.atendofstream)
-      strIN = objHOOK.stdout.readline
-      if (strIN <> vbnullstring) then
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-      end if
-    wend
-    wscript.sleep 10
-  'wend
+	while (not objHOOK.stdout.atendofstream)
+		strIN = objHOOK.stdout.readline
+		if (strIN <> vbnullstring) then
+			objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+			objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+		end if
+	wend
+	wscript.sleep 10
   strIN = objHOOK.stdout.readall
   if (strIN <> vbnullstring) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
   end if
-  'retSTOP = objHOOK.exitcode
   set objHOOK = nothing
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+		errRET = 3
+		err.clear
   end if
 end sub
 
 sub CLEANUP()                                         ''SCRIPT CLEANUP
+  if (errRET = 0) then         												''AUTO_PLANv2 COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "AUTO_PLANv2 SUCCESSFUL : " & NOW
+  elseif (errRET <> 0) then    												''AUTO_PLANv2 FAILED
+    objOUT.write vbnewline & "AUTO_PLANv2 FAILURE : " & NOW & " : " & errRET
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "AUTO_PLANv2", "FAILURE")
+  end if
   objOUT.write vbnewline & vbnewline & now & " - AUTO_PLANv2 COMPLETE. PLEASE VERIFY ALL MONITORING AND SERVICES!" & vbnewline
   objLOG.write vbnewline & vbnewline & now & " - AUTO_PLANv2 COMPLETE. PLEASE VERIFY ALL MONITORING AND SERVICES!" & vbnewline
   objLOG.close
@@ -424,5 +487,5 @@ sub CLEANUP()                                         ''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit err.number
+  wscript.quit errRET
 end sub

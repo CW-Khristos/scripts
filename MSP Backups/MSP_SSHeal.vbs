@@ -8,8 +8,13 @@
 dim errRET, strVER
 dim strIDL, strTMP, arrTMP, strIN
 ''SCRIPT OBJECTS
+<<<<<<< HEAD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objXML, objHTTP, objXML
+=======
+dim objIN, objOUT, objARG, objWSH
+dim objFSO, objLOG, objHOOK, objHTTP, objXML
+>>>>>>> master
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2
 strVER = 2
 ''VSS WRITER FLAGS
@@ -45,12 +50,18 @@ if (strIN <> "cscript.exe") Then
   objWSH.run "cscript.exe //nologo " & chr(34) & Wscript.ScriptFullName & chr(34)
   wscript.quit
 end if
+
+''------------
+''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2
 call CHKAU()
+<<<<<<< HEAD
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS, REF #2
 call CLEANUP()
+=======
+>>>>>>> master
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -93,6 +104,8 @@ elseif (instr(1, strIDL, "Idle") = 0) then					''BACKUPS IN PROGRESS
 end if
 ''END SCRIPT
 call CLEANUP()
+''END SCRIPT
+''------------
 
 ''SUB-ROUTINES
 sub CHKVSS()																				''CHECK VSS WRITER STATUSES
@@ -285,7 +298,11 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
+<<<<<<< HEAD
 	if objXML.load("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/version.xml") then
+=======
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+>>>>>>> master
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -299,7 +316,22 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
 					end if
 					''DOWNLOAD LATEST VERSION OF SCRIPT
+<<<<<<< HEAD
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+=======
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					''RUN LATEST VERSION
+					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+						for x = 0 to (wscript.arguments.count - 1)
+							strTMP = strTMP & " " & objARG.item(x)
+						next
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+					end if
+					''END SCRIPT
+					call CLEANUP()
+>>>>>>> master
 				end if
 			end if
 		next
