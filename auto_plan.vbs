@@ -13,7 +13,7 @@ dim errRET, strVER
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
 strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
@@ -53,7 +53,7 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
-''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2
+''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE AUTO_PLAN.VBS, REF #2
 call CLEANUP()
@@ -360,7 +360,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
