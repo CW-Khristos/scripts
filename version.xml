@@ -18,8 +18,10 @@
 	<rotate_msp.vbs>1</rotate_msp.vbs>
 	<set_msparchive.vbs>1</set_msparchive.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
+	<reagent.vbs>2</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
+	<reprobe.vbs>2</reprobe.vbs>
 	<SNMPparam.vbs>1</SNMPparam.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
