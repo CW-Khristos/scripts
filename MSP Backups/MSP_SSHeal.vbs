@@ -52,6 +52,8 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2
 call CHKAU()
+''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS, REF #2
+call CLEANUP()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
 objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -302,7 +304,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
 					end if
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)

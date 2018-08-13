@@ -55,6 +55,8 @@ objOUT.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 ''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2
 call CHKAU()
+''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE AUTO_PLAN.VBS, REF #2
+call CLEANUP()
 ''------------
 ''STAGE1
 ''CHANGE ACTIVE POWER PLAN
