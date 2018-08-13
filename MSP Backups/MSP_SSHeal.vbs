@@ -10,7 +10,7 @@ dim strIDL, strTMP, arrTMP, strIN
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
-''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2
+''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
 strVER = 2
 ''VSS WRITER FLAGS
 dim blnSQL, blnTSK, blnVSS, blnWMI
@@ -50,7 +50,7 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2
+''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE MSP_SSHEAL.VBS, REF #2
 call CLEANUP()
@@ -279,7 +279,11 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
   end if
 end sub
 
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+  end if
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
@@ -299,10 +303,6 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 				if (cint(objSCR.text) > cint(strVER)) then
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-					if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-					end if
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Automated-Updates/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
