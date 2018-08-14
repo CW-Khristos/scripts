@@ -21,7 +21,7 @@
 	<reagent.vbs>2</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
-	<reprobe.vbs>2</reprobe.vbs>
+	<reprobe.vbs>3</reprobe.vbs>
 	<SNMPparam.vbs>1</SNMPparam.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
