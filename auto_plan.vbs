@@ -374,6 +374,7 @@ sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, RE
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
+=======
 sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
 >>>>>>> master
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
