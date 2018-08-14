@@ -72,6 +72,7 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   ''DEFAULT RESTART OF VSS
   call HOOK("net stop VSS")
   call HOOK ("net start VSS")
+  wscript.sleep 1500
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
   wscript.sleep 1500
@@ -80,6 +81,7 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   ''CHECK VSS WRITERS AFTER RESTART
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+  wscript.sleep 1500
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
   wscript.sleep 1500
