@@ -8,6 +8,7 @@
 '8/14/2018 9:18:03 AM                       System Update
 '8/14/2018 9:18:03 AM                       IP Helper
 '8/14/2018 9:18:03 AM                       Intel(R) PROSet/Wireless Event Log
+'8/14/2018 10:11:15 AM			   VMware USB Arbitration Service
 'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
