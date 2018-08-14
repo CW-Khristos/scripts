@@ -278,10 +278,19 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
 end sub
 
 sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> Automated-Updates
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> master
+>>>>>>> Automated-Updates
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
