@@ -4,16 +4,16 @@
 ''RUN ON LOCAL DEVICE WITH ADMINISTRATIVE PRIVILEGES
 ''COMPUTER RENAME WILL REQUIRE REBOOT AND RE-RUN OF SCRIPT
 ''CURRENTLY ONLY CREATES / UPDATES LOCAL RMMTECH USER
-''VARIABLES ACCEPTING PARAMETERS - CONFIGURES SNMP TRAP AND COMMUNITY STRING
-'dim strMOD, strTRP, strSNMP
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
+''VARIABLES ACCEPTING PARAMETERS - CONFIGURES SNMP TRAP AND COMMUNITY STRING
+dim strSNMP, strTRP
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
 strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
@@ -53,7 +53,7 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
-''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2
+''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE AUTO_PLAN.VBS, REF #2
 call CLEANUP()
@@ -360,7 +360,11 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2
+sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
+  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+  end if
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
@@ -380,10 +384,6 @@ sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, RE
 				if (cint(objSCR.text) > cint(strVER)) then
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-					if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-						objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-					end if
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/auto_plan.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
