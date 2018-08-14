@@ -13,15 +13,7 @@ dim strSNMP, strTRP
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
-<<<<<<< HEAD
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
-=======
-<<<<<<< HEAD
-''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
-=======
-''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
->>>>>>> master
->>>>>>> Automated-Updates
 strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
@@ -61,18 +53,10 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
-<<<<<<< HEAD
 ''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
-=======
-<<<<<<< HEAD
-''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
-=======
-''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
->>>>>>> master
->>>>>>> Automated-Updates
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE AUTO_PLAN.VBS, REF #2
-call CLEANUP()
+'call CLEANUP()
 ''------------
 ''STAGE1
 ''CHANGE ACTIVE POWER PLAN
@@ -376,22 +360,11 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-<<<<<<< HEAD
 sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
-=======
-<<<<<<< HEAD
-sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , FIXES #5
->>>>>>> Automated-Updates
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
-<<<<<<< HEAD
-=======
-=======
-sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5
->>>>>>> master
->>>>>>> Automated-Updates
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
