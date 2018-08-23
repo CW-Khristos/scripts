@@ -1,0 +1,54 @@
+stage 4 - SNMP
+execution of SNMPparam script failed, reported :
+8/23/2018 11:16:29 AM            - DOWNLOAD : C:\temp\SNMPparam.vbs : SUCCESSFUL
+8/23/2018 11:16:29 AM            - SNMP SETUP : SNMPPARAM
+8/23/2018 11:16:29 AM                   Input Error: There is no script engine for file extension ".1".
+
+stage4 - SNMP
+failed execution, did not properly pass parameters, did not install SNMP
+silly me, left pre-mature end script active
+VV-- corrected syntax
+      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SNMPparam.vbs" & chr(34) & " " & chr(34) & "modify" & chr(34) & _
+        " " & chr(34) & strSNMP & chr(34) & " " & chr(34) & strTRP & chr(34))
+
+stage5 - Agent
+forgot switch for silent install in reagent.vbs
+failed execution of reagent, same error as probe
+8/23/2018 11:49:33 AM            - DOWNLOAD : C:\temp\reagent.vbs : SUCCESSFUL
+8/23/2018 11:49:33 AM            - WINDOWS AGENT SETUP : RE-AGENT
+8/23/2018 11:49:33 AM                   Input Error: There is no script engine for file extension ".vbs 633 The".
+VV-- corrected syntax
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
+            " SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\agent_install.log ALLUSERS=2")
+            
+stage6 - Probe
+failed execution of reprobe.vbs script, most likely syntax of passing parameters
+8/23/2018 11:36:49 AM            - DOWNLOAD : C:\temp\reprobe.vbs : SUCCESSFUL
+8/23/2018 11:36:49 AM            - WINDOWS PROBE SETUP : RE-PROBE
+8/23/2018 11:36:49 AM                   Input Error: There is no script engine for file extension ".vbs 633 The".
+VV-- corrected syntax
+              call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
+                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34))
+                
+stage9 - Backups
+failed modification of LSV settings, syntax error
+VV-- corrected syntax
+    call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.setting.modify -name LocalSpeedVaultEnabled -value 1 -name LocalSpeedVaultLocation -value " & _
+      chr(34) & strLSVL & chr(34) & " -name LocalSpeedVaultPassword -value " & chr(34) & strLSVP & chr(34) & " -name LocalSpeedVaultUser -value " & chr(34) & strLSVU & chr(34))
+
+failed execution of LSVperm, same error as probe
+8/23/2018 12:29:16 PM            - DOWNLOAD : C:\temp\LSVperm.vbs : SUCCESSFUL
+8/23/2018 12:29:16 PM            - RESTRICT LSV PERMISSIONS SETUP : LSVPERM
+8/23/2018 12:29:16 PM                   Input Error: There is no file extension in "c:\temp\LSVperm.vbs E:\MSP".
+VV-- corrected syntax
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\LSVperm.vbs" & chr(34) & " " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
+            " " & chr(34) & strLSVP)
+            
+            
+virtual drive install
+failed to install MSP Backup VD
+8/23/2018 12:32:42 PM    - DOWNLOADING MSP BACKUP VIRTUAL DRIVE
+8/23/2018 12:32:42 PM    - ONCE INSTALLED PLEASE EDUCATE CUSTOMER
+8/23/2018 12:32:42 PM                   HTTPDOWNLOAD-------------DOWNLOAD : http://cdn.cloudbackup.management/maxdownloads/mxb-vd-windows-x64.exe : SAVE AS :  C:\temp\MSPBackupVD.exe
+8/23/2018 12:32:43 PM            - DOWNLOAD : C:\temp\MSPBackupVD.exe : SUCCESSFUL
+8/23/2018 12:32:43 PM    - SELECT WHICH STAGE TO RUN

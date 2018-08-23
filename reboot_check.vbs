@@ -60,8 +60,8 @@ call chkSYS()
 if (strRUN = "true") then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SHUTDOWN"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SHUTDOWN"
-  call HOOK("shutdown -r -t 1800 -c " & chr(34) & "This is a message from The ComputerWarriors, your system has been scheduled for a required reboot to maintain stability." & vbnewline & _
-    "Please save all work and close all programs prior to the scheduled reboot time." & chr(34))
+  'call HOOK("shutdown -r -t 1800 -c " & chr(34) & "This is a message from The ComputerWarriors, your system has been scheduled for a required reboot to maintain stability." & vbnewline & _
+  '  "Please save all work and close all programs prior to the scheduled reboot time." & chr(34))
 end if
 ''END SCRIPT
 call CLEANUP()

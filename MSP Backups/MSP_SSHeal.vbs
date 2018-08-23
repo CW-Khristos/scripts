@@ -9,6 +9,8 @@
 '8/14/2018 9:18:03 AM                       IP Helper
 '8/14/2018 9:18:03 AM                       Intel(R) PROSet/Wireless Event Log
 '8/14/2018 10:11:15 AM			                VMware USB Arbitration Service
+'8/20/2018 11:09:47 AM                      Intel(R) Rapid Storage Technology
+'8/20/2018 11:09:47 AM                      Dell Foundation Services
 'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER

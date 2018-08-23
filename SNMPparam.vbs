@@ -13,7 +13,7 @@ dim strMOD, strTRP, strSNMP
 dim objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, RE-PROBE.VBS, REF #2 , FIXES #7
-strVER = 2
+strVER = 3
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -56,7 +56,7 @@ objLOG.write vbnewline & vbnewline & now & " - STARTING SNMPPARAM" & vbnewline
 ''AUTOMATIC UPDATE, SNMPARAM.VBS, REF #2 , FIXES #9
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE SNMPPARAM.VBS, REF #9
-call CLEANUP()
+'call CLEANUP()
 
 ''SELECT MODE "QUERY" / "MODIFY"
 select case lcase(strMOD)

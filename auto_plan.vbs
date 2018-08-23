@@ -14,7 +14,7 @@ dim strSNMP, strTRP
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 5
+strVER = 6
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -81,6 +81,11 @@ while (blnEND = false)
   objOUT.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT"
   objLOG.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT"
   strSEL = objIN.readline
+  ''CHECK FOR QUIT
+  if ((lcase(strSEL) = "q") or (lcase(strSEL) = "quit")) then
+    strSEL = 10
+    blnEND = true
+  end if
   select case strSEL
     case 1
       call STAGE1()
@@ -101,10 +106,6 @@ while (blnEND = false)
     case 9
       call STAGE9()
   end select
-  ''CHECK FOR QUIT
-  if ((lcase(strSEL) = "q") or (lcase(strSEL) = "quit")) then
-    blnEND = true
-  end if
   strSEL = vbnullstring
 wend
 ''END MAINLOOP
@@ -314,9 +315,9 @@ sub STAGE4()
       ''INSTALL SNMP VIA SNMPPARAM , REF #6 , FIXES #15
       objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP SETUP : SNMPPARAM"
       objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP SETUP : SNMPPARAM"
-      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SNMPparam.vbs " & chr(34) & "modify" & chr(34) & _
+      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SNMPparam.vbs" & chr(34) & " " & chr(34) & "modify" & chr(34) & _
         " " & chr(34) & strSNMP & chr(34) & " " & chr(34) & strTRP & chr(34))
-    elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
+    elseif (not objFSO.fileexists("c:\temp\SNMPparam.vbs")) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
       call LOGERR(41)
@@ -376,7 +377,7 @@ sub STAGE5()
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
           objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
           objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
             " SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\agent_install.log ALLUSERS=2")
         elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -459,8 +460,8 @@ sub STAGE6()
               ''INSTALL WINDOWS PROBE VIA RE-PROBE , FIXES #7
               objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
               objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
-              call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
-                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34))
+              call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
+                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34))
             elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
               objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
               objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -530,7 +531,7 @@ sub STAGE8()
   if (err.number <> 0) then
     call LOGERR(8)
   end if
-end sub()
+end sub
 
 sub STAGE9()
   ''------------REF #6
@@ -575,7 +576,7 @@ sub STAGE9()
     ''SET MSP BACKUP LOCAL SPEEDVAULT SETTINGS, REF #6 , FIXES #12
     objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
-    call HOOK("C:\Program Files\Backup Manager>ClientTool.exe control.setting.modify -name LocalSpeedVaultEnabled -value 1 -name LocalSpeedVaultLocation -value " & _
+    call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.setting.modify -name LocalSpeedVaultEnabled -value 1 -name LocalSpeedVaultLocation -value " & _
       chr(34) & strLSVL & chr(34) & " -name LocalSpeedVaultPassword -value " & chr(34) & strLSVP & chr(34) & " -name LocalSpeedVaultUser -value " & chr(34) & strLSVU & chr(34))
     if (err.number <> 0) then
       call LOGERR(91)
@@ -593,7 +594,7 @@ sub STAGE9()
           ''RESTRICT LSV PERMISSIONS VIA LSVPERM, REF #6 , FIXES #12
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
           objLOG.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\LSVperm.vbs " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\LSVperm.vbs" & chr(34) & " " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
             " " & chr(34) & strLSVP)
         elseif (not objFSO.fileexists("c:\temp\LSVperm.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -638,8 +639,8 @@ sub STAGE9()
     strNUL = objIN.readline
   end if
   ''DOWNLOAD AND INSTALL MSP BACKUP VIRTUAL DRIVE, REF #6 , FIXES #12
-  objOUT.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (Y / N)?"
-  objLOG.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (Y / N)?"
+  objOUT.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?"
+  objLOG.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?"
   strMSPVD = objIN.readline
   if (ucase(strMSPVD) = "Y") then
     objOUT.write vbnewline & vbtab & "SELECT MSP BACKUP VIRTUAL DRIVE URL : (1) - (X86) / (2) - (X64)"
@@ -658,7 +659,10 @@ sub STAGE9()
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING MSP BACKUP VIRTUAL DRIVE"
     objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER"
     objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER"
+    ''DOWNLOAD MSP BACKUP VIRTUAL DRIVE
     call FILEDL(strMSPVDdl, "MSPBackupVD.exe")
+    ''INSTALL MSP BACKUP VIRTUAL DRIVE
+    call HOOK("C:\temp\MSPBackupVD.exe")
     if (err.number <> 0) then
       call LOGERR(95)
     end if
