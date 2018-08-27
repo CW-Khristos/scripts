@@ -12,7 +12,7 @@ dim strUSR
 ''SCRIPT OBJECTS
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2
+''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
 strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
@@ -60,7 +60,7 @@ objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
 ''AUTOMATIC UPDATE, SVCPERM.VBS, REF #2
 call CHKAU()
-''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE SVCPERM.VBS, REF #2
+''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE SVCPERM.VBS, REF #2 , FIXES #21
 'call CLEANUP()
 ''GET SIDS OF ALL USERS
 intUSR = 0
@@ -136,7 +136,7 @@ objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " 
 call CLEANUP()
 
 ''SUB-ROUTINES
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
