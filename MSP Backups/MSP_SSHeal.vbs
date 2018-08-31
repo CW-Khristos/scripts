@@ -86,9 +86,9 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
   call CHKDEP()
   if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
-    call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
+    'call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
   elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE, WILL NOT RUN SYSTEM STATE BACKUPS" 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE, WILL NOT RUN SYSTEM STATE BACKUPS"
