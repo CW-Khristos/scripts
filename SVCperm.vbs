@@ -43,16 +43,16 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   if (wscript.arguments.count > 0) then                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(0)
     ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-    if (instr(1, strUSR, "\") = 0) then
-      strUSR = ".\" & strUSR
-    end if
+    'if (instr(1, strUSR, "\") = 0) then
+    '  strUSR = ".\" & strUSR
+    'end if
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     errRET = 1
     call CLEANUP
   end if
 else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION"
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
   errRET = 1
   call CLEANUP
 end if
@@ -101,9 +101,9 @@ for intUSR = 0 to ubound(colUSR)
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
 next
 ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
-objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
-objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
-strORG = "SeServiceLogonRight ="
+objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
+objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
+strORG = "SeServiceLogonRight = "
 strREP = "SeServiceLogonRight = " & "*" & strSID & ","
 ''EXPORT CURRENT SECURITY DATABASE CONFIGS
 call HOOK("secedit /export /cfg c:\temp\config.inf")
@@ -117,6 +117,7 @@ set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
 objSOUT.write (replace(strIN,strORG,strREP))
 objSOUT.close
 set objSOUT = nothing
+wscript.sleep 1000
 ''APPLY NEW SECURITY DATABASE CONFIGS
 call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
 call HOOK("secedit /configure /db secedit.sdb")

@@ -3,30 +3,24 @@
 ''CHECKS STATUS OF BACKUPS, RESTARTS SERVICES IF NEEDED, CHECKS VSS WRITERS, RE-RUNS SYSTEM STATE BACKUPS
 ''MUST BE USED IN CONJUNCTION WITH MSP BACKUP SYSTEM STATE BACKUP MONITORED SERVICE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
-'8/14/2018 9:18:03 AM                       Security Center
-'8/14/2018 9:18:03 AM                       System Update
-'8/14/2018 9:18:03 AM                       IP Helper
-'8/14/2018 9:18:03 AM                       Intel(R) PROSet/Wireless Event Log
-'8/14/2018 10:11:15 AM			                VMware USB Arbitration Service
-'8/20/2018 11:09:47 AM                      Intel(R) Rapid Storage Technology
-'8/20/2018 11:09:47 AM                      Dell Foundation Services
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
-dim errRET, strVER
 dim strIDL, strTMP, arrTMP, strIN
+dim errRET, strVER, blnRUN, blnSUP
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-strVER = 3
+strVER = 4
 ''VSS WRITER FLAGS
 dim blnSQL, blnTSK, blnVSS, blnWMI
-dim blnAHS, blnBIT, blnCSVC, blnRDP, blnRUN
+dim blnAHS, blnBIT, blnCSVC, blnRDP
 ''SET 'ERRRET' CODE
 errRET = 0
-''DEFAULT 'BLNRUN' FLAG
+''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
+''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
+blnSUP = false
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -89,6 +83,8 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   wscript.sleep 1500
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
+  ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
+  call CHKDEP()
   if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUPS"
@@ -108,6 +104,17 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
+sub CHKDEP()                                        ''RESTART WMI DEPENDENT SERVICES, REF #19
+''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
+ call HOOK("net start " & chr(34) & "Security Center" & chr(34))
+ call HOOK("net start " & chr(34) & "System Update" & chr(34))
+ call HOOK("net start " & chr(34) & "IP Helper" & chr(34))
+ call HOOK("net start " & chr(34) & "Intel(R) PROSet/Wireless Event Log" & chr(34))
+ call HOOK("net start " & chr(34) & "VMware USB Arbitration Service" & chr(34))
+ call HOOK("net start " & chr(34) & "Intel(R) Rapid Storage Technology" & chr(34))
+ call HOOK("net start " & chr(34) & "Dell Foundation Services" & chr(34))
+end sub
+
 sub CHKVSS()																				''CHECK VSS WRITER STATUSES
   set objHOOK = objWSH.exec("vssadmin list writers")
   strTMP = objHOOK.stdout.readall
@@ -353,7 +360,7 @@ sub HOOK(strCMD)                              			''CALL HOOK TO MONITOR OUTPUT O
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then
+  if ((not blnSUP) and (err.number <> 0)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     errRET = 3
