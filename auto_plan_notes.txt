@@ -18,8 +18,7 @@ failed execution of reagent, same error as probe
 8/23/2018 11:49:33 AM            - WINDOWS AGENT SETUP : RE-AGENT
 8/23/2018 11:49:33 AM                   Input Error: There is no script engine for file extension ".vbs 633 The".
 VV-- corrected syntax
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
-            " SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\agent_install.log ALLUSERS=2")
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34))
             
 stage6 - Probe
 failed execution of reprobe.vbs script, most likely syntax of passing parameters
