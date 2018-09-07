@@ -1,0 +1,186 @@
+
+9/7/2018 4:05:46 PM - STARTING MSP_SSHEAL
+
+9/7/2018 4:05:46 PM			The operation completed successfully.
+9/7/2018 4:05:46 PM			The operation completed successfully.
+9/7/2018 4:05:47 PM	 - CHECKING MSP BACKUP STATUS
+9/7/2018 4:05:47 PM			Idle
+
+9/7/2018 4:05:47 PM		 - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS
+9/7/2018 4:05:50 PM			The Volume Shadow Copy service is stopping.
+9/7/2018 4:05:50 PM			The Volume Shadow Copy service was stopped successfully.
+9/7/2018 4:05:53 PM			The Volume Shadow Copy service is starting.
+9/7/2018 4:05:53 PM			The Volume Shadow Copy service was started successfully.
+9/7/2018 4:05:57 PM			vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+9/7/2018 4:05:57 PM			(C) Copyright 2001-2005 Microsoft Corp.
+9/7/2018 4:05:57 PM			Writer name: 'Task Scheduler Writer'
+9/7/2018 4:05:57 PM			blnTSK : True
+9/7/2018 4:05:57 PM			   Writer Id: {d61d61c8-d73a-4eee-8cdd-f6f9786b7124}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {1bddd48e-5052-49db-9b07-b96f96727e6b}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'VSS Metadata Store Writer'
+9/7/2018 4:05:57 PM			   Writer Id: {75dfb225-e2e4-4d39-9ac9-ffaff65ddf06}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {088e7a7d-09a8-4cc6-a609-ad90e75ddc93}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'Performance Counters Writer'
+9/7/2018 4:05:57 PM			   Writer Id: {0bada1de-01a9-4625-8278-69e735f39dd2}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {f0086dda-9efc-47c5-8eb6-a944c3d09381}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'System Writer'
+9/7/2018 4:05:57 PM			blnCSVC : True
+9/7/2018 4:05:57 PM			   Writer Id: {e8132975-6f93-4464-a53e-1050253ae220}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {4681e3fd-e4ac-46c9-bf17-9ce8730a4a34}
+9/7/2018 4:05:57 PM			   State: [9] Failed
+9/7/2018 4:05:57 PM			   Last error: Timed out
+9/7/2018 4:05:57 PM			Writer name: 'ASR Writer'
+9/7/2018 4:05:57 PM			blnVSS : True
+9/7/2018 4:05:57 PM			   Writer Id: {be000cbe-11fe-4426-9c58-531aa6355fc4}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {55ce4ded-6ebb-4134-97d1-946a27e9ce55}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'Registry Writer'
+9/7/2018 4:05:57 PM			blnVSS : True
+9/7/2018 4:05:57 PM			   Writer Id: {afbab4a2-367d-4d15-a586-71dbb18f8485}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {ea5b1b71-f4ec-4183-b061-1b832c313dba}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'Shadow Copy Optimization Writer'
+9/7/2018 4:05:57 PM			blnVSS : True
+9/7/2018 4:05:57 PM			   Writer Id: {4dc3bdd4-ab48-4d07-adb0-3bee2926fd7f}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {795e690e-45c9-4949-a34c-43babd9b8db1}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'TermServLicensing'
+9/7/2018 4:05:57 PM			blnRDP : True
+9/7/2018 4:05:57 PM			   Writer Id: {5382579c-98df-47a7-ac6c-98a6d7106e09}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {75a0af34-5d36-410a-87c8-7d01566ed927}
+9/7/2018 4:05:57 PM			   State: [9] Failed
+9/7/2018 4:05:57 PM			   Last error: Timed out
+9/7/2018 4:05:57 PM			Writer name: 'BITS Writer'
+9/7/2018 4:05:57 PM			blnBIT : True
+9/7/2018 4:05:57 PM			   Writer Id: {4969d978-be47-48b0-b100-f328f07ac1e0}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {2e87cea7-2cd3-47f4-bba0-c7bd9e779e8f}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'COM+ REGDB Writer'
+9/7/2018 4:05:57 PM			blnVSS : True
+9/7/2018 4:05:57 PM			   Writer Id: {542da469-d3e1-473c-9f4f-7847f01fc64f}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {80268b13-2d07-4d44-8cd3-33d9ac9d81dd}
+9/7/2018 4:05:57 PM			   State: [1] Stable
+9/7/2018 4:05:57 PM			   Last error: No error
+9/7/2018 4:05:57 PM			Writer name: 'WMI Writer'
+9/7/2018 4:05:57 PM			blnWMI : True
+9/7/2018 4:05:57 PM			   Writer Id: {a6ad56c2-b509-4e6c-bb19-49d8f43532f0}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {f139ba1f-4585-4c18-90b8-f330a09e4c40}
+9/7/2018 4:05:57 PM			   State: [9] Failed
+9/7/2018 4:05:57 PM			   Last error: Timed out
+9/7/2018 4:05:57 PM			Writer name: 'IIS Config Writer'
+9/7/2018 4:05:57 PM			blnAHS : True
+9/7/2018 4:05:57 PM			   Writer Id: {2a40fd15-dfca-4aa8-a654-1f8c654603f6}
+9/7/2018 4:05:57 PM			   Writer Instance Id: {756444c3-bf64-43f7-a230-5dd7b3dcd732}
+9/7/2018 4:05:57 PM			   State: [9] Failed
+9/7/2018 4:05:57 PM			   Last error: Timed out
+9/7/2018 4:06:01 PM			The Application Host Helper Service service is stopping.
+9/7/2018 4:06:01 PM			The Application Host Helper Service service was stopped successfully.
+9/7/2018 4:06:03 PM			The Application Host Helper Service service is starting.
+9/7/2018 4:06:03 PM			The Application Host Helper Service service was started successfully.
+9/7/2018 4:06:06 PM			The Cryptographic Services service is stopping..
+9/7/2018 4:06:06 PM			The Cryptographic Services service was stopped successfully.
+9/7/2018 4:06:08 PM			The Cryptographic Services service is starting.
+9/7/2018 4:06:08 PM			The Cryptographic Services service was started successfully.
+9/7/2018 4:06:10 PM			The Remote Desktop Licensing service is stopping.
+9/7/2018 4:06:10 PM			The Remote Desktop Licensing service was stopped successfully.
+9/7/2018 4:06:12 PM			The Remote Desktop Licensing service is starting.
+9/7/2018 4:06:12 PM			The Remote Desktop Licensing service was started successfully.
+9/7/2018 4:06:12 PM			The following services are dependent on the Windows Management Instrumentation service.
+9/7/2018 4:06:12 PM			Stopping the Windows Management Instrumentation service will also stop these services.
+9/7/2018 4:06:12 PM			   VMware USB Arbitration Service
+9/7/2018 4:06:12 PM			   IP Helper
+9/7/2018 4:06:12 PM			The VMware USB Arbitration Service service was stopped successfully.
+9/7/2018 4:06:15 PM			The IP Helper service is stopping.
+9/7/2018 4:06:15 PM			The IP Helper service was stopped successfully.
+9/7/2018 4:06:17 PM			The Windows Management Instrumentation service is stopping.
+9/7/2018 4:06:17 PM			The Windows Management Instrumentation service was stopped successfully.
+9/7/2018 4:06:19 PM			The Windows Management Instrumentation service is starting.
+9/7/2018 4:06:19 PM			The Windows Management Instrumentation service was started successfully.
+9/7/2018 4:06:19 PM		 - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS
+9/7/2018 4:06:23 PM			vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+9/7/2018 4:06:23 PM			(C) Copyright 2001-2005 Microsoft Corp.
+9/7/2018 4:06:23 PM			Writer name: 'Task Scheduler Writer'
+9/7/2018 4:06:23 PM			blnTSK : True
+9/7/2018 4:06:23 PM			   Writer Id: {d61d61c8-d73a-4eee-8cdd-f6f9786b7124}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {1bddd48e-5052-49db-9b07-b96f96727e6b}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'VSS Metadata Store Writer'
+9/7/2018 4:06:23 PM			   Writer Id: {75dfb225-e2e4-4d39-9ac9-ffaff65ddf06}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {088e7a7d-09a8-4cc6-a609-ad90e75ddc93}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'Performance Counters Writer'
+9/7/2018 4:06:23 PM			   Writer Id: {0bada1de-01a9-4625-8278-69e735f39dd2}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {f0086dda-9efc-47c5-8eb6-a944c3d09381}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'System Writer'
+9/7/2018 4:06:23 PM			blnCSVC : True
+9/7/2018 4:06:23 PM			   Writer Id: {e8132975-6f93-4464-a53e-1050253ae220}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {8e7b0aa2-76e5-4e74-80c8-380a1d52d91f}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'ASR Writer'
+9/7/2018 4:06:23 PM			blnVSS : True
+9/7/2018 4:06:23 PM			   Writer Id: {be000cbe-11fe-4426-9c58-531aa6355fc4}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {55ce4ded-6ebb-4134-97d1-946a27e9ce55}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'IIS Config Writer'
+9/7/2018 4:06:23 PM			blnAHS : True
+9/7/2018 4:06:23 PM			   Writer Id: {2a40fd15-dfca-4aa8-a654-1f8c654603f6}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {bf5073a0-e4b2-40a3-a4eb-86d520d85599}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'COM+ REGDB Writer'
+9/7/2018 4:06:23 PM			blnVSS : True
+9/7/2018 4:06:23 PM			   Writer Id: {542da469-d3e1-473c-9f4f-7847f01fc64f}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {80268b13-2d07-4d44-8cd3-33d9ac9d81dd}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'TermServLicensing'
+9/7/2018 4:06:23 PM			blnRDP : True
+9/7/2018 4:06:23 PM			   Writer Id: {5382579c-98df-47a7-ac6c-98a6d7106e09}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {9ae1e0c1-830f-4c1a-8bed-a91cc3a599ca}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'BITS Writer'
+9/7/2018 4:06:23 PM			blnBIT : True
+9/7/2018 4:06:23 PM			   Writer Id: {4969d978-be47-48b0-b100-f328f07ac1e0}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {2e87cea7-2cd3-47f4-bba0-c7bd9e779e8f}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'Registry Writer'
+9/7/2018 4:06:23 PM			blnVSS : True
+9/7/2018 4:06:23 PM			   Writer Id: {afbab4a2-367d-4d15-a586-71dbb18f8485}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {ea5b1b71-f4ec-4183-b061-1b832c313dba}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:23 PM			Writer name: 'Shadow Copy Optimization Writer'
+9/7/2018 4:06:23 PM			blnVSS : True
+9/7/2018 4:06:23 PM			   Writer Id: {4dc3bdd4-ab48-4d07-adb0-3bee2926fd7f}
+9/7/2018 4:06:23 PM			   Writer Instance Id: {795e690e-45c9-4949-a34c-43babd9b8db1}
+9/7/2018 4:06:23 PM			   State: [1] Stable
+9/7/2018 4:06:23 PM			   Last error: No error
+9/7/2018 4:06:28 PM			The Windows Management Instrumentation service is stopping.
+9/7/2018 4:06:28 PM			The Windows Management Instrumentation service was stopped successfully.
+9/7/2018 4:06:30 PM			The Windows Management Instrumentation service is starting.
+9/7/2018 4:06:30 PM			The Windows Management Instrumentation service was started successfully.
+9/7/2018 4:06:32 PM			The IP Helper service is starting.
+9/7/2018 4:06:32 PM			The IP Helper service was started successfully.
+9/7/2018 4:06:34 PM			The VMware USB Arbitration Service service is starting.
+9/7/2018 4:06:34 PM			The VMware USB Arbitration Service service was started successfully.
+9/7/2018 4:06:34 PM			VSS WRITERS RESET
+
+9/7/2018 4:06:34 PM - MSP_SSHEAL COMPLETE

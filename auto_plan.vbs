@@ -57,9 +57,8 @@ objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 call CHKAU()
 ''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE AUTO_PLAN.VBS, REF #2
 'call CLEANUP()
-
 ''------------
-''MAINLOOP - LOOPED ENTRY PERMITS SELECTING MULTIPLE OPTIONS
+''MAINLOOP - LOOPED ENTRY PERMITS SELECTING OPTIONS IN SEQUENCE
 ''ALLOWS FOR STAGES TO BE SELECTED IN A LOOP
 ''ENTERING 'Q' OR 'QUIT' WILL END THE LOOP
 ''SELECTING STAGE2 WILL FORCE REBOOT AND SCRIPT WILL NEED TO BE RUN AGAIN
@@ -78,8 +77,8 @@ while (blnEND = false)
   objLOG.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
   objOUT.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
   objLOG.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
-  objOUT.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT"
-  objLOG.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT"
+  objOUT.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
+  objLOG.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
   strSEL = objIN.readline
   ''CHECK FOR QUIT
   if ((lcase(strSEL) = "q") or (lcase(strSEL) = "quit")) then
@@ -110,7 +109,6 @@ while (blnEND = false)
 wend
 ''END MAINLOOP
 ''------------
-
 ''CLEANUP
 call CLEANUP()
 ''END SCRIPT
@@ -377,8 +375,7 @@ sub STAGE5()
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
           objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
           objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
-            " SERVERPROTOCOL=https SERVERADDRESS=ilmcw.dyndns.biz SERVERPORT=443 /l*v c:\temp\agent_install.log ALLUSERS=2")
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34))
         elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"

@@ -11,7 +11,7 @@
 	<LSVperm.vbs>1</LSVperm.vbs>
 	<MSP_Config.vbs>1</MSP_Config.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
-	<MSP_SSHeal.vbs>4</MSP_SSHeal.vbs>
+	<MSP_SSHeal.vbs>5</MSP_SSHeal.vbs>
 	<MSP_Update.vbs>1</MSP_Update.vbs>
 	<rndds_msp_postbackup.vbs>1</rndds_msp_postbackup.vbs>
 	<rndds_msp_prebackup.vbs>1</rndds_msp_prebackup.vbs>
