@@ -1,4 +1,4 @@
-'on error resume next
+on error resume next
 ''ALWAYS RIGHT-CLICK SCRIPT, CHOOSE "PROPERTIES", CLICK "UNBLOCK"
 ''SCRIPT VARIABLES
 dim strIN, strNUL, strSEL, strRUN
