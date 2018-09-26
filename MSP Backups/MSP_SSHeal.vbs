@@ -108,14 +108,16 @@ call CLEANUP()
 ''SUB-ROUTINES
 sub CHKDEP()                                        ''RESTART WMI DEPENDENT SERVICES, REF #19
 ''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
- call HOOK("net start " & chr(34) & "Security Center" & chr(34))
- call HOOK("net start " & chr(34) & "System Update" & chr(34))
- call HOOK("net start " & chr(34) & "IP Helper" & chr(34))
- call HOOK("net start " & chr(34) & "Intel(R) PROSet/Wireless Event Log" & chr(34))
- call HOOK("net start " & chr(34) & "VMware USB Arbitration Service" & chr(34))
- call HOOK("net start " & chr(34) & "Intel(R) Rapid Storage Technology" & chr(34))
- call HOOK("net start " & chr(34) & "Dell Foundation Services" & chr(34))
- call HOOK("net start " & chr(34) & "User Access Logging Service" & chr(34))
+  objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
+  call HOOK("net start " & chr(34) & "Security Center" & chr(34))
+  call HOOK("net start " & chr(34) & "System Update" & chr(34))
+  call HOOK("net start " & chr(34) & "IP Helper" & chr(34))
+  call HOOK("net start " & chr(34) & "Intel(R) PROSet/Wireless Event Log" & chr(34))
+  call HOOK("net start " & chr(34) & "VMware USB Arbitration Service" & chr(34))
+  call HOOK("net start " & chr(34) & "Intel(R) Rapid Storage Technology" & chr(34))
+  call HOOK("net start " & chr(34) & "Dell Foundation Services" & chr(34))
+  call HOOK("net start " & chr(34) & "User Access Logging Service" & chr(34))
 end sub
 
 sub CHKVSS()																				''CHECK VSS WRITER STATUSES
