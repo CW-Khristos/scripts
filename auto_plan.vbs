@@ -436,9 +436,12 @@ sub STAGE6()
         objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
         strCNAM = objIN.readline
         ''DOMAIN
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (MAY BE BLANK IF WORKGROUP) :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (MAY BE BLANK IF WORKGROUP) :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :"
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :"
         strDMN = objIN.readline
+        if (instr(1, strDMN, "\")) then
+          strDMN = replace(strDMN, "\", vbnullstring)
+        end if
         ''DOMAIN USER
         objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :"
         objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :"
