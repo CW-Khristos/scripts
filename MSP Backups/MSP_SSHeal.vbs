@@ -138,6 +138,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
           x = x + 1
           wscript.sleep 1000
         wend
+        err.raise 1
         call HOOK("net stop VSS")
         call HOOK ("net start VSS")
         exit for
