@@ -133,6 +133,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & arrTMP(intTMP)
 <<<<<<< HEAD
       if (instr(1, arrTMP(intTMP), "Error: A Volume Shadow Copy Service component encountered an unexpected error.") then
+      if (instr(1, arrTMP(intTMP), "Error: A Volume Shadow Copy Service component encountered an unexpected error.")) then
         ''VSS ERROR, PAUSE 60SEC, RESTART VSS
         x = 0
         while x <= 60
