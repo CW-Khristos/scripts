@@ -4,7 +4,7 @@ dim objIN, objOUT, objARG, objWSH
 dim objFSO, objMSP, colFOL, objFOL
 dim errRET, retDEL, strIN
 dim strLSV, strDEV, strDLM, intDIFF, blnRUN
-''VERSION FOR SCRIPT UPDATE, ROTATE_MSP.VBS, REF #2
+''VERSION FOR SCRIPT UPDATE, MSP_ROTATE.VBS, REF #2
 strVER = 1
 ''DEFAULT SUCCESS
 errRET = 0
@@ -23,15 +23,15 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\ROTATE_MSP")) then     							''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\ROTATE_MSP", true
-  set objLOG = objFSO.createtextfile("C:\temp\ROTATE_MSP")
+if (objFSO.fileexists("C:\temp\MSP_ROTATE")) then     							''LOGFILE EXISTS
+  objFSO.deletefile "C:\temp\MSP_ROTATE", true
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_ROTATE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\ROTATE_MSP", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_ROTATE", 8)
 else                                            										''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\ROTATE_MSP")
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_ROTATE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\ROTATE_MSP", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_ROTATE", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then        												''ARGUMENTS WERE PASSED
@@ -65,8 +65,8 @@ call rotMSP()
 call CLEANUP()
 
 ''SUB-ROUTINES
-sub rotMSP()																												''ROTATE_MSP MAIN SUB-ROUTINE
-	''RUN ROTATE_MSP
+sub rotMSP()																												''MSP_ROTATE MAIN SUB-ROUTINE
+	''RUN MSP_ROTATE
 	objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & strRUN
 	objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & strRUN
 	''RETRIEVE MSP BACKUP LSV FOLDER
@@ -254,7 +254,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/Rotate_MSP.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_Rotate.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
