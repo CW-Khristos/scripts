@@ -68,25 +68,27 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
   ''DEFAULT RESTART OF VSS, DISABLED TO CHECK WRITERS PRIOR TO RESET, SUSPECT CONFLICT WITH MSP BACKUP VSS COMPONENT , REF #1
   'call HOOK("net stop VSS")
   'call HOOK ("net start VSS")
-  wscript.sleep 1500
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
-  wscript.sleep 1500
+  if (errRET = 2) then
+    x = 0
+    while x <= 60
+      x = x + 1
+      wscript.sleep 1000
+    wend
+    call CHKVSS()
+  end if
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
-  wscript.sleep 1500
   ''CHECK VSS WRITERS AFTER RESTART
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   ''EXPORT CURRENT VSS WRITER STATUSES
   call CHKVSS()
-  wscript.sleep 1500
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
-  wscript.sleep 1500
   ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
   call CHKDEP()
-  wscript.sleep 1500
   if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
@@ -129,7 +131,18 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
     if (arrTMP(intTMP) <> vbnullstring) then
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & arrTMP(intTMP) 
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & arrTMP(intTMP)
-      ''LOCATE VSS WRITER
+      if (instr(1, arrTMP(intTMP), "Error: A Volume Shadow Copy Service component encountered an unexpected error.") then
+        ''VSS ERROR, PAUSE 60SEC, RESTART VSS
+        x = 0
+        while x <= 60
+          x = x + 1
+          wscript.sleep 1000
+        wend
+        call HOOK("net stop VSS")
+        call HOOK ("net start VSS")
+        exit for
+      end if
+      ''LOCATE VSS WRITERS
       if (instr(1, arrTMP(intTMP), "IIS Config Writer")) then
         blnAHS = true
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnAHS : " & blnAHS 
