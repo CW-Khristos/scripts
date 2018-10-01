@@ -117,7 +117,6 @@ set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
 objSOUT.write (replace(strIN,strORG,strREP))
 objSOUT.close
 set objSOUT = nothing
-wscript.sleep 1000
 ''APPLY NEW SECURITY DATABASE CONFIGS
 call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
 call HOOK("secedit /configure /db secedit.sdb")
@@ -126,13 +125,6 @@ call HOOK("gpupdate /force")
 'objFSO.deletefile("c:\temp\config.inf") 
 objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
 objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
-''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
-'objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
-'objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
-'call HOOK("sc.exe stop " & chr(34) & "Backup Service Controller" & chr(34))
-'call HOOK("sc.exe config " & chr(34) & "Backup Service Controller" & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34) & " TYPE= own")
-'objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
-'objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
 ''END SCRIPT
 call CLEANUP()
 
