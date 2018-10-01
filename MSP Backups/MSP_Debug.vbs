@@ -5,12 +5,12 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 ''SCRIPT VARIABLES
 dim strVER, strIN, arrIN, strHDR, strCHG
-dim retSTOP, objCFG, blnHDR, blnINJ, blnMOD
+dim errRET, objCFG, blnHDR, blnINJ, blnMOD
 dim objIN, objOUT, objARG, objWSH, objFSO, objLOG
 ''VERSION FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2
 strVER = 1
-''SET 'RETSTOP' CODE
-retSTOP = 0
+''SET 'errRET' CODE
+errRET = 0
 ''SET 'BLNHDR' FLAG
 blnHDR = false
 ''SET 'BLNINJ' FLAG
@@ -56,7 +56,7 @@ if (wscript.arguments.count > 0) then                           ''ARGUMENTS WERE
   if (wscript.arguments.count > 1) then                         ''SET STRING TO INSERT INTO CONFIG.INI
     strCHG = "LoggingLevel=Debug"
   else                                                          ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    retSTOP = 1
+    errRET = 1
     call CLEANUP
   end if
 else                                                            ''NO ARGUMENTS PASSED, END SCRIPT
@@ -64,7 +64,7 @@ else                                                            ''NO ARGUMENTS P
   strCHG = "LoggingLevel=Debug"
   'objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
   'objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
-  'retSTOP = 1
+  'errRET = 1
   'call CLEANUP
 end if
 
@@ -119,8 +119,8 @@ if (objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs")) then
     objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
   end if
 elseif (objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs")) then
-  if (not objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs")) then
-    objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
+  if (not objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol")) then
+    objFSO.createfolder "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol"
   end if
 end if
 ''CLEANUP
@@ -154,7 +154,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_Debug.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
@@ -235,7 +235,7 @@ sub HOOK(strCMD)                                                ''CALL HOOK TO M
     objOUT.write vbnewline & now & vbtab & vbtab & strIN 
     objLOG.write vbnewline & now & vbtab & vbtab & strIN 
   end if
-  'retSTOP = objHOOK.exitcode
+  'errRET = objHOOK.exitcode
   set objHOOK = nothing
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
@@ -256,5 +256,5 @@ sub CLEANUP()                                                   ''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit retSTOP
+  wscript.quit errRET
 end sub
