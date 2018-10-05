@@ -281,7 +281,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
               blnAHS = false
             end if
           end if
-        case "IIS Metabase Writer")) then
+        case "IIS Metabase Writer"
           blnIIS = true
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnIIS : " & blnIIS 
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnIIS : " & blnIIS
