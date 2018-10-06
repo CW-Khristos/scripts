@@ -10,9 +10,9 @@
 	<jdc_msp_prebackup.vbs>1</jdc_msp_prebackup.vbs>
 	<LSVperm.vbs>1</LSVperm.vbs>
 	<MSP_Config.vbs>1</MSP_Config.vbs>
-  <MSP_Debug.vbs>1</MSP_Debug.vbs>
+  <MSP_Debug.vbs>2</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
-  <MSP_Rotate.vbs>1</MSP_Rotate.vbs>
+  <MSP_Rotate.vbs>2</MSP_Rotate.vbs>
 	<MSP_SSHeal.vbs>6</MSP_SSHeal.vbs>
 	<MSP_Update.vbs>1</MSP_Update.vbs>
 	<rndds_msp_postbackup.vbs>1</rndds_msp_postbackup.vbs>

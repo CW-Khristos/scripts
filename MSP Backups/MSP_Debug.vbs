@@ -3,13 +3,13 @@
 ''REQUIRED PARAMETER : 'STRHDR' TO IDENTIFY SECTION OF 'CONFIG.INI' FILE TO MODIFY
 ''REQUIRED PARAMETER : 'STRCHG', SCRIPT VARIABLE TO CONTAIN STRING TO INJECT INTO 'CONFIG.INI' FILE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim strVER, strIN, arrIN, strHDR, strCHG
 dim errRET, objCFG, blnHDR, blnINJ, blnMOD
 dim objIN, objOUT, objARG, objWSH, objFSO, objLOG
-''VERSION FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2
-strVER = 1
+''VERSION FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2 , FIXES #24
+strVER = 2
 ''SET 'errRET' CODE
 errRET = 0
 ''SET 'BLNHDR' FLAG
@@ -18,6 +18,10 @@ blnHDR = false
 blnINJ = false
 ''SET 'BLNMOD' FLAG
 blnMOD = true
+''SET HEADER TO INSERT INTO CONFIG.INI
+strHDR = "[Logging]"
+''SET STRING TO INSERT INTO CONFIG.INI
+strCHG = "LoggingLevel=Debug"
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -52,32 +56,18 @@ if (wscript.arguments.count > 0) then                                 ''ARGUMENT
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  ''ARGUMENT 0 - TARGET 'HEADER'
-  strHDR = "[Logging]"
-  ''SET STRING TO INSERT INTO CONFIG.INI
-  strCHG = "LoggingLevel=Debug"
-  if (wscript.arguments.count > 1) then                               ''SET STRING TO INSERT INTO CONFIG.INI
-    'strCHG = "LoggingLevel=Debug"
-  else                                                                ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    'errRET = 1
-    'call CLEANUP
-  end if
-else                                                                  ''SET DEFAULT ARGUMENTS FOR DEBUG LOGGING
+else                                                                  ''SET DEFAULT ARGUMENTS FOR DEBUG LOGGING , REF #17
   strHDR = "[Logging]"
   strCHG = "LoggingLevel=Debug"
-  'objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
-  'objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
-  'errRET = 1
-  'call CLEANUP
 end if
 
 ''------------
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
 objLOG.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
-''AUTOMATIC UPDATE, MSP_DEBUG.VBS, REF #2
+''AUTOMATIC UPDATE, MSP_DEBUG.VBS, REF #2 , FIXES #24
 call CHKAU()
-''PARSE CONFIG.INI FILE
+''PARSE CONFIG.INI FILE , REF #17
 objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 strIN = objCFG.readall
@@ -97,13 +87,14 @@ for intIN = 0 to ubound(arrIN)                                        ''CHECK CO
     arrIN(intIN) = "LoggingLevel=Debug" & vbCrlf
   end if
 next
-if ((not blnHDR) and (blnMOD)) then                                   '' '[LOGGING]' HEADER NOT FOUND
+if ((not blnHDR) and (blnMOD)) then                                   '' '[LOGGING]' HEADER NOT FOUND , REF #17
   blnINJ = true
+  redim preserve arrIN(intIN)
   arrIN(intIN) = "[Logging]" & vbCrlf & "LoggingLevel=Debug" & vbCrlf
 end if
 objCFG.close
 set objCFG = nothing
-''REPLACE CONFIG.INI FILE
+''REPLACE CONFIG.INI FILE , REF #17
 if (blnINJ) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
@@ -118,16 +109,27 @@ if (blnINJ) then
   objCFG.close
   set objCFG = nothing
 end if
-''CREATE MSP BACKUP DEBUG FOLDERS
+''CREATE MSP BACKUP DEBUG FOLDERS , REF #17
 objOUT.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
 objLOG.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
-if (objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs")) then
-  if (not objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol")) then
+''WIN 7/8/10/2K8
+strFOL = "C:\ProgramData\MXB\Backup Manager\logs"
+if (objFSO.folderexists(strFOL)) then
+  strFOL = "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
+  if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
+    objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+    objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
     objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
   end if
-elseif (objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs")) then
-  if (not objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol")) then
-    objFSO.createfolder "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol"
+end if
+''WIN XP/2K3
+strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs"
+if (objFSO.folderexists(strFOL)) then
+  strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol"
+  if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
+    objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+    objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+    objFSO.createfolder strFOL
   end if
 end if
 ''CLEANUP
@@ -136,7 +138,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+sub CHKAU()																					                  ''CHECK FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2 , FIXES #24
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -163,14 +165,14 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_Debug.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+					if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
 							strTMP = strTMP & " " & objARG.item(x)
 						next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+					elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
@@ -185,7 +187,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 	set objXML = nothing
 end sub
 
-sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strFILE)                   			                  ''CALL HOOK TO DOWNLOAD FILE FROM URL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -223,7 +225,7 @@ sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FR
   end if
 end sub
 
-sub HOOK(strCMD)                                                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub HOOK(strCMD)                                                      ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   on error resume next
   'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
   set objHOOK = objWSH.exec(strCMD)
@@ -250,7 +252,7 @@ sub HOOK(strCMD)                                                ''CALL HOOK TO M
   end if
 end sub
 
-sub CLEANUP()                                                   ''SCRIPT CLEANUP
+sub CLEANUP()                                                         ''SCRIPT CLEANUP
   objOUT.write vbnewline & vbnewline & now & " - MSP_DEBUG COMPLETE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & " - MSP_DEBUG COMPLETE" & vbnewline
   objLOG.close
