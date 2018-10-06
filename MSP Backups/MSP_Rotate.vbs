@@ -120,13 +120,6 @@ function makZIP(strSRC, strZIP)
       intLOOP = intLOOP + 1
     loop
     objOUT.write "COMPLETED" & vbnewline
-    'set objZIP = objFSO.getfile(strZIP)
-    'do
-    '  objOUT.write "."
-    '    wscript.sleep 500
-    '    intMAX = objZIP.size
-    'loop while objZIP.size > intMAX 
-    'on error goto 0
   end if
   set objZIP = nothing
 end function
@@ -214,7 +207,7 @@ sub chkFOL(objMSP)
         ''DELETE FOLDER, INCLUDING CONTENT , REF #17
         objOUT.write vbnewline & now & vbtab & vbtab & " - DELETING : " & objFOL.path
         objLOG.write vbnewline & now & vbtab & vbtab & " - DELETING : " & objFOL.path
-        'retDEL = objFSO.deletefolder(objFOL.path, true)
+        retDEL = objFSO.deletefolder(objFOL.path, true)
         if (retDEL <> 0) then                    									    ''ERROR RETURNED
           objOUT.write vbnewline & now & vbtab & vbtab & " - ERROR DELETING : " & objFOL.path
           objLOG.write vbnewline & now & vbtab & vbtab & " - ERROR DELETING : " & objFOL.path
@@ -252,7 +245,7 @@ sub chkFIL(objMSP)
         ''DELETE FILE , REF #17
         objOUT.write vbnewline & now & vbtab & vbtab & " - DELETING : " & objFIL.path
         objLOG.write vbnewline & now & vbtab & vbtab & " - DELETING : " & objFIL.path
-        'retDEL = objFSO.delete(objFIL.path, true)
+        retDEL = objFSO.delete(objFIL.path, true)
         if (retDEL <> 0) then                    									    ''ERROR RETURNED
           objOUT.write vbnewline & now & vbtab & vbtab & " - ERROR DELETING : " & objFIL.path
           objLOG.write vbnewline & now & vbtab & vbtab & " - ERROR DELETING : " & objFIL.path
