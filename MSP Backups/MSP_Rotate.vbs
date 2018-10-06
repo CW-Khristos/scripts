@@ -1,5 +1,10 @@
 ''MSP_ROTATE.VBS
+''WILL STOP MSP BACKUP SERVICES DURING EXECUTION
 ''DESIGNED TO AUTOMATE ARCHIVAL / ROTATION OF MSP BACKUP LSV AND DEBUG LOG DATA
+''REQUIRED PARAMETER : 'STRLSV', STRING TO IDENTIFY MSP BACKUP LSV DESTINATION DIRECTORY, MAY BE BLANK ("")
+''SCRIPT WILL ATTEMPT TO LOCATE LSV DESTINATION VIA LSV MONITOR FILE 'C:\TEMP\LSV.TXT' IF BLANK
+''REQUIRED PARAMETER : 'INTAGE', INTEGER TO SET FILE / FOLDER AGE RETENTION IN DAYS, DEFAULTS TO '60' IF BLANK ("")
+''REQUIRED PARAMETER : 'BLNRUN', BOOLEAN TO SET ARCHIVAL / DELETION FLAG, DEFAULTS TO 'FALSE' IF BLANK ("")
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''DEFINE VARIABLES
@@ -194,7 +199,7 @@ sub chkFOL(objMSP)
     strDLM = objFOL.datelastmodified
     ''CALCULATE DATE DIFFERENCE (BY VALUE "D"AYS)
     intDIFF = -(datediff("d", now, strDLM))
-    if (intDIFF >= cint(intAGE)) then           										  ''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
+    if (intDIFF > cint(intAGE)) then           										    ''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - " & objFOL.path
       objOUT.write vbnewline & now & vbtab & vbtab & " - LAST MODIFIED : " & objFOL.DateLastModified & " : " & intDIFF & " Day(s)"
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - " & objFOL.path
@@ -216,7 +221,7 @@ sub chkFOL(objMSP)
       elseif (not blnRUN) then															          ''SCRIPT NOT SET TO EXECUTE DELETION
         retDEL = 0
       end if
-    elseif (intDIFF < cint(intAGE)) then       									      ''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
+    elseif (intDIFF <= cint(intAGE)) then       									    ''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXCLUDED : " & objFOL.path & " : " & intDIFF & " Day(s)"
       retDEL = 0
     end if
@@ -232,7 +237,7 @@ sub chkFIL(objMSP)
     strDLM = objFIL.datelastmodified
     ''CALCULATE DATE DIFFERENCE (BY VALUE "D"AYS)
     intDIFF = -(datediff("d", now, strDLM))
-    if (intDIFF >= cint(intAGE)) then           										  ''FILE HAS NOT BEEN MODIFIED IN TARGET AGE
+    if (intDIFF > cint(intAGE)) then           										    ''FILE HAS NOT BEEN MODIFIED IN TARGET AGE
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - " & objFIL.path
       objOUT.write vbnewline & now & vbtab & vbtab & " - LAST MODIFIED : " & objFIL.DateLastModified & " : " & intDIFF & " Day(s)"
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - " & objFIL.path
@@ -254,7 +259,7 @@ sub chkFIL(objMSP)
       elseif (not blnRUN) then															          ''SCRIPT NOT SET TO EXECUTE DELETION
         retDEL = 0
       end if
-    elseif (intDIFF < cint(intAGE)) then       									      ''FILE HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
+    elseif (intDIFF <= cint(intAGE)) then       									    ''FILE HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXCLUDED : " & objFIL.path & " : " & intDIFF & " Day(s)"
       retDEL = 0
     end if
