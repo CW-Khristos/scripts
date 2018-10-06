@@ -145,8 +145,10 @@ sub rotMSP()																												  ''MSP_ROTATE MAIN SUB-ROUTINE , REF #1
 	objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & blnRUN
 	objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & blnRUN
   ''STOP 'BACKUP SERVICE CONTROLLER' SERVICE AND TERMINATE 'BACKUPFP.EXE' PROCESS PRIOR TO ARCHIVE / DELETION
-  'call HOOK("net stop " & chr(34) & "backup service controller" & chr(34) & " /y")
-  'call HOOK("taskkill /IM " & chr(34) & "BackupFP.exe" & chr(34) & " /F")
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - STOPPING MSP BACKUP SERVICES"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - STOPPING MSP BACKUP SERVICES"
+  call HOOK("net stop " & chr(34) & "backup service controller" & chr(34) & " /y")
+  call HOOK("taskkill /IM " & chr(34) & "BackupFP.exe" & chr(34) & " /F")
 	''RETRIEVE MSP BACKUP LSV FOLDER , REF #17
 	if (strLSV <> vbnullstring) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHECKING LSV : RUNNING : DELETION : " & blnRUN
@@ -187,7 +189,7 @@ sub rotMSP()																												  ''MSP_ROTATE MAIN SUB-ROUTINE , REF #1
     call chkFIL(objMSP)
   end if
   ''RESTART 'BACKUP SERVICE CONTROLLER' SERVICE
-  'call HOOK("net start " & chr(34) & "backup service controller" & chr(34) & " /y")
+  call HOOK("net start " & chr(34) & "backup service controller" & chr(34) & " /y")
 end sub
 
 sub chkFOL(objMSP)
