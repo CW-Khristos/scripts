@@ -1,3 +1,6 @@
+''MSP_ROTATE.VBS
+''DESIGNED TO AUTOMATE ARCHIVAL / ROTATION OF MSP BACKUP LSV AND DEBUG LOG DATA
+''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''DEFINE VARIABLES
 dim objIN, objOUT, objARG, objWSH
@@ -23,18 +26,18 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_ROTATE")) then     							''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_ROTATE")) then     							  ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_ROTATE", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_ROTATE")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_ROTATE", 8)
-else                                            										''LOGFILE NEEDS TO BE CREATED
+else                                            										  ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_ROTATE")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_ROTATE", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then        												''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then        												  ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
@@ -51,21 +54,30 @@ if (wscript.arguments.count > 0) then        												''ARGUMENTS WERE PASSED
     blnRUN = false
   end if
 end if
-if ((wscript.arguments.count = 0) or (strLSV = vbnullstring)) then  ''NO ARGUMENTS PASSED, END SCRIPT
+if ((wscript.arguments.count = 0) or (strLSV = vbnullstring)) then    ''NO ARGUMENTS PASSED
   objOUT.write vbnewline & now & " - SCRIPT REQUIRES PATH TO LOCAL MSP BACKUP DESTINATION"
   objLOG.write vbnewline & now & " - SCRIPT REQUIRES PATH TO LOCAL MSP BACKUP DESTINATION"
   intAGE = 60
   blnRUN = false
 end if
+
+''------------
+''BEGIN SCRIPT
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_ROTATE"
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_ROTATE"
+''AUTOMATIC UPDATE, MSP_ROTATE.VBS, REF #2
+call CHKAU()
 'CHECK LSV IF CONFIGURED, OTHERWISE ATTEMPT TO LOCATE
 call chkLSV()
 ''RUN MAIN SCRIPT
 call rotMSP()
 ''END SCRIPT
 call CLEANUP()
+''END SCRIPT
+''------------
 
 ''SUB-ROUTINES
-sub rotMSP()																												''MSP_ROTATE MAIN SUB-ROUTINE
+sub rotMSP()																												  ''MSP_ROTATE MAIN SUB-ROUTINE
 	''RUN MSP_ROTATE
 	objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & strRUN
 	objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : RUNNING : DELETION : " & strRUN
@@ -73,10 +85,11 @@ sub rotMSP()																												''MSP_ROTATE MAIN SUB-ROUTINE
 	if (strLSV <> vbnullstring) then
     set objMSP = objFSO.getfolder(strLSV)
     if (err.number <> 0) then																					''ERROR OBTAINING FOLDER
-      objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : ERROR : " & err.description
-      objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : ERROR : " & err.description
-      errRET = 2
+      objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : LSV ERROR : " & err.description
+      objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : LSV ERROR : " & err.description
+      errRET = 4
     elseif (err.number = 0) then																			''SUCCESSFULLY OBTAINED FOLDER
+      errRET = 0
       ''CHECK THROUGH ALL SUB-FOLDERS IN MSP BACKUPSET FOLDER
       ''THIS NEEDS TO BE THE COMPLETE PATH THAT MSP BACKUPS WRITE TO, IE : F:\MSP Backups\jax-dc1_lr0xa_E93A9C6948C0DD5FF5E9\
       call chkFOL(objMSP)
@@ -95,8 +108,9 @@ sub rotMSP()																												''MSP_ROTATE MAIN SUB-ROUTINE
   if (err.number <> 0) then																					''ERROR OBTAINING FOLDER
     objOUT.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : ERROR : " & err.description
     objLOG.write vbnewline & vbnewline & now & " - ROTATE MSP BACKUPSET : ERROR : " & err.description
-    errRET = 3
+    errRET = 5
   elseif (err.number = 0) then																			''SUCCESSFULLY OBTAINED FOLDER
+    errRET = 0
     ''CHECK THROUGH ALL SUB-FOLDERS IN MSP BACKUPSET FOLDER
     ''THIS NEEDS TO BE THE COMPLETE PATH THAT MSP BACKUPS WRITE TO, IE : F:\MSP Backups\jax-dc1_lr0xa_E93A9C6948C0DD5FF5E9\
     call chkFOL(objMSP)
@@ -106,32 +120,32 @@ end sub
 
 sub chkFOL(objMSP)
   set colFOL = objMSP.subfolders
-  for each objFOL in colFOL                    										''ENUMERATE EACH SUB-FOLDER
+  for each objFOL in colFOL                    										  ''ENUMERATE EACH SUB-FOLDER
     ''DEFAULT FAIL
-    retDEL = 3
+    retDEL = 6
     ''RETRIEVE SUB-FOLDER LAST DATE MODIFIED
     strDLM = objFOL.datelastmodified
     ''CALCULATE DATE DIFFERENCE (BY VALUE "D"AYS)
     intDIFF = -(datediff("d", now, strDLM))
-    if (intDIFF > cint(intAGE)) then           										''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
+    if (intDIFF > cint(intAGE)) then           										  ''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
       objOUT.write vbnewline & vbnewline & now & vbtab & " - " & objFOL.path
       objOUT.write vbnewline & now & vbtab & " - " & vbtab & "LAST MODIFIED : " & objFOL.DateLastModified & " : " & intDIFF & " Day(s)"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - " & objFOL.path
       objLOG.write vbnewline & now & vbtab & " - " & vbtab & "LAST MODIFIED : " & objFOL.DateLastModified & " : " & intDIFF & " Day(s)"
-      if (blnRUN) then																		''SCRIPT SET TO EXECUTE DELETION
+      if (blnRUN) then																		          ''SCRIPT SET TO EXECUTE DELETION
         ''DELETE FOLDER, INCLUDING CONTENT
         objOUT.write vbnewline & now & vbtab & " - DELETING : " & objFOL.path
         objLOG.write vbnewline & now & vbtab & " - DELETING : " & objFOL.path
         retDEL = objFSO.deletefolder(objFOL.path, true)
-        if (retDEL <> 0) then                    									''ERROR RETURNED
+        if (retDEL <> 0) then                    									  ''ERROR RETURNED
           objOUT.write vbnewline & now & vbtab & " - ERROR DELETING : " & objFOL.path
           objLOG.write vbnewline & now & vbtab & " - ERROR DELETING : " & objFOL.path
           errRET = retDEL
         end if
-      elseif (not blnRUN) then															''SCRIPT NOT SET TO EXECUTE DELETION
+      elseif (not blnRUN) then															        ''SCRIPT NOT SET TO EXECUTE DELETION
         retDEL = 0
       end if
-    elseif (intDIFF <= cint(intAGE)) then       									''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
+    elseif (intDIFF <= cint(intAGE)) then       									  ''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
       objLOG.write vbnewline & vbnewline & now & vbtab & " - EXCLUDED : " & objFOL.path & " : " & intDIFF & " Day(s)"
       retDEL = 0
     end if
@@ -140,32 +154,32 @@ end sub
 
 sub chkFIL(objMSP)
   set colFIL = objMSP.files
-  for each objFIL in bolFIL                    										''ENUMERATE EACH SUB-FOLDER
+  for each objFIL in bolFIL                    										  ''ENUMERATE EACH SUB-FOLDER
     ''DEFAULT FAIL
-    retDEL = 3
+    retDEL = 7
     ''RETRIEVE SUB-FOLDER LAST DATE MODIFIED
     strDLM = objFIL.datelastmodified
     ''CALCULATE DATE DIFFERENCE (BY VALUE "D"AYS)
     intDIFF = -(datediff("d", now, strDLM))
-    if (intDIFF > cint(intAGE)) then           										''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
+    if (intDIFF > cint(intAGE)) then           										  ''FOLDER HAS NOT BEEN MODIFIED IN TARGET AGE
       objOUT.write vbnewline & vbnewline & now & vbtab & " - " & objFIL.path
       objOUT.write vbnewline & now & vbtab & " - " & vbtab & "LAST MODIFIED : " & objFIL.DateLastModified & " : " & intDIFF & " Day(s)"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - " & objFIL.path
       objLOG.write vbnewline & now & vbtab & " - " & vbtab & "LAST MODIFIED : " & objFIL.DateLastModified & " : " & intDIFF & " Day(s)"
-      if (blnRUN) then																		''SCRIPT SET TO EXECUTE DELETION
+      if (blnRUN) then																		          ''SCRIPT SET TO EXECUTE DELETION
         ''DELETE FOLDER, INCLUDING CONTENT
         objOUT.write vbnewline & now & vbtab & " - DELETING : " & objFIL.path
         objLOG.write vbnewline & now & vbtab & " - DELETING : " & objFIL.path
         retDEL = objFSO.delete(objFIL.path, true)
-        if (retDEL <> 0) then                    									''ERROR RETURNED
+        if (retDEL <> 0) then                    									  ''ERROR RETURNED
           objOUT.write vbnewline & now & vbtab & " - ERROR DELETING : " & objFIL.path
           objLOG.write vbnewline & now & vbtab & " - ERROR DELETING : " & objFIL.path
           errRET = retDEL
         end if
-      elseif (not blnRUN) then															''SCRIPT NOT SET TO EXECUTE DELETION
+      elseif (not blnRUN) then															        ''SCRIPT NOT SET TO EXECUTE DELETION
         retDEL = 0
       end if
-    elseif (intDIFF <= cint(intAGE)) then       									''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
+    elseif (intDIFF <= cint(intAGE)) then       									  ''FOLDER HAS BEEN MODIFIED MORE RECENT THAN TARGET AGE
       objLOG.write vbnewline & vbnewline & now & vbtab & " - EXCLUDED : " & objFIL.path & " : " & intDIFF & " Day(s)"
       retDEL = 0
     end if
@@ -176,7 +190,7 @@ sub chkLSV()																												''CHECK FOR MSP BACKUP LSV DESTINATION
 	if (strLSV <> vbnullstring) then																	''LOCAL SPEEDVAULT VARIABLE SET, CHECK PATH EXISTENCE
 		objOUT.write vbnewline & vbnewline & now & " - CHECKING LSV DESTINATION : " & strLSV
 		objLOG.write vbnewline & vbnewline & now & " - CHECKING LSV DESTINATION : " & strLSV
-		if not(objFSO.folderexistts(strLSV)) then												''PATH DOES NOT EXIST
+		if (not objFSO.folderexistts(strLSV)) then											''PATH DOES NOT EXIST
 			objOUT.write vbnewline & now & vbtab & " - ERROR ACCESSING : " & strLSV & " : SCRIPT WILL ATTEMPT TO LOCATE LSV"
 			objLOG.write vbnewline & now & vbtab & " - ERROR ACCESSING : " & strLSV & " : SCRIPT WILL ATTEMPT TO LOCATE LSV"
 			strLSV = vbnullstring
@@ -222,14 +236,14 @@ sub chkLSV()																												''CHECK FOR MSP BACKUP LSV DESTINATION
 			objOUT.write vbnewline & vbnewline & now & " - MSP BACKUP LSV MONITOR FILE NOT PRESENT. SCRIPT REQUIRES PATH TO LOCAL MSP BACKUP DESTINATION, ENDING"
 			objLOG.write vbnewline & vbnewline & now & " - MSP BACKUP LSV MONITOR FILE NOT PRESENT. SCRIPT REQUIRES PATH TO LOCAL MSP BACKUP DESTINATION, ENDING"
 			''END SCRIPT
-			errRET = 1
+			errRET = 3
 			'call CLEANUP()
 		end if
 	end if
 end sub
 
 ''SUB-ROUTINES
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+sub CHKAU()																					                ''CHECK FOR SCRIPT UPDATE, MSP_ROTATE.VBS, REF #2
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -256,14 +270,14 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_Rotate.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+					if (wscript.arguments.count > 0) then                     ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
 							strTMP = strTMP & " " & objARG.item(x)
 						next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+					elseif (wscript.arguments.count = 0) then                 ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
@@ -278,7 +292,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 	set objXML = nothing
 end sub
 
-sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strFILE)                   			                ''CALL HOOK TO DOWNLOAD FILE FROM URL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -316,7 +330,7 @@ sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FR
   end if
 end sub
 
-sub HOOK(strCMD)                                                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub HOOK(strCMD)                                                    ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   on error resume next
   'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
   set objHOOK = objWSH.exec(strCMD)
@@ -340,6 +354,8 @@ sub HOOK(strCMD)                                                ''CALL HOOK TO M
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    errRET = 1
+    err.clear
   end if
 end sub
 

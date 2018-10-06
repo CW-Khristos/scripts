@@ -1,5 +1,5 @@
 ''MSP_DEBUG.VBS
-''DESIGNED TO UPDATE THE MSP BACKUP 'CONFIG.INI' FILE IN AN AUTOMATED FASHION
+''DESIGNED TO UPDATE THE MSP BACKUP 'CONFIG.INI' FILE IN AN AUTOMATED FASHION TO ENABLE DEBUG LOGGING
 ''REQUIRED PARAMETER : 'STRHDR' TO IDENTIFY SECTION OF 'CONFIG.INI' FILE TO MODIFY
 ''REQUIRED PARAMETER : 'STRCHG', SCRIPT VARIABLE TO CONTAIN STRING TO INJECT INTO 'CONFIG.INI' FILE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
@@ -36,31 +36,33 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_DEBUG")) then               ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_DEBUG")) then                      ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_DEBUG", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_DEBUG")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_DEBUG", 8)
-else                                                            ''LOGFILE NEEDS TO BE CREATED
+else                                                                  ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_DEBUG")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_DEBUG", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                           ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                                 ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   ''ARGUMENT 0 - TARGET 'HEADER'
-  strHDR = objARG.item(0)
-  if (wscript.arguments.count > 1) then                         ''SET STRING TO INSERT INTO CONFIG.INI
-    strCHG = "LoggingLevel=Debug"
-  else                                                          ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    errRET = 1
-    call CLEANUP
+  strHDR = "[Logging]"
+  ''SET STRING TO INSERT INTO CONFIG.INI
+  strCHG = "LoggingLevel=Debug"
+  if (wscript.arguments.count > 1) then                               ''SET STRING TO INSERT INTO CONFIG.INI
+    'strCHG = "LoggingLevel=Debug"
+  else                                                                ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
+    'errRET = 1
+    'call CLEANUP
   end if
-else                                                            ''NO ARGUMENTS PASSED, END SCRIPT
+else                                                                  ''SET DEFAULT ARGUMENTS FOR DEBUG LOGGING
   strHDR = "[Logging]"
   strCHG = "LoggingLevel=Debug"
   'objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
@@ -71,20 +73,22 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING MSP_DEBUG" & vbnewline
-objLOG.write vbnewline & now & " - STARTING MSP_DEBUG" & vbnewline
+objOUT.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
+objLOG.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
+''AUTOMATIC UPDATE, MSP_DEBUG.VBS, REF #2
+call CHKAU()
 ''PARSE CONFIG.INI FILE
 objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 strIN = objCFG.readall
 arrIN = split(strIN, vbnewline)
-for intIN = 0 to ubound(arrIN)                                  ''CHECK CONFIG.INI LINE BY LINE
+for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
   objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
   objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
-  if (arrIN(intIN) = "[Logging]") then                          ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
+  if (arrIN(intIN) = "[Logging]") then                                ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
     blnHDR = true
   end if
-  if (arrIN(intIN) = "LoggingLevel=Debug") then                   ''STRING TO INJECT ALREADY IN CONFIG.INI
+  if (arrIN(intIN) = "LoggingLevel=Debug") then                       ''STRING TO INJECT ALREADY IN CONFIG.INI
     blnMOD = false
   end if
   if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
@@ -93,7 +97,7 @@ for intIN = 0 to ubound(arrIN)                                  ''CHECK CONFIG.I
     arrIN(intIN) = "LoggingLevel=Debug" & vbCrlf
   end if
 next
-if ((not blnHDR) and (blnMOD)) then   ''[LOGGING] HHEADER NOT FOUND
+if ((not blnHDR) and (blnMOD)) then                                   '' '[LOGGING]' HEADER NOT FOUND
   blnINJ = true
   arrIN(intIN) = "[Logging]" & vbCrlf & "LoggingLevel=Debug" & vbCrlf
 end if
@@ -115,6 +119,8 @@ if (blnINJ) then
   set objCFG = nothing
 end if
 ''CREATE MSP BACKUP DEBUG FOLDERS
+objOUT.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
+objLOG.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
 if (objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs")) then
   if (not objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol")) then
     objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
