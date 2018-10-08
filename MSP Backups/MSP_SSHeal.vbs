@@ -164,6 +164,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
           x = x + 1
           wscript.sleep 1000
         wend
+        errRET = 2
         exit for
       end if
       ''LOCATE VSS WRITERS
@@ -231,7 +232,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
       end if
     end if
   next
-  if (err.number <> 0) then
+  if ((err.number <> 0) or (errRET = 2)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     errRET = 2
