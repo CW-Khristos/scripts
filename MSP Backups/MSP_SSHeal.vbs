@@ -108,6 +108,16 @@ call CLEANUP()
 ''END SCRIPT
 ''------------
 
+function CHKSTAT(strSTAT)                           ''CHECK VSS WRITER STATE
+  if (instr(1, strSTAT, "State:")) then
+    if (instr(1, strSTAT, "Stable") = 0) then       ''VSS WRITER IN ERROR STATE
+      CHKSTAT = true
+    elseif (instr(1, strSTAT, "Stable")) then       ''VSS WRITER STABLE
+      CHKSTAT = false
+    end if
+  end if
+end function
+
 ''SUB-ROUTINES
 sub CHKDEP()                                        ''RESTART WMI DEPENDENT SERVICES, REF #19
 ''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
@@ -160,140 +170,63 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
       if (instr(1, arrTMP(intTMP), "name: ")) then
         select case (replace(split(arrTMP(intTMP), "name: ")(1), "'", vbnullstring))
           case "BITS Writer"
-            blnBIT = true
+            ''CHECK VSS WRITER STATE
+            blnBIT = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnBIT : " & blnBIT  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnBIT : " & blnBIT
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnBIT = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnBIT = false
-              end if
-            end if        
           case "System Writer"
-            blnCSVC = true
+            ''CHECK VSS WRITER STATE
+            blnCSVC = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnCSVC : " & blnCSVC  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnCSVC : " & blnCSVC 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnCSVC = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnCSVC = false
-              end if
-            end if
           case "Task Scheduler Writer"
-            blnTSK = true
+            ''CHECK VSS WRITER STATE
+            blnTSK = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnTSK : " & blnTSK  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnTSK : " & blnTSK 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnTSK = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnTSK = false
-              end if
-            end if
           case "ASR Writer", "COM+ REGDB Writer", "Registry Writer", "Shadow Copy Optimization Writer"
-            blnVSS = true
+            ''CHECK VSS WRITER STATE
+            blnVSS = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnVSS : " & blnVSS  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnVSS : " & blnVSS 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnVSS = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnVSS = false
-              end if
-            end if
           case "WMI Writer"
-            blnWMI = true
+            ''CHECK VSS WRITER STATE
+            blnWMI = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnWMI : " & blnWMI  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnWMI : " & blnWMI 
+          case "NPS VSS Writer" 
             ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnWMI = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnWMI = false
-              end if
-            end if
-          case "NPS VSS Writer"
-            blnNPS = true
+            blnNPS = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnNPS : " & blnNPS  
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnNPS : " & blnNPS 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnNPS = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnNPS = false
-              end if
-            end if        
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnNPS : " & blnNPS
           ''TERMINAL SERVICES
           case "TermServLicensing"
-            blnRDP = true
+            ''CHECK VSS WRITER STATE
+            blnRDP = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnRDP : " & blnRDP  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnRDP : " & blnRDP 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnRDP = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnRDP = false
-              end if
-            end if
           case "TS Gateway Writer"
-            blnTSG = true
+            ''CHECK VSS WRITER STATE
+            blnTSG = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnTSG : " & blnTSG  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnTSG : " & blnTSG 
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnTSG = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnTSG = false
-              end if
-            end if
           ''SQL SERVICES
-          case "SqlServerWriter"
-            blnSQL = true
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnSQL : " & blnSQL  
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnSQL : " & blnSQL 
+          case "SqlServerWriter" 
             ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnSQL = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnSQL = false
-              end if
-            end if
+            blnSQL = CHKSTAT(arrTMP(intTMP + 3))
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnSQL : " & blnSQL  
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnSQL : " & blnSQL
           ''IIS SERVICES
           case "IIS Config Writer"
-            blnAHS = true
+            ''CHECK VSS WRITER STATE
+            blnAHS = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnAHS : " & blnAHS 
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnAHS : " & blnAHS
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnAHS = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnAHS = false
-              end if
-            end if
           case "IIS Metabase Writer"
-            blnIIS = true
+            ''CHECK VSS WRITER STATE
+            blnIIS = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnIIS : " & blnIIS 
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnIIS : " & blnIIS
-            ''CHECK VSS WRITER STATE
-            if (instr(1, arrTMP(intTMP + 3), "State:")) then
-              if (instr(1, arrTMP(intTMP + 3), "Stable") = 0) then
-                blnIIS = true
-              elseif (instr(1, arrTMP(intTMP + 3), "Stable")) then
-                blnIIS = false
-              end if
-            end if
         end select
       end if
     end if
