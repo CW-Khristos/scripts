@@ -158,7 +158,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
       end if
       ''LOCATE VSS WRITERS
       if (instr(1, arrTMP(intTMP), "name: ")) then
-        select case (split(arrTMP(intTMP), "name: ")(1))
+        select case (replace(split(arrTMP(intTMP), "name: ")(1), "'", vbnullstring))
           case "BITS Writer"
             blnBIT = true
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnBIT : " & blnBIT  
