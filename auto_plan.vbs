@@ -589,7 +589,7 @@ sub STAGE9()
         ''DOWNLOAD LSV PERMISSIONS SETUP : LSVPERM, REF #6 , FIXES #12
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
-        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP Backups/LSVperm.vbs", "LSVperm.vbs")
+        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/LSVperm.vbs", "LSVperm.vbs")
         if (objFSO.fileexists("c:\temp\LSVperm.vbs")) then
           ''RESTRICT LSV PERMISSIONS VIA LSVPERM, REF #6 , FIXES #12
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
