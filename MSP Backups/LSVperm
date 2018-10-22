@@ -1,83 +1,0 @@
-
-3/29/2018 5:19:52 PM	 - ARGUMENT 1 (ITEM 0)  PASSED : E:\MSP BACKUPS
-3/29/2018 5:19:52 PM	 - ARGUMENT 2 (ITEM 1)  PASSED : RMMTECH
-3/29/2018 5:19:52 PM	 - ARGUMENT 3 (ITEM 2)  PASSED : RMMP@$$W0RD
-
-3/29/2018 5:19:52 PM	 - EXECUTING LSVPERM
-
-3/29/2018 5:19:52 PM		 - ENUMERATING USERNAMES AND SIDS
-
-3/29/2018 5:19:52 PM		 - COLLECTED USERNAMES AND SIDS
-3/29/2018 5:19:52 PM			Administrator : S-1-5-21-1083755882-3788632256-1335885300-500
-3/29/2018 5:19:52 PM			Guest : S-1-5-21-1083755882-3788632256-1335885300-501
-3/29/2018 5:19:52 PM			owner : S-1-5-21-1083755882-3788632256-1335885300-1000
-3/29/2018 5:19:52 PM			RMMTech : S-1-5-21-1083755882-3788632256-1335885300-1001
-3/29/2018 5:19:52 PM			 : 
-
-3/29/2018 5:19:52 PM		 - UPDATING BACKUP SERVICE CONTROLLER
-3/29/2018 5:19:52 PM		EXECUTING : sc.exe stop "Backup Service Controller"
-3/29/2018 5:19:52 PM			[SC] ControlService FAILED 1062:
-3/29/2018 5:19:52 PM			The service has not been started.
-3/29/2018 5:19:52 PM		EXECUTING : sc.exe config "Backup Service Controller" obj= "RMMTech" password= "RMMP@$$w0rD" TYPE= own
-3/29/2018 5:19:52 PM			[SC] ChangeServiceConfig FAILED 1057:
-3/29/2018 5:19:52 PM			The account name is invalid or does not exist, or the password is invalid for the account name specified.
-3/29/2018 5:19:52 PM			 - GRANT LONGON AS SERVICE : RMMTech
-3/29/2018 5:19:52 PM		EXECUTING : secedit /export /cfg c:\temp\config.inf
-3/29/2018 5:19:52 PM			                                                                           
-3/29/2018 5:19:52 PM			The task has completed successfully.
-3/29/2018 5:19:52 PM			See log %windir%\security\logs\scesrv.log for detail info.
-3/29/2018 5:19:52 PM		EXECUTING : secedit /import /db secedit.sdb /cfg c:\temp\config.inf
-3/29/2018 5:19:52 PM		EXECUTING : secedit /configure /db secedit.sdb
-3/29/2018 5:19:53 PM			Completed 1 percent (0/63) 	Process Privilege Rights area        Completed 3 percent (1/63) 	Process Privilege Rights area        Completed 4 percent (2/63) 	Process Privilege Rights area        Completed 6 percent (3/63) 	Process Privilege Rights area        Completed 7 percent (4/63) 	Process Privilege Rights area        Completed 9 percent (5/63) 	Process Privilege Rights area        Completed 11 percent (6/63) 	Process Privilege Rights area        Completed 12 percent (7/63) 	Process Privilege Rights area        Completed 14 percent (8/63) 	Process Privilege Rights area        Completed 15 percent (9/63) 	Process Privilege Rights area        Completed 17 percent (10/63) 	Process Privilege Rights area        Completed 19 percent (11/63) 	Process Privilege Rights area        Completed 20 percent (12/63) 	Process Privilege Rights area        Completed 22 percent (13/63) 	Process Privilege Rights area        Completed 25 percent (15/63) 	Process Privilege Rights area        Completed 25 percent (15/63) 	Process Group Membership area        Completed 49 percent (30/63) 	Process Group Membership area        Completed 49 percent (30/63) 	Process Registry Keys area        Completed 49 percent (30/63) 	Process File Security area        Completed 49 percent (30/63) 	Process Services area        Completed 65 percent (40/63) 	Process Services area        Completed 73 percent (45/63) 	Process Services area        Completed 73 percent (45/63) 	Process Security Policy area        Completed 77 percent (48/63) 	Process Security Policy area        Completed 84 percent (52/63) 	Process Security Policy area        Completed 88 percent (55/63) 	Process Security Policy area        Completed 93 percent (58/63) 	Process Security Policy area        Completed 100 percent (63/63) 	Process Security Policy area                                                                                   
-3/29/2018 5:19:53 PM			The task has completed successfully.
-3/29/2018 5:19:53 PM			See log %windir%\security\logs\scesrv.log for detail info.
-3/29/2018 5:19:53 PM		EXECUTING : gpupdate /force
-3/29/2018 5:20:03 PM			Updating Policy...
-3/29/2018 5:20:03 PM			
-3/29/2018 5:20:03 PM			User Policy update has completed successfully.
-3/29/2018 5:20:03 PM			Computer Policy update has completed successfully.
-3/29/2018 5:20:03 PM			
-3/29/2018 5:20:03 PM			 - LOGON AS SERVICE GRANTED : RMMTech
-3/29/2018 5:20:03 PM		 - BACKUP SERVICE CONTROLLER UPDATED
-
-3/29/2018 5:20:03 PM		 - ASSIGNING OWNERSHIP
-3/29/2018 5:20:03 PM		EXECUTING : takeown /F "E:\MSP Backups" /R /D Y
-3/29/2018 5:20:03 PM		 - ASSIGNING RMMTECH FULL CONTROL
-3/29/2018 5:20:03 PM		EXECUTING : icacls "E:\MSP Backups" /grant RMMTech:(OI)(CI)F /T /C /Q
-3/29/2018 5:20:03 PM			Successfully processed 1 files; Failed processing 1 files
-3/29/2018 5:20:03 PM		EXECUTING : icacls "E:\MSP Backups" /grant *S-1-5-21-1083755882-3788632256-1335885300-1001:(OI)(CI)F /T /C /Q
-3/29/2018 5:20:03 PM			Successfully processed 0 files; Failed processing 1 files
-
-3/29/2018 5:20:03 PM		 - REMOVING INHERITANCE ON LSV DESTINATION
-3/29/2018 5:20:03 PM		EXECUTING : icacls "E:\MSP Backups" /inheritance:r /C
-3/29/2018 5:20:03 PM			processed file: E:\MSP Backups
-3/29/2018 5:20:03 PM			Successfully processed 1 files; Failed processing 0 files
-
-3/29/2018 5:20:03 PM		 - REMOVING ALL OTHER ENUMERATED USERS' PERMISSIONS
-3/29/2018 5:20:03 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g Administrator /T /C /Q
-3/29/2018 5:20:03 PM			Successfully processed 1 files; Failed processing 1 files
-3/29/2018 5:20:03 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g *S-1-5-21-1083755882-3788632256-1335885300-500 /T /C /Q
-3/29/2018 5:20:04 PM			Successfully processed 0 files; Failed processing 0 files
-3/29/2018 5:20:04 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g Guest /T /C /Q
-3/29/2018 5:20:04 PM			Successfully processed 1 files; Failed processing 1 files
-3/29/2018 5:20:04 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g *S-1-5-21-1083755882-3788632256-1335885300-501 /T /C /Q
-3/29/2018 5:20:04 PM			Successfully processed 0 files; Failed processing 0 files
-3/29/2018 5:20:04 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g owner /T /C /Q
-3/29/2018 5:20:04 PM			Successfully processed 1 files; Failed processing 1 files
-3/29/2018 5:20:04 PM		EXECUTING : icacls "E:\MSP Backups" /remove:g *S-1-5-21-1083755882-3788632256-1335885300-1000 /T /C /Q
-3/29/2018 5:20:04 PM			Successfully processed 0 files; Failed processing 0 files
-
-3/29/2018 5:20:04 PM		 - RESTARTING BACKUP SERVICE CONTROLLER
-3/29/2018 5:20:04 PM		EXECUTING : sc.exe start "Backup Service Controller"
-3/29/2018 5:20:04 PM			SERVICE_NAME: Backup Service Controller 
-3/29/2018 5:20:04 PM			        TYPE               : 10  WIN32_OWN_PROCESS  
-3/29/2018 5:20:04 PM			        STATE              : 2  START_PENDING 
-3/29/2018 5:20:04 PM			                                (NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
-3/29/2018 5:20:04 PM			        WIN32_EXIT_CODE    : 0  (0x0)
-3/29/2018 5:20:04 PM			        SERVICE_EXIT_CODE  : 0  (0x0)
-3/29/2018 5:20:04 PM			        CHECKPOINT         : 0x2
-3/29/2018 5:20:04 PM			        WAIT_HINT          : 0x3e8
-3/29/2018 5:20:04 PM			        PID                : 4404
-3/29/2018 5:20:04 PM			        FLAGS              : 
-
-3/29/2018 5:20:04 PM	 - LSVPERM COMPLETE : 3/29/2018 5:20:04 PM
