@@ -208,14 +208,14 @@ end sub
 
 sub CLEANUP()                                           ''SCRIPT CLEANUP
   if (errRET = 0) then                                 ''SCRIPT COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PWDCHG COMPLETE : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PWDCHG COMPLETE : " & now
     err.clear
   elseif (errRET <> 0) then                            ''SCRIPT FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM FAILURE : " & errRET & " : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM FAILURE : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PWDCHG FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PWDCHG FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "SVCPERM", "fail")
+    call err.raise(vbObjectError + errRET, "PWDCHG", "fail")
   end if
   ''EMPTY OBJECTS
   set objEXEC = nothing
