@@ -14,7 +14,7 @@ dim strSNMP, strTRP
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 7
+strVER = 8
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -69,8 +69,8 @@ while (blnEND = false)
   objLOG.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN"
   objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET HIGH PERF. POWER PLAN" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
   objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET HIGH PERF. POWER PLAN" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
-  objOUT.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
-  objLOG.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
+  objOUT.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
+  objLOG.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
   objOUT.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
   objLOG.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
   objOUT.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
@@ -136,16 +136,16 @@ sub STAGE2()
   ''------------REF #6
   ''STAGE2 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   ''RENAME COMPUTER - REQUIRES RESTART; REQUIRES 'STRNEWPC'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
-  objOUT.write vbnewline & vbnewline & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
-  objLOG.write vbnewline & vbnewline & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
+  objOUT.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
+  objLOG.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
   strSEL = objIN.readline
   ''DEFAULT NO REBOOT
   blnRBT = false
   if (ucase(strSEL) = "Y") then
     objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & _
-      "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
+      "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT" & vbnewline & vbtab & vbtab
     objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW COMPUTER NAME : " & vbnewline & vbtab & vbtab & _
-      "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT"
+      "RECOMMENDED FOLLOWING '<CO INITIALS–DEVICE TYPE–NAME>' FORMAT" & vbnewline & vbtab & vbtab
     strNEWPC = objIN.readline
     if (strNEWPC <> vbnullstring) then
       set colCOMP = objWMI.execquery ("select * from Win32_ComputerSystem")
@@ -195,97 +195,144 @@ end sub
 sub STAGE3()
   ''------------REF #6
   ''STAGE3 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
-  ''UPDATE RMMTECH USER (LOCAL ONLY) - REQUIRES 'STRPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
-  if (strPWD = vbnullstring) then
-    objOUT.write vbnewline & vbnewline & vbtab & "CREATE AND UPDATE RMMTECH USER (Y / N)?"
-    objLOG.write vbnewline & vbnewline & vbtab & "CREATE AND UPDATE RMMTECH USER (Y / N)?"
-    strSEL = objIN.readline
-    if (ucase(strSEL) = "Y") then
-      objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :"
-      objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :"
-      strPWD = objIN.readline
-      if (strPWD <> vbnullstring) then
-        ''CREATE RMMTECH USER
-        objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
-        call HOOK("net user " & chr(34) & "RMMTech" & chr(34) & " " & chr(34) & strPWD & chr(34) & _
-          "  /add /active:yes /expires:never /passwordchg:yes /passwordreq:yes /Y")
-        ''SET PASSWORD TO NEVER EXPIRE
-        objOUT.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
-        call HOOK("wmic useraccount where Name='rmmtech' set PasswordExpires=FALSE")
-        ''ADD RMMTECH TO LOCAL ADMINISTRATORS GROUP
-        objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
-        call HOOK("net localgroup " & chr(34) & "Administrators" & chr(34) & " " & chr(34) & "RMMTech" & chr(34) & " /add")
-        ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
-        ''GET SIDS OF ALL USERS
-        intUSR = 0
-        intSID = 0
-        objOUT.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-        set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
-        while (not objEXEC.stdout.atendofstream)
-          strIN = objEXEC.stdout.readline
-          if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, ","))) then
-            if ((trim(split(strIN, ",")(1)) <> vbnullstring) and (trim(split(strIN, ",")(1)) <> "Name")) then
-              redim preserve colUSR(intUSR + 1)
-              redim preserve colSID(intSID + 1)
-              colUSR(intUSR) = trim(split(strIN, ",")(1))
-              colSID(intSID) = trim(split(strIN, ",")(2))
-              ''SAVE RMMTECH USER SID
-              if (lcase(colUSR(intUSR)) = "rmmtech") then 
-                strSID = colSID(intUSR)
-              end if
-              intUSR = (intUSR + 1)
-              intSID = (intSID + 1)
-            end if
-          end if
-          if (err.number <> 0) then
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-          end if
-        wend
-        err.clear
-        objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : RMMTECH"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : RMMTECH"
-        strORG = "SeServiceLogonRight ="
-        strREP = "SeServiceLogonRight = " & "*" & strSID & ","
-        ''EXPORT CURRENT SECURITY DATABASE CONFIGS
-        call HOOK("secedit /export /cfg c:\temp\config.inf")
-        ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
-        set objSIN = objFSO.opentextfile("c:\temp\config.inf", 1, 1, -1)
-        strIN = objSIN.readall
-        objSIN.close
-        set objSIN = nothing
-        ''WRITE SECURITY DATABASE CONFIGS WITH 'SeServiceLogonRight' FOR RMMTECH
-        set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
-        objSOUT.write (replace(strIN,strORG,strREP))
-        objSOUT.close
-        set objSOUT = nothing
-        ''APPLY NEW SECURITY DATABASE CONFIGS
-        call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
-        call HOOK("secedit /configure /db secedit.sdb")
-        call HOOK("gpupdate /force")
-        ''REMOVE TEMP FILES
-        'objFSO.deletefile("c:\temp\config.inf") 
-        objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"    
-      end if
-      ''STEP TO VERIFY ADMIN USER CREDENTIALS
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY ADMIN USER CREDENTIALS"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY ADMIN USER CREDENTIALS"
-      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>APPLIANCE SETTINGS>CREDENTIALS"
-      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>APPLIANCE SETTINGS>CREDENTIALS"
-      objOUT.write vbnewline & now & vbtab & " - ENTER RMMTECH AND RMMTECH PASSWORD, CHECK BOX UNDER 'PROPAGATE'"
-      objLOG.write vbnewline & now & vbtab & " - ENTER RMMTECH AND RMMTECH PASSWORD, CHECK BOX UNDER 'PROPAGATE'"
-      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PROPERTIES>CREDENTIALS"
-      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PROPERTIES>CREDENTIALS"
-      objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
-      objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
-      strNUL = objIN.readline
-    end if
+  ''PROMPT FOR TYPE OF SETUP (LOCAL / DOMAIN) , REF #16
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - (3)STAGE3 - SELECT TYPE OF SETUP"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - (3)STAGE3 - SELECT TYPE OF SETUP"
+  objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE3 - LOCAL RMMTECH ADMIN" & vbnewline & vbtab & vbtab & " - (2)STAGE3 - DOMAIN RMMTECH / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab
+  objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE3 - LOCAL RMMTECH ADMIN" & vbnewline & vbtab & vbtab & " - (2)STAGE3 - DOMAIN RMMTECH / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab
+  strSEL = objIN.readline
+  if ((ucase(strSEL) = "LOCAL") or (strSEL = "1")) then
+    strSEL = "LOCAL"
+  elseif ((ucase(strSEL) = "DOMAIN") or (strSEL = "2")) then
+    strSEL = "DOMAIN"
   end if
+  select case strSEL
+    case "LOCAL"
+      objOUT.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
+      objLOG.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
+      ''UPDATE RMMTECH USER (LOCAL ONLY) - REQUIRES 'STRPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
+      if (strPWD = vbnullstring) then
+        objOUT.write vbnewline & vbtab & vbtab & "CREATE AND UPDATE LOCAL RMMTECH USER (Y / N)?" & vbnewline & vbtab & vbtab
+        objLOG.write vbnewline & vbtab & vbtab & "CREATE AND UPDATE LOCAL RMMTECH USER (Y / N)?" & vbnewline & vbtab & vbtab
+        strSEL = objIN.readline
+        if (ucase(strSEL) = "Y") then
+          objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
+          objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
+          strPWD = objIN.readline
+          if (strPWD <> vbnullstring) then
+            ''CREATE RMMTECH USER
+            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
+            call HOOK("net user " & chr(34) & "RMMTech" & chr(34) & " " & chr(34) & strPWD & chr(34) & _
+              "  /add /active:yes /expires:never /passwordchg:yes /passwordreq:yes /Y")
+            ''SET PASSWORD TO NEVER EXPIRE
+            objOUT.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - SETTING RMMTECH PASSWORD TO NEVER EXPIRE"
+            call HOOK("wmic useraccount where Name='rmmtech' set PasswordExpires=FALSE")
+            ''ADD RMMTECH TO LOCAL ADMINISTRATORS GROUP
+            objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
+            call HOOK("net localgroup " & chr(34) & "Administrators" & chr(34) & " " & chr(34) & "RMMTech" & chr(34) & " /add")
+          end if
+        end if
+      end if    
+    
+    case "DOMAIN"
+      objOUT.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - DOMAIN RMMTECH (PWD & SVC LOGON)"
+      objOUT.write vbnewline & vbtab & vbtab & " - RUNNING THIS STAGE FROM A DEVICE OTHER THAN THE AD-DC OR A DOMAIN DEVICE WILL REQUIRE JOINING TO DOMAIN AND REBOOT"
+      objLOG.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - DOMAIN RMMTECH (PWD & SVC LOGON)"
+      ''UPDATE RMMTECH USER (DOMAIN ONLY) - REQUIRES 'STRPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS , REF #16
+      if (strPWD = vbnullstring) then
+        objOUT.write vbnewline & vbtab & vbtab & "CREATE AND UPDATE DOMAIN RMMTECH USER (Y / N)?" & vbnewline & vbtab & vbtab
+        objLOG.write vbnewline & vbtab & vbtab & "CREATE AND UPDATE DOMAIN RMMTECH USER (Y / N)?" & vbnewline & vbtab & vbtab
+        strSEL = objIN.readline
+        if (ucase(strSEL) = "Y") then
+          objOUT.write vbnewline & vbtab & vbtab & "IS DEVICE ALREADY MEMBER OF DOMAIN (Y / N)?" & vbnewline & vbtab & vbtab
+          objLOG.write vbnewline & vbtab & vbtab & "IS DEVICE ALREADY MEMBER OF DOMAIN (Y / N)?" & vbnewline & vbtab & vbtab
+          strSEL = objIN.readline
+          if (ucase(strSEL) = "Y") then
+            objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
+            objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
+            strPWD = objIN.readline
+            ''CREATE RMMTECH USER
+            objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
+            objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
+            call HOOK("net user RMMTech " & chr(34) & strPWD & chr(34) & " /add /domain")
+            wscript.sleep 3000
+            ''ADD RMMTECH TO DOMAIN ADMINISTRATORS GROUP
+            objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO DOMAIN GROUPS"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO DOMAIN GROUPS"
+            call HOOK("net group Administrators RMMTech /add /domain")
+            call HOOK("net group Domain Admins RMMTech /add /domain")
+            call HOOK("net group Enterprise Admins RMMTech /add /domain")
+            call HOOK("net group Schema Admins RMMTech /add /domain")
+            ''ADD RMMTECH TO LOCAL ADMINISTRATORS GROUP
+            objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO LOCAL ADMINISTRATORS GROUP"
+            call HOOK("net localgroup Administrators RMMTech /add /domain")
+          elseif (ucase(strSEL) = "N") then
+            objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ADDING DEVICE TO DOMAIN (WILL REQUIRE RESTART PRIOR TO CONTINUING)"
+            objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ADDING DEVICE TO DOMAIN (WILL REQUIRE RESTART PRIOR TO CONTINUING)"
+            ''PROMPT FOR DOMAIN FQDN
+            objOUT.write vbnewline & vbtab & vbtab & "ENTER FQDN DOMAIN NAME (MY.DOMAIN.LOCAL) :" & vbnewline & vbtab & vbtab
+            objLOG.write vbnewline & vbtab & vbtab & "ENTER FQDN DOMAIN NAME (MY.DOMAIN.LOCAL) :" & vbnewline & vbtab & vbtab
+            strDMN = objIN.readline
+            ''PROMPT FOR DOMAIN ADMIN USER
+            objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER WITH DOMAIN ADMIN (DOMAIN\USER) :" & vbnewline & vbtab & vbtab
+            objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER WITH DOMAIN ADMIN (DOMAIN\USER) :" & vbnewline & vbtab & vbtab
+            strDUSR = objIN.readline
+            ''PROMPT FOR DOMAIN ADMIN USER PASSWORD
+            objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER WITH DOMAIN ADMIN PASSWORD :" & vbnewline & vbtab & vbtab
+            objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER WITH DOMAIN ADMIN PASSWORD :" & vbnewline & vbtab & vbtab
+            strDPWD = objIN.readline
+            ''CREATE DN PATH TO DOMAIN COMPUTERS CONTAINER
+            strOU = "CN=Computers;"
+            for x = 0 to ubound(split(strDMN, "."))
+              if (x < ubound(split(strDMN, "."))) then
+                strOU = strOU & "DC=" & (split(strDMN, ".")(x)) & ";"
+              elseif (x = ubound(split(strDMN, "."))) then
+                strOU = strOU & "DC=" & (split(strDMN, ".")(x))
+              end if
+            next x
+            ''JOIN COMPUTER TO DOMAIN
+            strJOIN = "/interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & chr(34) & strDMN & chr(34) & _
+              " UserName=" & chr(34) & strDUSR & chr(34) & " Password=" & chr(34) & strDPWD & chr(34) & " AccountOU=" & chr(34) & strOU & chr(34)
+            call HOOK("wmic.exe " & strJOIN)
+          end if
+        end if
+      end if
+  end select
+  ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
+  ''DOWNLOAD SERVICE LOGON SCRIPT : SVCPERM , REF #16
+  objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "SVCperm.vbs")
+  if (objFSO.fileexists("c:\temp\SVCperm.vbs")) then
+    ''EXECUTE SERVICE LOGON SCRIPT : SVCPERM , REF #16
+    objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
+    call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SVCperm.vbs" & chr(34) & " " & chr(34) & "RMMTech" & chr(34))
+    objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"
+  elseif (not objFSO.fileexists("c:\temp\SVCperm.vbs")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
+    call LOGERR(32)
+  end if 
+  ''STEP TO VERIFY ADMIN USER CREDENTIALS
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - (3)STAGE3 - COMPLETE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - (3)STAGE3 - COMPLETE"
+  objOUT.write vbnewline & now & vbtab & " - PLEASE VERIFY ADMIN USER CREDENTIALS"
+  objLOG.write vbnewline & now & vbtab & " - PLEASE VERIFY ADMIN USER CREDENTIALS"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>APPLIANCE SETTINGS>CREDENTIALS"
+  objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>APPLIANCE SETTINGS>CREDENTIALS"
+  objOUT.write vbnewline & now & vbtab & " - ENTER RMMTECH AND RMMTECH PASSWORD, CHECK BOX UNDER 'PROPAGATE'"
+  objLOG.write vbnewline & now & vbtab & " - ENTER RMMTECH AND RMMTECH PASSWORD, CHECK BOX UNDER 'PROPAGATE'"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PROPERTIES>CREDENTIALS"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PROPERTIES>CREDENTIALS"
+  objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
+  objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
+  strNUL = objIN.readline
   strSEL = vbnullstring
   if (err.number <> 0) then
     call LOGERR(3)
@@ -684,7 +731,7 @@ sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, RE
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/Auto_Plan/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -782,8 +829,8 @@ end sub
 
 sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		errRET = intSTG
 		err.clear
   end if

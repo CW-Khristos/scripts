@@ -13,7 +13,7 @@ dim objIN, objOUT, objARG, objWSH, objSHL
 dim errRET, retDEL, strIN
 dim strLSV, strDEV, strDLM, intDIFF, blnRUN
 ''VERSION FOR SCRIPT UPDATE, MSP_ROTATE.VBS, REF #2 , FIXES #26
-strVER = 2
+strVER = 3
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT

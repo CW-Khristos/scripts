@@ -1,6 +1,6 @@
 <SCRIPTS>
 	<all_av_removal.vbs>1</all_av_removal.vbs>
-	<auto_plan.vbs>7</auto_plan.vbs>
+	<auto_plan.vbs>8</auto_plan.vbs>
 	<CClutter.vbs>1</CClutter.vbs>
 	<CSize.vbs>1</CSize.vbs>
 	<drvmap.vbs>1</drvmap.vbs>
@@ -10,22 +10,21 @@
 	<jdc_msp_prebackup.vbs>1</jdc_msp_prebackup.vbs>
 	<LSVperm.vbs>1</LSVperm.vbs>
 	<MSP_Config.vbs>1</MSP_Config.vbs>
-  <MSP_Debug.vbs>2</MSP_Debug.vbs>
+  <MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
-  <MSP_Rotate.vbs>2</MSP_Rotate.vbs>
+  <MSP_Rotate.vbs>3</MSP_Rotate.vbs>
 	<MSP_SSHeal.vbs>6</MSP_SSHeal.vbs>
 	<MSP_Update.vbs>1</MSP_Update.vbs>
 	<rndds_msp_postbackup.vbs>1</rndds_msp_postbackup.vbs>
 	<rndds_msp_prebackup.vbs>1</rndds_msp_prebackup.vbs>
-	<rotate_msp.vbs>1</rotate_msp.vbs>
 	<set_msparchive.vbs>1</set_msparchive.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
 	<reagent.vbs>4</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
 	<reprobe.vbs>4</reprobe.vbs>
-	<SNMPparam.vbs>3</SNMPparam.vbs>
-	<SVCperm.vbs>2</SVCperm.vbs>
+	<SNMPparam.vbs>4</SNMPparam.vbs>
+	<SVCperm.vbs>3</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>

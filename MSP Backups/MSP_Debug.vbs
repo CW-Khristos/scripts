@@ -9,7 +9,7 @@ dim strVER, strIN, arrIN, strHDR, strCHG
 dim errRET, objCFG, blnHDR, blnINJ, blnMOD
 dim objIN, objOUT, objARG, objWSH, objFSO, objLOG
 ''VERSION FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2 , FIXES #24
-strVER = 2
+strVER = 3
 ''SET 'errRET' CODE
 errRET = 0
 ''SET 'BLNHDR' FLAG

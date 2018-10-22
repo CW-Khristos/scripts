@@ -13,7 +13,7 @@ dim strUSR
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
-strVER = 2
+strVER = 3
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -104,7 +104,11 @@ next
 objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
 objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
 strORG = "SeServiceLogonRight = "
-strREP = "SeServiceLogonRight = " & "*" & strSID & ","
+if (strSID <> vbnullstring) then
+  strREP = "SeServiceLogonRight = " & "*" & strSID & ","
+elseif (strSID = vbnullstring) then
+  strREP = "SeServiceLogonRight = " & strUSR & ","
+end if
 ''EXPORT CURRENT SECURITY DATABASE CONFIGS
 call HOOK("secedit /export /cfg c:\temp\config.inf")
 ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
