@@ -64,6 +64,7 @@ call CHKAU()
 if ((strLVL = vbnullstring) or (ucase(strLVL) = "LOCAL")) then
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING LOCAL PWDCHG"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING LOCAL PWDCHG"
+  call HOOK("net user " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " /y")
   call HOOK("net user " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " /ADD /y")
 end if
 ''CHANGE DOMAIN USER PASSWORD

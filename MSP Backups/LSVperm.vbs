@@ -94,8 +94,8 @@ objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP S
 call HOOK("sc.exe stop " & chr(34) & "Backup Service Controller" & chr(34))
 call HOOK("sc.exe config " & chr(34) & "Backup Service Controller" & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34) & " TYPE= own")
 ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
-objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
-objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
+objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
+objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
 strORG = "SeServiceLogonRight ="
 strREP = "SeServiceLogonRight = " & "*" & strSID & ","
 ''EXPORT CURRENT SECURITY DATABASE CONFIGS
@@ -116,8 +116,8 @@ call HOOK("secedit /configure /db secedit.sdb")
 call HOOK("gpupdate")
 ''REMOVE TEMP FILES
 'objFSO.deletefile("c:\temp\config.inf") 
-objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
-objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
+objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
+objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
 objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
 objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
 ''TAKEOWN USING CURRENT USERS, THIS SHOULD BE RMMTECH
