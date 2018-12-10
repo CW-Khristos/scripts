@@ -63,7 +63,7 @@ strIDL = objHOOK.stdout.readall
 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
-if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
+if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then            			''BACKUPS NOT IN PROGRESS
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
   ''DEFAULT RESTART OF VSS, DISABLED TO CHECK WRITERS PRIOR TO RESET, SUSPECT CONFLICT WITH MSP BACKUP VSS COMPONENT , REF #1
@@ -98,7 +98,7 @@ if (instr(1, strIDL, "Idle")) then            			''BACKUPS NOT IN PROGRESS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
   end if
-elseif (instr(1, strIDL, "Idle") = 0) then					''BACKUPS IN PROGRESS
+elseif ((instr(1, strIDL, "Idle") = 0) and (instr(1, strIDL, "RegSync") = 0)) then					''BACKUPS IN PROGRESS
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
   errRET = 1

@@ -159,16 +159,10 @@ sub rotMSP()																												  ''MSP_ROTATE MAIN SUB-ROUTINE , REF #1
     end if
   end if
   ''RETRIEVE MSP BACKUP DEBUG FOLDERS , REF #17
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' DEBUG LOGS : RUNNING : DELETION : " & blnRUN
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' DEBUG LOGS : RUNNING : DELETION : " & blnRUN
   if (objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs")) then
-    if (objFSO.folderexists("C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol")) then
-      set objMSP = objFSO.getfolder("C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol")
-    end if
+    set objMSP = objFSO.getfolder("C:\ProgramData\MXB\Backup Manager\logs")
   elseif (objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs")) then
-    if (objFSO.folderexists("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol")) then
-      set objMSP = objFSO.getfolder("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol")
-    end if
+    set objMSP = objFSO.getfolder("C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs")
   end if
   if (err.number <> 0) then																					  ''ERROR OBTAINING FOLDER
     objOUT.write vbnewline & vbnewline & now & vbtab & " - ROTATE MSP BACKUPSET : DEBUG ERROR : " & err.description
@@ -176,6 +170,8 @@ sub rotMSP()																												  ''MSP_ROTATE MAIN SUB-ROUTINE , REF #1
     errRET = 5
   elseif (err.number = 0) then																			  ''SUCCESSFULLY OBTAINED FOLDER
     errRET = 0
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHECKING 'BACKUPFP' DEBUG LOGS : RUNNING : DELETION : " & blnRUN
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHECKING 'BACKUPFP' DEBUG LOGS : RUNNING : DELETION : " & blnRUN
     ''CHECK THROUGH ALL SUB-FOLDERS IN MSP BACKUPSET FOLDER
     ''THIS NEEDS TO BE THE COMPLETE PATH THAT MSP BACKUPS WRITE TO, IE : F:\MSP Backups\jax-dc1_lr0xa_E93A9C6948C0DD5FF5E9\
     call chkFOL(objMSP)
@@ -221,6 +217,7 @@ sub chkFOL(objMSP)
       retDEL = 0
     end if
   next
+  set colFOL = nothing
 end sub
 
 sub chkFIL(objMSP)
@@ -259,6 +256,7 @@ sub chkFIL(objMSP)
       retDEL = 0
     end if
   next
+  set colFIL = nothing
 end sub
 
 sub chkLSV()																												  ''CHECK FOR MSP BACKUP LSV DESTINATION , REF #17

@@ -82,7 +82,7 @@ objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAM
 objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
 for intUSR = 0 to ubound(colUSR)
   intSID = intUSR
-  if (instr(1, lcase(colUSR(intUSR)), "rmmtech")) then
+  if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
     strSID = colSID(intUSR)
   end if
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
@@ -94,10 +94,14 @@ objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP S
 call HOOK("sc.exe stop " & chr(34) & "Backup Service Controller" & chr(34))
 call HOOK("sc.exe config " & chr(34) & "Backup Service Controller" & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34) & " TYPE= own")
 ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
+strORG = "SeServiceLogonRight ="
 objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
 objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
-strORG = "SeServiceLogonRight ="
-strREP = "SeServiceLogonRight = " & "*" & strSID & ","
+if (strSID = vbnullstring) then
+  strREP = "SeServiceLogonRight = " & strUSR & ","
+elseif (strSID <> vbnullstring) then
+  strREP = "SeServiceLogonRight = " & "*" & strSID & ","
+end if
 ''EXPORT CURRENT SECURITY DATABASE CONFIGS
 call HOOK("secedit /export /cfg c:\temp\config.inf")
 ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
@@ -113,7 +117,7 @@ set objSOUT = nothing
 ''APPLY NEW SECURITY DATABASE CONFIGS
 call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
 call HOOK("secedit /configure /db secedit.sdb")
-call HOOK("gpupdate")
+call HOOK("gpupdate /force")
 ''REMOVE TEMP FILES
 'objFSO.deletefile("c:\temp\config.inf") 
 objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR

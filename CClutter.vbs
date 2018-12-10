@@ -1,7 +1,7 @@
 on error resume next
 ''DEFINE VARIABLES
 dim strNEW
-dim colFOL(21), blnLOG, lngSIZ, strFOL
+dim colFOL(26), blnLOG, lngSIZ, strFOL
 dim objOUT, objARG, objWSH, objFSO, objFOL, objLOG
 ''FILESIZE COUNTER
 lngSIZ = 0
@@ -30,25 +30,30 @@ colFOL(2) = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
 colFOL(3) = "C:\Program Files\N-able Technologies\NablePatchCache"
 colFOL(4) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
-colFOL(5) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(6) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(5) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
+colFOL(6) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
+colFOL(7) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
+colFOL(8) = "C:\ProgramData\GetSupportService_N-Central\logs"
+colFOL(9) = "C:\ProgramData\GetSupportService_N-Central\Updates"
+colFOL(10) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(11) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
-  colFOL(7) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(8) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(9) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(10) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(11) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(12) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(13) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(12) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(13) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
