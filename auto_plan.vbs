@@ -257,7 +257,7 @@ sub STAGE3()
             ''CREATE RMMTECH USER
             objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
             objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - CREATING RMMTECH USER"
-            call HOOK("net user RMMTech " & chr(34) & strPWD & chr(34) & " /add /domain")
+            call HOOK("net user RMMTech " & chr(34) & strPWD & chr(34) & " /add /domain /y")
             wscript.sleep 3000
             ''ADD RMMTECH TO DOMAIN ADMINISTRATORS GROUP
             objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING RMMTECH TO DOMAIN GROUPS"
