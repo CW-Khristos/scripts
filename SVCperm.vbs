@@ -13,7 +13,7 @@ dim strUSR
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
-strVER = 3
+strVER = 4
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
