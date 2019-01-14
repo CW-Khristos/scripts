@@ -137,7 +137,7 @@ objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " 
 if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
   objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
-  call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR chr(34) & " password= " & chr(34) & strPWD & chr(34))
+  call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
 end if
