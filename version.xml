@@ -25,7 +25,7 @@
 	<reboot_force.vbs>1</reboot_force.vbs>
 	<reprobe.vbs>5</reprobe.vbs>
 	<SNMPparam.vbs>4</SNMPparam.vbs>
-	<SVCperm.vbs>4</SVCperm.vbs>
+	<SVCperm.vbs>5</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>
