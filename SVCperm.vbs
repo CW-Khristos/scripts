@@ -133,12 +133,20 @@ objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " 
 if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
   ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
   if (instr(1, strUSR, "\") = 0) then
-    strUSR = ".\" & strUSR
+    strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+    if (lcase(strDMN) = "workgroup") then
+      strUSR = ".\" & strUSR
+    elseif (lcase(strDMN) <> "workgroup") then
+      strUSR = strDMN & "\" & strUSR
+    else
+      strUSR = ".\" & strUSR
+    end if
   end if
   objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
   call HOOK("sc stop " & chr(34) & strSVC & chr(34))
+  wscript.sleep 5000
   call HOOK("sc start " & chr(34) & strSVC & chr(34))
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
