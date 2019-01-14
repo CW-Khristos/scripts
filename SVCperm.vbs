@@ -7,8 +7,8 @@ on error resume next
 dim errRET, strVER, strSEL
 dim strIN, strOUT, colUSR(), colSID()
 dim objSIN, objSOUT, strORG, strREP, strSID
-''VARIABLES ACCEPTING PARAMETERS - TARGET USERNAME
-dim strUSR
+''VARIABLES ACCEPTING PARAMETERS
+dim strUSR, strPWD, strSVC
 ''SCRIPT OBJECTS
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
@@ -43,11 +43,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   if (wscript.arguments.count > 0) then                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(0)
     strPWD = objARG.item(1)
-    strSVC - objARG.item(2)
-    ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-    'if (instr(1, strUSR, "\") = 0) then
-    '  strUSR = ".\" & strUSR
-    'end if
+    strSVC = objARG.item(2)
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     errRET = 1
     call CLEANUP
@@ -135,9 +131,15 @@ call HOOK("gpupdate /force")
 objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
 objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
 if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
+  ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
+  if (instr(1, strUSR, "\") = 0) then
+    strUSR = ".\" & strUSR
+  end if
   objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
+  call HOOK("sc stop " & chr(34) & strSVC & chr(34))
+  call HOOK("sc start " & chr(34) & strSVC & chr(34))
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
 end if
