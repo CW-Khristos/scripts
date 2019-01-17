@@ -1,19 +1,27 @@
 on error resume next
-''DEFINE VARIABLES
-dim strNEW
-dim colFOL(26), blnLOG, lngSIZ, strFOL
-dim objOUT, objARG, objWSH, objFSO, objFOL, objLOG
+''SCRIPT VARIABLES
+dim errRET, strVER, strNEW
+dim colFOL(30), blnLOG, lngSIZ, strFOL
+''SCRIPT OBJECTS
+dim objLOG, objHOOK, objHTTP, objXML
+dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
+''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2
+strVER = 2
+''DEFAULT SUCCESS
+errRET = 0
+''STDIN / STDOUT
+set objIN = wscript.stdin
+set objOUT = wscript.stdout
+set objARG = wscript.arguments
+''OBJECTS FOR LOCATING FOLDERS
+set objWSH = createobject("wscript.shell")
+set objFSO = createobject("scripting.filesystemobject"
 ''FILESIZE COUNTER
 lngSIZ = 0
 ''SET BLNLOG TO 'TRUE' TO ENABLE A TEXT LOG
 ''THIS SHOULD ONLY BE USED IF NEEDED
 ''PREFERRABLY USING CSCRIPT.EXE CCLUTTER.VBS FROM COMMAND-LINE
 blnLOG = true
-''CREATE SCRIPTING OBJECTS
-set objOUT = wscript.stdout
-set objARG = wscript.arguments
-set objWSH = createobject("wscript.shell")
-set objFSO = createobject("scripting.filesystemobject")
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
 if (strIN <> "cscript.exe") Then
@@ -24,36 +32,37 @@ end if
 ''COLLECTION OF FOLDERS TO CHECK
 ''THESE FOLDERS REQUIRE RETRIEVAL FROM ENVIRONMENTAL VARIABLES
 colFOL(0) = objWSH.expandenvironmentstrings("%windir%") & "\Temp"
-''colFOL(1) =  objWSH.expandenvironmentstrings("%temp%")
 colFOL(1) = objWSH.expandenvironmentstrings("%windir%") & "\Logs\CBS"
 colFOL(2) = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution"
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
-colFOL(3) = "C:\Program Files\N-able Technologies\NablePatchCache"
-colFOL(4) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
-colFOL(5) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
-colFOL(6) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
-colFOL(7) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
-colFOL(8) = "C:\ProgramData\GetSupportService_N-Central\logs"
-colFOL(9) = "C:\ProgramData\GetSupportService_N-Central\Updates"
-colFOL(10) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(11) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(3) =  "C:\temp"
+colFOL(4) = "C:\Program Files\N-able Technologies\NablePatchCache"
+colFOL(5) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
+colFOL(6) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
+colFOL(7) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
+colFOL(8) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
+colFOL(9) = "C:\ProgramData\GetSupportService\logs"
+colFOL(10) = "C:\ProgramData\GetSupportService_N-Central\logs"
+colFOL(11) = "C:\ProgramData\GetSupportService_N-Central\Updates"
+colFOL(12) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(13) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
-  colFOL(12) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(13) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(27) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(28) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
@@ -67,33 +76,40 @@ if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 else                                              ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
   blnLOG = false
 end if
+
+''------------
+''BEGIN SCRIPT
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
+''AUTOMATIC UPDATE, CCLUTTER.VBS, REF #2
+call CHKAU()
 ''CREATE LOGFILE, IF ENABLED
 if (blnLOG) then
-  if (objFSO.fileexists("C:\cclutter.txt")) then  ''LOGFILE EXISTS
-    objFSO.deletefile "C:\cclutter.txt", true
-    set objLOG = objFSO.createtextfile("C:\cclutter.txt")
+  if (objFSO.fileexists("C:\temp\cclutter.txt")) then  ''LOGFILE EXISTS
+    objFSO.deletefile "C:\temp\cclutter.txt", true
+    set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
     objLOG.close
-    set objLOG = objFSO.opentextfile("C:\cclutter.txt", 8)
+    set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
   else                                            ''LOGFILE NEEDS TO BE CREATED
-    set objLOG = objFSO.createtextfile("C:\cclutter.txt")
+    set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
     objLOG.close
-    set objLOG = objFSO.opentextfile("C:\cclutter.txt", 8)
+    set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
   end if
 end if
 ''ENUMERATE THROUGH FOLDER COLLECTION
 for x = 0 to ubound(colFOL)
   if (colFOL(x) <> vbnullstring) then             ''ENSURE COLFOL(X) IS NOT EMPTY
     if (objFSO.folderexists(colFOL(x))) then      ''ENSURE FOLDER EXISTS BEFORE CLEARING
-	  set objFOL = objFSO.getfolder(colFOL(x))
-	  strNEW = vbnewline & "CLEARING : " & objFOL.path
-	  objOUT.write strNEW
+      set objFOL = objFSO.getfolder(colFOL(x))
+      strNEW = vbnewline & "CLEARING : " & objFOL.path
+      objOUT.write strNEW
       if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
       ''CLEAR CONTENTS OF FOLDER
       call cFolder(objFOL)
     else                                          ''NON-EXISTENT FOLDER
-	  strNEW = vbnewline & "NON-EXISTENT : " & colFOL(x)
+      strNEW = vbnewline & "NON-EXISTENT : " & colFOL(x)
       objOUT.write strNEW
       if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
@@ -123,7 +139,7 @@ next
 '  end if
 'end if
 ''END SCRIPT
-call CLEANUP
+call CLEANUP()
 
 ''SUB-ROUTINES
 sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENTS OF FOLDER
@@ -171,6 +187,134 @@ sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENT
       end if
     end if
   next
+end sub
+
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , FIXES #21
+  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+  end if
+	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	''SCRIPT OBJECT FOR PARSING XML
+	set objXML = createobject("Microsoft.XMLDOM")
+	''FORCE SYNCHRONOUS
+	objXML.async = false
+	''LOAD SCRIPT VERSIONS DATABASE XML
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+		set colVER = objXML.documentelement
+		for each objSCR in colVER.ChildNodes
+			''LOCATE CURRENTLY RUNNING SCRIPT
+			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+				''CHECK LATEST VERSION
+				if (cint(objSCR.text) > cint(strVER)) then
+					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					''DOWNLOAD LATEST VERSION OF SCRIPT
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/cclutter.vbs", wscript.scriptname)
+					''RUN LATEST VERSION
+					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+						for x = 0 to (wscript.arguments.count - 1)
+							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
+						next
+            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+					end if
+					''END SCRIPT
+					call CLEANUP()
+				end if
+			end if
+		next
+	end if
+	set colVER = nothing
+	set objXML = nothing
+end sub
+
+sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
+  strSAV = vbnullstring
+  ''SET DOWNLOAD PATH
+  strSAV = "C:\temp\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
+  if objFSO.fileexists(strSAV) then
+    objFSO.deletefile(strSAV)
+  end if
+  if (objHTTP.status = 200) then
+    dim objStream
+    set objStream = createobject("ADODB.Stream")
+    with objStream
+      .Type = 1 'adTypeBinary
+      .Open
+      .Write objHTTP.ResponseBody
+      .SaveToFile strSAV
+      .Close
+    end with
+    set objStream = nothing
+  end if
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists(strSAV) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+  end if
+	set objHTTP = nothing
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    errRET = 2
+		err.clear
+  end if
+end sub
+
+sub HOOK(strCMD)                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  on error resume next
+  'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  set objHOOK = objWSH.exec(strCMD)
+  if (instr(1, strCMD, "takeown /F ") = 0) then         ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    while (not objHOOK.stdout.atendofstream)
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
+    wend
+    wscript.sleep 10
+    strIN = objHOOK.stdout.readall
+    if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    end if
+  end if
+  set objHOOK = nothing
+  if (err.number <> 0) then
+    errRET = 3
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    err.clear
+  end if
+end sub
+
+sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+		errRET = intSTG
+		err.clear
+  end if
 end sub
 
 sub CLEANUP()                                     ''SCRIPT CLEANUP
