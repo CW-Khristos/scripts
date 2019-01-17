@@ -15,7 +15,7 @@ set objOUT = wscript.stdout
 set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
-set objFSO = createobject("scripting.filesystemobject"
+set objFSO = createobject("scripting.filesystemobject")
 ''FILESIZE COUNTER
 lngSIZ = 0
 ''SET BLNLOG TO 'TRUE' TO ENABLE A TEXT LOG
@@ -163,7 +163,7 @@ sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENT
       strNEW = vbnewline & "ERROR : " &  err.number & vbtab & err.description & vbtab & strFIL
       objOUT.write strNEW
       if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
-	    objLOG.write strNEW
+        objLOG.write strNEW
       end if
     end if
   next
@@ -183,7 +183,7 @@ sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENT
       strNEW = vbnewline & "ERROR : " &  err.number & vbtab & err.description & vbtab & strFOL
       objOUT.write strNEW
       if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
-	    objLOG.write strNEW
+        objLOG.write strNEW
       end if
     end if
   next
