@@ -1,7 +1,7 @@
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strNEW
-dim colFOL(30), blnLOG, lngSIZ, strFOL
+dim colFOL(31), blnLOG, lngSIZ, strFOL
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
@@ -37,32 +37,34 @@ colFOL(2) = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
 colFOL(3) =  "C:\temp"
 colFOL(4) = "C:\Program Files\N-able Technologies\NablePatchCache"
-colFOL(5) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
-colFOL(6) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
-colFOL(7) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
-colFOL(8) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
-colFOL(9) = "C:\ProgramData\GetSupportService\logs"
-colFOL(10) = "C:\ProgramData\GetSupportService_N-Central\logs"
-colFOL(11) = "C:\ProgramData\GetSupportService_N-Central\Updates"
-colFOL(12) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(13) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(5) = "C:\Program Files\N-able Technologies\UpdateServerCache"
+colFOL(6) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
+colFOL(7) = "C:\Program Files (x86)\N-able Technologies\UpdateServerCache"
+colFOL(8) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
+colFOL(9) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
+colFOL(10) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
+colFOL(11) = "C:\ProgramData\GetSupportService\logs"
+colFOL(12) = "C:\ProgramData\GetSupportService_N-Central\logs"
+colFOL(13) = "C:\ProgramData\GetSupportService_N-Central\Updates"
+colFOL(14) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(15) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
-  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(27) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(28) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(27) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(28) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(29) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(30) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
@@ -140,6 +142,8 @@ next
 'end if
 ''END SCRIPT
 call CLEANUP()
+''END SCRIPT
+''------------
 
 ''SUB-ROUTINES
 sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENTS OF FOLDER
@@ -195,10 +199,8 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , 
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
 	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
 	''SCRIPT OBJECT FOR PARSING XML
 	set objXML = createobject("Microsoft.XMLDOM")
 	''FORCE SYNCHRONOUS
