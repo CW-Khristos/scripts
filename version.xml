@@ -12,7 +12,7 @@
 	<MSP_Config.vbs>1</MSP_Config.vbs>
   <MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
-  <MSP_Rotate.vbs>3</MSP_Rotate.vbs>
+  <MSP_Rotate.vbs>4</MSP_Rotate.vbs>
 	<MSP_SSHeal.vbs>6</MSP_SSHeal.vbs>
 	<MSP_Update.vbs>1</MSP_Update.vbs>
 	<rndds_msp_postbackup.vbs>1</rndds_msp_postbackup.vbs>
