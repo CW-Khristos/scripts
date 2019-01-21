@@ -8,13 +8,13 @@
 	<iasdatasync.vbs>1</iasdatasync.vbs>
 	<jdc_msp_postbackup.vbs>1</jdc_msp_postbackup.vbs>
 	<jdc_msp_prebackup.vbs>1</jdc_msp_prebackup.vbs>
-	<LSVperm.vbs>1</LSVperm.vbs>
+	<LSVperm.vbs>2</LSVperm.vbs>
 	<MSP_Config.vbs>1</MSP_Config.vbs>
   <MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
-  <MSP_Rotate.vbs>4</MSP_Rotate.vbs>
+  <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
 	<MSP_SSHeal.vbs>6</MSP_SSHeal.vbs>
-	<MSP_Update.vbs>1</MSP_Update.vbs>
+	<MSP_Update.vbs>2</MSP_Update.vbs>
 	<rndds_msp_postbackup.vbs>1</rndds_msp_postbackup.vbs>
 	<rndds_msp_prebackup.vbs>1</rndds_msp_prebackup.vbs>
 	<set_msparchive.vbs>1</set_msparchive.vbs>

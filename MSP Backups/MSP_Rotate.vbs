@@ -7,13 +7,16 @@
 ''REQUIRED PARAMETER : 'BLNRUN', BOOLEAN TO SET ARCHIVAL / DELETION FLAG, DEFAULTS TO 'FALSE' IF BLANK ("")
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
-''DEFINE VARIABLES
+''SCRIPT OBJECTS
 dim objFSO, objMSP, colFOL, objFOL
 dim objIN, objOUT, objARG, objWSH, objSHL
+''VARIABLES ACCEPTING PARAMETERS
+dim intAGE, blnRUN
+''SCRIPT VARIABLES
 dim errRET, retDEL, strIN
-dim strLSV, strDEV, strDLM, intDIFF, blnRUN
+dim strLSV, strDEV, strDLM, intDIFF
 ''VERSION FOR SCRIPT UPDATE, MSP_ROTATE.VBS, REF #2 , FIXES #26
-strVER = 4
+strVER = 5
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -348,7 +351,6 @@ sub chkLSV()																												                  ''CHECK FOR MSP BACKUP
   end if
 end sub
 
-''SUB-ROUTINES
 sub CHKAU()																					                                  ''CHECK FOR SCRIPT UPDATE, 'ERRRET'=10 , MSP_ROTATE.VBS , REF #2 , FIXES #26
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
