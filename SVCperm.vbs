@@ -42,8 +42,10 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count > 0) then                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(0)
-    strPWD = objARG.item(1)
-    strSVC = objARG.item(2)
+    if (wscript.arguments.count > 1) then
+      strPWD = objARG.item(1)
+      strSVC = objARG.item(2)
+    end if
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     errRET = 1
     call CLEANUP
