@@ -175,6 +175,7 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
     end if
   next
   ''RESTART 'BACKUP SERVICE CONTROLLER'
+  wscript.sleep 90
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - RESTARTING BACKUP SERVICE CONTROLLER"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - RESTARTING BACKUP SERVICE CONTROLLER"
   call HOOK("sc.exe start " & chr(34) & "Backup Service Controller" & chr(34))
