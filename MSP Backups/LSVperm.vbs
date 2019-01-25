@@ -42,9 +42,9 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     strUSR = objARG.item(1)
     strPWD = objARG.item(2)
     ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-    if (instr(1, strUSR, "\") = 0) then
-      strUSR = ".\" & strUSR
-    end if
+    'if (instr(1, strUSR, "\") = 0) then
+    '  strUSR = ".\" & strUSR
+    'end if
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     errRET = 1
     call CLEANUP
@@ -109,6 +109,16 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
   next
+  if (instr(1, strUSR, "\") = 0) then
+    strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+    if (lcase(strDMN) = "workgroup") then
+      strUSR = ".\" & strUSR
+    elseif (lcase(strDMN) <> "workgroup") then
+      strUSR = strDMN & "\" & strUSR
+    else
+      strUSR = ".\" & strUSR
+    end if
+  end if
   ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
@@ -116,8 +126,8 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
   call HOOK("sc.exe config " & chr(34) & "Backup Service Controller" & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34) & " TYPE= own")
   ''GRANT 'LOGON AS A SERVICE' TO RMMTECH USER
   strORG = "SeServiceLogonRight ="
-  objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
-  objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR
+  objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
+  objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & strSID
   if (strSID = vbnullstring) then
     strREP = "SeServiceLogonRight = " & strUSR & ","
   elseif (strSID <> vbnullstring) then
