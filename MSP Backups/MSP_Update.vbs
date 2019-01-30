@@ -2,7 +2,7 @@
 ''MSP_UPDATE.VBS
 ''SCRIPT IS DESIGNED TO AUTOMATICALLY DOWNLOAD AND INSTALL MSP BACKUPS FROM DIRECT LINK
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim objFSO, objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH
@@ -11,7 +11,7 @@ dim errRET, strVER, strIDL, strTMP, arrTMP, strIN
 dim blnSQL, blnTSK, blnVSS, blnWMI
 dim blnAHS, blnBIT, blnCSVC, blnRDP, blnRUN
 ''VERSION FOR SCRIPT UPDATE, MSP_UPDATE.VBS, REF #2
-strVER = 2
+strVER = 3
 ''SET 'ERRRET' CODE
 errRET = 0
 ''DEFAULT 'BLNRUN' FLAG
@@ -68,7 +68,7 @@ strIDL = objHOOK.stdout.readall
 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
-if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then            			''BACKUPS NOT IN PROGRESS
+if (((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (strIDL = vbnullstring))) then            			''BACKUPS NOT IN PROGRESS
   ''DOWNLOAD MSP BACKUP CLIENT
   objOUT.write vbnewline & now & vbtab & " - DOWNLOADING LATEST MSP BACKUP CLIENT"
   objLOG.write vbnewline & now & vbtab & " - DOWNLOADING LATEST MSP BACKUP CLIENT"
