@@ -1,8 +1,9 @@
 ''SNMPPARAM.VBS
 ''DESIGNED TO CONFIGURE / MONITOR SNMP CONFIGURATIONS
-''SCRIPT 'MODE' IS SET BY VARIABLE 'STRMOD', THIS MUST BE THE FIRST PARAMETER PASSED
-''SNMP COMMUNITY STRING SET BY VARIABLE 'STRSNMP', THIS MUST BE THE SECOND PARAMETER PASSED
-''SNMP TRAP AGENT SET BY VARIABLE 'STRTRP', THIS MUST BE THE THIRD PARAMETER PASSED, SEPARATE MULTIPLE TRAP DESTINATIONS WITH A ','
+''ACCEPTS 3 PARAMETERS, REQUIRES 3 PARAMETERS
+''REQUIRED PARAMETER : 'STRMOD', STRING TO SET SCRIPT 'MODE', THIS MUST BE THE FIRST PARAMETER PASSED
+''REQUIRED PARAMETER : 'STRSNMP', STRING TO SET SNMP COMMUNITY STRING, THIS MUST BE THE SECOND PARAMETER PASSED
+''REQUIRED PARAMETER : 'STRTRP', STRING TO SET SNMP TRAP AGENT, THIS MUST BE THE THIRD PARAMETER PASSED, SEPARATE MULTIPLE TRAP DESTINATIONS WITH A ','
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
@@ -12,7 +13,7 @@ dim strMOD, strTRP, strSNMP
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, RE-PROBE.VBS, REF #2 , FIXES #7
+''VERSION FOR SCRIPT UPDATE, SNMPPARAM.VBS, REF #2
 strVER = 4
 ''DEFAULT SUCCESS
 errRET = 0
@@ -101,7 +102,7 @@ select case lcase(strMOD)
     call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration" & chr(34) & " /f")
     call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /f")
     call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\ValidCommunities" & chr(34) & " /v " & strSNMP & " /t REG_DWORD /d 4 /f")
-    if (instr(1, strTRP, ",")) then ''HANDLE MULTIPLE SNMP TRAP AGENTS
+    if (instr(1, strTRP, ",")) then                         ''HANDLE MULTIPLE SNMP TRAP AGENTS
       arrTRP = split(strTRP, ",")
       for intTRP = 0 to ubound(arrTRP)
         if (arrTRP(intTRP) <> vbnullstring) then
@@ -111,7 +112,7 @@ select case lcase(strMOD)
           call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /v " & (intTRP + 1) & " /t REG_SZ /d " & arrTRP(intTRP) & " /f")
         end if
       next
-    else  ''HANDLE SINGLE SNMP TRAP AGENT
+    else                                                    ''HANDLE SINGLE SNMP TRAP AGENT
       call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
       call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v 2 /t REG_SZ /d " & strTRP & " /f")
       call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
@@ -121,6 +122,8 @@ select case lcase(strMOD)
     objOUT.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"
     objLOG.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"    
     call HOOK("reg query " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /s")
+    call HOOK("sc stop " & chr(34) & "SNMP" & chr(34))
+    call HOOK("sc start " & chr(34) & "SNMP" & chr(34))
 end select
 if (err.number <> 0) then
   errRET = 1
@@ -129,7 +132,7 @@ if (err.number <> 0) then
   err.clear
 end if
 ''CLEANUP
-call CLEANUP
+call CLEANUP()
 ''END SCRIPT
 ''------------
 
