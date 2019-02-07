@@ -65,12 +65,14 @@ call CHKAU()
 blnEND = false
 while (blnEND = false)
   strSEL = vbnullstring
-  objOUT.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN"
-  objLOG.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN"
-  objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET HIGH PERF. POWER PLAN" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
-  objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET HIGH PERF. POWER PLAN" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
+  objOUT.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
+  objLOG.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
+  objOUT.write vbnewline & vbtab & vbtab & " - PRE-REQUISITES : "
+  objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
+  objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
   objOUT.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
   objLOG.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
+  objOUT.write vbnewline & vbtab & vbtab & " - AGENT / PROBE SETUP : "
   objOUT.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
   objLOG.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
   objOUT.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
@@ -126,6 +128,13 @@ sub STAGE1()
   objOUT.write vbnewline & now & vbtab & " - DISABLING HIBERNATION" & vbnewline
   objLOG.write vbnewline & now & vbtab & " - DISABLING HIBERNATION" & vbnewline
   call HOOK("powercfg –h off")
+  ''NETOWRK DISCOVERY
+  objOUT.write vbnewline & now & vbtab & " - ENABLING NETWORK DISCOVERY SERVICES" & vbnewline
+  objLOG.write vbnewline & now & vbtab & " - ENABLING NETWORK DISCOVERY SERVICES" & vbnewline
+  call HOOK("sc config " & chr(34) & "fdPHost" & chr(34) & " start= auto")
+  call HOOK("sc start " & chr(34) & fdPHost" & chr(34))
+  call HOOK("sc config " & chr(34) & "FDResPub" & chr(34) & " start= auto")
+  call HOOK("sc start " & chr(34) & "FDResPub" & chr(34))
   strSEL = vbnullstring
   if (err.number <> 0) then
     call LOGERR(1)
@@ -413,6 +422,13 @@ sub STAGE5()
       objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
       objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
       strCNAM = objIN.readline
+      ''SERVER ADDRESS
+      objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+      objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+      strSRV = objIN.readline
+      if (strSRV = vbnullstring) then
+        strSRV = "ncentral.cwitsupport.com"
+      end if
       if ((strCID <> vbnullstring) and (strCNAM <> vbnullstring)) then
         ''DOWNLOAD WINDOWS AGENT SETUP : RE-AGENT , FIXES #7
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS AGENT SETUP : RE-AGENT"
@@ -422,8 +438,8 @@ sub STAGE5()
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
           objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
           objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34))
-        elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & " " & chr(34) & strSRV & chr(34))
+        elseif (not objFSO.fileexists("c:\temp\reagent.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           call LOGERR(51)
@@ -445,12 +461,14 @@ sub STAGE5()
       strNUL = objIN.readline
     end if
   end if
-  strSEL = vbnullstring
-  strCID = vbnullstring
-  strCNAM = vbnullstring
   if (err.number <> 0) then
     call LOGERR(5)
   end if
+  ''CLEAR VARIABLES
+  strSEL = vbnullstring
+  strCID = vbnullstring
+  strCNAM = vbnullstring
+  strSRV = vbnullstring
 end sub
 
 sub STAGE6()
@@ -497,6 +515,13 @@ sub STAGE6()
         objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :"
         objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :"
         strDPWD = objIN.readline
+        ''SERVER ADDRESS
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+        strSRV = objIN.readline
+        if (strSRV = vbnullstring) then
+          strSRV = "ncentral.cwitsupport.com"
+        end if
         if ((strCID <> vbnullstring) and (strCNAM <> vbnullstring) and _
           (strDMN <> vbnullstring) and (strDUSR <> vbnullstring) and (strDPWD <> vbnullstring)) then
             ''DOWNLOAD WINDOWS PROBE SETUP : RE-PROBE , FIXES #7
@@ -508,7 +533,7 @@ sub STAGE6()
               objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
               objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
               call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
-                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34))
+                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34) & " " & chr(34) & strSRV & chr(34))
             elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
               objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
               objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -528,10 +553,18 @@ sub STAGE6()
       strNUL = objIN.readline
     end if
   end if
-  strSEL = vbnullstring
-   if (err.number <> 0) then
+  if (err.number <> 0) then
     call LOGERR(6)
   end if
+  ''CLEAR VARIABLES
+  strSEL = vbnullstring
+  strCID = vbnullstring
+  strCNAM = vbnullstring
+  strTYP = vbNullString
+  strDMN = vbNullString
+  strDUSR = vbnullstring
+  strDPWD = vbnullstring
+  strSRV = vbnullstring
 end sub
 
 sub STAGE7()
@@ -541,8 +574,11 @@ sub STAGE7()
   ''DOWNLOAD AND INSTALL AV DEFENDER, REF #6 , FIXES #14
   objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING AV DEFENDER"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING AV DEFENDER"
-  objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE AV DEFENDER VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER"
-  objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE AV DEFENDER VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER"
+  objOUT.write vbnewline & now & vbtab & " - PLEASE ENABLE AV DEFENDER VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER"
+  objLOG.write vbnewline & now & vbtab & " - PLEASE ENABLE AV DEFENDER VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER"
+  objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
+  objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
+  strNUL = objIN.readline
   'call FILEDL(strAVDdl,"AVDefender.exe")
   ''STEP TO VERIFY AV DEFENDER / MONITORING, REF #6 , FIXES #14
   objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY AV DEFENDER / MONITORING"
@@ -589,10 +625,10 @@ sub STAGE9()
   objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING MSP BACKUP"
   objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
   objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
-  'call FILEDL(strMSPdl, "MSPBackup.exe")
+  call FILEDL("https://cdn.cloudbackup.management/maxdownloads/mxb-windows-x86_x64.exe", "MSPBackup.exe")
   ''STEP TO VERIFY MSP BACKUP / MONITORING, REF #6 , FIXES #12
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP / MONITORING"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP / MONITORING"
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
   objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BAKCUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
   objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BACKUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
   objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
@@ -629,8 +665,8 @@ sub STAGE9()
       call LOGERR(91)
     end if
     ''RESTRICT MSP BACKUP LOCAL SPEEDVAULT PERMISSIONS
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTRICTING MSP BACKUP LOCAL SPEEDVAULT PERMISSIONS"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - RESTRICTING MSP BACKUP LOCAL SPEEDVAULT PERMISSIONS"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTRICTING MSP BACKUP LOCAL SPEEDVAULT PERMISSIONS (BACKUP SERVICE WILL RESTART)"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - RESTRICTING MSP BACKUP LOCAL SPEEDVAULT PERMISSIONS (BACKUP SERVICE WILL RESTART)"
     if ((strLSVL <> vbnullstring) and _
       (strLSVU <> vbnullstring) and (strLSVP <> vbnullstring)) then
         ''DOWNLOAD LSV PERMISSIONS SETUP : LSVPERM, REF #6 , FIXES #12
@@ -668,11 +704,27 @@ sub STAGE9()
   objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?"
   strARC = objIN.readline
   if (lcase(strARC) = "y") then
-    ''SET DEFAULT 'CW_DEFAULT_MSPARCHIVE" ARCHIVING SCHEDULE, REF #6 , FIXES #12
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
-    call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.archiving.add -name " & chr(34) & "CW_DEFAULT_MSPARCHIVE" & chr(34) & _
-      " -active 1 -datasources All -days-of-month 1,15 -months All -time 22:00")
+    objOUT.write vbnewline & vbtab & "SELECT MSP BACKUP ARCHIVE SCHEDULE : "
+    objLOG.write vbnewline & vbtab & "SELECT MSP BACKUP ARCHIVE SCHEDULE : "
+    objOUT.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
+    objLOG.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
+    objOUT.write vbnewline & vbtab & "(2) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
+    objLOG.write vbnewline & vbtab & "(2) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
+    strARC = objIN.readline
+    select case strARC
+      case 1                    ''SET DEFAULT 'CW_DEFAULT_MSPARCHIVE" ARCHIVING SCHEDULE, REF #6 , FIXES #12
+        objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
+        objLOG.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
+        call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.archiving.add -name " & chr(34) & "CW_DEFAULT_MSPARCHIVE" & chr(34) & _
+          " -active 1 -datasources All -days-of-month 1,15 -months All -time 22:00")
+      case 2
+        objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE CONFIGURE MSP BACKUP ARCHIVE SCHEDULE '<CO>_<DEVICE>_MSPARCHIVE'"
+        objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE CONFIGURE MSP BACKUP ARCHIVE SCHEDULE '<CO>_<DEVICE>_MSPARCHIVE'"
+        objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>ARCHIVING"
+        objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>ARCHIVING"
+        'call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.archiving.add -name " & chr(34) & "CW_DEFAULT_MSPARCHIVE" & chr(34) & _
+        '  " -active 1 -datasources All -days-of-month 1,15 -months All -time 22:00")
+    end select
     if (err.number <> 0) then
       call LOGERR(94)
     end if
@@ -704,8 +756,8 @@ sub STAGE9()
   if (strMSPVDdl <> vbnullstring) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING MSP BACKUP VIRTUAL DRIVE"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING MSP BACKUP VIRTUAL DRIVE"
-    objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER"
-    objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER"
+    objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER ON USE"
+    objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER ON USE"
     ''DOWNLOAD MSP BACKUP VIRTUAL DRIVE
     call FILEDL(strMSPVDdl, "MSPBackupVD.exe")
     ''INSTALL MSP BACKUP VIRTUAL DRIVE
