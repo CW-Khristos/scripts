@@ -174,13 +174,15 @@ if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
   objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
   call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
+  if (errRET <> 0) then
+    call LOGERR(6)
   call HOOK("sc stop " & chr(34) & strSVC & chr(34))
   wscript.sleep 5000
   call HOOK("sc start " & chr(34) & strSVC & chr(34))
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
   if (errRET <> 0) then
-    call LOGERR(6)
+    call LOGERR(7)
   end if
 end if
 ''END SCRIPT

@@ -179,7 +179,7 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - REMOVING ALL OTHER ENUMERATED USERS' PERMISSIONS"
   for intUSR = 0 to ubound(colUSR)
     intSID = intUSR
-    if ((colUSR(intUSR) <> vbnullstring) and (instr(1, lcase(colUSR(intUSR)), "rmmtech")=0)) then
+    if ((colUSR(intUSR) <> vbnullstring) and (instr(1, lcase(colUSR(intUSR)), "rmmtech") = 0)) then
       call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g " & colUSR(intUSR) & " /T /C /Q")
       call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g *" & colSID(intSID) & " /T /C /Q")
     end if
