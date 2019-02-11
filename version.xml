@@ -20,12 +20,12 @@
 	<set_msparchive.vbs>1</set_msparchive.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
   <PWDchg.vbs>1</PWDchg.vbs>
-	<reagent.vbs>6</reagent.vbs>
+	<reagent.vbs>7</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
-	<reprobe.vbs>7</reprobe.vbs>
+	<reprobe.vbs>8</reprobe.vbs>
 	<SNMPparam.vbs>4</SNMPparam.vbs>
-	<SVCperm.vbs>5</SVCperm.vbs>
+	<SVCperm.vbs>6</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>

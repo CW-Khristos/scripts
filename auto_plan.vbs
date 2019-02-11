@@ -907,5 +907,5 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit errRET
+  wscript.quit err.number
 end sub
