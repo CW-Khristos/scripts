@@ -8,4 +8,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 Files in the form of EXEs, scripts, or other forms of documentation; whether explicitly listed or not,contained herein that are not owned by me are the respective property of their developers / distributors; and are subject to their original copyrights. They are included in this repository ONLY for the use / function of the scripts and their intended design!
 
-I make not promises, comittments, or declarations regarding the legality of their use and/or distribution; even when used as intended with these scripts!
+I make no promises, comittments, or declarations regarding the legality of their use and/or distribution; even when used as intended with these scripts!
