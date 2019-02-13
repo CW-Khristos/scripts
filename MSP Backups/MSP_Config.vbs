@@ -14,7 +14,7 @@ dim objIN, objOUT, objARG, objWSH, objFSO
 ''SET 'errRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
-strVER = 2
+strVER = 3
 ''SET 'BLNHDR' FLAG
 blnHDR = false
 ''SET 'BLNINJ' FLAG
