@@ -1,9 +1,9 @@
 ''SVCPERM.VBS
 ''DESIGNED TO GRANTING SERVICE LOGON PERMISSIONS
-''ACCEPTS 3 PARAMETERS, REQUIRES 1 PARAMETER
-''REQUIRED PARAMETER : 'STRUSR', STRING TO SET USER
-''OPTIONAL PARAMETER : 'STRPWD', STRING TO SET PASSWORD
-''OPTIONAL PARAMETER : 'STRSVC', STRING TO SET TARGET SERVICE TO MODIFY
+''ACCEPTS 3 PARAMETERS , REQUIRES 1 PARAMETER
+''REQUIRED PARAMETER : 'STRUSR' , STRING TO SET USER
+''OPTIONAL PARAMETER : 'STRPWD' , STRING TO SET PASSWORD
+''OPTIONAL PARAMETER : 'STRSVC' , STRING TO SET TARGET SERVICE TO MODIFY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
-strVER = 6
+strVER = 8
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -44,145 +44,155 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                     ''REQUIRED ARGUMENTS PASSED
-    strUSR = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRUSR'; TARGET USER FOR SERVICE LOGON PERMISSIONS
+    strUSR = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRUSR' ; TARGET USER FOR SERVICE LOGON PERMISSIONS
+    if (instr(1, strUSR, "\")) then                         ''INPUT VALIDATION FOR 'STRUSR'
+      strUSR = split(strUSR, "\")(1)                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
+    end if
     if (wscript.arguments.count > 1) then                   ''OPTIONAL ARGUMENTS PASSED
       strPWD = objARG.item(1)                               ''SET OPTIONAL PARAMETER 'STRPWD', TARGET USER CREDENTIALS
       strSVC = objARG.item(2)                               ''SET OPTIONAL PARAMETER 'STRSVC', TARGET SERVICE FOR USER CREDENTIALS
     end if
   end if
-else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+else                                                        ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
-  call CLEANUP()
 end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
-objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
-''AUTOMATIC UPDATE, SVCPERM.VBS, REF #2
-call CHKAU()
-''PRE-MATURE END SCRIPT, TESTING AUTOMATIC UPDATE SVCPERM.VBS, REF #2 , FIXES #21
-'call CLEANUP()
-''GET SIDS OF ALL USERS
-intUSR = 0
-intSID = 0
-objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
-while (not objEXEC.stdout.atendofstream)
-  strIN = objEXEC.stdout.readline
-  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
-  if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, ","))) then
-    if ((trim(split(strIN, ",")(1)) <> vbnullstring) and (trim(split(strIN, ",")(1)) <> "Name")) then
-      redim preserve colUSR(intUSR + 1)
-      redim preserve colSID(intSID + 1)
-      colUSR(intUSR) = trim(split(strIN, ",")(1))
-      colSID(intSID) = trim(split(strIN, ",")(2))
-      intUSR = (intUSR + 1)
-      intSID = (intSID + 1)
+if (errRET <> 0) then
+elseif (errRET = 0) then
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
+  ''AUTOMATIC UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2
+  call CHKAU()
+  ''PRE-MATURE END SCRIPT , TESTING AUTOMATIC UPDATE SVCPERM.VBS , REF #2 , FIXES #21
+  'call CLEANUP()
+  ''GET SIDS OF ALL USERS , 'ERRRET'=2
+  intUSR = 0
+  intSID = 0
+  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+  set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
+  while (not objEXEC.stdout.atendofstream)
+    strIN = objEXEC.stdout.readline
+    'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+    'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+    if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, ","))) then
+      if ((trim(split(strIN, ",")(1)) <> vbnullstring) and (trim(split(strIN, ",")(1)) <> "Name")) then
+        redim preserve colUSR(intUSR + 1)
+        redim preserve colSID(intSID + 1)
+        colUSR(intUSR) = trim(split(strIN, ",")(1))
+        colSID(intSID) = trim(split(strIN, ",")(2))
+        intUSR = (intUSR + 1)
+        intSID = (intSID + 1)
+      end if
     end if
+    if (err.number <> 0) then
+      call LOGERR(2)
+    end if
+  wend
+  err.clear
+  ''VALIDATE COLLECTED USERNAMES AND SIDS
+  intUSR = 0
+  intSID = 0
+  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
+  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
+  for intUSR = 0 to ubound(colUSR)
+    if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
+      intSID = intSID + 1
+      arrSID(ubound(arrSID)) = colSID(intUSR)
+      redim arrSID(intSID)
+    end if
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+  next
+  ''GRANT 'LOGON AS A SERVICE' TO TARGET USER
+  intUSR = 0
+  intSID = 0
+  for intSID = 0 to ubound(arrSID)
+    objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    strORG = "SeServiceLogonRight = "
+    if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
+      strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
+    elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
+      ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
+      if (instr(1, strUSR, "\") = 0) then
+        ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
+        strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+        if (lcase(strDMN) = "workgroup") then         ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
+          strDMN = ".\"
+          strUSR = strDMN & strUSR
+        elseif (lcase(strDMN) <> "workgroup") then    ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
+          strUSR = strDMN & "\" & strUSR
+        else                                          '' 'DEFAULT' TO A LOCAL ACCOUNT
+          strDMN = ".\"
+          strUSR = strDMN & strUSR
+        end if
+      end if
+      strREP = "SeServiceLogonRight = " & strUSR & ","
+    end if
+    ''EXPORT CURRENT SECURITY DATABASE CONFIGS , 'ERRRET'=3
+    call HOOK("secedit /export /cfg c:\temp\config.inf")
+    if (errRET <> 0) then
+      call LOGERR(3)
+    end if
+    ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
+    set objSIN = objFSO.opentextfile("c:\temp\config.inf", 1, 1, -1)
+    strIN = objSIN.readall
+    objSIN.close
+    set objSIN = nothing
+    ''WRITE SECURITY DATABASE CONFIGS WITH 'SetServiceLogonRight' FOR TARGET USER , 'ERRRET'=4
+    set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
+    objSOUT.write (replace(strIN,strORG,strREP))
+    objSOUT.close
+    set objSOUT = nothing
+    if (err.number <> 0) then
+      call LOGERR(4)
+    end if
+  next
+  ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
+  call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
+  call HOOK("secedit /configure /db secedit.sdb")
+  call HOOK("gpupdate /force")
+  if (errRET <> 0) then
+    call LOGERR(5)
   end if
-  if (err.number <> 0) then
-    call LOGERR(2)
-  end if
-wend
-err.clear
-''VALIDATE COLLECTED USERNAMES AND SIDS
-intUSR = 0
-intSID = 0
-objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
-objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
-for intUSR = 0 to ubound(colUSR)
-  if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
-    intSID = intSID + 1
-    arrSID(ubound(arrSID)) = colSID(intUSR)
-    redim arrSID(intSID)
-  end if
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
-next
-''GRANT 'LOGON AS A SERVICE' TO TARGET USER
-intUSR = 0
-intSID = 0
-for intSID = 0 to ubound(arrSID)
-  objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-  objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-  strORG = "SeServiceLogonRight = "
-  if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
-    strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
-  elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND, USE 'PLAINTEXT' USER NAME
+  ''REMOVE TEMP FILES
+  'objFSO.deletefile("c:\temp\config.inf") 
+  objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
+  objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
+  if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
     ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
     if (instr(1, strUSR, "\") = 0) then
       ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
       strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-      if (lcase(strDMN) = "workgroup") then         ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-        strUSR = ".\" & strUSR
-      elseif (lcase(strDMN) <> "workgroup") then    ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
+      if (lcase(strDMN) = "workgroup") then           ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
+        strDMN = ".\"
+        strUSR = strDMN & strUSR
+      elseif (lcase(strDMN) <> "workgroup") then      ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
         strUSR = strDMN & "\" & strUSR
-      else                                          '' 'DEFAULT' TO A LOCAL ACCOUNT
-        strUSR = ".\" & strUSR
+      else                                            '' 'DEFAULT' TO A LOCAL ACCOUNT
+        strDMN = ".\"
+        strUSR = strDMN & strUSR
       end if
     end if
-    strREP = "SeServiceLogonRight = " & strUSR & ","
-  end if
-  ''EXPORT CURRENT SECURITY DATABASE CONFIGS
-  call HOOK("secedit /export /cfg c:\temp\config.inf")
-  if (errRET <> 0) then
-    call LOGERR(3)
-  end if
-  ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
-  set objSIN = objFSO.opentextfile("c:\temp\config.inf", 1, 1, -1)
-  strIN = objSIN.readall
-  objSIN.close
-  set objSIN = nothing
-  ''WRITE SECURITY DATABASE CONFIGS WITH 'SetServiceLogonRight' FOR TARGET USER
-  set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
-  objSOUT.write (replace(strIN,strORG,strREP))
-  objSOUT.close
-  set objSOUT = nothing
-  if (err.number <> 0) then
-    call LOGERR(4)
-  end if
-next
-''APPLY NEW SECURITY DATABASE CONFIGS
-call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
-call HOOK("secedit /configure /db secedit.sdb")
-call HOOK("gpupdate /force")
-if (errRET <> 0) then
-  call LOGERR(5)
-end if
-''REMOVE TEMP FILES
-'objFSO.deletefile("c:\temp\config.inf") 
-objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
-objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
-if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
-  ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
-  if (instr(1, strUSR, "\") = 0) then
-    ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
-    strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-    if (lcase(strDMN) = "workgroup") then           ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-      strUSR = ".\" & strUSR
-    elseif (lcase(strDMN) <> "workgroup") then      ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
-      strUSR = strDMN & "\" & strUSR
-    else                                            '' 'DEFAULT' TO A LOCAL ACCOUNT
-      strUSR = ".\" & strUSR
+    ''UPDATE SERVICE LOGON CREDENTIALS USING 'SC CONFIG' CMD , 'ERRRET'=6
+    objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
+    objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
+    call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
+    if (errRET <> 0) then
+      call LOGERR(6)
     end if
-  end if
-  objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
-  objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
-  call HOOK("sc config " & chr(34) & strSVC & chr(34) & " obj= " & chr(34) & strUSR & chr(34) & " password= " & chr(34) & strPWD & chr(34))
-  if (errRET <> 0) then
-    call LOGERR(6)
-  call HOOK("sc stop " & chr(34) & strSVC & chr(34))
-  wscript.sleep 5000
-  call HOOK("sc start " & chr(34) & strSVC & chr(34))
-  objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
-  objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
-  if (errRET <> 0) then
-    call LOGERR(7)
+    ''STOP AND RESTART SERVICE TO UPDATE SERVICE LOGON CREDENTIALS , 'ERRRET'=7
+    call HOOK("sc stop " & chr(34) & strSVC & chr(34))
+    wscript.sleep 90000
+    call HOOK("sc start " & chr(34) & strSVC & chr(34))
+    objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
+    objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICE LOGON UPDATED : " & strSVC
+    if (errRET <> 0) then
+      call LOGERR(7)
+    end if
   end if
 end if
 ''END SCRIPT
@@ -191,7 +201,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2 , FIXES #21
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -206,7 +216,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, SVCPERM.VBS, 
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -241,12 +251,12 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, SVCPERM.VBS, 
 	end if
 	set colVER = nothing
 	set objXML = nothing
-  if (err.number <> 0) then
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
     call LOGERR(10)
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -278,12 +288,12 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if (err.number <> 0) then
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -304,7 +314,7 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
@@ -316,6 +326,11 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 		errRET = intSTG
 		err.clear
   end if
+  select case intSTG
+    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+  end select
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
@@ -326,7 +341,7 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
   elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM FAILURE : " & errRET & " : " & now
-    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    ''RAISE CUSTOMIZED ERROR CODE , ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "SVCPERM", "fail")
   end if
   ''EMPTY OBJECTS
@@ -337,6 +352,6 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
   set objARG = nothing
   set objOUT = nothing
   set objIN = nothing
-  ''END SCRIPT, RETURN ERROR
+  ''END SCRIPT , RETURN ERROR
   wscript.quit err.number
 end sub
