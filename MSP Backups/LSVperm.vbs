@@ -48,7 +48,7 @@ if (wscript.arguments.count > 0) then                                       ''AR
   strLSV = objARG.item(0)
   if (wscript.arguments.count > 1) then                                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(1)
-    if (instr(1, strUSR, "\") then                                          ''INPUT VALIDATION FOR 'STRUSR'
+    if (instr(1, strUSR, "\")) then                                         ''INPUT VALIDATION FOR 'STRUSR'
       strUSR = split(strUSR, "\")(1)                                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
     end if
     strPWD = objARG.item(2)
