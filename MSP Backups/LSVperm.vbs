@@ -80,8 +80,8 @@ elseif (errRET = 0) then                                                    ''AR
     ''GET SIDS OF ALL USERS , 'ERRRET'=20
     intUSR = 0
     intSID = 0
-    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
     set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
     while (not objEXEC.stdout.atendofstream)
       strIN = objEXEC.stdout.readline
