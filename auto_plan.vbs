@@ -132,7 +132,7 @@ sub STAGE1()
   objOUT.write vbnewline & now & vbtab & " - ENABLING NETWORK DISCOVERY SERVICES" & vbnewline
   objLOG.write vbnewline & now & vbtab & " - ENABLING NETWORK DISCOVERY SERVICES" & vbnewline
   call HOOK("sc config " & chr(34) & "fdPHost" & chr(34) & " start= auto")
-  call HOOK("sc start " & chr(34) & fdPHost" & chr(34))
+  call HOOK("sc start " & chr(34) & "fdPHost" & chr(34))
   call HOOK("sc config " & chr(34) & "FDResPub" & chr(34) & " start= auto")
   call HOOK("sc start " & chr(34) & "FDResPub" & chr(34))
   strSEL = vbnullstring
