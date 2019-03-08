@@ -48,7 +48,7 @@ if (wscript.arguments.count > 0) then                                       ''AR
   strLSV = objARG.item(0)
   if (wscript.arguments.count > 1) then                                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(1)
-    if (instr(1, strUSR, "\") then                                          ''INPUT VALIDATION FOR 'STRUSR'
+    if (instr(1, strUSR, "\")) then                                         ''INPUT VALIDATION FOR 'STRUSR'
       strUSR = split(strUSR, "\")(1)                                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
     end if
     strPWD = objARG.item(2)
@@ -80,8 +80,8 @@ elseif (errRET = 0) then                                                    ''AR
     ''GET SIDS OF ALL USERS , 'ERRRET'=20
     intUSR = 0
     intSID = 0
-    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
     set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
     while (not objEXEC.stdout.atendofstream)
       strIN = objEXEC.stdout.readline

@@ -6,7 +6,7 @@ dim colFOL(31), blnLOG, lngSIZ, strFOL
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
 ''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2
-strVER = 2
+strVER = 3
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -108,8 +108,36 @@ for x = 0 to ubound(colFOL)
       if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
-      ''CLEAR CONTENTS OF FOLDER
-      call cFolder(objFOL)
+      ''CLEAR NORMAL FOLDERS
+      if (objFOL.path <> objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+        strNEW = vbnewline & "CLEARING : " & objFOL.path
+        objOUT.write strNEW
+        if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+          objLOG.write strNEW
+        end if
+        call cFolder(objFOL)
+      ''CLEARING WINDOWS UPDATES
+      elseif (objFOL.path = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+        ''CHECK FOR 'PENDING.XML IF CLEARING SOFTWAREDISTRIBUTION
+        if (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml")) then
+          strNEW = vbnewline & "'PENDING.XML' FOUND : SKIPPING : " & objFOL.path
+          objOUT.write strNEW
+          if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+            objLOG.write strNEW
+          end if
+        elseif (not (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml"))) then
+          strNEW = vbnewline & "'PENDING.XML' NOT FOUND : CLEARING : " & objFOL.path
+          objOUT.write strNEW
+          if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+            objLOG.write strNEW
+          end if
+          ''STOP WINDOWS UPDATE SERVICE TO CLEAR WINDOWS UPDATE FOLDER
+          call HOOK("net stop wuauserv /y")
+          call cFolder(objFOL)
+          ''RESTART WINDOWS UPDATE SERVICE
+          call HOOK("net start wuauserv")
+        end if
+      end if
     else                                          ''NON-EXISTENT FOLDER
       strNEW = vbnewline & "NON-EXISTENT : " & colFOL(x)
       objOUT.write strNEW
