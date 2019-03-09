@@ -14,7 +14,7 @@ dim strSNMP, strTRP
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 9
+strVER = 10
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -357,8 +357,8 @@ sub STAGE4()
   objOUT.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :"
   objLOG.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :"
   strTRP = objIN.readline
-  objOUT.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (DO NOT USE 'PUBLIC') :"
-  objLOG.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (DO NOT USE 'PUBLIC') :"
+  objOUT.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :"
+  objLOG.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :"
   strSNMP = objIN.readline
   if ((strTRP <> vbnullstring) and (strSNMP <> vbnullstring)) then
     ''DOWNLOAD SNMP SETUP : SNMPPARAM, REF #6 , FIXES #15
@@ -386,15 +386,19 @@ sub STAGE4()
     end if 
     ''STEP TO VERIFY SNMP MONITORING
     objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY SNMP MONITORING"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY IMPORT / WINDOWS AGENT MONITORING"
-    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>BACKUP AND SNMP DEFAULTS"
-    objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>BACKUP AND SNMP DEFAULTS"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY SNMP MONITORING"
+    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>BACKUP AND SNMP DEFAULTS;"
+    objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>DEFAULTS>BACKUP AND SNMP DEFAULTS;"
     objOUT.write vbnewline & now & vbtab & " - DISABLE THE 'SYSTEM DEFAULT' SNMP PROFILE, USE 'ADD SNMP CREDENTIALS' TO CREATE NEW SNMPv1 PROFILE, USE CUSTOMER SNMP SETTINGS"
     objLOG.write vbnewline & now & vbtab & " - DISABLE THE 'SYSTEM DEFAULT' SNMP PROFILE, USE 'ADD SNMP CREDENTIALS' TO CREATE NEW SNMPv1 PROFILE, USE CUSTOMER SNMP SETTINGS"
-    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>MONITORING OPTIONS CHECK 'USE SNMP', SETTINGS FROM PREVIOUS STEP SHOULD BE POPULATED"
-    objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>MONITORING OPTIONS CHECK 'USE SNMP', SETTINGS FROM PREVIOUS STEP SHOULD BE POPULATED"
-    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
-    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE CONFIGURE DEVICE FOR SNMP MONITORING"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE CONFIGURE DEVICE FOR SNMP MONITORING"
+    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>MONITORING OPTIONS, CHECK 'USE SNMP', SETTINGS FROM PREVIOUS STEP SHOULD BE POPULATED"
+    objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>MONITORING OPTIONS, CHECK 'USE SNMP', SETTINGS FROM PREVIOUS STEP SHOULD BE POPULATED"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
+    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING."
+    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING."
     objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
     objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
     strNUL = objIN.readline
@@ -436,8 +440,8 @@ sub STAGE5()
         call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/reagent.vbs", "reagent.vbs")
         if (objFSO.fileexists("c:\temp\reagent.vbs")) then
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
-          objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
-          objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT"
+          objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
           call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & " " & chr(34) & strSRV & chr(34))
         elseif (not objFSO.fileexists("c:\temp\reagent.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -448,14 +452,20 @@ sub STAGE5()
       ''STEP TO VERIFY WINDOWS AGENT / MONITORING
       objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY IMPORT / WINDOWS AGENT MONITORING"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY IMPORT / WINDOWS AGENT MONITORING"
-      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES. THIS NEW DEVICE SHOULD SHOW UP WITHIN MINUTES AS THE AGENT CHECKS IN"
-      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES. THIS NEW DEVICE SHOULD SHOW UP WITHIN MINUTES AS THE AGENT CHECKS IN"
-      objOUT.write vbnewline & now & vbtab & " - SET APPROPRIATE LICENSE VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>CUSTOM DETAILS>SERVICE CODE CUSTOM DEVICE PROPERTY"
-      objLOG.write vbnewline & now & vbtab & " - SET APPROPRIATE LICENSE VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>CUSTOM DETAILS>SERVICE CODE CUSTOM DEVICE PROPERTY"
-      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
-      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
-      objOUT.write vbnewline & now & vbtab & " - THIS WILL AUTOMATICALLY ASSIGN AV, PATCHING, AND MSP BACKUPS PER CONTRACT 'SERVICE CODE' SOP"
-      objOUT.write vbnewline & now & vbtab & " - THIS WILL AUTOMATICALLY ASSIGN AV, PATCHING, AND MSP BACKUPS PER CONTRACT 'SERVICE CODE' SOP"
+      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. THIS NEW DEVICE SHOULD SHOW UP WITHIN MINUTES AS THE AGENT CHECKS IN."
+      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. THIS NEW DEVICE SHOULD SHOW UP WITHIN MINUTES AS THE AGENT CHECKS IN."
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - CONFIGURE 'CONTRACT SERVICE CODE' OR USE 'AUTOMATION CODE'"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - CONFIGURE 'CONTRACT SERVICE CODE' OR USE 'AUTOMATION CODE'"
+      objOUT.write vbnewline & now & vbtab & " - 'CONTRACT SERVICE CODES' ARE SETUP AS FILTERS IN N-CENTRAL AND ARE USEFUL FOR IDENTIFYING CUSTOMER DEVICES,"
+      objLOG.write vbnewline & now & vbtab & " - 'CONTRACT SERVICE CODES' ARE SETUP AS FILTERS IN N-CENTRAL AND ARE USEFUL FOR IDENTIFYING CUSTOMER DEVICES,"
+      objOTU.write vbnewline & now & vbtab & " - 'AUTOMATION CODES' WILL AUTOMATICALLY ASSIGN AV, PATCHING, AND MSP BACKUPS PER CONTRACT 'SERVICE CODE' SOP,"
+      objOUT.write vbnewline & now & vbtab & " - 'AUTOMATION CODES' WILL AUTOMATICALLY ASSIGN AV, PATCHING, AND MSP BACKUPS PER CONTRACT 'SERVICE CODE' SOP,"
+      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>CUSTOM DETAILS>SERVICE CODE CUSTOM DEVICE PROPERTY."
+      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>CUSTOM DETAILS>SERVICE CODE CUSTOM DEVICE PROPERTY."
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - RE-APPLY '<DEVICE CLASS> - WINDOWS' TEMPLATE IF NEEDED"
+      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING>SERVICE TEMPLATES."
+      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING>SERVICE TEMPLATES."
       objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
       objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
       strNUL = objIN.readline
@@ -530,8 +540,8 @@ sub STAGE6()
             call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/reprobe.vbs", "reprobe.vbs")
             if (objFSO.fileexists("c:\temp\reprobe.vbs")) then
               ''INSTALL WINDOWS PROBE VIA RE-PROBE , FIXES #7
-              objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
-              objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE"
+              objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
               call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
                 " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34) & " " & chr(34) & strSRV & chr(34))
             elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
@@ -548,6 +558,18 @@ sub STAGE6()
       objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY 'WINDOWS PROBE - <DEVICE CLASS>' TEMPLATE IF NEEDED"
       objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>PROBES, USE 'TRANSFER TASKS' TO ASSIGN DEVICE MONITORING TO PROBE"
       objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>PROBES, USE 'TRANSFER TASKS' TO ASSIGN DEVICE MONITORING TO PROBE"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - IF DESIRED, ENABLE PROBE AS THE AV DEFENDER UPDATE SERVER. " & _ 
+        "(CONFIGURED CLIENTS WILL USE THIS DEVICE FOR AV UPDATES)"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - IF DESIRED, ENABLE PROBE AS THE AV DEFENDER UPDATE SERVER. " & _ 
+        "(CONFIGURED CLIENTS WILL USE THIS DEVICE FOR AV UPDATES)"
+      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>SECURITY MANAGER>UPDATE SERVERS>ENABLE"
+      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>SECURITY MANAGER>UPDATE SERVERS>ENABLE"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - IF DESIRED, ENABLE PROBE AS THE PATCH CACHE REPOSITORY. " & _ 
+        "(CONFIGURED CLIENTS WILL USE THIS DEVICE FOR PATCH UPDATES. THIS REQUIRES ~20GB FREE SPACE AVAILABLE)"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - IF DESIRED, ENABLE PROBE AS THE PATCH CACHE REPOSITORY. " & _ 
+        "(CONFIGURED CLIENTS WILL USE THIS DEVICE FOR PATCH UPDATES. THIS REQUIRES ~20GB FREE SPACE AVAILABLE)"
+      objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>PROBES>PATCH CACHING>ENABLE"
+      objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ADMINISTRATION>PROBES>PATCH CACHING>ENABLE"
       objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
       objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
       strNUL = objIN.readline
@@ -585,6 +607,10 @@ sub STAGE7()
   objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY AV DEFENDER / MONITORING"
   objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY 'AV DEFENDER REQUIRED SERVICES - <DEVICE CLASS>' TEMPLATE IF NEEDED"
   objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY 'AV DEFENDER REQUIRED SERVICES - <DEVICE CLASS>' TEMPLATE IF NEEDED"
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED AV DEFENDER PROFILE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED AV DEFENDER PROFILE"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER."
+  objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>SECURITY MANAGER."
   objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   strNUL = objIN.readline
@@ -608,6 +634,10 @@ sub STAGE8()
   objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY PATCHING / MONITORING"
   objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY 'PATCH MANAGEMENT - <DEVICE CLASS>' TEMPLATE IF NEEDED"
   objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>MONITORING. RE-APPLY 'PATCH MANAGEMENT - <DEVICE CLASS>' TEMPLATE IF NEEDED"
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED PATCH PROFILE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED PATCH PROFILE"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PATCH MANAGEMENT."
+  objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>ALL DEVICES>DEVICE DETAILS>SETTINGS>PATCH MANAGEMENT." 
   objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   strNUL = objIN.readline
@@ -626,11 +656,16 @@ sub STAGE9()
   objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
   objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
   call FILEDL("https://cdn.cloudbackup.management/maxdownloads/mxb-windows-x86_x64.exe", "MSPBackup.exe")
+  call HOOK("c:\temp\MSPBackup.exe")
   ''STEP TO VERIFY MSP BACKUP / MONITORING, REF #6 , FIXES #12
   objOUT.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
   objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BAKCUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
   objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BACKUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED MSP BACKUP SCHEDULE PROFILE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY CONFIGURED MSP BACKUP SCHEDULE PROFILE"
+  objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT."
+  objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT."
   objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   strNUL = objIN.readline
@@ -691,8 +726,6 @@ sub STAGE9()
     ''STEP TO VERIFY LOCAL SPEEDVAULT SETTINGS / MONITORING
     objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
-    objOUT.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BAKCUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
-    objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>DEVICE DETAILS>MONITORING. RE-APPLY 'MSP BAKCUP MANAGER - <DEVICE CLASS>' TEMPLATE IF NEEDED"
     objOUT.write vbnewline & now & vbatb & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>LOCAL SPEEDVAULT"
     objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CUSTOMER>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>LOCAL SPEEDVAULT"
     objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
@@ -708,8 +741,8 @@ sub STAGE9()
     objLOG.write vbnewline & vbtab & "SELECT MSP BACKUP ARCHIVE SCHEDULE : "
     objOUT.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
     objLOG.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
-    objOUT.write vbnewline & vbtab & "(2) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
-    objLOG.write vbnewline & vbtab & "(2) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
+    objOUT.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
+    objLOG.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
     strARC = objIN.readline
     select case strARC
       case 1                    ''SET DEFAULT 'CW_DEFAULT_MSPARCHIVE" ARCHIVING SCHEDULE, REF #6 , FIXES #12
