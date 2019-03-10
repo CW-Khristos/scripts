@@ -16,8 +16,8 @@ dim strIN, strOUT, strVER, errRET
 dim strORG, strREP, strSID, strDMN
 ''VARIABLES ACCEPTING PARAMETERS
 dim strLSV, strUSR, strPWD
-''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2
-strVER = 3
+''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
+strVER = 4
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -66,7 +66,7 @@ if (errRET <> 0) then                                                       ''NO
 elseif (errRET = 0) then                                                    ''ARGUMENTS PASSED , CONTINUE SCRIPT
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING LSVPERM"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING LSVPERM"
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , LSVPERM.VBS , REF #2
+  ''AUTOMATIC UPDATE , 'ERRRET'=10 , LSVPERM.VBS , REF #2 , FIXES #32
   call CHKAU()
   ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
   objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -125,23 +125,23 @@ elseif (errRET = 0) then                                                    ''AR
       end if
     end if
     ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
-    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
-    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE CONTROLLER"
+    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
+    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
     call HOOK("sc.exe stop " & chr(34) & "Backup Service Controller" & chr(34))
     ''RESTRICT FILE-SYSTEM PERMISSIONS PRIOR TO APPLYING SERVICE LOGON AND RESTARTING SERVICE , 'ERRRET'=21 , REF #2 , REF #32
     ''TAKEOWN USING CURRENT USER, THIS SHOULD BE RMMTECH
-    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING OWNERSHIP"
-    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING OWNERSHIP"
+    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
+    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
     call HOOK("takeown /F " & chr(34) & strLSV & chr(34) & " /R /D Y")
     if (errRET <> 0) then
       call LOGERR(21)
     end if
     ''ADD RMMTECH USER EXPLICIT FULL CONTROL , 'ERRRET'=22
-    objOUT.write vbnewline & now & vbtab & vbtab & " - ASSIGNING RMMTECH FULL CONTROL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING RMMTECH FULL CONTROL"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if (instr(1, lcase(colUSR(intUSR)), "rmmtech")) then
+      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant " & colUSR(intUSR) & ":(OI)(CI)F /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant *" & colSID(intSID) & ":(OI)(CI)F /T /C /Q")
       end if
@@ -170,18 +170,19 @@ elseif (errRET = 0) then                                                    ''AR
     if (errRET <> 0) then
       call LOGERR(24)
     end if
-    ''DOWNLOAD SVCPERM.VBS SCRIPT TO GRANT USER SERVICE LOGON , 'ERRRET'=30 , REF #32
+    ''DOWNLOAD SVCPERM.VBS SCRIPT TO GRANT USER SERVICE LOGON , 'ERRRET'=30 , REF #2 , FIXES #32
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-    call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/SVCperm.vbs", "SVCperm.vbs")
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "SVCperm.vbs")
     if (errRET <> 0) then
       call LOGERR(30)
     end if
-    ''EXECUTE SERVICE LOGON SCRIPT : SVCPERM , 'ERRRET'=31 , REF #32
-    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
-    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
+    ''EXECUTE SERVICE LOGON SCRIPT : SVCPERM , 'ERRRET'=31 , REF #2 , FIXES #32
     if (objFSO.fileexists("c:\temp\svcperm.vbs")) then                                  ''SVCPERM.VBS DOWNLOAD SUCCESSFUL
-      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\svcperm.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34))
+      objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM : THIS MAY TAKE A FEW MOMENTS"
+      objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM : THIS MAY TAKE A FEW MOMENTS"
+      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\svcperm.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & _
+        " " & chr(34) & strPWD & chr(34) & " " & chr(34) & "Backup Service Controller" & chr(34))
     elseif (not objFSO.fileexists("c:\temp\svcperm.vbs")) then                          ''SVCPERM.VBS DOWNLOAD UNSUCCESSFUL , 'ERRRET'=31
       call LOGERR(31)
     end if

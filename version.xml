@@ -8,7 +8,7 @@
 	<iasdatasync.vbs>1</iasdatasync.vbs>
 	<jdc_msp_postbackup.vbs>1</jdc_msp_postbackup.vbs>
 	<jdc_msp_prebackup.vbs>1</jdc_msp_prebackup.vbs>
-	<LSVperm.vbs>3</LSVperm.vbs>
+	<LSVperm.vbs>4</LSVperm.vbs>
 	<MSP_Config.vbs>3</MSP_Config.vbs>
   <MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
