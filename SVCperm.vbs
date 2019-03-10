@@ -15,8 +15,8 @@ dim strUSR, strPWD, strSVC
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
-''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21
-strVER = 8
+''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
+strVER = 9
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -63,10 +63,8 @@ if (errRET <> 0) then
 elseif (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2
+  ''AUTOMATIC UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2 , FIXES #21
   call CHKAU()
-  ''PRE-MATURE END SCRIPT , TESTING AUTOMATIC UPDATE SVCPERM.VBS , REF #2 , FIXES #21
-  'call CLEANUP()
   ''GET SIDS OF ALL USERS , 'ERRRET'=2
   intUSR = 0
   intSID = 0
@@ -98,6 +96,7 @@ elseif (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
   for intUSR = 0 to ubound(colUSR)
+    ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
     if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
       intSID = intSID + 1
       arrSID(ubound(arrSID)) = colSID(intUSR)
@@ -109,6 +108,13 @@ elseif (errRET = 0) then
   ''GRANT 'LOGON AS A SERVICE' TO TARGET USER
   intUSR = 0
   intSID = 0
+  ''EXPORT CURRENT SECURITY DATABASE CONFIGS , 'ERRRET'=3
+  call HOOK("secedit /export /cfg c:\temp\config.inf")
+  if (errRET <> 0) then
+    call LOGERR(3)
+  end if
+  ''ENUMERATE THROUGH EACH USER COLLECTED MATCHING 'STRUSR' TARGET USER , REF#2 , FIXES #31
+  ''THIS ALLOWS FOR TARGETING BOTH LOCAL AND DOMAIN USER VARIANTS
   for intSID = 0 to ubound(arrSID)
     objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
     objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
@@ -131,11 +137,6 @@ elseif (errRET = 0) then
         end if
       end if
       strREP = "SeServiceLogonRight = " & strUSR & ","
-    end if
-    ''EXPORT CURRENT SECURITY DATABASE CONFIGS , 'ERRRET'=3
-    call HOOK("secedit /export /cfg c:\temp\config.inf")
-    if (errRET <> 0) then
-      call LOGERR(3)
     end if
     ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
     set objSIN = objFSO.opentextfile("c:\temp\config.inf", 1, 1, -1)
@@ -201,7 +202,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2 , FIXES #21
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , SVCPERM.VBS , REF #2 , FIXES #21 , FIXES #31
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
