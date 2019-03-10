@@ -151,6 +151,7 @@ elseif (errRET = 0) then
     if (err.number <> 0) then
       call LOGERR(4)
     end if
+    intSID = intSID + 1
   next
   ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
   call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
