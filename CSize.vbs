@@ -19,12 +19,12 @@ call CLEANUP
 
 sub getSIZ(strFOL)
   set objSIZ = objWSH.exec("%comspec% /c dir /A /S " & chr(34) & strFOL & chr(34) & " > " & chr(34) & "C:\CSize.txt")
-  while (objSIZ.status = 0)
+  'while (objSIZ.status = 0)
     while (not objSIZ.StdOut.atendofstream)
       objOUT.write vbnewline & (objSIZ.stdout.readline())
+      wscript.sleep 10
     wend
-    wscript.sleep 10
-  wend
+  'wend
   objOUT.write vbnewline & objSIZ.stdout.readall()
   retSTOP = objSIZ.exitcode
   set objSIZ = nothing
