@@ -126,8 +126,8 @@ elseif (errRET = 0) then
   ''ENUMERATE THROUGH EACH USER COLLECTED MATCHING 'STRUSR' TARGET USER , REF#2 , FIXES #31
   ''THIS ALLOWS FOR TARGETING BOTH LOCAL AND DOMAIN USER VARIANTS
   for intSID = 0 to ubound(arrSID)
-    objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-    objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
     strORG = "SeServiceLogonRight = "
     if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
       strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
