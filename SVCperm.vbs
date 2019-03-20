@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 9
+strVER = 10
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -97,10 +97,20 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
   for intUSR = 0 to ubound(colUSR)
     ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
-    if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
-      intSID = intSID + 1
-      arrSID(ubound(arrSID)) = colSID(intUSR)
-      redim arrSID(intSID)
+    ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
+    if (instr(1, lcase(strUSR), "\")) then
+      if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
+        intSID = intSID + 1
+        arrSID(ubound(arrSID)) = colSID(intUSR)
+        redim arrSID(intSID)
+      end if
+    ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
+    elseif (instr(1, lcase(strUSR), "\") = 0) then
+      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
+        intSID = intSID + 1
+        arrSID(ubound(arrSID)) = colSID(intUSR)
+        redim arrSID(intSID)
+      end if
     end if
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
