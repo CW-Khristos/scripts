@@ -78,8 +78,8 @@ if (((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (strIDL = vb
   objLOG.write vbnewline & now & vbtab & " - INSTALLING LATEST MSP BACKUP CLIENT"
   call HOOK("C:\temp\mxb-windows-x86_x64.exe")
 elseif ((instr(1, strIDL, "Idle") = 0) and (instr(1, strIDL, "RegSync") = 0)) then    ''BACKUPS IN PROGRESS , 'ERRRET'=1
-  objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_ROTATE"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_ROTATE"
+  objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_UPDATE"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_UPDATE"
   call LOGERR(1)
 end if
 ''END SCRIPT
