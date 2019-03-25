@@ -100,16 +100,20 @@ elseif (errRET = 0) then
     ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
     if (instr(1, lcase(strUSR), "\")) then
       if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
+        redim preserve arrSID(intSID + 1)
+        arrSID(intSID) = colSID(intUSR)
         intSID = intSID + 1
-        arrSID(ubound(arrSID)) = colSID(intUSR)
-        redim arrSID(intSID)
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
       end if
     ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
     elseif (instr(1, lcase(strUSR), "\") = 0) then
-      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
+      if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
+        redim preserve arrSID(intSID + 1)
+        arrSID(intSID) = colSID(intUSR)
         intSID = intSID + 1
-        arrSID(ubound(arrSID)) = colSID(intUSR)
-        redim arrSID(intSID)
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
       end if
     end if
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
@@ -126,9 +130,12 @@ elseif (errRET = 0) then
   ''ENUMERATE THROUGH EACH USER COLLECTED MATCHING 'STRUSR' TARGET USER , REF#2 , FIXES #31
   ''THIS ALLOWS FOR TARGETING BOTH LOCAL AND DOMAIN USER VARIANTS
   for intSID = 0 to ubound(arrSID)
+    objOUT.write vbnewline & vbtab & vbtab & arrSID(intSID)
+  next
+  for intSID = 0 to ubound(arrSID)
+    strORG = "SeServiceLogonRight = "
     objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
     objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-    strORG = "SeServiceLogonRight = "
     if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
       strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
     elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
@@ -161,7 +168,6 @@ elseif (errRET = 0) then
     if (err.number <> 0) then
       call LOGERR(4)
     end if
-    intSID = intSID + 1
   next
   ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
   call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
