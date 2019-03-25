@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 9
+strVER = 10
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -97,10 +97,24 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
   for intUSR = 0 to ubound(colUSR)
     ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
-    if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
-      intSID = intSID + 1
-      arrSID(ubound(arrSID)) = colSID(intUSR)
-      redim arrSID(intSID)
+    ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
+    if (instr(1, lcase(strUSR), "\")) then
+      if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
+        redim preserve arrSID(intSID + 1)
+        arrSID(intSID) = colSID(intUSR)
+        intSID = intSID + 1
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+      end if
+    ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
+    elseif (instr(1, lcase(strUSR), "\") = 0) then
+      if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
+        redim preserve arrSID(intSID + 1)
+        arrSID(intSID) = colSID(intUSR)
+        intSID = intSID + 1
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+      end if
     end if
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
@@ -116,9 +130,12 @@ elseif (errRET = 0) then
   ''ENUMERATE THROUGH EACH USER COLLECTED MATCHING 'STRUSR' TARGET USER , REF#2 , FIXES #31
   ''THIS ALLOWS FOR TARGETING BOTH LOCAL AND DOMAIN USER VARIANTS
   for intSID = 0 to ubound(arrSID)
-    objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-    objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LONGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    objOUT.write vbnewline & vbtab & vbtab & arrSID(intSID)
+  next
+  for intSID = 0 to ubound(arrSID)
     strORG = "SeServiceLogonRight = "
+    objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
+    objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
     if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
       strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
     elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
@@ -151,7 +168,6 @@ elseif (errRET = 0) then
     if (err.number <> 0) then
       call LOGERR(4)
     end if
-    intSID = intSID + 1
   next
   ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
   call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
@@ -218,7 +234,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -228,7 +244,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SVCperm.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
