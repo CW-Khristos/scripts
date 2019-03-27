@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project; When submitting a Feature Request, please make the Title according to this standard : "[Script or Project] - [Title]"
+about: Suggest an idea for this project
 title: Script or Project - Title
 
 ---
