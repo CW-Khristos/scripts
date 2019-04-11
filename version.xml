@@ -24,6 +24,7 @@
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
 	<reprobe.vbs>9</reprobe.vbs>
+  <rmm_logo.vbs>1</rmm_logo.vbs>
 	<SNMPparam.vbs>4</SNMPparam.vbs>
 	<SVCperm.vbs>10</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
