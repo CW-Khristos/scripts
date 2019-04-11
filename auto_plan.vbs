@@ -304,7 +304,7 @@ sub STAGE3()
               end if
             next
             ''JOIN COMPUTER TO DOMAIN
-            strJOIN = "/interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & chr(34) & strDMN & chr(34) & _
+            strJOIN = "wmic /interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & chr(34) & strDMN & chr(34) & _
               " UserName=" & chr(34) & strDUSR & chr(34) & " Password=" & chr(34) & strDPWD & chr(34) & " AccountOU=" & chr(34) & strOU & chr(34)
             call HOOK("wmic.exe " & strJOIN)
           end if

@@ -19,7 +19,7 @@
 	<rndds_msp_prebackup.vbs>1</rndds_msp_prebackup.vbs>
 	<set_msparchive.vbs>1</set_msparchive.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
-  <PWDchg.vbs>1</PWDchg.vbs>
+  <PWDchg.vbs>2</PWDchg.vbs>
 	<reagent.vbs>8</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>

@@ -14,7 +14,7 @@ dim strUSR, strPWD, strLVL
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -72,6 +72,7 @@ if ((strLVL = vbnullstring) or (ucase(strLVL) = "DOMAIN")) then
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING DOMAIN PWDCHG"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - EXECUTING DOMAIN PWDCHG"
   call HOOK("net user " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " /DOMAIN /y")
+  call HOOK("net user " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " /DOMAIN /ADD /y")
 end if
 ''END SCRIPT
 call CLEANUP()
