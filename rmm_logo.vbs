@@ -109,7 +109,7 @@ elseif (errRET = 0) then
     if (instr(1, lcase(strUSR), "\")) then
       if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
         redim preserve arrSID(intSID + 1)
-        arrSID(intSID) = colSID(intUSR)
+        arrSID(intSID) = trim(replace(colSID(intUSR), vbcrlf, vbnullstring))
         intSID = intSID + 1
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
@@ -118,7 +118,7 @@ elseif (errRET = 0) then
     elseif (instr(1, lcase(strUSR), "\") = 0) then
       if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
         redim preserve arrSID(intSID + 1)
-        arrSID(intSID) = colSID(intUSR)
+        arrSID(intSID) = trim(replace(colSID(intUSR), vbcrlf, vbnullstring))
         intSID = intSID + 1
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
@@ -142,29 +142,35 @@ elseif (errRET = 0) then
       set colFOL = objUFOL.subfolders
       for each sFOL in colFOL
         if (instr(1, lcase(sFOL.name), "rmmtech")) then
-          if (not (objFSO.folderexists(sFOL.path & "\AppData\Roaming\Microsoft\AccountPictures"))) then
-            objFSO.createfolder(sFOL.path & "\AppData\Roaming\Microsoft\AccountPictures")
+          if (not (objFSO.folderexists(sFOL.path & "\AppData\Roaming\Microsoft\Windows\AccountPictures"))) then
+            objFSO.createfolder(sFOL.path & "\AppData\Roaming\Microsoft\Windows\AccountPictures")
           end if
-          call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CW%20Logo/cw-logo.accountpicture-ms?raw=true", sFOL.path & "\AppData\Roaming\Microsoft\AccountPictures\", "cw-logo.accountpicture-ms")
+          call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CW%20Logo/cw-logo.accountpicture-ms?raw=true", sFOL.path & "\AppData\Roaming\Microsoft\Windows\AccountPictures\", "cw-logo.accountpicture-ms")
           wscript.sleep 1000
         end if
       next
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKLM\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE KEYS"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKLM\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE KEYS"
       call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture\Users\" & arrSID(intSID) & chr(34) & _
         " /f /ve /t REG_SZ /reg:32")
       call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture\Users\" & arrSID(intSID) & chr(34) & _
         " /f /ve /t REG_SZ /reg:64")
       ''ADD PUBLIC USER ACCOUNT PICTURE REGISTRY KEYS
       if (not (objFSO.folderexists(strPUB & arrSID(intSID)))) then
-        objOUT.write vbnewline & "need to create folder : " & chr(34) & "C:\Users\Public\AccountPictures\" & arrSID(intSID) & chr(34)
         'errRET = objFSO.createfolder(chr(34) & strPUB & arrSID(intSID) & chr(34))
         'objOUT.write vbnewline & vbtab & errRET
         strRCMD = "mkdir " & chr(34) & "C:\Users\Public\AccountPictures\" & arrSID(intSID) & chr(34)
         call HOOK("CMD /C " & strRCMD)
+        wscript.sleep 1000
       end if
       for intIMG = 0 to ubound(arrIMG)
         call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CW%20Logo/pub/" & strCW & "-" & arrIMG(intIMG) & ".jpg", "c:\temp\", strCW & "-" & arrIMG(intIMG) & ".jpg")
-		strRCMD = "copy " & chr(34) & "c:\temp\" & strCW & "-" & arrIMG(intIMG) & ".jpg" & chr(34) & " " & chr(34) & strPUB & arrSID(intSID) & "\" & strCW & "-" & arrIMG(intIMG) & ".jpg" & chr(34) & " /Y"
+        strRCMD = "copy " & chr(34) & "c:\temp\" & strCW & "-" & arrIMG(intIMG) & ".jpg" & chr(34) & " " & chr(34) & strPUB & arrSID(intSID) & "\" & strCW & "-" & arrIMG(intIMG) & ".jpg" & chr(34) & " /Y"
         call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+        wscript.sleep 1000
+        ''ADD PUBLIC USER ACCOUNT PICTURE REGISTRY VALUES
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKLM\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE VALUES"
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKLM\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE VALUES"
         call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture\Users\" & arrSID(intSID) & chr(34) & _
           " /f /v " & chr(34) & arrIMG(intIMG) & chr(34) & " /t REG_SZ /d " & chr(34) & strPUB & arrSID(intSID) & "\" & strCW & "-" & arrIMG(intIMG) & ".jpg" & chr(34) & " /reg:32")
         call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture\Users\" & arrSID(intSID) & chr(34) & _
@@ -172,15 +178,38 @@ elseif (errRET = 0) then
         wscript.sleep 1000
       next
       ''ADD RMMTECH USER ACCOUNT PICTURE REGISTRY KEYS
-      call HOOK("reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
-        " /f /v SourceId /t REG_SZ /d " & chr(34) & strCW & chr(34) & " /reg:32")
-      call HOOK("reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
-        " /f /v SourceId /t REG_SZ /d " & chr(34) & strCW & chr(34) & " /reg:64")
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE KEYS"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE KEYS"
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
+          " /f /ve /t REG_SZ /reg:32"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
+          " /f /ve /t REG_SZ /reg:64"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
+      ''ADD RMMTECH USER ACCOUNT PICTURE REGISTRY VALUES
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE VALUES"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTPICTURE VALUES"
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
+          " /f /v SourceId /t REG_SZ /d " & chr(34) & strCW & chr(34) & " /reg:32"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountPicture" & chr(34) & _
+          " /f /v SourceId /t REG_SZ /d " & chr(34) & strCW & chr(34) & " /reg:64"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
       ''ADD RMMTECH USER ACCOUNT STATE REGISTRY KEYS
-      call HOOK("reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountState" & chr(34) & _
-        " /f /ve /t REG_SZ /reg:32")
-      call HOOK("reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountState" & chr(34) & _
-        " /f /ve /t REG_SZ /reg:64")
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTSTATE KEYS"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ADDING : HKU\SOFTWARE\MICROSOFT\WINDOWS\CURRENTVERSION\ACCOUNTSTATE KEYS"
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountState" & chr(34) & _
+          " /f /ve /t REG_SZ /reg:32"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
+      strRCMD = "reg add " & chr(34) & "HKU\" & arrSID(intSID) & "\SOFTWARE\Microsoft\Windows\CurrentVersion\AccountState" & chr(34) & _
+          " /f /ve /t REG_SZ /reg:64"
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      wscript.sleep 1000
     end if
   next
 end if
@@ -245,7 +274,6 @@ end sub
 sub FILEDL(strURL, strPATH, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  objOUT.write vbnewline & strPATH
   strSAV = strPATH & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV

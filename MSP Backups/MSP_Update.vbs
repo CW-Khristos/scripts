@@ -51,8 +51,6 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
 else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
   objOUT.write vbnewline & vbnewline & now & vbtab & " - NO ARGUMENTS PASSED"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - NO ARGUMENTS PASSED"
-  errRET = 1
-  'call CLEANUP
 end if
 
 ''------------
@@ -210,6 +208,14 @@ sub LOGERR(intSTG)                                                              
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
+  if (errRET = 0) then         												      ''MSP_UPDATE COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "MSP_UPDATE SUCCESSFUL : " & NOW
+    err.clear
+  elseif (errRET <> 0) then    												      ''MSP_UPDATE FAILED
+    objOUT.write vbnewline & "MSP_UPDATE FAILURE : " & NOW & " : " & errRET
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "MSP_UPDATE", "FAILURE")
+  end if
   objOUT.write vbnewline & vbnewline & now & " - MSP_UPDATE COMPLETE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & " - MSP_UPDATE COMPLETE" & vbnewline
   objLOG.close
@@ -221,5 +227,5 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit errRET
+  wscript.quit err.number
 end sub
