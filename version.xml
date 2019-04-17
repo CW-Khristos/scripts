@@ -20,6 +20,7 @@
 	<set_msparchive.vbs>1</set_msparchive.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
   <PWDchg.vbs>2</PWDchg.vbs>
+  <qsmart.vbs>1</qsmart.vbs>
 	<reagent.vbs>8</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>

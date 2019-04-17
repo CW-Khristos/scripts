@@ -1,17 +1,25 @@
 ''QSMART.VBS
 ''DESIGNED TO QUERY AND REPORT SMART STATUS FOR ALL CONNECTED DRIVES
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
-dim errRET, strVER, strCOMP
+dim errRET, strVER
+dim strIN, strCOMP
+dim arrDRV(), arrSMART()
+dim intDRV, intTOT, intSMART
 ''SCRIPT OBJECTS
 dim objWMI, objFPD, arrFPD
-dim objLOG, objHOOK, objHTTP, objXML
+dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, SMART.VBS, REF #2
 strVER = 1
 ''DEFAULT SUCCESS
 errRET = 0
+''INITIALIZE ENUMERATED DRIVE ARRAY
+redim arrDRV(0)
+''INITIALIZE SMART ATTRIBUTE ARRAY
+redim arrSMART(0,0)
+arrSMART(0,0) = vbnullstring
 ''STDIN / STDOUT
 strCOMP = "."
 set objIN = wscript.stdin
@@ -42,11 +50,11 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    errRET = 1
+    'errRET = 1
     'call CLEANUP()
   end if
 else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
-  errRET = 1
+  'errRET = 1
   'call CLEANUP()
 end if
 
@@ -54,9 +62,76 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnewline
-''AUTOMATIC UPDATE, QSMART.VBS, REF #2
-''call CHKAU()
-objOUT.write colSMART
+''AUTOMATIC UPDATE, QSMART.VBS, REF #2 , FIXES #42
+call CHKAU()
+''CHECK FOR SMARTCTL.EXE IN C:\TEMPERATURE
+if (not objFSO.fileexists("c:\temp\smartctl.exe")) then
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SMART/smartctl.exe", "smartctl.exe")
+end if
+''GET LIST OF AVAILABLE DRIVES , 'ERRRET'=2
+intDRV = 0
+intSMART = 0
+objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING CONNECTED DRIVES" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING CONNECTED DRIVES" & vbnewline
+set objEXEC = objWSH.exec("c:\temp\smartctl.exe --scan-open")
+while (not objEXEC.stdout.atendofstream)
+  strIN = objEXEC.stdout.readline
+  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+  if (trim(strIN) <> vbnullstring) then
+    redim arrSMART((intDRV + 1), 0)
+    redim preserve arrDRV(intDRV + 1)
+    arrDRV(intDRV) = trim(split(strIN, " ")(0))
+    intDRV = (intDRV + 1)
+    intTOT = intDRV
+  end if
+  if (err.number <> 0) then
+    call LOGERR(2)
+  end if
+wend
+set objEXEC = nothing
+err.clear
+for intDRV = 0 to ubound(arrDRV)
+  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & arrDRV(intDRV)
+next
+''QUERY SMART STATUS FOR ALL ENUMERATED DRIVES
+if (intTOT > 0) then
+  for intDRV = 0 to (intTOT - 1)
+    if (arrDRV(intDRV) <> vbnullstring) then
+      set objEXEC = objWSH.exec("c:\temp\smartctl.exe -A " & arrDRV(intDRV))
+      while (not objEXEC.stdout.atendofstream)
+        strIN = objEXEC.stdout.readline
+        'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+        'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+        if (trim(strIN) <> vbnullstring) then
+          if ((instr(1, strIN, "smartctl") = 0) and (instr(1, strIN, "Copyright (C)") = 0) and (instr(1, strIN, "=== START") = 0) _ 
+            and (instr(1, strIN, "SMART Attributes Data") = 0) and (instr(1, strIN, "Vendor Specific SMART") = 0) and (instr(1, strIN, "ID#") = 0)) then
+              redim preserve arrSMART(intTOT, intSMART + 1)
+              'wscript.echo vbnewline & strIN & vbnewline
+              arrSMART(intDRV, intSMART) = trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, " ")(ubound(split(strIN, " ")))) & "]"
+              intSMART = (intSMART + 1)
+          end if
+        end if
+        if (err.number <> 0) then
+          call LOGERR(2)
+        end if
+        wscript.sleep 1000
+      wend
+      set objEXEC = nothing
+    end if
+  next
+end if
+for intDRV = 0 to (intTOT - 1)
+  for intSMART = 0 to ubound(arrSMART(intDRV))
+    objOUT.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
+  next
+next
+
+''END SCRIPT
+call CLEANUP()
+''END SCRIPT
+''------------
+ 
 for each objDRV in objFPD
 	arrFPD = objDRV.VendorSpecific
 	objOUT.writeline vbnewline & "OBTAINING SMART STATUS : " & objDRV.instancename & " : "
@@ -149,14 +224,6 @@ for each objDRV in objFPD
     end if
 	next
 next
-wscript.quit
-
-
-
-''END SCRIPT
-call CLEANUP()
-''END SCRIPT
-''------------
 
 ''SUB-ROUTINES
 sub wrtVAL(posFPD)
@@ -168,7 +235,7 @@ sub wrtVAL(posFPD)
     objOUT.write vbnewline
 end sub
 
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , FIXES #21
+sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, QSNART.VBS, REF #2 , FIXES #42
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -183,7 +250,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , 
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -193,7 +260,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , 
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/qSMART.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/qSMART.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)

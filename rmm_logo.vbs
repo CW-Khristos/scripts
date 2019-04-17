@@ -71,7 +71,7 @@ if (errRET <> 0) then
 elseif (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RMM_LOGO"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RMM_LOGO"
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , RMM_LOGO.VBS , REF #2 , REF #39
+  ''AUTOMATIC UPDATE , 'ERRRET'=10 , RMM_LOGO.VBS , REF #2 , FIXES #40
   call CHKAU()
   ''GET SIDS OF ALL USERS , 'ERRRET'=2
   intUSR = 0
@@ -219,7 +219,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, RMM_LOGO.VBS, REF #2 , REF #39
+sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, RMM_LOGO.VBS, REF #2 , FIXES #40
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
