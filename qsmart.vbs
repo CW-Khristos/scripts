@@ -64,7 +64,7 @@ objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnew
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnewline
 ''AUTOMATIC UPDATE, QSMART.VBS, REF #2 , FIXES #42
 call CHKAU()
-''CHECK FOR SMARTCTL.EXE IN C:\TEMPERATURE
+''CHECK FOR SMARTCTL.EXE IN C:\TEMP , REF #44
 if (not objFSO.fileexists("c:\temp\smartctl.exe")) then
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SMART/smartctl.exe", "smartctl.exe")
 end if
@@ -94,7 +94,7 @@ err.clear
 for intDRV = 0 to ubound(arrDRV)
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & arrDRV(intDRV)
 next
-''QUERY SMART STATUS FOR ALL ENUMERATED DRIVES
+''QUERY SMART STATUS FOR ALL ENUMERATED DRIVES , FIXES #44
 if (intTOT > 0) then
   for intDRV = 0 to (intTOT - 1)
     if (arrDRV(intDRV) <> vbnullstring) then

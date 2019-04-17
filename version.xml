@@ -3,6 +3,7 @@
 	<auto_plan.vbs>10</auto_plan.vbs>
 	<CClutter.vbs>3</CClutter.vbs>
 	<CSize.vbs>1</CSize.vbs>
+  <disk_usage.vbs>1</disk_usage>
 	<drvmap.vbs>1</drvmap.vbs>
 	<fileback.vbs>1</fileback.vbs>
 	<iasdatasync.vbs>1</iasdatasync.vbs>
