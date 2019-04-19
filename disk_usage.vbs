@@ -39,8 +39,8 @@ if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE P
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                       ''REQUIRED ARGUMENTS PASSED
-    if (instr(1, strUSR, "\")) then                           ''INPUT VALIDATION FOR 'STRUSR'
-    end if
+    strPATH = objARG.item(0)
+    strFORM = objARG.item(1)
   end if
 else                                                          ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
@@ -49,7 +49,42 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-if (errRET <> 0) then
+if (errRET = 1) then
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
+  ''AUTOMATIC UPDATE , 'ERRRET'=10 , DISK_USAGE.VBS , REF #2 , FIXES #45
+  call CHKAU()
+  ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
+  if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    wscript.sleep 5000
+    ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
+    if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    end if
+    if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
+      ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
+      set objSRC = objAPP.namespace("C:\temp\X.Robot32.zip").items()
+      set objTGT = objAPP.namespace("C:\temp")
+      objTGT.copyhere objSRC, intOPT
+    end if
+  end if
+  if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
+    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
+    if (ucase(strFORM) = "HTM") then
+      strRCMD = strRCMD & " /HTM{111111111120};c:\temp\robot.htm"
+    elseif (ucase(strFORM) = "CSV") then
+      strRCMD = strRCMD & " /CSV{113};c:\temp\robot.csv"
+    end if
+    call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+    ''DISABLED ZIP ARCHIVE CALLS
+    'wscript.sleep 5000
+    'if (ucase(strFORM) = "HTM") then
+    '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
+    '  wscript.sleep 1000
+    '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
+    'end if
+  end if
 elseif (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
@@ -71,8 +106,20 @@ elseif (errRET = 0) then
     end if
   end if
   if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & "C:\" & chr(34) & " /CSV{113};c:\temp\robot.csv"
-    call HOOK("CMD /C " & strRCMD)
+    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
+    if (ucase(strFORM) = "HTM") then
+      strRCMD = strRCMD & " /HTM{111111111120};c:\temp\robot.htm"
+    elseif (ucase(strFORM) = "CSV") then
+      strRCMD = strRCMD & " /CSV{113};c:\temp\robot.csv"
+    end if
+    call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+    ''DISABLED ZIP ARCHIVE CALLS
+    'wscript.sleep 5000
+    'if (ucase(strFORM) = "HTM") then
+    '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
+    '  wscript.sleep 1000
+    '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
+    'end if
   end if
 end if
 ''END SCRIPT
@@ -80,7 +127,55 @@ call CLEANUP()
 ''END SCRIPT
 ''------------
 
+''FUNCTIONS
+function makZIP(strSRC, strZIP)                                                       ''MAKE ZIP ARCHIVE , 'ERRRET'=60
+  strSRC = objFSO.getabsolutepathname(strSRC)
+  strZIP = objFSO.getabsolutepathname(strZIP)
+  if (not objFSO.fileexists(strZIP)) then                                             ''MAKE NEW ZIP ARCHIVE IF ARCHIVE DOES NOT EXIST , 'ERRRET'=61
+    call newZIP(strZIP)
+  end if
+  ''ENUMERATE FILES
+  sDupe = false
+  aFileName = split(strSRC, "\")
+  sFileName = (aFileName(ubound(aFileName)))
+  sZipFileCount = objAPP.namespace(strZIP).items.count
+  if (sZipFileCount > 0) then                                                         ''CHECK FOR DUPLICATES
+    for each strZIPFILE in objAPP.namespace(strZIP).items
+      if lcase(sFileName) = lcase(strZIPFILE) then                                    ''DUPLICATE FOUND
+        sDupe = true
+        exit for
+      end if
+    next
+  end if
+  if (not sDupe) then                                                                 ''DUPLICATE NOT FOUND
+    objAPP.namespace(strZIP).copyhere objAPP.namespace(strSRC).items, 16
+    ''CHECK FOR COMPLETION OF COMPRESSION
+    intLOOP = 0
+    do until (sZipFileCount < objAPP.namespace(strZIP).items.count)
+      wscript.sleep 500
+      objOUT.write "."
+      intLOOP = intLOOP + 1
+    loop
+    objOUT.write vbnewline & vbtab & vbtab & "ZIP COMPLETED" & vbnewline
+  end if
+  set objZIP = nothing
+  if (err.number <> 0) then                                                           ''ERROR RETURNED DURING ZIP ARCHIVE CREATION , 'ERRRET'=61
+    call LOGERR(60)
+  end if
+end function
+
 ''SUB-ROUTINES
+sub newZIP(strNZIP)                                                                   ''PREPARE NEW ZIP ARCHIVE , 'ERRRET'=61
+  Set objNFIL = objFSO.createtextfile(strNZIP)
+  objNFIL.write chr(80) & chr(75) & chr(5) & chr(6) & string(18, 0)
+  objNFIL.close
+  set objNFIL = nothing
+  wscript.sleep 500
+  if (err.number <> 0) then                                                           ''ERROR CREATING NEW ZIP ARCHIVE , 'ERRRET'=61
+    call LOGERR(61)
+  end if
+end sub
+
 sub CHKAU()																					          ''CHECK FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
