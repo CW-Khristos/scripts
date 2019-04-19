@@ -79,11 +79,14 @@ if (errRET = 1) then
     call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     ''DISABLED ZIP ARCHIVE CALLS
     'wscript.sleep 5000
-    'if (ucase(strFORM) = "HTM") then
+    if (ucase(strFORM) = "HTM") then
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/SavePage.exe", "savepage.exe")
+      strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\xrobot - report.mht" & chr(34)
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
     '  wscript.sleep 1000
     '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
-    'end if
+    end if
   end if
 elseif (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
@@ -115,11 +118,14 @@ elseif (errRET = 0) then
     call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     ''DISABLED ZIP ARCHIVE CALLS
     'wscript.sleep 5000
-    'if (ucase(strFORM) = "HTM") then
+    if (ucase(strFORM) = "HTM") then
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/SavePage.exe", "savepage.exe")
+      strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\xrobot - report.mht" & chr(34)
+      call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
     '  wscript.sleep 1000
     '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
-    'end if
+    end if
   end if
 end if
 ''END SCRIPT
