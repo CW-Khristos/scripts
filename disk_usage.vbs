@@ -3,21 +3,23 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
-dim errRET, strVER, strIN
+dim errRET, strVER, strIN, intOPT
 ''SCRIPT OBJECTS
-dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
+dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
 strVER = 1
 ''DEFAULT SUCCESS
 errRET = 0
-
+''ZIP ARCHIVE OPTIONS
+intOPT = 256
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
 set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
+Set objAPP = createobject("shell.application")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\DISK_USAGE")) then               ''LOGFILE EXISTS
@@ -53,14 +55,31 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
   ''AUTOMATIC UPDATE , 'ERRRET'=10 , DISK_USAGE.VBS , REF #2 , FIXES #45
   call CHKAU()
-  ''CHECK FOR X.ROBOT.EXE IN C:\TEMP, REF #46
-  if (not objFSO.fileexists("c:\temp\x.robot.exe")) then
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/x.robot.exe", "x.robot.exe")
+  ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
+  if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    wscript.sleep 5000
+    ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
+    if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    end if
+    if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
+      ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
+      set objSRC = objAPP.namespace("C:\temp\X.Robot32.zip").items()
+      set objTGT = objAPP.namespace("C:\temp")
+      objTGT.copyhere objSRC, intOPT
+    end if
+  elseif (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
+    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & "C:\" & chr(34) & " /CSV{113};c:\temp\robot.csv"
+    call HOOK("CMD /C " & strRCMD)
   end if
+end if
+''END SCRIPT
+call CLEANUP()
+''END SCRIPT
+''------------
 
-
-
-
+''SUB-ROUTINES
 sub CHKAU()																					          ''CHECK FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
