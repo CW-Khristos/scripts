@@ -69,7 +69,8 @@ elseif (errRET = 0) then
       set objTGT = objAPP.namespace("C:\temp")
       objTGT.copyhere objSRC, intOPT
     end if
-  elseif (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
+  end if
+  if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
     strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & "C:\" & chr(34) & " /CSV{113};c:\temp\robot.csv"
     call HOOK("CMD /C " & strRCMD)
   end if
