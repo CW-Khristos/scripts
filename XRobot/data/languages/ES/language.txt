@@ -1,0 +1,775 @@
+﻿Ene
+Feb
+Mar 
+Abr
+May
+Jun
+Jul
+Ago
+Sep
+Oct
+Nov
+Dic
+Enero
+Febrero 
+Marzo
+Abril
+Mayo
+Junio
+Julio
+Agosto
+Septiembre
+Octubre
+Noviembre
+Diciembre
+Acerca de
+Consultado el
+Consultado fecha
+Consultado fecha (dd/mm/aaaa)
+Consultado fecha (mm/dd/aaaa)
+Consultado hoy 
+Añadir carpeta actual
+Añadir los nombres de archivo a "Fecha" ficha
+Añadir a
+Añadir a zip
+Avanzada
+Opciones avanzadas
+Después de
+Todos los
+Todos los demás archivos
+Permita que las sentencias de SQL en la búsqueda
+Todos los usuarios
+Analizado en
+Analizar esta carpeta
+Análisis de datos
+y
+Appearance
+Archivo
+¿Está seguro que desea continuar?
+Como%
+Extensiones de archivo asociadas
+Attr
+Audio
+Buscar actualizaciones automáticamente en el arranque
+Automático-open
+Actualización automática
+Guardado automático
+Copia de seguridad automática de carpetas
+Opciones de copia de seguridad automática 
+Reporte(s) guardado automático
+Disponible
+Gracias por comprar Xinorbis! Por favor, introduzca la dirección de e-mail y código de activación que se le envió.
+Available Times
+Avanzada
+Copia de seguridad de los datos Xinorbis
+Gráfico de barras de color
+Bar resolución gráfica
+Antes de
+Negro
+Azul
+Edificación
+Web Elaboración de informes
+por la Fecha
+Cantidad por
+por tamaño
+bytes
+P1
+P10
+P2
+P3
+P4
+P5
+P6
+P7
+P8
+P9
+Cancelar
+Categorías
+Categoría
+Categoría Colores
+CDROM drive
+Cambiar
+Gráfico
+Opciones de gráfico
+Tabla de Nivel de zoom
+Buscar actualizaciones
+Elegir carpetas para añadir a la lista de escán
+Elija tipo de informe
+Borrar "Scan History"
+Borrar "Scan History". ¿Estás seguro?
+Haga clic para añadir
+Close
+Contraer los nodos
+Código de colores
+Combine
+Combine las unidades / carpetas
+Compare Folder
+Compare Folder Tree
+Comprimido
+Los archivos comprimidos
+Equipo
+Configurar
+Contiene el texto
+Contiene
+Este análisis contiene una o más exlusions. ¿Usted desea analizar con los archivos excluidos / carpetas?
+Contenido del primer registro
+Ayuda contextual
+Copiar
+Copiar tabla en el portapapeles
+Copia el último informe al portapapeles
+Copiar tabla en el portapapeles
+Copiar a
+Copiar al portapapeles árbol
+Creado
+Fecha de creación
+Fecha de creación (dd/mm/aaaa) 
+fecha de creación (mm/dd/aaaa) 
+Creado Hoy
+CSV
+CSV informe
+CSV informe guardado como
+Acumulativos
+Personalizar
+Personalizado 1
+Personalizado 10
+Personalizado 2
+Personalizado 3
+Personalizado 4
+Personalizado 5
+Personalizado 6
+Personalizado 7
+Personalizado 8
+Personalizado 9
+Personalizar
+Los archivos personalizados de informes
+Personalizada espectador
+Ciánico
+Fecha
+Formato de fecha
+Fechas
+Fecha / Hora
+Fecha de la pantalla
+Día
+LMMJVSD
+Día / Mes
+Por defecto la configuración de salida CSV
+Informe de texto por defecto la configuración de salida
+Eliminar
+Eliminar archivos de datos Historia. ¿Estás seguro?
+delta
+Detalle
+Detallada
+No se puede escanear esta carpeta! No existe!
+Configuración actual prohíbe entrar directamente SQL para las búsquedas!
+Bienvenido a
+No hay memoria suficiente para terminar de construir el árbol!
+Un error muy grave ha ocurrido!#13Por favor, correo electrónico del autor, si esto sucede otra vez.
+Rormato de archivo no admitido!
+¿Está seguro que desea enviar el archivo seleccionado a la papelera de reciclaje?
+¿Está seguro que desea enviar todos los archivos a la papelera de reciclaje?
+Reparación de éxito!
+Reparación de error: (
+Xinorbis cree que puede reparar el archivo que falta.
+¿Le gustaría intentar una reparación de archivos?
+Carpeta ya existe en "Favoritos"
+Diferencia de Izquierda
+Diferencia de Derecho
+Espacio libre en disco
+De espacio en disco utilizado
+Espacio de disco desperdiciado
+Alterar el estilo del contenido de los informes Xinorbis
+No contiene
+No hacer nada
+No construya árbol de la fecha
+No se los detalles del archivo propietario
+Tipo de unidad no se puede determinar
+Unidad de Datos del
+Unidad libre
+Tipo de transmisión               :
+Sistema de archivos               :
+Tipo de unidad                    : a distancia (redes) de unidad
+Espacio en el disco               :
+Espacio libre                     :
+Sectores por racimo               :
+Bytes por sector                  :
+Libre Clusters                    :
+Las agrupaciones en total         :
+Volumen Nombre                    :
+Número de serie                   :
+Unidad utilizada
+duplicar nombres de archivo
+Duplicados (Nombre de archivo)
+Duplicados (tamaño de archivo)
+Duplicados (Nombre de archivo)
+Duplicados (tamaño de archivo)
+Editar
+Edición de exclusión
+Vaciar las carpetas
+Habilitar la historia de la carpeta
+Habilitar el expediente completo de registro
+Cifrados
+Escriba un nombre nuevo para
+Igual a
+Error opening
+Error opening Xinorbis system file
+Excluir
+Archivo Exclusión
+Carpeta Exclusión
+Carpeta Exclusión
+Excluir archivos partir de la exploración
+Excluir partir de la exploración
+Exe
+Existe
+Salida
+Explota el mayor segmento
+Explora
+Explorar carpeta
+Explorar esta carpeta
+Exploración
+Exportación de contenido
+Exportar lista
+Exportar seleccionado al archivo
+Exportar seleccionado al archivo
+Extensión
+Para las extensiones que aparecen en más de una categoría
+No haga caso de duplicar las extensiones de las categorías personalizadas (categorías generales que tienen prioridad)
+No haga caso de duplicar las extensiones de las categorías estándar (categorías personalizadas tienen prioridad)
+Extensiones de uso tal como se especifica en todas las categorías (gráficos e informes pueden ser inexactos)
+Extensiones
+Favoritos
+Favoritos
+Campo de tipo de datos
+Archivo
+Archivo histórico de acceso
+Archivo Edad
+Atributos de los archivos
+Archivo histórico de la creación
+Archivo fechas
+Extensiones de archivo
+Archivo Historia Comparar
+Información del archivo de base de datos Historia
+Archivo Historial de búsquedas
+Archivo histórico de la modificación
+Nombre de archivo
+El dueño del archivo
+Ruta de archivos
+Propiedades del archivo
+Archivos
+Tamaño del archivo
+Tamaño del archivo (en bytes)
+Tamaño del archivo en el disco (en bytes)
+Archivo propagación tamaño
+Archivos de la izquierda que no existen en DERECHO
+Archivos en el DERECHO que no existen en la izquierda
+Archivos donde el tamaño se ha cambiado
+Tipos de archivo
+Filtro
+Carpeta
+Carpeta detalle
+No se puede escanear esta carpeta! No existe!
+Carpeta de Historia 
+Historia de carpetas: Informática
+Historia carpeta: Carpeta
+Carpeta de Historia de
+Carpeta de información Historia
+Lista de carpetas
+Propiedades de la carpeta
+Carpetas
+Analiza carpeta
+Carpetas dentro de la raíz, por la cantidad de archivos
+Carpetas dentro de la raíz, por el tamaño de los archivos
+Carpetas para escanear
+Estructura de carpetas
+Que se encuentran
+Se encuentra en
+De
+FTP de host
+FTP password
+FTP Nombre de usuario
+lista de archivos completo
+ruta de acceso completa
+General
+Genera nombres de archivo
+Generar MD5 checksum
+Generar MD5 checksum
+Gfx
+Gradiente de colores
+Gradiente from
+Gradiente to
+El gráfico de fondo
+Gráfico
+Verde
+Gris
+Disco Duro
+ha sido seleccionado, pero no se ha especificado nombre de archivo
+# Archivos
+Ayuda
+Hex edit
+Ocultos
+Ocultar
+Mostrar la fecha de creación del archivo
+Mostrar la fecha del último acceso al archivo
+Mostrar la fecha de la última modificación del archivo
+Mostrar el propietario del fichero (el usuario)
+Mostrar los atributos de archivo
+Tamaño de muestra (reales sobre el uso del disco)
+Las entradas de código de color según el tipo de archivo
+Seleccione los archivos de este lado que no se encuentran en el otro lado
+La página anterior
+Página siguiente
+Casa
+Cambiar el modo de privacidad
+Historia carpeta cambiar
+Historia
+Hora
+HTML informe de comparación guardan como
+Los archivos HTML
+HTML informe
+Gráficas e Imágenes
+Archivo fechas (creación)
+Fechas de archivo (Acceso)
+Archivo fechas (Modificado)
+Información del usuario
+Top 101 archivos más grandes
+Top 101 archivos más pequeños
+Top 101 archivos más nuevos
+Top 101 archivos más antiguos
+Cabecera
+Simple resumen
+Los atributos de archivo
+Categorías
+Carpetas dentro de la raíz
+Magnitud de los datos
+Categorías y extensión de archivo
+Nulo archivos / carpetas
+HTML opciones de informe
+Informe guardado como HTML
+Ignorar
+No haga caso de primer registro
+Importar
+Lista de importación
+Importación scan detalle
+Incluye títulos de las columnas
+Incluye todo el Camino
+Incluir imágenes
+Páginas de información
+Carpeta inicial
+Intervalo
+Proceso justo a tiempo
+Kilobytes
+Etiqueta
+Etiqueta de color
+Porcentaje Labe
+Etiqueta Total Porcentaje
+Etiqueta de valor
+Idioma
+Más grande
+Archivos más grandes
+El mes pasado
+La semana pasada
+Archivos de diseño 
+El lado izquierdo la barra de progreso
+Leyenda
+Enlace hover
+Enlace normal
+De carga
+Loading Folder History data
+Logarítmica
+Magnitud
+Cuadro Principal
+Estos pueden disminuir la generación de reportes HTML
+Megabytes
+Modificado
+Fecha de modificación
+Fecha de modificación (dd/mm/aaaa) 
+Fecha de modificación (mm/dd/aaaa) 
+Modificado Hoy
+Mes
+Mes / Año
+Más detalles
+Más conveniente
+Mov
+Mover
+Mover a
+Película
+Lo nuevo
+Nuevos archivos
+No "La historia de carpeta" carpeta seleccionada!
+Lo sentimos, pero no hay datos disponibles para el archivo
+No se encontraron archivos
+No hay archivos para comprimir!
+No se encontró resultado
+Ninguno que se encuentran
+Normal
+Distribución normal
+Contenido no indexadas
+No hay archivos "temporales" que se encuentran
+No es igual a
+NO ESPECIFICADO
+Nulo
+Nulo Archivos
+Cantidad de archivos
+Número de archivos
+de
+Ofi
+Oficina
+En línea
+Mayores de
+El más antiguo
+Los archivos más antiguos
+En
+Abierto
+Abrir en aplicación
+Abrir en las aplicaciones (por defecto es el bloc de notas)
+Abrir en Historia Archivo
+Abrir el último informe
+Abrir con "visor personalizado"
+Optimizaciones
+Opciones
+Naranja
+Organizar los informes
+Cabecera
+Archivo / carpeta de contar
+Tamaño del archivo
+Nulo archivos / carpetas
+Promedios
+Más grande de archivo / carpeta
+Usuario
+Categoría estadísticas
+Unidad
+Otros
+De salida como CSV
+De salida como HTML
+Salida en formato XML
+Chart Options
+Propietario
+Página de fondo
+Camino
+Caminos
+Patrón para excluir
+Por ciento
+Porcentaje total
+Por favor, espera
+Please wait while Folder History finishes
+Archivos de imagen PNG
+Mensaje de escaneo
+Prevista
+Prg
+Procesado en
+Programación
+Programas
+Púrpura
+Cantidad.
+Cantidad de archivos
+Cantidad
+Cantidad de archivos que aparecen por el usuario
+Rápida
+Carpeta ya existe en "Rápida carpetas"!
+Rápida Preferencias Informe
+Informes rápidos
+Disco RAM
+Gama
+Lea sólo
+Rojo
+Referencia
+Actualizar
+En comparación con anteriores
+En relación con la actualidad
+Remoto (red) de unidad
+Extraíble
+Cambiar el nombre de categorías personalizadas
+Reanálisis Archivo
+Informe
+Informe del navegador
+Indicar un bug / Sugerir una funció
+Informe de colores
+The selected report contains only selected data.
+This will cause certain displays to be inaccurate!
+informe para
+los elementos de informe
+Informe de diseño
+Opciones de salida
+Informes de carpetas
+Informes URL
+Are you sure you want to restore the default "file extension associations"?
+Restaurar valores predeterminados
+El lado derecho la barra de progreso
+Guardar
+Guardar todos (por defecto) 
+Guardar como
+Guardar gráfico
+Guardar los datos
+Guardar los que existen en otra fecha
+Salvar a los que no existen en otra fecha
+Guardar informes
+Guardar para Todos
+Informes de ahorro
+Escanear
+Escaneo de una unidad o carpeta
+Guardar los datos
+Escaneo de una unidad o carpeta
+Exploración Historia
+De exploración de carpetas
+Progreso de la búsqueda
+Busque en la siguiente unidad o carpeta
+Búsqueda
+Límite de Resultado de la búsqueda
+La sintaxis de búsqueda
+Elige
+Seleccione las categorías
+Seleccione exploración fecha / hora
+La carpeta seleccionada 
+Seleccione exploración fecha / hora
+Separador
+Establecer gráficos de barras de un solo color
+Configuración
+Sfx
+Mostrar
+Mostrar todos
+Mostrar categoría
+Presentación personalizada
+Mostrar todos los archivos
+Mostrar tamaño de archivo como
+Mostrar todo el Camino
+Listado
+Mostrar las etiquetas
+Mostrar nombres
+Mostrar sólo distinto de cero
+Mostrar los tamaños en
+Mostrar sin clasificar
+Tamaño
+Antes de Tamaño
+Cambios de tamaño
+Tamaño de los archivos enumerados por el usuario
+Tamaño Ahora 
+Tamaño (en disco)
+Tamaño de los archivos
+Tamaño de los archivos (en bytes)
+Tamaño en disco
+Más pequeño
+Archivos más pequeños
+Los archivos dispersos
+Especial
+Started scan of
+Condición Jurídica y Social
+Tipo de archivo sugerido
+Resumen
+                        Analizado :
+Promedio de archivos / carpetas   :
+Carpeta más grande                :
+Carpeta más grande                : <raíz>
+Más grande del archivo            :
+Usuario con mayor cuota de        :
+                                  : Cantidad Tamaño
+Número de archivos                :
+Número de carpetas                :
+Tamaño de archivos                :
+Tamaño de los archivos (en disco) :
+El espacio de disco desperdiciado :
+Nulo archivos                     :
+Vaciar las carpetas               :
+Promedio Tamaño del archivo       :
+Tipos de archivo admitidos
+Sys
+Sistema de
+Cuadro
+Tabla de fondo
+Tabla de pantalla
+Encabezado de tabla
+Nombre de tabla
+Cuadro altura de la fila
+Tablas
+Tabla de colores de texto
+Tabla de colores de texto 2
+Temp
+Los archivos temporales como% del número total de archivos
+Los archivos temporales como% del tamaño total de archivos
+Archivos temporales
+Lista de archivos temporales
+Temporal
+Texto
+Color del texto
+Archivos de texto
+Informe de texto
+================================================================================
+-- Archivos de Null ------------------------------------------------------------
+-- Vaciar las carpetas ---------------------------------------------------------
+-- Usuarios --------------------------------------------------------------------
+Nombre ---------------------------- Cantidad --- Como% --- Tamaño ---- Como% ---
+-- Comienzo de la página 101 archivos más grandes ------------------------------
+-- Comienzo de la página 101 archivos más pequeños -----------------------------
+-- Top 101 Nuevos Archivos -----------------------------------------------------
+-- Comienzo de la página 101 archivos más antiguos -----------------------------
+-- Tipos de archivo ------------------------------------------------------------
+Categoría ------------------------- Cantidad --- Como% --- Tamaño ---- Como% ---
+-- Atributos -------------------------------------------------------------------
+Atributos ------------------------- Cantidad --- Como% --- Tamaño ---- Como% ---
+-- Lista de carpetas -----------------------------------------------------------
+Carpeta --------------------------- Cantidad --- Como% --- Tamaño ---- Como% ---
+-- Magnitudes ------------------------------------------------------------------
+-- Detalles de la extensión ----------------------------------------------------
+Informe de texto Nombre de archivo
+Informe de texto guardado como
+La carpeta raíz no existe
+Esta semana
+Tiempo
+TMP
+Para
+Cambiar gradiente 
+Herramientas
+Top 101
+Tamaño total
+El tamaño total de archivos analizados
+Árbol
+Árbol gráfico 
+Nombre de archivo del árbol de informes
+Árbol de archivos
+Árbol de informes
+Árbol de informes guardados como
+Free
+Tipo
+Tipos de "archivo temporal"
+SinCat
+Sin categoría
+Desconocida
+Tipo de archivo desconocido
+Mayor actualización de los progresos realizados (más lento)
+Nivel de Progreso Actualización 2
+Nivel de Progreso Actualización 3
+Nivel de Progreso Actualización 4
+Nivel de Progreso Actualización 5
+Bajo actualizar el progreso (más rápido)
+Actualización de Historia carpeta
+Subir
+Cargar
+Cargar gráficos HTML
+Cargar las páginas de índice
+Uso por el usuario
+Usado
+Se utiliza el espacio
+Definido por el usuario
+Información del usuario
+Manual de instrucciones
+Usuario
+Valor
+Tareas
+Ver / Abrir el archivo
+Web Reports
+Semana
+Semana / Año
+Bienvenido
+Cuando hay menos de este número de archivos
+¿Qué datos
+Blanco
+Los archivos de Windows
+En los últimos
+Asistente
+Bytes
+Xinorbis lista de archivos
+Gigabytes
+Xinorbis datos de las carpetas
+Los cambios en la carpeta de datos se aplicará la próxima vez que abra su Xinorbis
+Xinorbis lista de archivos
+inorbis Inicio
+Nombre de archivo del informe Xinorbis
+Kilobytes
+Megabytes
+XML informe de comparación guardan como
+Archivos XML
+XML informe
+XML informe guardado como
+XValue
+Año
+Amarillo
+Ayer
+Zip
+Informe no encontrado
+Checking for updates
+Copiar al portapapeles
+Advertencia
+Error al guardar el informe
+Error al guardar
+Sólo versión Pro
+Modifica para requisitos particulares menú Carpeta Rápida
+Añadir Xinorbis al menú contextual del Explorador
+Tutorial
+Compra Xinorbis
+Habilitado
+Discapacitado
+Seleccione una fecha para los lados IZQUIERDA y DERECHA.
+Buscando...
+¡Una nueva versión está disponible!
+¡No hay nueva versión disponible!
+¡Error!
+Medios de comunicación social
+Gracias
+Portátil
+Estándar
+Color del título
+Multicolor
+Gradiente
+Predeterminada
+Resultados de la búsqueda
+Ocultar nombres
+Incapaz de conectarse a
+Importar datos CSV
+Horas de trabajo
+Minuto
+Minutos
+Segundo
+Segundos
+Nombre
+Dirección de correo electrónico
+Código de activación
+Esta función no está disponible en la versión gratuita.
+Error al comprimir archivos
+Versión instalada
+Lo último disponible en línea
+Descargar
+Actualizar ahora
+Versión
+Sitio web
+Xinorbis está ocupado
+Error al abrir el archivo de sistema Xinorbis
+Historial de carpetas disponibles escanea para la carpeta seleccionada
+Escanea
+Excluir vacío
+Seleccionado
+Espere a que finalice la subida de Web Reports
+Combinación de nombre / correo electrónico / código no válida
+Exportar
+Por favor, compruebe qué Xinorbis está instalado correctamente!
+Base de datos está vacía
+De archivo incorrecto CSV
+no existe
+Varias carpetas
+Conexión a la base de datos
+Error al conectar a ODBC con la cadena de conexión suministrada.
+Entrada inválida
+Archivo perdido
+Búsqueda terminada
+Este mes
+Mapa de carpetas
+Restablecer los colores de degradado de la gráfica
+Advertencia: La adquisición del nombre de usuario está desactivada. Haga clic aquí para habilitar.
+Línea de tiempo
+Color de la pantalla
+Izquierda
+Derecho
+Mostrar registro
+Guardar registro
+Restaurar todos los valores predeterminados
+Seleccionar todo
+Seleccionar ninguno
+Copiar los resultados en el portapapeles
+Fuente de datos
+Nuevo
+No puedo encontrar el archivo "%$"
+Prueba de carga de FTP fallida
+Carpeta Explosiva
+Web Reports FTP settings are missing
+No procesar archivos temporales
+Advertencia: la adquisición temporal de archivos está deshabilitada. Haga clic aquí para habilitar.
+Escanear
+Todas las demás pantallas de la tabla
+Log

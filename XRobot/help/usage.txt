@@ -1,0 +1,296 @@
+=========================================================================================
+==                                                                                     ==
+== x.Robot 2.0 Usage Document                                                          ==
+==                                                                                     ==
+== (c) Paul Alan Freshney 2017                                                         ==
+==                                                                                     ==
+== www.xinorbis.com / www/maximumoctopus.com / xinorbis@maximumoctopus.com             ==
+==                                                                                     ==
+==                                                                                     ==
+==  April 13th 2017                                                                    ==
+==                                                                                     ==
+=========================================================================================
+
+Installation;
+
+X.Robot doesn't need installing in the normal sense. Either add the folder
+where X.Robot is located to the "path" environmental variable or refer to
+it by its full path in batch files (etc.).
+
+There should be ten files in the root of the X.Robot folder. The 9 ".txt"
+files contain associations that X.Robot uses to decide which category a file
+belongs to. Each file contains a list of file extensions (without leading .)
+one per line. Feel free to edit these!
+
+Command Line Parameters;
+
+The first parameter is always the path to scan
+
+  xcom.exe folder
+
+If X.Robot is executed with just this one parameter then it will output a
+simple summary of the scan to the console.
+
+All comments and suggestions are gratefully received, please email them to me
+at freeware@freshney.org .
+
+
+=========================================================================================
+=========================================================================================
+== Misc.                                                                               ==
+=========================================================================================
+=========================================================================================
+
+
+    *nothing*
+  Outputs version and basic "about" information" (web address and email etc.)
+
+    /? or /h
+  Simple help stuff and a few stats.
+
+    /o
+  Disables status output.
+
+    /p
+  Show scan and processing progress
+
+    /u
+  Open this document.
+
+
+=========================================================================================
+=========================================================================================
+== Database                                                                            ==
+=========================================================================================
+=========================================================================================
+
+
+X.Robot can update a Xinorbis database if required to do so. 
+
+Use X.Robot to update the database (e.g. automatically through a batchfile)
+and then use Xinorbis to view graphs tables and generate reports etc.
+
+    /odbc
+  Updates an ODBC compliant database with all file/folder details.
+
+  X.Robot will expect a custom.ini file with a "connectionstring" parameter
+  in the same format as Xinorbis.
+
+  Ideally Xinorbis and XinorbisCOM should live in the same folder, they'll be
+  much happier and can share config information.
+
+    /sqlite
+  Updates an SQLite 3 database with all file/folder details.
+
+  XinorbisCOM will read the config.ini file and use the same as Xinorbis.
+
+    /updatescanhistory
+  Updates the Xinorbis Scan History. Only useful if you use Xinorbis on the 
+  same PC as XinorbisCOM.
+
+The following command will scan "somefolder" and update the Xinorbis ODBC database
+and update the Xinorbis scan history. 
+ 
+  	xcom somefolder /odbc /updatescanhistory	
+  
+
+=========================================================================================
+=========================================================================================
+== Optimisations                                                                       ==
+=========================================================================================
+=========================================================================================
+
+    /nouser
+  Don't gather user details; this will improve scan performance but will mean
+  that reports will not show user usage statistics.  
+ 
+    /noprocess
+  If you only plan on producing file lists then use this option as it stops
+  Xinorbis from unnecessarily processing file data.
+  
+
+=========================================================================================
+=========================================================================================
+== Report Output                                                                       ==
+=========================================================================================
+=========================================================================================
+
+
+If no report options are selected then a basic summary of the directory scan
+will be output to the console.
+
+The configuration options in the braces {110} are OPTIONAL. The defaults are
+specified where appropriate.
+
+The majority of options are either on or off, toggling an option is simply
+a matter of replacing the letters (a, b, c etc.) with either;
+  0 to disable the option
+  1 to enable the option
+
+Where an option has many settings then this is specified separately.
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate CSV report
+Default : /CSV{1100}
+
+    /CSV{abcd};<filename>
+
+  Outputs a CSV file to the path specified in <filename>.
+
+    option a; 0 - category output only
+              1 - full file list (default)
+
+    option b; 0 - Don't add "heading row"
+              1 - Add "heading row" (default)
+
+    option c; 0 - File sizes in most convenient format (1MB, 400bytes etc.)
+              1 - All file sizes in bytes
+              2 - All file sizes in kilobytes
+
+    option d; 0 - Separator is comma (default)
+              1 - Separator is tab 
+
+  If a file name is not specified then it will be saved to;  
+    %temp%\xcom_yyyymmdd_hhmmss.csv
+
+Example : /CSV{1}
+          Create only a list of files in the scan
+  
+          /CSV{10}
+          Create only a list of files in the scan and don't add a heading row.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate HTML report
+Default : /HTM{111111111120}
+
+    /HTM{abcdefghijkl};<filename>
+
+  Outputs an HTML report file to the path specified in <filename>.
+
+  option a; graphs on (1 default) or off (0)
+  option b; include File Attributes section     (default is 1)
+  option c; include Category section            (default is 1) 
+  option d; include Directories section         (default is 1)
+  option e; include Magnitude section           (default is 1)
+  option f; include File Extension list section (default is 1)
+  option g; include Null Files section          (default is 1)
+  option h; include File Dates section          (default is 1)
+  option i; include Top 50 section              (default is 1)
+  option j; include Users section               (default is 1)
+  option k: 0 - report is 800 pixels wide
+            1 - report is 1024 pixels wide
+            2 - report is 1280 pixels wide (default)
+  option l; 0 - File sizes in most convenient format (1MB, 400bytes etc.)
+            1 - All file sizes in bytes
+            2 - All file sizes in kilobytes
+              
+
+  If a file name is not specified then it will be saved to;  
+    %temp%\xcom_yyyymmdd_hhmmss.htm
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate a simple summary of findings
+Default : /SUM
+
+    /SUM
+  Outputs a summary to the console
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate an ASCII text report
+Default : /TXT{1111111111}
+
+    /TXT{abcdefghij};<filename>
+  Outputs an ASCII text report file to the path specified in <filename>.
+
+  option a; UNUSED
+  option b; include File Attributes section     (default is 1)
+  option c; include Category section            (default is 1)
+  option d; include Directories section         (default is 1)
+  option e; include Magnitude section           (default is 1)
+  option f; include File Extension list section (default is 1)
+  option g; include Null Files section          (default is 1)
+  option h; include File Dates section          (default is 1)
+  option i; include Top 50 section              (default is 1)
+  option j; include Users section               (default is 1)   
+
+If a file name is not specified then it will be saved to;  
+    %temp%\xcom_yyyymmdd_hhmmss.txt
+  
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate an XML report
+Default : /XML{0111111111}
+
+    /XML{abcdefghij};<filename>
+
+  Outputs an XML 1.0 compliant report file to the path specified in <filename>.
+
+  option a; File list (1) or summary of results (default is 0)
+  option b; include File Attributes section     (default is 1)
+  option c; include Category section            (default is 1)
+  option d; include Directories section         (default is 1)
+  option e; include Magnitude section           (default is 1)
+  option f; include File Extension list section (default is 1)
+  option g; include Null Files section          (default is 1)
+  option h; include File Dates section          (default is 1)
+  option i; include Top 50 section              (default is 1)
+  option j; include Users section               (default is 1)
+
+If a file name is not specified then it will be saved to;  
+    %temp%\xcom_yyyymmdd_hhmmss.xml
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+Option  : Generate an XML file list report
+Default : /XFL{0111111111}
+
+    /XFL;<filename>
+
+  Outputs an XML 1.0 compliant report file to the path specified in <filename>.
+
+If a file name is not specified then it will be saved to;  
+    %temp%\xcom_yyyymmdd_hhmmss.xml
+
+  
+=========================================================================================
+== Dynamic filename generation                                                         ==
+=========================================================================================
+
+  
+  For use in all output options that take a filename as a parameter.
+
+    $XD   - The drive where XinorbisCOM was run from
+    $XF   - The folder where XinorbisCOM was run from
+  
+    $PC   - The name (network) of the PC XinorbisCOM is executed on
+    $User - The name of the user that executed XinorbisCOM  
+
+    $yyyy - current year (eg 2009)
+    $YY   - last two digits of current year (eg 08)	
+    $mm   - current month (01 for January, 02 for February etc.)
+    $MM   - current month as short word (Jan, Feb, Mar, Apr etc.)
+    $dd   - current day (01 through 28, 29, 30 or 31 depending on month)
+    $DD   - current day as short word (Mon, Tue, Wed etc.) 
+	
+    $Th   - hour part of the current time (00 - 23)
+    $Tm   - minute part of the current time (00 - 59)
+    $Ts   - second part of the current time  (00 - 59)
+  
+  Examples of usage;   	
+    - Current date in yyyymmdd format;
+	    /TXT;c:\xinorbis\$yyyy$mm$dd_dailyscan.txt
+
+    - Store files in individual folders for month and year;
+            /TXT;c:\scan\$yyyy\$mm\$dd_dailyscan.txt
+		
+
+=========================================================================================
+=========================================================================================
+= end                                                                                  ==
+=========================================================================================
+=========================================================================================

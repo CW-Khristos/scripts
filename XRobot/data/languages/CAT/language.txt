@@ -1,0 +1,775 @@
+Jan
+Feb
+Mar
+Apr
+May
+Jun
+Jul
+Aug
+Sep
+Oct
+Nov
+Dec
+January
+February
+March
+April
+May
+June
+July
+August
+Septembr
+Octobr
+Novembr
+Decembr
+Fingz
+Accessd
+Accessd Date
+Accessd date (dd/mm/yyyy)
+Accessd date (mm/dd/yyyy)
+Accessd Today
+Add current foldr
+Add file names 2 "date" tab
+Add 2
+Add 2 zip file
+Advancd
+Advancd Opshuns
+After
+All
+All other filez
+Allow SQL statements when searching
+All users
+Analysd at
+Analyse this foldr
+Analysin data
+and
+Appearance
+Archive
+R u sure u wants to continue?
+As %
+Associatd File Extensions
+Attr
+Audio
+Automatically check 4 updates on startup
+Auto-open
+Auto Refresh
+Auto save
+Auto-save foldr report(s)
+Autosave Opshuns
+Autosave Report(s)
+Available
+Thank u 4 purchasing Xinorbis! Please enter teh email address and activation code that was sent 2 u.
+Available times
+Advancd
+Backup ur Xinorbis data
+Bar graph colour
+Bar graph resolution
+Before
+Black
+Blue
+Building...
+Building Web Reports
+by Date
+by Quantity
+by Size
+nomz
+C1
+C10
+C2
+C3
+C4
+C5
+C6
+C7
+C8
+C9
+Cancel
+Kategories
+Kategory
+Kategory colours
+CDROM drive
+Change
+Chart
+Chart Opshuns
+Chart zoom level
+Check 4 updates
+Choose foldrz 2 add 2 skan list
+Choose report type
+Clear skan history
+Clear "Skan History". R u sure?
+Click 2 add
+Close
+Collapse nodes
+Colour code
+Combine
+Combine drives / foldrz
+Compare Foldr
+Compare Foldr Tree
+Compressd
+Compressd filez
+Computer
+Configure
+Containing text
+Contains
+This skan contains one or more exlusions. Do u wants 2 skan wiv teh excludd filez/foldrz?
+Contents ov first record
+Context Help
+Copy
+Copy chart 2 clipboard
+Copy last report 2 clipboard
+Copy table 2 clipboard
+Copy to
+Copy tree 2 clipboard
+Creatd
+Creatd Date
+Creatd date (dd/mm/yyyy)
+Creatd date (mm/dd/yyyy)
+Creatd Today
+CSV filez
+CSV report
+CSV report savd as
+Cumulative
+Custom
+Custom1
+Custom10
+Custom2
+Custom3
+Custom4
+Custom5
+Custom6
+Custom7
+Custom8
+Custom9
+Customise
+Custom Report Filez
+Custom viewer
+Cyan
+Date
+Date format
+Dates
+Date / Time
+Date Display
+Day
+MTWTFSS
+Day/Munf
+Default CSV output settings
+Default Text Report output settings
+Delete
+Delete Foldr History data. R u sure?
+delta
+Detail
+Detaild
+You cannot skan this foldr! It does not exist!
+Current settings forbid directly entering SQL 4 searches!
+welcome to
+Thar is not enough memory 2 finish building teh Tree!
+A vry serious error has occurd!#13Please email teh author if this happens again.
+Unsupportd file format!
+R u sure u wants 2 send teh selectd file 2 teh recycle bin?
+R u sure u wants 2 send all ov teh filez 2 teh recycle bin?
+Repair Successful!
+Repair Faild :(
+Xinorbis thinkz it can repair teh missing file.
+Would u like 2 attempt a file repair?
+Foldr already exists in "Favourites"
+Difference on Left
+Difference on Right
+Disk space free
+Disk space usd
+Disk space wastd
+Alter teh style or contents ov Xinorbis reports
+Doesnt contain
+Do nothing
+Dont build date tree
+Dont get file owner details
+Drive type cannot be determind
+Drive Details 4
+Drive free
+Drive Type              :
+File System             :
+Drive Type              : Remote (Network) Drive
+Space on Drive          :
+Free Space              :
+Sectors per Cluster     :
+Bytes per Sector        :
+Free Clusters           :
+Total Clusters          :
+Volume Name             :
+Serial Number           :
+Drive usd
+duplicate filenames
+Duplicates (File naym)
+Duplicates (File size)
+Duplicates (File naym)
+Duplicates (File size)
+Edit
+Edit exclusion
+Empty Foldrz
+Enable Foldr History
+Enable full file logging
+Encryptd
+Enter a new naym 4
+Equal to
+Error opening
+Error opening Xinorbis system file
+Exclude
+Excludd File(s)
+Excludd Foldr(z)
+Excludd Foldr(z)
+Exclude filez from skan
+Exclude from skan
+Exe
+Exists
+KTHXBAI
+Explode largest slice
+Explore
+Explore foldr
+Explore this foldr
+Exploring
+Export content
+Export list
+Export selectd 2 file
+Export selectd 2 file
+Extension
+For extensions that appear in more than one kategory
+Ignore duplicate extensions in custom kategories (standard kategories take precedence)
+Ignore duplicate extensions in standard kategories (custom kategories take precedence)
+Use extensions as specifid in all kategories (charts and reports may be inaccurate)
+Extensions
+Favourite
+Favourites
+Field data type
+File
+File access history
+File Age
+File Attributes
+File creation history
+File dates
+File Extensions
+Folder History Compare
+Folder History Database Information
+Folder History Search
+File modification history
+File naym
+File Owner
+File path
+File properties
+Filez
+File Size
+File size (nomz)
+File size on disk (nomz)
+File size spread
+Filez on LEFT that dont exist on RIGHT
+Filez on RIGHT that dont exist on LEFT
+Filez where teh size has changd
+File types
+Filter
+Foldr
+Foldr detail
+You cannot skan this foldr! It does not exist!
+Foldr History
+Foldr History: Computer
+Foldr History: Foldr
+Foldr History 4
+Foldr History info
+Foldr List
+Foldr properties
+Foldrz
+Foldr Skans
+Foldrz wivin root, by quantity ov filez
+Foldrz wivin root, by size ov filez
+Foldrz 2 skan
+Foldr structure
+Found
+Found in
+From
+FTP host
+FTP password
+FTP username
+Full file list
+Full file path
+General
+Generate filenames
+Generate MD5 checksum
+Generate MD5 checksum
+Gfx
+Gradient colours
+Gradient from
+Gradient to
+Graph background
+Graphics
+Green
+Grey
+Hard disk
+has been selectd but no filename has been specifid.
+# Filez
+Help
+Hex edit
+Hidden
+Hide
+show file creatd date
+show date teh file was last accessd
+show date teh file was last modifid
+show file owner (user)
+show file attributes
+show size (actual on-disk usage)
+colour code entries according 2 file type
+highlight teh filez on this side which are not found on teh other side
+previous paeg
+next paeg
+home
+toggle privacy mode
+toggle Foldr History
+History
+Hour
+HTML Comparison Report savd as
+HTML filez
+HTML report
+Charts and Images
+File dates (Creatd)
+File dates (Accessd)
+File dates (Modifid)
+User details
+Top 101 largest filez
+Top 101 smallest filez
+Top 101 newest filez
+Top 101 oldest filez
+Header
+Simple summary
+File attributes
+Kategories
+Foldrz wivin root
+Magnitude data
+Kategories and file extension
+Empty filez / foldrz
+HTML report opshuns
+HTML report savd as
+Ignore
+Ignore first record
+Import
+Import list
+Import skan detail
+Include column titles
+Include full file path
+Include images
+Information paegz
+Initial foldr
+Interval
+Just-in-time processing
+Kilonomz
+Label
+Label colour
+Label Percent
+Label Percent Total
+Label Value
+Language
+Largest
+Largest Filez
+Last Munf
+Last Week
+Laut filez
+Left side progress bar
+Legend
+Link hover
+Link normal
+Load
+Loading Folder History data...
+Logarthmic
+Magnitude
+Main chart
+These may slow down HTML report generation
+Meganomz
+Modifid
+Modifid Date
+Modifid date (dd/mm/yyyy)
+Modifid date (mm/dd/yyyy)
+Modifid Today
+Munf
+Munf/Year
+More detail
+Most convenient
+Mov
+Moov
+Moov to
+Movie
+Newest
+Newest filez
+No "Foldr History" foldr selectd!
+Soz, but there iz no file data available 4
+No filez found
+No filez 2 compress!
+No matches found.
+None found
+Normal
+Normal distribution
+Not Content Indexd
+No temporary filez found
+Not equal to
+NOT SPECIFIED
+Empty
+Empty Filez
+Number ov filez
+Number ov foldrz
+ov
+Off
+Office
+Offline
+Older than
+Oldest
+Oldest filez
+On
+Open
+Open in application
+Open in application (default is notepad)
+Open in Folder History
+Open last report
+Open wiv "custom viewer"
+Optimisations
+Opshuns
+Orange
+Organise reports
+Header
+File / foldr count
+File size
+Empty filez / foldrz
+Averages
+Largest file / foldr
+User
+Kategory stats
+Drive
+Other
+Output as CSV
+Output as HTML
+Output as XML
+Chart Opshuns
+Owner
+Page background
+Path
+Paths
+Pattern 2 exclude
+Percent
+Percent Total
+Please wait...
+Please wait while Foldr History finishes
+PNG image filez
+Post skan
+Preview
+Prg
+Processd in
+Programming
+Programs
+Purple
+Qty.
+Qty ov Filez
+Quantity
+Quantity ov filez listd by user
+Quick
+Foldr already exists in "Quick Foldrs"!
+Quick Report Preferences
+Quick Reports
+RAM disk
+Range
+Read Only
+Red
+Reference
+Refresh
+Relative 2 previous
+Relative 2 today
+Remote drive
+Removable disk
+Rename custom kategory
+Reparse File
+Report
+Report browser
+Report a bug / Suggest a feature
+Report colours
+Teh selectd report contains only selectd data.
+This will cause certain displays 2 be inaccurate!
+report 4
+Report items
+Report laut
+Report Opshuns
+Reports foldr
+Reports URL
+R u sure u wants 2 restore teh default "file extension associations"?
+Restore defaults
+Right side progress bar
+Save
+Save all (default)
+Save as
+Save chart
+Save data
+Save those that do exist on other date
+Save those that dont exist on other date
+Save reports
+Save 2 all
+Saving reports
+Skan
+Skan a drive or foldr
+Skan data
+Skan a drive or foldr
+Skan History
+Skanning foldr
+Skanning progress
+Skan teh following drive or foldr
+Search
+Search result limit
+Search syntax
+Select
+Select kategories
+Select skan date/time
+Selectd foldr
+Select skan date/time
+Separator
+Set bar graph 2 a single colour
+Settings
+Sfx
+Show
+Show all
+Show kategorisd
+Show custom
+Show filez
+Show file sizes as
+Show Full Path
+Showing
+Show labels
+Show names
+Show only non-zero
+Show sizes in
+Show unkategorisd
+Size
+Size before
+Size Changes
+Size ov filez listd by user
+Size now
+Size (disk)
+Size ov Filez
+Size ov Filez (nomz)
+Size on Disk
+Smallest
+Smallest Filez
+Sparse File
+Special
+Startd skan ov
+Status
+Suggestd File Type
+Summary
+                 Analysd :
+ Average Filez/Foldr     :
+ Largest Foldr           :
+ Largest Foldr           : <root>
+ Largest File            :
+ Usr wiv largest share   :
+                         : Quantity     Size
+ Number ov Filez         :
+ Number ov Foldrz        :
+ Size ov Filez           :
+ Size ov Filez (on disk) :
+ Disk space wastd        :
+ Empty filez             :
+ Empty foldrz            :
+ Average File Size       :
+Supportd file typez
+Sys
+System
+Table
+Table background
+Table Display
+Table header
+Table naym
+Table row height
+Tables
+Table text colour
+Table text colour 2
+Temp
+Temp filez as % ov total number ov filez
+Temp filez as % ov total size ov filez
+Temp filez
+Temporary Filez List
+Temporary
+Text
+Text colour
+Text filez
+Text report
+==================================================================
+-- Empty Files ---------------------------------------------------
+-- Empty Foldrz --------------------------------------------------
+-- Users ---------------------------------------------------------
+Name ------------------------- Qty --- As % ---- Size -- As % ----
+-- Top 101 Largest Files -----------------------------------------
+-- Top 101 Smallest Files ----------------------------------------
+-- Top 101 Newest Files ------------------------------------------
+-- Top 101 Oldest Files ------------------------------------------
+-- File Types ----------------------------------------------------
+Kategory --------------------- Qty --- As % ---- Size -- As % ----
+-- Attributes ----------------------------------------------------
+Attributes ------------------- Qty --- As % ---- Size -- As % ----
+-- Foldr List ----------------------------------------------------
+Foldr ------------------------ Qty --- As % ---- Size -- As % ----
+-- Magnitudes ----------------------------------------------------
+-- Extension Details ---------------------------------------------
+Text report filename
+Text report savd as
+Root does not exist 
+This Week
+Time
+TMP
+To
+Toggle gradient
+Tools
+Top 101
+Total size
+Total size ov files analysd
+Tree
+Tree chart
+Tree report filename
+Tree files
+Tree report
+Tree report savd as
+Free
+Type
+Types ov "temporary file"
+Unkat
+Unkategorisd
+Unknown
+Unknown file type
+Highest progress update (Slowest)
+Progress Update Level 2
+Progress Update Level 3
+Progress Update Level 4
+Progress Update Level 5
+Lowest progress update (Fastest)
+Updating Foldr History
+Upload
+Uploading
+Uploading HTML grafs
+Uploading index paegz
+Usage by user
+Used
+Used space
+User defind
+User Details
+User manual
+Users
+Value
+View
+View/open file
+Web Reports
+Week
+Week/Year
+Welcome
+When theres fewer than this many filez
+Which data
+White
+Windows filez
+Within teh last
+Wizard
+Bytes
+Xinorbis file list
+Giganomz
+Xinorbis data foldr
+Changes 2 teh data foldr will be applid next time ur open Xinorbis
+Xinorbis file list
+Xinorbis Home
+Xinorbis report filename
+Kilonomz
+Meganomz
+XML Comparison Report savd as
+XML filez
+XML report
+XML report savd as
+XValue
+Year
+Yellow
+Yesterday
+Zip
+Report not found
+Checking 4 updatez
+Copy 2 clipbord
+Warningz
+Error saving report
+Error saving
+Pro vershion only
+Customise Quick Folder menu
+Add Xinorbis 2 Explorer context menu
+Tutorial
+Purchase Xinorbis
+Enabld
+Disabld
+Please select a date for teh LEFT and RIGHT sides.
+Searching...
+A new version is available!
+No new version is available!
+Error!
+Social Media
+Thanks
+Portable
+Standard
+Title colour
+Multi-coloured
+Gradient
+Default
+Search Results
+Hide Names
+Unable 2 connect 2
+Import CSV data
+Hours
+Minute
+Minutes
+Second
+Seconds
+Name
+Email Address
+Activation Code
+Sorry, this feature is not available in teh Free Version.
+Error compressing filez
+Installed Version
+Latest Available Online
+Download
+Update now
+Version
+Website
+Xinorbis iz bizzy
+Error opening Xinorbis system file
+Available Folder History Scans 4 Selectd Foldr
+Scans
+Exclude empty
+Selected
+Please wait 4 teh Web Reports upload 2 finish
+Invalid Name/Email/Code combination
+Export
+Please check that Xinorbis iz installed correctly!
+Database iz empty
+Bad CSV file
+haz bin eated
+Multiple foldrz
+Database connecshun
+Error connecting 2 ODBC wiv supplied connectshun string.
+Invalid input
+Missing file
+Searchin finishd
+This Munf
+Foldr Map
+Reset Chart Gradient Colours
+Warning: Usr name acquisition iz disabled. Clik here 2 enable.
+Time Line
+Display kolour
+Left
+Right
+Show teh logz
+Save teh logz
+Restor all settingz 2 default
+Select all
+Select none
+Copy resultz 2 clipboardz
+Data sourcez
+New
+Cannot find file "%$"
+FTP Upload test faild
+Foldr Explodr!
+Web Reportz FTP settngz r missin
+Don't process temporary filez
+Warning: Temporary file acquisition iz disabled. Click here 2 enable.
+Skan
+All ov teh uva table displayz
+Logz

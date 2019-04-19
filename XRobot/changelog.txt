@@ -1,0 +1,5 @@
+2.0.1 May 2018
+
+Added: Logging. Logs saved to \logs\
+Added: Implemented Xinorbis optimisations
+Fixed: A few minor tweaks and bugs

@@ -1,0 +1,775 @@
+﻿Led
+Úno
+Bře
+Dub
+Kvě
+Čvn
+Čvc
+Srp
+Zář
+Říj
+Lis
+Pro
+Leden
+Únor
+Březen
+Duben
+Květen
+Červen
+Červenec
+Srpen
+Září
+Říjen
+Listopad
+Prosinec
+O Programu
+Přístup
+Datum přístupu
+Datum přístupu (dd/mm/rrrr)
+Datum přístupu (mm/dd/rrrr)
+Den přístupu
+Přidat aktuální složku
+Přidat názvy souborů na kartu "datum"
+Přidat do
+Přidat do zip souboru
+Pokročilé
+Pokročilé nastavení
+Po
+Všechno
+Všechny ostatní soubory
+Povolit příkazy SQL při hledání
+Všichni uživatelé
+Analyzováno na
+Analyzovat tuto složku
+Analýza dat
+a
+Vzhled
+Archiv
+Jste si jistý, že chcete pokračovat?
+v %
+Asociovat přípony souborů
+Vlast
+Zvukové soubory
+Automaticky zkontrolovat aktualizace při spuštění
+Auto-otevření
+Automatická obnova
+Automatické uložení
+Automatické ukládání reportu(ů)
+Možnosti automatického ukládání
+Automatické ukládání reportu(ů)
+Dostupné
+Děkujeme, že jste si zakoupili Xinorbis! Zadejte prosím e-mailovou adresu a aktivační kód, který vám byl zaslán.
+Dostupné časy
+Pokročilé
+Zálohovat Vaše Xinorbis data
+Barva baru grafu
+Rozlišení baru grafu
+Před
+Černá
+Modrá
+Vytváření...
+Vytváření Web Reporu
+podle Data
+Podle množství
+Podle velikosti
+bajtů
+C1
+C10
+C2
+C3
+C4
+C5
+C6
+C7
+C8
+C9
+Zrušit
+Kategorie
+Kategorie
+Kategorie barev
+CDROM mechanika
+Změnit
+Graf
+Graf nastavení
+Úrověň přiblížení grafu
+Kontrola aktualizací
+Vyberte složky, které chcete přidat do seznamu skenování
+Vyberte typ reportu
+Vyčistit "Nedávné prohledávání"
+Vyčistit "Nedávné prohledávání". Jste si jist?
+Klepnutím přidáte
+Zavřít
+Sbalit uzle
+Barevný kód
+Kombinovat
+Kombinovat disky / složky
+Porovnej složku
+Porovnej strukturu složek
+Archivy
+Komprimované soubory
+Počítač
+Nakonfigurovat
+Obsahuje text
+Obsahuje
+Toto skenování obsahuje jedno nebo více výjimek. Chcete skenovat s vyloučenými soubory nebo složkami?
+Obsah prvního záznamu
+Kontextová nápověda
+Kopírování
+Kopírovat graf do schránky
+Kopírovat poslední report do schránky
+Kopírovat tabulku do schránky
+Kopírovat do
+Kopírovat strukturu do schránky
+Vytvořeno
+Datum vytvoření
+Datum vytvoření (dd/mm/rrrr)
+Datum vytvoření (mm/dd/rrrr)
+Vytvořeno dnes
+CSV soubor
+CSV report
+CSV report uložen jako
+Kumulativní
+Vlastní
+Vlastní1
+Vlastní10
+Vlastní2
+Vlastní3
+Vlastní4
+Vlastní5
+Vlastní6
+Vlastní7
+Vlastní8
+Vlastní9
+Přizpůsobení
+Vlastní report souborů
+Vlastní prohlížeč
+Tyrkysová
+Datum
+Formát data
+Data
+Datum / Čas
+Zobrazení data
+Den
+PÚSČPSN
+Den/Měsíc
+Výchozí nastavení CSV report výstupu
+Výchozí nastavení TEXT report výstupu
+Smazat
+Odstranit data historie souboru. Jsi si jist?
+delta
+Detaily
+Detailní
+Tuto složku nelze skenovat! Neexistuje!
+Aktuální nastavení zakazuje přímý vstup do SQL pro vyhledávání!
+Vítejte v
+Není dostatek paměti pro dokončení vytvoření struktury!
+Vyskytla se velmi závažná chyba! # 13Napište e-mail tvůrci, pokud se stane znovu.
+Nepodporovaný formát souboru!
+Opravdu chcete odeslat vybraný soubor do koše?
+Opravdu chcete odeslat všechny soubory do koše?
+Oprava úspěšná!
+Oprava selhala :(
+Xinorbis si myslí, že může opravit chybějící soubor.
+Chcete opravit soubor?
+Složka již existuje ve složce "Oblíbené"
+Rozdíl vlevo
+Rozdíl vpravo
+Volné místo na disku
+Využité místo na disku
+Ztráta místa na disku
+Změňte styl nebo obsah reportů Xinorbis
+Neobsahuje
+Nedělat nic
+Nevytvářet strukturu dat
+Nezískávat podrobnosti o vlastníkovi souboru
+Typ disku nelze určit
+Podrobnosti disku pro
+Volný disk
+ Typ disku              :
+ Souborový systém             :
+ Typ disku              : Vzdálená (síťová) jednotka
+ Místo na disku         :
+ Volné místo              :
+ Sektory na cluster     :
+ Bajtů na sektor        :
+ Volné clustery           :
+ Celkové clustery          :
+ Název svazku             :
+ Seriové číslo           :
+Využití disku
+duplicitní názvy souborů
+Duplicity (Název souboru)
+Duplicity (Velikost souboru)
+Duplicity (Název souboru)
+Duplicity (Velikost souboru)
+Úpravy
+Upravit vyloučení
+Prázdné složky
+Povolit historii složek
+Povolit protokolování úplného souboru
+Šifrováno
+Zadejte nový název pro
+Rovná se
+Chyba otevírání
+Chyba otevírání systémového souboru Xinorbis
+Vyloučit
+Vyloučený soubor(y)
+Vyloučená složka(y)
+Vyloučená složka(y)
+Vyloučit soubory ze skenování
+Vyloučit ze skenování
+Exe
+Existuje
+Ukončit
+Prozkoumat největší segment
+Prozkoumat
+Prozkoumat složku
+Prozkoumat tuto složku
+Zkoumání
+Export obsahu
+Export seznamu
+Export do souboru
+Export do souboru
+Rozšíření
+U rozšíření, které se zobrazují ve více kategoriích
+Ignoruje duplicitní přípony ve vlastních kategoriích (standardní kategorie mají přednost)
+Ignoruje duplicitní přípony ve standardních kategoriích (vlastní kategorie mají přednost)
+Použití přípon ve všech kategoriích (grafy a reporty mohou být nepřesné)
+Přípony
+Oblíbené
+Oblíbené
+Typ datového pole
+Soubor
+Historie přístupu k souborům
+Stáří souboru
+Vlastnosti souboru
+Historie vytváření souborů
+Soubory dat
+Přípony souborů
+Porovnat Historie složek
+Informace o databázi Historie složek
+Hledání Historie složek
+Historie úprav souborů
+Název souboru
+Vlastník souboru
+Cesta souboru
+Vlastnosti souboru
+Soubory
+Velikost souboru
+Velikost souboru (bajty)
+Velikost souboru na disku (bity)
+Rozložení velikosti souboru
+Soubory vlevo, které na pravé straně neexistují
+Soubory vpravo, které na levé strane neexistují
+Soubory, jejichž velikost byla změněna
+Typy souborů
+Filtr
+Složka
+Podropnosti složky
+Tuto složku nelze skenovat! Neexistuje!
+Historie složek
+Historie složek: Počítač
+Historie složek: Složka
+Historie složek pro
+Informace o Historii
+Seznam složek
+Vlastnosti složky
+Složky
+Skenované složky
+Složky v kořenovém adresáři podle množství souborů
+Složky v kořenovém adresáři podle velikosti souborů
+Složky pro skenování
+Struktura složek
+Nalezeno
+Nalezen v
+Z
+FTP server
+FTP heslo
+FTP uživ. jméno
+Úplný seznam souborů
+Celá cesta k souboru
+Všeobecné
+Generovat názvy souborů
+Generujte kontrolní součet MD5
+Generujte kontrolní součet MD5
+Gfx
+Gradientní barvy
+Přechod od
+Přechod na
+Grafické pozadí
+Grafika
+Zelená
+Šedá
+Pevný disk
+byl vybrán, ale nebyl zadán žádný název souboru.
+# Soubory
+Nápověda
+Hex úpravy
+Skrytý
+Skrýt
+zobrazit datum vytvoření souboru
+zobrazit datum, kdy byl soubor naposledy zpřístupněn
+ukázat datum poslední změny souboru
+zobrazit vlastníka souboru (uživatel)
+zobrazit vlastnosti souborů
+velikost zobrazení (skutečné využití na disku)
+záznamy barevných kódů podle typu souboru
+zvýrazněte soubory na této straně, které se nenacházejí na druhé straně
+předchozí stránka
+další strana
+Domů
+přepnout režim ochrany osobních údajů
+přepnout historii složek
+Historie
+Hodina
+Zpráva o porovnání HTML byla uložena jako
+Soubory HTML
+HTML report
+Grafy a obrázky
+Datum souborů (vytvořeno)
+Datové soubory (přístupné)
+Datum souborů (změněno)
+Podrobnosti o uživateli
+Top 101 největších souborů
+Top 101 nejmenších souborů
+Top 101 nejnovějších souborů
+Top 101 nejstarších souborů
+Záhlaví
+Jednoduché shrnutí
+Vlastnosti souborů
+Kategorie
+Složky v kořenovém adresáři
+Údaje o velikosti
+Kategorie a přípona souboru
+Prázdné soubory / složky
+Možnosti HTML reportu
+Zpráva HTML byla uložena jako
+Ignorovat
+Ignorovat první záznam
+Import
+Seznam importů
+Import podrobnosti skenování
+Zahrnout názvy sloupců
+Zahrnout cestu k souboru
+Zahrnout obrázky
+Informační stránky
+Počáteční složka
+Interval
+Zpracování v reálném čase
+Kilobity
+Označení
+Barva štítku
+Procento štítků
+Celkové procento štítků
+Hodnota štítku
+Jazyk
+Největší
+Největší soubory
+Minulý měsíc
+Minulý týden
+Soubory rozložení
+Levý panel průběhu
+Legenda
+Ukazuje na odkaz
+Normální odkaz
+Načíst
+Načítání dat historie složky ...
+Logaritmický
+Velikost
+Hlavní graf
+Mohou zpomalit generování zpráv HTML
+Megabajtů
+Změněno
+Datum úpravy
+Změněné datum (dd/mm/rrrr)
+Datum změny (mm/dd/rrrr)
+Změněno dnes
+Měsíc
+Měsíc/Rok
+Více detailů
+Nejvhodnější
+Mov
+Přesunout
+Přesunout do
+Filmy
+Nejnovější
+Nejnovější soubory
+Není vybrána žádná složka "Složka Historie"!
+Omlouváme se, ale žádné údaje o souboru nejsou k dispozici
+Žádné soubory
+Žádné soubory ke kompresi!
+Nebyly nalezeny žádné výsledky.
+Nenalezeno
+Normální
+Normální distribuce
+Obsah není indexován
+Nebyly nalezeny žádné dočasné soubory
+Nerovná se
+NESPECIFIKOVÁNO
+Prázdné
+Prázdné soubory
+Počet souborů
+Počet složek
+z
+Vypnuto
+Dokumenty Office
+Offline
+Starší
+Nejstarší
+Nejstarší soubory
+Na
+otevřeno
+Otevřít v aplikaci
+Otevřít v aplikaci (výchozí je Poznámkový blok)
+Otevřete složku Historie složek
+Otevřít poslední zprávu
+Otevřete v "vlastní prohlížeč"
+Optimalizace
+Možnosti
+Oranžová
+Uspořádejte reporty
+Záhlaví
+Počet souborů / složek
+Velikost souboru
+Prázdné soubory / složky
+Průměrné hodnoty
+Největší soubor / složka
+Uživatel
+Statistika kategorií
+Disk
+Jiný
+Výstup do CSV
+Výstup do HTML
+Výstup do XML
+Možnosti grafu
+Vlastník
+Pozadí stránky
+Cesta
+Cesty
+Vzor k vyloučení
+Procento
+Procenta celkem
+Prosím, čekejte...
+Počkejte, až se ukončí Historie složek
+Soubory obrázků PNG
+Po skenování
+Náhled
+Prg
+Zpracováno v
+Programy
+Programy
+Fialová
+Množství.
+Množství souborů
+Množství
+Množství souborů uvedených uživatelem
+Rychlý
+Složka již existuje v "Rychlé složky"!
+Předvolby Rychlé reporty
+Rychlé reporty
+RAM disk
+Rozsah
+Pouze ke čtení
+Červená
+Odkaz
+Obnovit
+Relativně k předchozím
+Relativní k dnešnímu dni
+Vzdálená jednotka
+Vyměnitelný disk
+Přejmenovat kategorii
+Opravit soubor
+Reporty
+Prohlížeč reportů
+Nahlásit chybu / Navrhnout funkci
+Nahlásit barvy
+Vybraná zpráva obsahuje pouze vybraná data.
+Toto způsobí, že některé zobrazení bude nepřesné!
+report pro
+Nahlásit položky
+Rozložení sestavy
+Možnosti sestavy
+Složka reportů
+Adresa URL reportů
+Opravdu chcete obnovit výchozí "sdružení pro přípony souborů"?
+Obnovit nastavení
+Pravý panel průběhu
+Uložit
+Uložit vše (výchozí)
+Uložit jako
+Uložit schéma
+Uložit data
+Uložit to, co existuje v jiném datumu
+Uložit to, co neexistuje v jiném datumu
+Uložit reporty
+Uložit ke všem
+Ukládání reportů
+Skenování
+Skenování jednotky nebo složky
+Skenování dat
+Skenování jednotky nebo složky
+Nedávné prohledávání
+Skenování složky
+Probíhá skenování
+Vyhledejte následující jednotku nebo složku
+Vyhledávání
+Limit výsledku vyhledávání
+Hledat syntaxi
+Vybrat
+Vyberte kategorie
+Vyberte datum/čas skenování
+Vybraná složka
+Vyberte datum/čas skenování
+Oddělovač
+Nastaví sloupcový graf na jednu barvu
+Nastavení
+Sfx
+Zobrazit
+Zobrazit vše
+Zobrazit kategorie
+Zobrazit vlastní
+Zobrazit soubory
+Zobrazit velikosti souborů jako
+Zobrazit celou cestu
+Zobrazení
+Zobrazit štítky
+Zobrazit názvy
+Zobrazit pouze nenulový
+Zobrazit velikosti v
+Zobrazit nekategorizované
+Velikost
+Velikost před
+Změny velikosti
+Velikost souborů uvedených uživatelem
+Velikost nyní
+Velikost (disk)
+Velikost souborů
+Velikost souborů (bajtů)
+Velikost na disku
+Nejmenší
+Nejmenší soubory
+Řídký soubor
+Speciální
+Zahájeno skenování
+Postavení
+Doporučený typ souboru
+Shrnutí
+                Analyzováno :
+ Průměr soubory/složky    :
+ Největší složka          :
+ Největší složka         : <root>
+ Největší soubor            :
+ Uživatel s největším podílem :
+                         : Množství     Velikost
+ Počet souborů         :
+ Počet složek       :
+ Velikost souborů           :
+ Velikost souborů (na disku) :
+ Využité místo na disku       :
+ Prázdné soubory             :
+ Prázdné složky           :
+ Průměrná velikost souboru       :
+Podporované typy souborů
+Sys
+Systém
+Tabulka
+Pozadí tabulky
+Zobrazení tabulky
+Záhlaví tabulky
+Název tabulky
+Výška řádku tabulky
+Tabulky
+Barva textu tabulky
+Barva textu tabulky 2
+Temp
+Temp soubory jako % z celkového počtu souborů
+Temp soubory jako % celkové velikosti souborů
+Dočasné soubory
+Seznam dočasných souborů
+Dočasný
+Text
+Barva textu
+Textový soubor
+Textový report
+==================================================================
+-- Prázdné soubory ---------------------------------------------------
+-- Prázdné složky -------------------------------------------------
+-- Uživatelé ---------------------------------------------------------
+Název ------------------------- Množství --- v % ----- Velikost --- v % --
+-- Top 101 největších souborů-----------------------------------------
+-- Top 101 nejmenších souborů ----------------------------------------
+-- Top 101 nejnovějších souborů ------------------------------------------
+-- Top 101 nejstarších souborů ------------------------------------------
+-- Typy souborů ----------------------------------------------------
+Kategorie --------------------- Množství --- v % ----- Velikost --- v % --
+-- Vlastnosti ----------------------------------------------------
+Vlastnosti ------------------- Množství --- v % ----- Velikost --- v % --
+-- Seznam složek ---------------------------------------------------
+Složka ----------------------- Množství --- v % ----- Velikost --- v % --
+-- Velikosti ----------------------------------------------------
+-- Podrobnosti o rozšíření ---------------------------------------------
+Název textové reportu
+Textový report uložen jako
+Kořen neexistuje
+Tento týden
+Čas
+TMP
+Do
+Přepnout gradient
+Nástroje
+Top 101
+Celková velikost
+Celková velikost analyzovaných souborů
+Stromového
+Stromový graf
+Název stromového reportu
+Stromové soubory
+Stromový report
+Stromový report uložen jako
+Zkušební
+Typ
+Typy "TEMP souboru"
+Nesprávné
+Nekategorizováno
+Neznámý
+Neznámý typ souboru
+Nejvyšší aktualizace průběhu (Nejpomalejší)
+Úroveň aktualizace průběhu 2
+Úroveň aktualizace průběhu 3
+Úroveň aktualizace průběhu 4
+Úroveň aktualizace průběhu 5
+Nejnižší aktualizace průběhu (Nejrychlejší)
+Aktualizace historie složek
+Nahrát
+Nahrávání
+Nahrávání grafů HTML
+Nahrávání stránek indexu
+Využito uživatelem
+Využít
+Využité místo
+Definováno uživatelem
+Podrobnosti o uživateli
+Uživatelský manuál
+Uživatelé
+Hodnota
+Report
+Zobrazit/Otevřít soubor
+Web Reporty
+Týden
+Týden/Rok
+Vítejte
+Méně než souborů
+Které údaje
+Bílá
+Soubory systému Windows
+Během posledního
+Vzhled
+Bity
+Seznam souborů Xinorbis
+Gigabajty
+Datová složka Xinorbis
+Změny ve složce dat budou aplikovány při příštím otevření Xinorbis
+Seznam souborů Xinorbis
+Domovské stránka Xinorbis
+Název souboru Xinorbis report
+Kilobity
+Megabity
+XML Srovnávací zpráva byla uložena jako
+XML soubory
+XML report
+XML report uložen jako
+XHodnota
+Rok
+Žlutá
+Včera
+Zip
+Výsledek nenalezen
+Kontrola aktualizací
+Zkopírovat do schránky
+Varování
+Chyba ukládání reportu
+Chyba ukládání
+Jen v Pro verzi
+Přizpůsobení Rychlé nabídky
+Přidejte Xinorbis do kontextového menu Průzkumníka Windows
+Průvodce
+Koupit Xinorbis
+Povoleno
+Zakázáno
+Zvolte prosím datum pro levou a pravou stranu.
+Vyhledávání...
+K dispozici je nová verze!
+Není k dispozici žádná nová verze!
+Chyba!
+Sociální Media
+Děkuji
+Přenosná
+Standardní
+Barva titulku
+Vícebarevný
+Gradient
+Výchozí
+Výsledky vyhledávání
+Skrýt jména
+Nelze se připojit k
+Import CSV dat
+Hodiny
+Minuta
+Minuty
+sekunda
+sekundy
+Jméno
+E-mailová adresa
+Aktivační kód
+Je nám líto, ale tato funkce není k dispozici ve Free Verzi.
+Chyba při komprimaci souborů
+Instalovaná verze
+Nejnovější dostupná online
+Stáhnout
+Nyní aktualizovat
+Verze
+Webové stránky
+Xinorbis je zaneprázdněn
+Při otevření souboru systému Xinorbis došlo k chybě
+Dostupná historie složky prohledává vybranou složku
+Skeny
+Vyloučit prázdné
+Označené
+Čekejte, až se dokončí nahrávání webových reportů
+Neplatná kombinace Jméno/Email/Kód
+Export
+Zkontrolujte, zda je Xinorbis nainstalován správně!
+Databáze je prázdná
+Špatný CSV soubor
+neexistuje
+Více složek
+Připojení k databázi
+Chyba při připojování k ODBC pomocí dodaného řetězce připojení.
+Neplatný vstup
+Chybějící soubor
+Vyhledávání dokončeno
+Tento měsíc
+Mapa složek
+Obnovit barvy gradient grafu
+Upozornění: Je zakázáno získání uživatelského jména. Kliknutím sem povolíte.
+Časová osa
+Zobrazená barva
+Levá
+Pravá
+Ukázat logypo
+Uložit log
+Obnovit všechna výchozí nastavení
+Vybrat vše
+Nevybrat nic
+Kopírovat výsledky do schránky
+Zdroj dat
+Nový
+Nelze nalézt soubor "%$"
+Test odesílání na FTP se nezdařil
+Prohledáváč složek
+Chybí nastavení FTP Web Report
+Nepracovat s TEMP soubory
+Upozornění: Dočasně zakázáno získávání souborů. Kliknutím sem povolíte.
+Skenování
+Zobrazení všech ostatních tabulek
+Přihlásít se

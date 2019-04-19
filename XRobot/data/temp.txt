@@ -1,0 +1,16 @@
+*.chk
+*.temp
+*.tmp
+*.~*
+pspbrwse.jbf
+thumbs.db
+\temp\
+~*
+*.~*
+*.chk
+*.temp
+*.tmp
+\temp\
+~*
+pspbrwse.jbf
+thumbs.db

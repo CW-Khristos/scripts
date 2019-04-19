@@ -1,0 +1,775 @@
+﻿Jan
+Feb
+Maa
+Apr
+Kan
+Jun
+Jul
+Aug
+Sep
+Okt
+Nov
+Dec
+Januari
+Februari
+Maart
+April
+Kan
+Juni
+Juli
+Augustus
+September
+Oktober
+November
+December
+Over
+Toegankelijk
+Bezocht op datum
+Bezocht op datum (dd/mm/yyyy)
+Bezocht op datum (mm/dd/yyyy)
+Bezocht Vandaag
+Voeg huidige map
+Voeg bestandsnamen "Datum" tab
+Toe te voegen aan
+Voeg toe aan bestand zip
+Geavanceerde
+Geavanceerde opties
+Na
+Alle
+Alle andere bestanden
+Laat SQL-statements bij het zoeken
+Alle gebruikers
+Geanalyseerde op
+Analyseer deze map
+Analyseren van gegevens
+en
+Appearance
+Archief
+Weet u zeker dat u wilt doorgaan? 
+Als %
+Bijbehorende bestandsextensies
+Attr
+Audio
+Automatisch controleren op updates bij het opstarten
+Automatisch-open
+Auto Vernieuwen
+Automatisch opslaan
+Auto-save folder report(s)
+Autosave Opties
+Autosave Rapport(en)
+Beschikbaar
+Dank u voor de aanschaf van Xinorbis! Vul het e-mailadres en activering code die aan u is toegezonden.
+Available Times
+Geavanceerde
+Backup van uw gegevens Xinorbis
+Staafdiagram kleur
+Staafdiagram resolutie
+Vóór
+Zwart
+Blauw
+Gebouw
+Gebouw Web Reports
+door Datum
+door Hoeveelheid
+door Grootte
+bytes
+A1
+A10
+A2
+A3
+A4
+A5
+A6
+A7
+A8
+A9
+Annuleren
+Categorieën
+Categorie
+Categorie kleuren
+CDROM drive
+Wijzigen
+Grafiek
+Grafiek Opties
+Grafiek Zoom niveau
+Controleren op updates
+Kies mappen toe te voegen aan de lijst te scannen
+Kies type rapport
+Duidelijk "Scan History".
+Duidelijk "Scan History". Ben je zeker?
+Klik om toe te voegen
+Close
+Collapse knooppunten
+Kleurcode
+Combineren
+Combineer drives / mappen
+Vergelijk map
+vergelijk map boom
+Gecomprimeerd
+Gecomprimeerde bestanden
+Computer
+Configureren
+Met de tekst
+Bevat
+Deze scan bevat een of meer exlusions. Wilt u scannen met de uitgesloten bestanden / mappen?
+Inhoud van de eerste record
+Context Help
+Kopie
+Kopieer grafiek naar het klembord
+Kopieer laatste verslag aan klembord
+Tabel kopiëren naar het klembord
+Kopiëren naar
+Kopieer boom naar het klembord
+Gemaakt
+Gemaakt Datum
+Gemaakt datum (dd / mm / yyyy)
+Gemaakt datum (mm / dd / yyyy)
+Gemaakt Vandaag
+CSV-bestanden
+CSV rapport
+CSV-rapport opgeslagen als
+Cumulatieve
+Aangepast
+Aangepast 1
+Aangepast 10
+Aangepast 2
+Aangepast 3
+Aangepast 4
+Aangepast 5
+Aangepast 6
+Aangepast 7
+Aangepast 8
+Aangepast 9
+Pas
+Aangepast rapport Bestanden
+Aangepaste viewer
+Cyan
+Datum
+Datumnotatie
+Data
+Datum / tijd
+Datumweergave
+Dag
+MDWDVZZ
+Dag / maand
+Standaard CSV output instellingen
+Default Text Verslag output instellingen
+Verwijderen
+Bestand verwijderen Geschiedenis gegevens. Ben je zeker?
+delta
+Detail
+Gedetailleerde
+U kunt niet scannen deze map! Het bestaat niet!
+Huidige instellingen te verbieden direct invoeren van SQL voor zoekopdrachten!
+welkom bij
+Er is niet genoeg geheugen om af te bouwen de boom!
+Een zeer ernstige fout is opgetreden!#13Stuur een mail naar de auteur als dit weer gebeurt.
+Niet-ondersteunde bestandsindeling!
+Weet u zeker dat u het geselecteerde bestand naar de prullenbak?
+Ben je zeker dat je wilt alle bestanden naar de prullenbak?
+Reparatie Succesvolle!
+Reparatie is mislukt: (
+Xinorbis denkt te kunnen herstellen van de ontbrekende bestand
+Wilt u naar een bestand te repareren proberen?
+Map bestaat reeds in "Favorieten"
+Verschil op links
+Verschil op de rechtermuisknop
+Schijfruimte vrij
+Gebruikte schijfruimte
+Verspilde schijfruimte
+Alter the style or contents of Xinorbis reports
+Bevat geen
+Niets doen
+Bouwen geen datum boom
+Don't get eigenaar van het bestand details
+Type drive niet kan worden bepaald
+Details voor rijden
+Gratis rijden
+Drive Type                            :
+File System                           :
+Drive Type                            : Afstandsbediening (Netwerk) Drive
+Ruimte op het station                 :
+Vrije ruimte                          :
+Sectoren per cluster                  : 
+Bytes per Sector                      :
+Gratis Clusters                       :
+Totaal aantal clusters                :
+Deel Naam                             : 
+Serienummer                           :
+Station dat wordt gebruikt
+dubbele bestandsnamen
+Duplicaten (bestandsnaam)
+Duplicaten (bestandsgrootte)
+Duplicaten (bestandsnaam)
+Duplicaten (bestandsgrootte)
+Bewerken
+Uitsluiting bewerken
+Lege mappen
+Staat de map geschiedenis
+Staat volledig dossier te loggen
+Gecodeerd
+Voer een nieuwe naam voor
+Gelijk aan
+Error opening
+Error opening Xinorbis system file
+Sluiten
+Uitgesloten Bestanden
+Uitgesloten mappen
+Uitgesloten mappen
+Bestanden uitsluiten van scannen
+Bestanden van scannen
+Exe
+Bestaat
+Exit
+Explode grootste slice
+Verken
+Verken map 
+Verken deze map 
+Exploring
+Exporteren van inhoud
+Lijst exporteren
+Exporteren naar bestand geselecteerd
+Exporteren naar bestand geselecteerd
+Uitbreiding
+Voor uitbreidingen die in meer dan een categorie
+Negeer dubbele extensies in aangepaste categorieën (standaard categorieën hebben voorrang)
+Negeer dubbele extensies in standaard categorieën (aangepaste categorieën hebben voorrang)
+Gebruik extensies zoals gespecificeerd in alle categorieën (grafieken en rapporten kunnen onnauwkeurig zijn)
+Extensies
+Favorieten
+Favorieten
+Veldgegevens type
+Bestand
+Toegang tot bestanden geschiedenis
+Bestand Leeftijd
+Bestandskenmerken
+Bestanden maken geschiedenis
+Bestand data
+Bestandsextensies
+Bestand Geschiedenis Vergelijk
+Bestand Geschiedenis Database Information
+Bestand Geschiedenis Zoek
+Bestand modificatie geschiedenis
+Bestandsnaam
+Eigenaar van het bestand
+Bestandspad
+Bestandseigenschappen
+Bestanden
+Bestandsgrootte
+Bestandsgrootte (bytes)
+Bestandsgrootte op schijf (bytes)
+Bestandsgrootte verspreid
+Bestanden op LINKS die niet bestaan RECHTS
+Bestanden op RECHTS die niet bestaan op LINKS
+Bestanden waar de grootte is veranderd
+Bestandstypen
+Filter
+Map
+Folder detail
+U kunt niet scannen deze map! Het bestaat niet!
+Map Geschiedenis
+Map Geschiedenis: Computer
+Map Geschiedenis: Map
+Map Geschiedenis voor
+Map Geschiedenis info
+Mappenlijst
+Mapeigenschappen
+Mappen
+Mappen Scan
+Mappen in de root, door de hoeveelheid van bestanden
+Mappen in de root, naar grootte van de bestanden
+Mappen om te scannen
+Mappenstructuur
+Gevonden
+Gevonden in
+Uit
+FTP host
+FTP password
+FTP-gebruikersnaam
+Volledige lijst met bestanden
+Volledige bestandspad
+Algemene
+Het genereren van bestandsnamen
+Het genereren van MD5 checksum
+Het genereren van MD5 checksum
+Gfx
+Gradiëntkleuren
+Gradiënt van
+Gradiënt naar
+Grafiek achtergrond
+Grafiek
+Groen
+Grijs
+Garde schijf
+is geselecteerd, maar geen bestandsnaam is opgegeven
+# Files
+Help
+Hex edit
+Verborgen
+Verberg
+tonen bestand gemaakt datum
+datum weer te geven het bestand voor het laatst geopend
+datum weer te geven het bestand voor het laatst gewijzigd
+show file eigenaar (gebruiker)
+show file attributen
+toon grootte (werkelijke on-schijfgebruik)
+kleurcode inzendingen op basis van bestandstype
+markeert de bestanden op deze zijde die niet zijn te vinden op de andere kant
+vorige pagina
+volgende pagina
+Naar huis
+toggle privacy mode
+toggle Folder History
+Geschiedenis
+Uur
+HTML Vergelijking Verslag opgeslagen als
+HTML-bestanden
+HTML-rapport
+Grafieken en afbeeldingen
+De data van bestanden (Gemaakt)
+De data van bestanden (Bezocht)
+De data van bestanden (Gewijzigd)
+Details van de gebruiker
+Top 101 grootste bestanden
+Top 101 kleinste bestanden
+Top 101 nieuwste bestanden
+Top 101 oudste bestanden7
+Header
+Eenvoudige samenvatting
+Bestandskenmerken
+Categorieën
+Mappen in de root
+Magnitude gegevens
+Categorieën en bestandsextensie
+Null bestanden / mappen
+HTML-rapport opties
+HTML-rapport opgeslagen als 
+Negeren
+Negeer eerste record
+Import
+Import Lijst
+Import scan detail
+Onder kolomtitels
+Beelden full file path
+Inclusief beelden
+Information pages
+Eerste map
+Interval
+Just-in-time verwerking
+Kilobytes
+Label
+Label Kleur
+Label Procent
+Label procent van het totaal
+Labelwaarde
+Taal
+Grootste
+Grootste bestanden
+Last Month
+Last Week
+Lay-out bestanden
+Linkerkant voortgangsbalk
+Legende
+Link hover
+Link normal
+Belasting
+Loading Folder History data...
+Logaritmische
+Omvang
+Belangrijkste Grafiek
+These may slow down HTML report generation
+Megabytes
+Gemodificeerde
+Gewijzigd datum
+Gewijzigde datum (dd/mm/yyyy)
+Gewijzigde datum (mm/dd/yyyy)
+Gewijzigd vandaag
+Maand
+Maand / jaar
+Meer detail
+Meest geschikte
+Flm
+Te verplaatsen
+Ga naar
+Film
+Nieuwste
+Nieuwste bestanden
+Geen "Map Geschiedenis" map geselecteerd!
+Sorry, maar er is geen bestand gegevens beschikbaar voor
+Geen bestanden gevonden
+Geen bestanden te comprimeren!
+Geen wedstrijden gevonden
+Geen gevonden
+Normal
+Normal distribution
+Not Content Indexed
+No temporary files found
+Not equal to
+NOT SPECIFIED
+Nietig
+Null-bestanden
+Aantal bestanden
+Aantal mappen
+van
+Kan
+Kantoor
+Offline
+Ouder dan
+Oudste
+Oudste bestanden
+Op
+Open
+Open in de toepassing
+Open in applicaties (standaard is notepad)
+Open in Bestand Geschiedenis
+Open het laatste verslag
+Openen met "custom viewer"
+Optimalisaties
+Opties
+Oranje
+Organiseer verslagen
+Header
+Bestand / map telt
+Bestandsgrootte
+Null bestanden / mappen
+Gemiddelden
+Grootste bestand / map
+Gebruiker
+Categorie stats
+Rijden
+Andere
+Output als CSV
+Output als HTML
+Output als XML
+Grafiek Opties
+Eigenaar
+Pagina achtergrond
+Pad
+Paden
+Patroon te sluiten
+Procent
+Procent van het totaal
+Even geduld aub
+Een moment geduld aub "Map Geschiedenis" eindigt
+PNG-beeldbestanden
+Post scan
+Preview
+Prg
+Verwerkt in
+Programmering
+Programma
+Purper
+Aant.
+Aantal van bestanden
+Hoeveelheid
+Hoeveelheid bestanden die door de gebruiker
+Snel
+Map bestaat reeds in "Favorieten"
+Snel Rapport Voorkeuren
+Snelle rapporten
+RAM-schij
+Aanbod
+Alleen-lezen
+Rood
+Referentie
+Vernieuwen
+Ten opzichte van vorige
+Ten opzichte van vandaag
+Remote drive
+Verwijderbaar
+Hernoemen aangepaste categorie
+Reparse Bestand 
+Verslag
+Verslag browser
+Meld een bug / Een functie voorstellen
+Verslag van kleuren
+De geselecteerde rapport bevat alleen geselecteerde gegevens
+Dit zal ervoor zorgen dat bepaalde schermen te kloppen!
+rapport voor 
+Rapport items
+Rapport Layout
+Output-opties
+Rapporten Map
+Rapporten URL
+Ben je zeker dat je de standaard "bestandsextensie verenigingen" te herstellen?
+Restore defaults
+Rechterkant voortgangsbalk
+Opslaan
+Bewaar alle (standaard)
+Opslaan als
+Bespaar grafiek
+Gegevens opslaan
+Behalve degenen die wel bestaan op andere datum
+Behalve degenen die niet bestaan op andere datum
+Rapporten opslaan
+Opslaan om alle
+Rapporten opslaan
+Scan
+Scan een schijf of map
+Scangegevens
+Scan een schijf of map
+Scan Geschiedenis
+Folder scannen
+Scanproces
+Scan de volgende schijf of map
+Zoek
+Zoekresultaat te beperken
+Zoek syntax
+Kies
+Selecteer categorieën
+Selecteer scan datum / tijd
+Geselecteerde map
+Selecteer scan datum / tijd
+Scheidingsteken
+Stel staafdiagrammen op een enkele kleur
+Instellingen
+Sfx
+Toon
+Toon alle
+Toon gecategoriseerd
+Toon op maat
+Show files
+Toon omvang van de bestanden
+Toon volledige pad
+Resultaat
+Toon labels
+Toon Namen
+Toon alleen non-zero
+Toon maten in
+Toon ongecatagoriseerde
+Maat
+Voordat grootte
+Formaat verandert
+Grootte van de bestanden in de lijst door de gebruiker
+Nu grootte
+Grootte (op schijf)
+Grootte van bestanden
+Grootte van de bestanden (bytes)
+Grootte op schijf
+Kleinste
+Kleinste bestanden
+Luchtig bestand
+Speciale
+Started scan of
+Status
+Voorgestelde File Type
+Samenvatting
+                        Geanalyseerde :
+Gemiddelde Files / Folder             :
+Grootste Folder                       :
+Grootste Folder                       : <root>
+Grootste bestand                      :
+Gebruiker met het grootste aandeel in :
+                                      : Aantal   Maat 
+Aantal bestanden                      :
+Aantal mappen                         :
+Grootte van de bestanden              :
+Grootte van de bestanden (op schijf)  :
+Schijfruimte verspild                 :
+Null-bestanden                        :
+Lege mappen                           :
+Gemiddelde bestandsgrootte            :
+Voorgestelde File Type
+Sys
+Het systeem
+Tabel
+Tafel achtergrond
+Tabel weergeven
+Tabelkop
+Tabelnaam
+Rijhoogte van een tabel
+Tabellen
+Tabel tekstkleur
+Tabel tekstkleur 2
+Temp
+Temp bestanden als% van het totaal aantal bestanden
+Temp bestanden als% van de totale grootte van de bestanden
+Temp bestanden
+Tijdelijke bestanden Lijst
+Tijdelijke
+Tekst
+Tekstkleur
+Tekstbestanden
+Tekst overzicht
+================================================================================
+-- Null Files ------------------------------------------------------------------
+-- Lege mappen -----------------------------------------------------------------
+-- Gebruikers ------------------------------------------------------------------
+Naam ------------------------------- Aantal ---- Als% ----- Maat ----- Als% ---- 
+-- Top 101 grootste bestanden --------------------------------------------------
+-- Top 101 kleinste bestanden --------------------------------------------------
+-- Top 101 Nieuwste Bestanden --------------------------------------------------
+-- Top 101 oudste bestanden ----------------------------------------------------
+-- Bestandstypen ---------------------------------------------------------------
+Categorie -------------------------- Aantal ---- Als% ----- Maat ----- Als% ----
+-- Kenmerken -------------------------------------------------------------------
+Attributen ------------------------- Aantal ---- Als% ----- Maat ----- Als% ----
+-- Mappenlijst -----------------------------------------------------------------
+Map -------------------------------- Aantal ---- Als% ----- Maat ----- Als% ---- 
+-- Magnitudes ------------------------------------------------------------------
+-- Uitbreiding Details ---------------------------------------------------------
+Tekst verslag bestandsnaam
+Tekst rapport opgeslagen als
+De hoofdmap bestaat niet 
+Deze week
+Tijd
+TMP
+Naar
+Toggle gradient
+Gereedschap
+Top 101
+Totale omvang
+Totale omvang van de bestanden geanalyseerd
+Boom
+Boom Grafiek
+Boom verslag bestandsnaam
+Boom Bestanden
+Boom verslag
+Boom rapport opgeslagen als
+Free
+Type
+Soorten van het "tijdelijk bestand"
+Uncat
+Ongecatagoriseerde
+Onbekend
+Onbekend bestandstype
+Hoogste vooruitgang update (Langzaamste)
+Voortgang Niveau 2
+Voortgang Niveau 3
+Voortgang Niveau 4
+Voortgang Niveau 5
+Laagste vooruitgang update (Snelste)
+Actualisering Folder Geschiedenis
+Uploaden
+Uploaden
+Het uploaden van HTML-grafieken
+Uploaden index pagina's
+Het gebruik door de gebruiker
+Tweedehands
+Gebruikte ruimte
+Door de gebruiker gedefinieerde
+Gebruiker details
+Gebruiksaanwijzing
+Gebruikers
+Waarde
+Bekijk
+Bekijk / Open bestand
+Web Reports
+Week
+Week / jaar 
+Welkom
+Als er minder dan dit aantal bestanden
+Welke gegevens
+Wit
+Windows-bestanden
+In de laatste
+Wizard
+Bytes
+Xinorbis bestandslijst
+Gigabytes
+Xinorbis data map
+Wijzigingen in de data map zal worden toegepast de volgende keer je open Xinorbis
+Xinorbis bestandslijst
+Xinorbis Home
+Xinorbis verslag bestandsnaam
+Kilobytes
+Megabytes
+XML Vergelijking Verslag opgeslagen als
+XML-bestanden
+XML-rapport
+XML-rapport opgeslagen als
+XValue
+Jaar
+Geel
+Gisteren
+Zip
+Rapport niet gevonden
+Checking for updates
+Kopieer naar het klembord
+Waarschuwing
+Fout bij het opslaan rapport
+Fout bij het opslaan
+alleen Pro-versie
+Pas Quick Folder menu
+Voeg Xinorbis aan Explorer context menu
+Tutorial
+aankoop Xinorbis
+Ingeschakeld
+invalide
+Selecteer een datum voor de linker- en rechterkant.
+Zoeken...
+Een nieuwe versie is beschikbaar!
+Geen nieuwe versie beschikbaar is!
+Fout!
+Sociale media
+Bedankt
+draagbaar
+Standaard
+Titel kleur
+Multi gekleurde
+Helling
+Standaard
+Zoekresultaten
+Hide Namen
+Kan geen verbinding maken
+Import CSV data
+Uren
+Minuut
+Minuuten
+Second
+Seconden
+Naam
+E-mailadres
+Activatie code
+Sorry, deze functie is niet beschikbaar in de gratis versie.
+Fout bij het comprimeren van bestanden
+Geïnstalleerde versie
+Laatste online beschikbaar
+Download
+Update nu
+Versie
+Website
+Xinorbis is bezig
+Fout bij het openen Xinorbis systeembestand
+Beschikbare Folder Geschiedenis Scant op geselecteerde map
+scans
+uitsluiten leeg
+Gekozen
+Wacht tot de Web Reports uploaden om te voltooien
+Ongeldige Naam / e-mail / Code combinatie
+Exporteren
+Controleer heeft Xinorbis correct is geïnstalleerd!
+Database is leeg
+Bad CSV-bestand
+bestaat niet
+Meerdere mappen
+database connectie
+Fout bij het verbinden met ODBC met de bijgeleverde verbinding string.
+Ongeldige invoer
+Ontbrekend bestand
+Zoeken afgewerkte
+Deze maand
+Folder Map
+Reset Grafiek Gradient Kleuren
+Waarschuwing: de aanschaf van de gebruikersnaam is uitgeschakeld. Klik hier om in te schakelen.
+Tijdlijn
+Weergave kleur
+Links
+Rechts
+Toon logboek
+Opslaan logboek
+Herstel alle instellingen naar de standaardinstelling
+Selecteer alles
+Niets selecteren
+Kopieer resultaten naar klembord
+Databron
+Nieuwe
+Kan bestand "%$" niet vinden
+FTP Upload-test mislukt
+Map Exploder
+Web Reports FTP settings are missing
+Verwerk geen tijdelijke bestanden
+Waarschuwing: tijdelijke bestandsverwerving is uitgeschakeld. Klik hier om in te schakelen.
+Scan
+Alle andere tabeldisplays
+Logboek

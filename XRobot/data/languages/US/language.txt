@@ -1,0 +1,775 @@
+Jan
+Feb
+Mar
+Apr
+May
+Jun
+Jul
+Aug
+Sep
+Oct
+Nov
+Dec
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+About
+Accessed
+Accessed Date
+Accessed date (dd/mm/yyyy)
+Accessed date (mm/dd/yyyy)
+Accessed Today
+Add current folder
+Add file names to "date" tab
+Add to
+Add to zip file
+Advanced
+Advanced Options
+After
+All
+All other files
+Allow SQL statements when searching
+All users
+Analyzed at
+Analyze this folder
+Analyzing data
+and
+Appearance
+Archive
+Are you sure you want to continue?
+As %
+Associated File Extensions
+Attr
+Audio
+Automatically check for updates on startup
+Auto-open
+Auto Refresh
+Auto save
+Auto-save folder report(s)
+Autosave Options
+Autosave Report(s)
+Available
+Thank you for purchasing Xinorbis! Please enter the name, email address, and activation code that was sent to you.
+Available times
+Advanced
+Backup your Xinorbis data
+Bar graph color
+Bar graph resolution
+Before
+Black
+Blue
+Building...
+Building Web Reports
+by Date
+by Quantity
+by Size
+bytes
+C1
+C10
+C2
+C3
+C4
+C5
+C6
+C7
+C8
+C9
+Cancel
+Categories
+Category
+Category colors
+CDROM drive
+Change
+Chart
+Chart Options
+Chart zoom level
+Check for updates
+Choose folders to add to scan list
+Choose report type
+Clear "Recent Scans"
+Clear "Recent Scans". Are you sure?
+Click to add
+Close
+Collapse nodes
+Color code
+Combine
+Combine drives / folders
+Compare Folder
+Compare Folder Tree
+Compressed
+Compressed files
+Computer
+Configure
+Containing text
+Contains
+This scan contains one or more exlusions. Do you want to scan with the excluded files/folders?
+Contents of first record
+Context Help
+Copy
+Copy chart to clipboard
+Copy last report to clipboard
+Copy table to clipboard
+Copy to
+Copy tree to clipboard
+Created
+Created Date
+Created date (dd/mm/yyyy)
+Created date (mm/dd/yyyy)
+Created Today
+CSV files
+CSV report
+CSV report saved as
+Cumulative
+Custom
+Custom1
+Custom10
+Custom2
+Custom3
+Custom4
+Custom5
+Custom6
+Custom7
+Custom8
+Custom9
+Customize
+Custom Report Files
+Custom viewer
+Cyan
+Date
+Date format
+Dates
+Date / Time
+Date Display
+Day
+MTWTFSS
+Day/Month
+Default CSV output settings
+Default Text Report output settings
+Delete
+Delete File History data. Are you sure?
+delta
+Detail
+Detailed
+You cannot scan this folder! It does not exist!
+Current settings forbid directly entering SQL for searches!
+welcome to
+There is not enough memory to finish building the Tree!
+A very serious error has occured!#13Please email the author if this happens again.
+Unsupported file format!
+Are you sure you want to send the selected file to the recycle bin?
+Are you sure you want to send all of the files to the recycle bin?
+Repair Successful!
+Repair Failed :(
+Xinorbis thinks it can repair the missing file.
+Would you like to attempt a file repair?
+Folder already exists in "Favorites"
+Difference on Left
+Difference on Right
+Disk space free
+Disk space used
+Disk space wasted
+Alter the style or contents of Xinorbis reports
+Doesnt contain
+Do nothing
+Don't build date tree
+Don't get file owner details
+Drive type cannot be determined
+Drive Details for
+Drive free
+Drive Type              :
+File System             :
+Drive Type              : Remote (Network) Drive
+Space on Drive          :
+Free Space              :
+Sectors per Cluster     :
+Bytes per Sector        :
+Free Clusters           :
+Total Clusters          :
+Volume Name             :
+Serial Number           :
+Drive used
+duplicate filenames
+Duplicates (File name)
+Duplicates (File size)
+Duplicates (File name)
+Duplicates (File size)
+Edit
+Edit exclusion
+Empty Folders
+Enable Folder History
+Enable full file logging
+Encrypted
+Enter a new name for
+Equal to
+Error opening
+Error opening Xinorbis system file
+Exclude
+Excluded File(s)
+Excluded Folder(s)
+Excluded Folder(s)
+Exclude files from scan
+Exclude from scan
+Exe
+Exists
+Exit
+Explode largest slice
+Explore
+Explore folder
+Explore this folder
+Exploring
+Export content
+Export list
+Export selected to file
+Export selected to file
+Extension
+For extensions that appear in more than one category
+Ignore duplicate extensions in custom categories (standard categories take precedence)
+Ignore duplicate extensions in standard categories (custom categories take precedence)
+Use extensions as specified in all categories (charts and reports may be inaccurate)
+Extensions
+Favorite
+Favorites
+Field data type
+File
+File access history
+File Age
+File Attributes
+File creation history
+File dates
+File Extensions
+Folder History Compare
+Folder History Database Information
+Folder History Search
+File modification history
+File name
+File Owner
+File path
+File properties
+Files
+File Size
+File size (bytes)
+File size on disk (bytes)
+File size spread
+Files on LEFT that don't exist on RIGHT
+Files on RIGHT that don't exist on LEFT
+Files where the size has changed
+File types
+Filter
+Folder
+Folder detail
+You cannot scan this folder! It does not exist!
+Folder History
+Folder History: Computer
+Folder History: Folder
+Folder History for
+Folder History info
+Folder List
+Folder properties
+Folders
+Folder Scans
+Folders within root, by quantity of files
+Folders within root, by size of files
+Folders to scan
+Folder structure
+Found
+Found in
+From
+FTP host
+FTP password
+FTP username
+Full file list
+Full file path
+General
+Generate filenames
+Generate MD5 checksum
+Generate MD5 checksum
+Gfx
+Gradient colors
+Gradient from
+Gradient to
+Graph background
+Graphics
+Green
+Grey
+Hard disk
+has been selected but no filename has been specified.
+# Files
+Help
+Hex edit
+Hidden
+Hide
+show file created date
+show date the file was last accessed
+show date the file was last modified
+show file owner (user)
+show file attributes
+show size (actual on-disk usage)
+color code entries according to file type
+highlight the files on this side which are not found on the other side
+previous page
+next page
+home
+toggle privacy mode
+toggle Folder History
+History
+Hour
+HTML Comparison Report saved as
+HTML files
+HTML report
+Charts and Images
+File dates (Created)
+File dates (Accessed)
+File dates (Modified)
+User details
+Top 101 largest Files
+Top 101 smallest Files
+Top 101 newest files
+Top 101 oldest files
+Header
+Simple summary
+File attributes
+Categories
+Folders within root
+Magnitude data
+Categories and file extension
+Empty files / folders
+HTML report options
+HTML report saved as
+Ignore
+Ignore first record
+Import
+Import list
+Import scan detail
+Include column titles
+Include full file path
+Include images
+Information pages
+Initial folder
+Interval
+Just-in-time processing
+Kilobytes
+Label
+Label color
+Label Percent
+Label Percent Total
+Label Value
+Language
+Largest
+Largest Files
+Last Month
+Last Week
+Layout files
+Left side progress bar
+Legend
+Link hover
+Link normal
+Load
+Loading Folder History data...
+Logarthmic
+Magnitude
+Main chart
+These may slow down HTML report generation
+Megabytes
+Modified
+Modified Date
+Modified date (dd/mm/yyyy)
+Modified date (mm/dd/yyyy)
+Modified Today
+Month
+Month/Year
+More detail
+Most convenient
+Mov
+Move
+Move to
+Movie
+Newest
+Newest files
+No "Folder History" folder selected!
+Sorry, but there is no file data available for
+No files found
+No files to compress!
+No matches found.
+None found
+Normal
+Normal distribution
+Not Content Indexed
+No temporary files found
+Not equal to
+NOT SPECIFIED
+Empty
+Empty Files
+Number of files
+Number of folders
+of
+Off
+Office
+Offline
+Older than
+Oldest
+Oldest files
+On
+Open
+Open in application
+Open in application (default is notepad)
+Open in Folder History
+Open last report
+Open with "custom viewer"
+Optimisations
+Options
+Orange
+Organize reports
+Header
+File / folder count
+File size
+Empty files / folders
+Averages
+Largest file / folder
+User
+Category stats
+Drive
+Other
+Output as CSV
+Output as HTML
+Output as XML
+Chart Options
+Owner
+Page background
+Path
+Paths
+Pattern to exclude
+Percent
+Percent Total
+Please wait...
+Please wait while Folder History finishes
+PNG image files
+Post scan
+Preview
+Prg
+Processed in
+Programming
+Programs
+Purple
+Qty.
+Qty of Files
+Quantity
+Quantity of files listed by user
+Quick
+Folder already exists in "Quick Folders"!
+Quick Report Preferences
+Quick Reports
+RAM disk
+Range
+Read Only
+Red
+Reference
+Refresh
+Relative to previous
+Relative to today
+Remote drive
+Removable disk
+Rename custom category
+Reparse File
+Report
+Report browser
+Report a bug / Suggest a feature
+Report colors
+The selected report contains only selected data.
+This will cause certain displays to be inaccurate!
+report for
+Report items
+Report layout
+Report Options
+Reports folder
+Reports URL
+Are you sure you want to restore the default "file extension associations"?
+Restore defaults
+Right side progress bar
+Save
+Save all (default)
+Save as
+Save chart
+Save data
+Save those that do exist on other date
+Save those that don't exist on other date
+Save reports
+Save to all
+Saving reports
+Scan
+Scan a drive or folder
+Scan data
+Scan a drive or folder
+Recent Scans
+Scanning folder
+Scanning progress
+Scan the following drive or folder
+Search
+Search result limit
+Search syntax
+Select
+Select categories
+Select scan date/time
+Selected folder
+Select scan date/time
+Separator
+Set bar graph to a single color
+Settings
+Sfx
+Show
+Show all
+Show categorized
+Show custom
+Show files
+Show file sizes as
+Show Full Path
+Showing
+Show labels
+Show names
+Show only non-zero
+Show sizes in
+Show uncategorized
+Size
+Size before
+Size Changes
+Size of files listed by user
+Size now
+Size (disk)
+Size of Files
+Size of Files (bytes)
+Size on Disk
+Smallest
+Smallest Files
+Sparse File
+Special
+Started scan of
+Status
+Suggested File Type
+Summary
+               Analyzed :
+Average Files/Folder    :
+Largest Folder          :
+Largest Folder          : <root>
+Largest File            :
+User with largest share :
+                        : Quantity     Size
+Number of Files         :
+Number of Folders       :
+Size of Files           :
+Size of Files (on disk) :
+Disk space wasted       :
+Empty files             :
+Empty folders           :
+Average File Size       :
+Supported file types
+Sys
+System
+Table
+Table background
+Table Display
+Table header
+Table name
+Table row height
+Tables
+Table text color
+Table text color 2
+Temp
+Temp files as % of total number of files
+Temp files as % of total size of files
+Temp files
+Temporary Files List
+Temporary
+Text
+Text color
+Text files
+Text report
+================================================================================
+-- Empty Files -----------------------------------------------------------------
+-- Empty Folders ---------------------------------------------------------------
+-- Users -----------------------------------------------------------------------
+Name --------------------------------- Qty ----- As % ----- Size ---- As % -----
+-- Top 101 Largest Files -------------------------------------------------------
+-- Top 101 Smallest Files ------------------------------------------------------
+-- Top 101 Newest Files --------------------------------------------------------
+-- Top 101 Oldest Files --------------------------------------------------------
+-- File Types ------------------------------------------------------------------
+Category ----------------------------- Qty ----- As % ----- Size ---- As % -----
+-- Attributes ------------------------------------------------------------------
+Attributes --------------------------- Qty ----- As % ----- Size ---- As % -----
+-- Folder List -----------------------------------------------------------------
+Folder ------------------------------- Qty ----- As % ----- Size ---- As % -----
+-- Magnitudes ------------------------------------------------------------------
+-- Extension Details -----------------------------------------------------------
+Text report filename
+Text report saved as
+Root does not exist
+This Week
+Time
+TMP
+To
+Toggle gradient
+Tools
+Top 101
+Total size
+Total size of files analyzed
+Tree
+Tree chart
+Tree report filename
+Tree files
+Tree report
+Tree report saved as
+Trial
+Type
+Types of "temporary file"
+Uncat
+Uncategorized
+Unknown
+Unknown file type
+Highest progress update (Slowest)
+Progress Update Level 2
+Progress Update Level 3
+Progress Update Level 4
+Progress Update Level 5
+Lowest progress update (Fastest)
+Updating Folder History
+Upload
+Uploading
+Uploading HTML graphs
+Uploading index pages
+Usage by user
+Used
+Used space
+User defined
+User Details
+User manual
+Users
+Value
+View
+View/open file
+Web Reports
+Week
+Week/Year
+Welcome
+When there's fewer than this many files
+Which data
+White
+Windows files
+Within the last
+Wizard
+Bytes
+Xinorbis file list
+Gigabytes
+Xinorbis data folder
+Changes to the data folder will be applied next time your open Xinorbis
+Xinorbis file list
+Xinorbis Home
+Xinorbis report filename
+Kilobytes
+Megabytes
+XML Comparison Report saved as
+XML files
+XML report
+XML report saved as
+XValue
+Year
+Yellow
+Yesterday
+Zip
+Report not found
+Checking for updates
+Copy to clipboard
+Warning
+Error saving report
+Error saving
+Pro version only
+Customize Quick Folder menu
+Add Xinorbis to Explorer context menu
+Tutorial
+Purchase Xinorbis
+Enabled
+Disabled
+Please select a date for the LEFT and RIGHT sides.
+Searching...
+A new version is available!
+No new version is available!
+Error!
+Social Media
+Thanks
+Portable
+Standard
+Title color
+Multi-colored
+Gradient
+Default
+Search Results
+Hide Names
+Unable to connect to
+Import CSV data
+Hours
+Minute
+Minutes
+Second
+Seconds
+Name
+Email Address
+Activation Code
+Sorry, this feature is not available in the Free Version.
+Error compressing files
+Installed Version
+Latest Available Online
+Download
+Update now
+Version
+Website
+Xinorbis is busy
+Error opening Xinorbis system file
+Available Folder History Scans for Selected Folder
+Scans
+Exclude empty
+Selected
+Please wait for the Web Reports upload to finish
+Invalid Name/Email/Code combination
+Export
+Please check that Xinorbis is installed correctly!
+Database is empty
+Bad CSV file
+does not exist
+Multiple folders
+Database connection
+Error connecting to ODBC with supplied connection string.
+Invalid input
+Missing file
+Searching finished
+This Month
+Folder Map
+Reset Chart Gradient Colors
+Warning: User name acquisition is disabled. Click here to enable.
+Time Line
+Display color
+Left
+Right
+Show log
+Save log
+Restore all settings to default
+Select all
+Select none
+Copy results to clipboard
+Data source
+New
+Cannot find file "%$"
+FTP Upload test failed
+Folder Exploder
+Web Reports FTP settings are missing
+Don't process temp files
+Warning: Temporary file acquisition is disabled. Click here to enable.
+Scan
+All other table displays
+Logs

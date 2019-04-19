@@ -1,0 +1,775 @@
+﻿Jan
+Feb
+Mar
+Apr
+May
+Jun
+Jul
+Aug
+Sep
+Okt
+Nov
+Dez
+Januar
+Februar
+März
+April
+Mai
+Juni
+Juli
+August
+September
+Oktober
+November
+Dezember
+Über
+letzter Zugriff
+letzter Zugriff
+letzter Zugriff Datum (TT/MM/JJJJ)
+letzter Zugriff Datum (MM/TT/JJJJ) 
+Heutiger letzter zugriff
+aktuellen Ordner hinzufügen
+Dateinamen zu "Datum"-Registerkarte hinzufügen
+Hinnzufügen zu 
+zu ZIP Datei hinzufügen
+Erweitert
+Erweiterte Optionen 
+Nach
+Alle
+Alle anderen Dateien
+SQL-Anweisungen bei der Suche zulassen
+Alle Benutzer
+Analysiert an
+diesen Ordner analysieren
+Die Analyse von Daten
+und
+Appearance
+Archiv
+Sie sind sicher, dass Sie den Vorgang fortsetzen wollen?
+In %
+Zuordnung von Dateierweiterungen
+Attr
+Audio
+Automatisch nach Aktualisierungen suchen beim Start
+Auto-open
+Auto Refresh
+Automatisches Speichern
+Autosave Ordner Bericht(e) 
+Autosave Optionen
+Autosave Bericht(e)
+Verfügbar
+Danke für den Kauf Xinorbis! Bitte geben Sie die E-Mail-Adresse und Aktivierungs-Code ein, der Ihnen zugeschickt wurde
+Available Times
+Erweitert
+Xinorbis Daten sichern
+Balkendiagramm Farbe
+Balkendiagramm Auflösung
+Bevor
+Schwarz
+Blau
+Erstelle...
+Erstelle "Web Berichte"
+nach Datum
+nach Menge
+nach Größe
+bytes
+B1
+B10
+B2
+B3
+B4
+B5
+B6
+B7
+B8
+B9
+Abbrechen
+Kategorien
+Kategorie
+Kategorie Farben
+CDROM drive
+Ändern
+Diagramm
+Diagramm Optionen
+diagramm Zoomstufe
+nach updates suchen
+Ordner zur Scan-Liste hinzufügen
+Bericht-Typ wählen
+'Scan History' löschen
+"Scan History" löschen. Sind Sie sicher?
+Klicken, zum Hinzufügen
+Close
+Knoten einklappen
+Farbcode
+Kombinieren
+Kombinieren Sie Laufwerke / Ordner
+Compare Folder
+Compare Folder Tree
+Archiv
+Komprimierte Dateien
+Computer
+konfigurieren
+Mit einem Text
+Enthält
+Dieser Scan enthält einen oder mehrere Ausschlüsse. Wollen Sie mit den ausgeschlossenen Dateien / Ordner scannen?
+Inhalt des ersten Datensatzes
+Kontext-Hilfe
+Kopieren
+Kopieren Grafik in die Zwischenablage kopieren
+letzten Bericht in die Zwischenablage kopieren
+Tabelle in die Zwischenablage kopieren
+Kopieren
+Baum in die Zwischenablage kopieren
+Erstellt
+Erstellt
+Erstellt (TT/MM/JJJJ)
+Erstellt (MM/TT/JJJJ)
+Heute erstellt
+CSV-Dateien
+CSV-Bericht
+CSV-Bericht gespeichert als
+Gesamt
+Eigene
+Benutzerdefiniert 1
+Benutzerdefiniert 10
+Benutzerdefiniert 2
+Benutzerdefiniert 3
+Benutzerdefiniert 4
+Benutzerdefiniert 5
+Benutzerdefiniert 6
+Benutzerdefiniert 7
+Benutzerdefiniert 8
+Benutzerdefiniert 9
+Passen
+Benutzerdefinierte Bericht Dateien
+Standardbetrachter
+Cyan
+Datum
+Datumsformat
+Termine
+Datum / Zeit
+Datumsanzeige
+Tag
+MTWTFSS
+Tag / Monat
+Standardeinstellungen CSV-Ausgabe
+Standard Text Bericht Ausgabe-Einstellungen
+Löschen
+Datei Chronik-Daten löschen. Sind Sie sicher?
+delta
+Detail
+Detailliert
+Ordner konnte nicht gescannt werden! Er existiert nicht!
+Aktuelle Einstellungen verbieten direkte Eingabe von SQL für die Suche!
+Willkommen bei
+Es ist nicht genügend Speicher vorhanden, um den Ordnerbaum zu erstellen!
+Ein sehr schwerer Fehler aufgetreten!#13Bitte sende eine E-Mail an den Autor, wenn dies noch einmal passiert.
+Nicht unterstütztes Dateiformat!
+Sie sind sicher, dass Sie die ausgewählte Datei in den Papierkorb verschieben möchten?
+Sie sind sicher, dass Sie alle Dateien in den Papierkorb verschieben möchten?
+Reparatur erfolgreich! :)
+Reparatur fehlgeschlagen :(
+Xinorbis meint, die fehlende Datei wäre zu reparieren.
+Möchten Sie eine Dateireparatur versuchen?
+Ordner gibt es bereits in "Favoriten"
+Differenz auf der linken Seite
+Differenz auf der rechten Seit
+Speicherplatz frei
+Speicherplatz verwendet
+Speicherplatz verschwendet
+Alter the style or contents of Xinorbis reports
+Enthält nicht
+Nichts tun
+Datumsbaum nicht erzeugen
+Dateibesitzerdetails nicht erzeugen
+Laufwerkstyp kann nicht bestimmt werden
+Laufwerk Details für
+Speicherplatz frei
+Laufwerkstyp                       :
+Dateisystem                        :
+Laufwerkstyp                       : Remote (Netzwerk-) Laufwerk
+Speicherplatz auf Laufwerk         :
+Freier Speicherplatz               :
+Sektoren pro Cluster               :
+Bytes pro Sektor                   :
+Freie Cluste                       :
+Insgesamt Cluster                  :
+Volume Name                        :
+Seriennummer                       :
+Laufwerk belegt
+doppelte Dateinamen
+Duplikate (Dateiname)
+Duplikate (Dateigröße)
+Duplikate (Dateiname)
+Duplikate (Dateigröße)
+Bearbeiten
+Ausschluss bearbeiten
+Leere Ordner
+Ordner Chronik aktivieren
+volle Dateiprotokollierung aktivieren
+Verschlüsselt
+Geben Sie einen neuen Namen ein für
+Gleich
+Fehler opening
+Fehler opening Xinorbis system Datei
+Ausschließen
+Ausgeschlossene Datei(en)
+Ausgeschlossen Ordner
+Ausgeschlossen Ordner
+Ausschließen von Dateien vom Scan
+Ausschließen von Dateien vom Scan
+Exe
+existiert
+Exit
+Größtes Stück heraustrennen
+öffnen
+Ordner öffnen
+diesem Ordner öffnen
+Untersuchen
+Inhalt exportieren
+Liste exportieren
+Auswahl zu Datei exportieren
+Auswahl zu Datei exportieren
+Erweiterung
+Für Erweiterungen, die in mehr als einer Kategorie angezeigt werden
+Ignorieren doppelte Erweiterungen in benutzerdefinierten Kategorien (Standard-Kategorien haben Vorrang)
+Ignorieren doppelte Erweiterungen in Standard-Kategorien (benutzerdefinierte Kategorien haben Vorrang)
+Erweiterungen verwenden wie in allen Kategorien (Diagramme und Berichte können ungenau sein)
+Erweiterungen
+Favoriten
+Favoriten
+Felddatentyp
+Datei
+Dateizugriff Chronik
+File Alter
+Dateiattribute
+Datei EntstehungsChronik
+Dateidatum
+Dateierweiterungen
+Datei chronik vergleichen
+Dateichronik Datenbankinformationen
+suche in Chronik
+Dateiänderung Chronik
+Dateiname
+Dateibesitzer
+Dateipfad
+Datei-Eigenschaften
+Dateien
+Dateigröße
+Dateigröße (in Bytes)
+Dateigröße auf der Festplatte (in Bytes)
+Dateigrößenverbreitung
+Dateien auf der LINKEN, die nicht RECHTS existieren
+Dateien auf der RECHTEN, die nicht LINKS existieren
+Dateien, in denen sich die Größe verändert hat
+Dateizuordnungen
+Filter
+Ordner
+Ordner Detail
+Ordner konnte nicht gescannt werden! Er existiert nicht!
+Ordner Chronik
+Datei Chronik: Computer
+Datei Chronik: Ordner
+Ordner Chronik für
+DateiChronik Info
+Ordnerliste
+Ordner-Eigenschaften
+Ordner
+Ordner Scans
+Ordner innerhalb Wurzel, nach der Menge der Dateien
+Ordner innerhalb Wurzel, nach Größe der Dateien
+Ordner zum scannen
+Ordner-Struktur
+Gefunden
+Gefunden in
+Von
+FTP-Host
+FTP password
+FTP Benutzername
+Vollständige Dateiliste
+Ausführlicher Dateipfad
+Allgemein
+Dateinamen generieren
+MD5-Prüfsumme generieren
+MD5-Prüfsumme generieren
+Gfx
+Gradient Farben
+Gradient from
+Gradient to
+Grafik Hintergrund
+Grafik
+Grün
+Grau
+Festplatte
+wurde ausgewählt, aber kein Dateiname angegeben
+# Dateien
+Hilfe
+Hex edit
+versteckt
+Verbergen
+zeigen Datei erstellt Datum
+zeigen Datum der Datei zuletzt zugegriffen
+zeigen Datum der letzten Dateiänderung
+zeigen Datei Eigentümer (user)
+zeigen Dateiattribute
+zeigen Größe (Ist auf der Festplatte Nutzung)
+Farbcode Einträge je nach Dateityp
+Markieren Sie die Dateien auf dieser Seite, die nicht auf der anderen Seite zu finden sind
+vorherige Seite
+nächste Seite
+nach Hause
+Umschalten Privacy-Modus
+Umschalten Ordner History
+Chronik
+Stunden
+HTML Vergleich Bericht gespeichert als
+HTML-Dateien
+HTML-Bericht
+Diagramme und Bilder
+Dateidaten (Erstellt)
+Datei Daten (Zugriff)
+Dateidatum (geändert)
+Benutzerdefinierte
+Top 101 der größten Dateien
+Top 101 der kleinsten Dateien
+Top 101 der neuesten Dateien
+Top 101 der ältesten Dateien
+Header
+Einfache Zusammenfassung
+Dateiattribute
+Kategorien
+Ordner innerhalb Stammverz.
+Datengrößenordnung
+Kategorien und Dateierweiterung
+0-byte Dateien / Ordner
+HTML-Bericht-Optionen
+HTML-Bericht gespeichert al
+Ignorieren
+ersten Datensatz ignorieren
+Importieren
+Importiere Liste
+Import Scan anzeigen
+Spaltentitel erhalten
+Include full file path
+Enthalten Bilder
+Information pages
+Initial Ordner
+Intervall
+Just-in-time-Verarbeitung
+Kilobytes
+Label
+Label Farbe
+Label Prozent
+Label Prozent insgesamt
+Label Wert
+Sprache
+Größter
+Größte Dateien
+Last Month
+Last Week
+Layout-Dateien
+Linke Seite Fortschrittsbalken
+Legende
+Link hover
+Link normal
+Laden
+Loading Folder History data
+Logarithmisch
+Größe
+Hauptdiagramm
+Dies könnte die HTML-Bericht erstellung verlangsamen
+Megabytes
+Geändert
+Geändert Datum
+Geändert (TT/MM/JJJJ) 
+Geändert (MM/TT/JJJJ) 
+Heute geändert
+Monat
+Monat / Jahr
+Mehr Details
+Einfachste
+Mov
+verschieben
+Gehen zu
+Video
+Neueste
+Neueste Dateien
+Keinen "Ordner Chronik"-Ordner ausgewählt!
+Sorry, aber es sind keine Dateidaten verfügbar für
+Keine Dateien gefunden
+Keine Dateien zu komprimieren!
+Keine Übereinstimmungen gefunden
+Nichts gefunden
+Normal
+Normalverteilung
+Nicht indizierter Inhalt
+Kein "Temp." Dateien gefunden
+Ungleich
+NOT SPECIFIED
+0-Byte
+0-Byte-Dateien
+Anzahl der Dateien
+Die Anzahl der Ordner
+der
+Off
+Office
+Offline
+Älter als
+Älteste
+Ältesten Dateien
+Auf
+Öffnen
+In Anwendung öffnen
+Öffnen mit ... (Standard ist Notepad)
+In DateiChronik öffnen
+Öffnen letzten Bericht
+Öffnen mit "Custom-Viewer"
+Optimisations
+Optionen
+Orange
+Berichte organisieren
+Header
+Dateien / Ordner zählen
+Dateigröße
+0-byte Dateien / Ordner
+Durchschnitt
+Größte Datei / Ordner
+Nutzer
+Kategorie Statistiken
+Laufwerk
+Andere
+Ausgabe als CSV
+Ausgabe als HTML
+Ausgabe als XML 
+Diagramm Optionen
+Besitzer
+eite Hintergrund
+Pfad
+Pfade
+Muster zum ausschließen
+Prozent
+Prozent insgesamt
+Bitte warten
+Bitte warten während Ordnerchronik fertiggestellt ist
+PNG-Bilddateien
+Nach scan
+Vorschau
+Prg
+Verarbeitete in
+Programmierung
+Programme
+Lila
+Anz.
+Anzahl der Dateien
+Menge
+Die Menge der Dateien, sortiert nach Benutzer
+Schnell
+Ordner gibt es bereits in "Quick Ordner"!
+Schnellbericht Einstellungen
+Schnellbericht
+RAM-disk
+Bereich
+Nur Lesen
+Rot
+Referenz
+Aktualisieren
+Im Vergleich zu früheren
+Bezogen auf heute
+Remote (Netzwerk-) Laufwerk
+Wechseldatenträger
+benutzerdefinierte Kategorie umbenennen
+Reparse Datei
+Bericht
+Bericht-Browser
+Einen bug / Funktion melden
+Berichtfarben
+Der ausgewählten Bericht enthält nur ausgewählte Daten.
+Dies führt dazu dass bestimmte Einträge zu ungenau werden!
+Bericht für
+Berichtselemente
+Berichtlayout
+Ausgabeoptionen
+Reports-Ordner
+Reports-URL
+Sie sind sicher, dass Sie die Standardeinstellung "Dateierweiterungszuordnung" wiederherstellen wollen?
+Standardeinstellungen wiederherstellen
+Rechte Seite Fortschrittsbalken
+Speichern
+Alles speichern (Standard)
+Speichern als
+Diagramm speichern
+Daten speichern
+Daten speichern die zu einem anderen Zeitpunkt existieren
+Daten speichern die zu einem anderen Zeitpunkt nicht existieren
+Berichte speichern
+Speichern Sie auf Alle
+Speichern von Berichten
+Scan
+Scannen Sie ein Laufwerk oder einen Ordner
+Scan-Daten
+Scannen Sie ein Laufwerk oder einen Ordner
+Chronik scannen
+Scanne Ordner
+Scanfortschritt
+Scannen Sie das folgende Laufwerk oder Ordner
+Suche
+Suchergebnis einschränken
+Suchsyntax
+wählen
+Kategorien wählen
+Wählen Sie Scan-Datum und Uhrzeit
+Ausgewählte Ordner
+Wählen Sie Scan-Datum und Uhrzeit
+Separator
+Bargraphen zu einer einzigen Farbe
+Einstellungen
+Sfx
+Zeige
+Alle zeigen
+zeige kategorisiert
+zeige benutzerdefiniert
+Dateien anzeigen
+Dateigrößen zeigen als
+Vollständigen Pfad zeigen
+Anzeigen
+Label anzeigen
+Namen anzeigen
+Nur Nicht-Null
+Zeige Größen in
+zeige kategorie 
+Größe
+Größe davor
+Größenänderungen
+Größe der Dateien, sortiert nach Benutzer
+Größe jetzt
+Größe (auf der Festplatte)
+Größe der Dateien
+Größe der Dateien (Byte)
+Größe auf der Festplatte
+Kleinste
+Kleinste Dateien
+kleine Dateien
+Spezial
+Started scan of
+Status
+Empfohlene Dateityp
+Zusammenfassung
+                       Analysiert  :
+Durchschnittliche Dateien / Ordner :
+Größter Ordner                     :
+Größter Ordner                     : <root>
+Größte Datei                       :
+User mit dem größten Anteil        :
+                                   : Anzahl      Größe
+Anzahl der Dateien                 :
+Anzahl der Ordner                  :
+Größe der Dateien                  :
+Größe der Dateien (auf Festplatte) :
+Speicherplatz verschwendet         :
+0-byte-Dateien                     :
+Leere Ordner                       :
+Durchschnittliche Dateigröße       :
+Empfohlene Dateityp
+Sys
+System
+Tabelle
+Tabelle Hintergrund
+Tabelle anzeigen
+Tabellenkopf
+Name der Tabelle
+Tabelle Zeilenhöhe
+Tabellen
+Tabelle Textfarbe
+Tabelle Text Farbe 2
+Temp
+Temp-Dateien in % der Gesamtzahl
+Temp-Dateien in % des Gesamt-Größe
+Temp-Dateien
+Temp. Dateien Liste
+Temporär
+Text
+Textfarbe
+Text-Dateien
+Text-Bericht
+================================================================================
+-- Null-Dateien ----------------------------------------------------------------
+-- Leere Ordner ----------------------------------------------------------------
+-- Benutzer --------------------------------------------------------------------
+-Name Anzahl ------------------------ Anzahl --- In % ----- Größe --- In % -----
+-- Top 101 größten Dateien -----------------------------------------------------
+-- Top 101 kleinsten Dateien ---------------------------------------------------
+-- Top 101 Neueste Dateien -----------------------------------------------------
+-- Top 101 ältesten Dateien ----------------------------------------------------
+-- Dateitypen ------------------------------------------------------------------
+Kategorie --------------------------- Anzahl --- In % ----- Größe --- In % -----
+-- Attribute -------------------------------------------------------------------
+Attribute --------------------------- Anzahl --- In % ----- Größe --- In % -----
+-- Ordnerliste -----------------------------------------------------------------
+Ordner ------------------------------ Anzahl --- In % ----- Größe --- In % -----
+-- Magnituden ------------------------------------------------------------------
+-- Details zur Erweiterung -----------------------------------------------------
+Text-Bericht Dateiname
+Text als Bericht gespeichert
+Der Stammordner ist nicht vorhanden
+This Week
+Zeit
+TMP
+An
+Umschalten gradient
+Werkzeuge
+Top 101
+Gesamtgröße
+Gesamtgröße der Dateien analysiert
+Baum
+Baumdiagramm
+Baumbericht Dateiname
+Baumdateien
+Baum Bericht
+Baum als Bericht gespeichert
+Frei
+Typ
+Arten von "temporäre Datei"
+Uncat
+Undefiniert
+Unbekannt
+Unbekannter Dateityp
+Höchste Updaterate (langsamste)
+Updaterate 2
+Updaterate 3
+Updaterate 4
+Updaterate 5
+Niedrigste Updaterate (am schnellsten)
+Aktualisieren von Ordnerchronik
+laden
+Hochladen
+Hochladen von HTML Grafiken
+Hochladen von Index-Seiten
+Nutzung durch Anwender
+Gebraucht
+Belegter Speicher
+Benutzerdefinierte
+Benutzer-Details
+Bedienungsanleitung
+Benutzer
+Wert
+Anzeigen
+Datei öffnen / ansehen
+Web Reports
+Woche
+Woche / Jahr
+Willkommen
+Wenn es weniger als diese Dateien sind
+Welche Daten
+Weiß
+Windows-Dateien
+Innerhalb der letzten
+Assistent
+Bytes
+Xinorbis Dateiliste
+Gigabytes
+Xinorbis Datenordner
+Änderungen an den Daten-Ordner wird beim nächsten Mal angewandt werden wenn Xinorbis neugestartet wird
+Xinorbis Dateiliste
+Xinorbis Home
+Xinorbis Bericht Dateiname
+Kilobytes
+Megabytes
+XML Vergleich Bericht gespeichert als
+XML-Dateien
+XML-Bericht
+XML-Bericht gespeichert als
+XValue
+Jahr
+Yellow
+Yesterday
+Zip
+Bericht nicht gefunden
+Checking for updates
+In die Zwischenablage kopieren
+Warnung
+Fehler beim Speichern des Berichts
+Fehler beim Speichern
+Pro-Version nur
+Fertigen Schnell Menü Ordner
+In Xinorbis zu Explorer-Kontextmenü 
+Lernprogramm 
+Kauf Xinorbis
+Aktiviert
+Behindert
+Bitte wählen Sie ein Datum für die LINKS- und RECHTS-Seiten.
+Suchen ...
+Eine neue Version ist verfügbar!
+Keine neue Version ist verfügbar!
+Fehler!
+Sozialen Medien
+Vielen Dank
+Tragbar
+Standard
+Titelfarbe
+Mehrfarbig
+Gradient
+Voreinstellen
+Suchergebnisse
+Namen ausblenden
+Kann keine Verbindung herstellen
+CSV-Daten importieren
+Stunden
+Minute
+Minuted
+Sekund
+Sekunden
+Name
+E-Mail-Addresse
+Aktivierungscode
+Diese Funktion ist in der kostenlosen Version nicht verfügbar.
+Fehler beim Komprimieren von Dateien
+Installierte Version
+Spätestens online verfügbar
+Herunterladen
+Jetzt aktualisieren
+Version
+Webseite
+Xinorbis ist beschäftigt
+Fehler beim Öffnen der Xinorbis-Systemdatei
+Verfügbare Ordner-Verlaufs-Scans für ausgewählten Ordner
+Scannt
+Ausschluss ausschließen
+Ausgewählt
+Bitte warten Sie, bis der Web Reports hochgeladen ist
+Ungültiger Name / Email / Code-Kombination
+Export
+Bitte überprüfen Sie Xinorbis Das korrekt installiert ist!
+Datenbank ist leer
+Bad CSV-Datei
+nicht vorhanden ist
+Mehrere Ordner
+Datenbankverbindung
+Fehler beim Verbinden mit ODBC mit zugeführter Verbindungszeichenfolge.
+Ungültige Eingabe
+Fehlende Datei
+Suche fertig
+Diesen Monat
+Ordnerkarte
+Reset Chart Gradienten Farben
+Warnung: Die Benutzerkennung ist deaktiviert. Klicken Sie hier, um zu aktivieren.
+Zeitleiste
+Farbe anzeigen
+Links
+Recht
+Protokoll anzeigen
+Protokoll speichern
+Setzen Sie alle Einstellungen auf Standard zurück
+Alles auswählen
+Nichts ausgewählt
+Kopiere die Ergebnisse in die Zwischenablage
+Datenquelle
+Neu
+kann die Datei "%$" nicht finden
+FTP-Uploadtest fehlgeschlagen
+Ordner Explodieren
+Web Reports FTP settings are missing
+Verarbeiten Sie keine temporären Dateien
+Warnung: Die temporäre Dateierfassung ist deaktiviert. Klicken Sie hier, um zu aktivieren.
+Scan
+Alle anderen Tabellen werden angezeigt
+Aufzeichnungen

@@ -1,0 +1,776 @@
+﻿Jan
+Feb
+Már
+Apr
+Máj
+Jún
+Júl
+Aug
+Sze
+Okt
+Nov
+Dec
+Január
+Február
+Március
+Április
+Máj
+Június
+Július
+Augusztus
+Szeptember
+Október
+November
+December
+Névjegy
+Hozzáférve
+Hozzáférés dátuma
+Hozzáférés dátuma (NN/HH/ÉÉÉÉ)
+Hozzáférés dátuma (HH/NN/ÉÉÉÉ)
+Hozzáférve ma
+Jelenlegi mappa hozzáadása
+Fájlnevek hozzáadása a "Dátum" fülhöz
+Hozzáad ehhez
+Hozzáadás zip fájlhoz
+Haladó
+Haladó beállítások
+Után
+Minden
+Minden más fájl
+SQL kivonatok engedélyezése kereséskor
+Összes felh
+Analizálva ekkor
+Mappa analizálása
+Adatok analizálása
+és
+Appearance
+Archívum
+Biztosan folytatni akarod?
+Mint %
+Hozzárendelt fájlkiterjesztések
+Attr
+Hang
+Frissítések keresése automatikusan az indításkor
+Auto-open
+Automata frissítés
+Automata mentés
+Mappa jelentés(ek) automata mentése
+Automata mentés beállításai
+Jelentés(ek) automata mentése
+Elérhetõ
+Köszönjük, hogy megvásároltad a Xinorbist! Kérlek add meg az emailcímedet és az aktivációs kódot, amit kaptál
+Elérhetõ idõk
+Haladó
+Xinorbis adatok biztonsági mentése
+Sávgrafikon színe
+Sávgrafikon felbontás
+Elõtt
+Fekete
+Kék
+Létrehozás
+Webjelentések építése
+dátum szerint
+mennyiség szerint
+méret szerint
+bájt
+E1
+E10
+E2
+E3
+E4
+E5
+E6
+E7
+E8
+E9
+Mégse
+Kategóriák
+Kategória
+Kategória színek
+CDROM drive
+Megváltoztat
+Diagram
+Diagram beállítások
+Grafikon nagyítási szint
+Frissítések keresése
+Adj mappákat a keresési listához
+Válassz jelentéstípust
+"Keresési elõzmények" törlése
+"Keresési elõzmények" törlése. Biztos vagy benne?
+Katt a hozzáadáshoz
+Close
+Csomópontok mutatása
+Színkód
+Kombinálás
+Meghajtók / mappák komibnálása
+Compare Folder
+Compare Folder Tree
+Tömörített
+Tömörített fájlok
+Számítógép
+Konfigurálás
+Szöveget tartalmaz
+Tartalmaz
+Ez a keresés egy vagy több kizárást tartalmaz. Szeretnéd belevenni a kizárt fájlokat/mappákat is a keresésbe?
+Elsõ rekord tartalma
+Kontextus súgó
+Másolás
+Diagram másolása a vágólapra
+Legutóbbi jelentés másolása a vágólapra
+Tábla másolása a vágólapra
+Másolás ide
+Fa másolása a vágólapra
+Létrehozva
+Létrehozás dátuma
+Létrehozás dátuma (NN/HH/ÉÉÉÉ)
+Létrehozás dátuma (HH/EE/ÉÉÉÉ)
+Létrehozva ma
+CSV fájlok
+CSV jelentés
+CSV jelentés elmentve mint
+Kumulatív
+Egyéni
+Egyéni 1
+Egyéni 10
+Egyéni 2
+Egyéni 3
+Egyéni 4
+Egyéni 5
+Egyéni 6
+Egyéni 7
+Egyéni 8
+Egyéni 9
+Testreszabás
+Egyéni jelentés fájlok
+Egyéni megjelenítõ
+Cián
+Dátum
+Dátum formátuma
+Dátumok
+Dátum / Idõ
+Dátum megjelenítés
+Nap
+HKSCPSV
+Nap/Hónap
+Alapértelmezett CSV kimeneti beállítások
+Alapértelmezett szöveges jelentés kimeneti beállítások
+Törlés
+Fájlelõzmény adatok törlése. Biztos vagy benne?
+delta
+Részlet
+Részletes
+Nem kereshetsz ebben a mappában, mert nem látezik!
+Jelenlegi beállítások nem engedik, hogy belépj az SQL-be a keresés miatt!
+Üdvözöljük
+Nincs elég memória a fa építésének befejezéséhez!
+Súlyos hiba történt!#13Kérlek küldj emailt a fejlesztõnek, ha ez ismét megtörténne.
+Nem támogatott fájlformátum!
+Biztosan szeretnéd a kiválasztott fájlt a Lomtárba dobni?
+Biztosan szeretnéd az összes fájlt a Lomtárba dobni?
+Javítás sikeres!
+Javítás sikertelen :(
+A Xinorbis úgy véli, hogy képes kijavítani a hiányzó fájlt
+Szeretnéd megpróbálni a fájljavítást?
+Mappa már létezik a "Kedvencekben"
+Különbség a bal oldalon
+Különbség a jobb oldalon
+Szabad hely
+Felhasznált szabad hely
+Helyveszteség
+Alter the style or contents of Xinorbis reports
+Nem tartalmaz
+Ne tegyen semmit
+Ne építsen adatfát
+Ne kérje le a fájltulajdonos részleteit
+Meghajtótípust nem sikerült meghatározni
+Meghajtó részletek
+Drive free
+Meghajtó típus          :
+Fájlrendszer            :
+Meghajtó típus          : Távoli (hálózati) meghajtó
+Hely a meghajtón        :
+Szabad hely             :
+Szektorok klaszterenként: 
+Bájtok szektoronként    :
+Szabad klaszterek       :
+Összes klaszter         :
+Kötet címe              :
+Sorozatszám             :
+Foglalt hely
+duplikált fájlnevek
+Duplikáltak (Fájlnév)
+Másolatok (Fájlnév)
+Duplikáltak (Fájlméret)
+Másolatok (Fájlméret)
+Szerkesztés
+Kizárás szerkesztése
+Üres mappák
+Mappa Elõzmények Engedélyezése
+Teljes fájlnaplózás engedélyezése
+Kódolt
+Adj meg új nevet
+Egyenlõ
+Error opening
+Error opening Xinorbis system file
+Kihagyás
+Kizárt fájl(ok)
+Kizárt mappák
+Kizárt mappák
+Fájlok kizárása a keresésbõl
+Exclude from scan
+Exe
+Létezik
+Exit
+Legnagyobb szelet szétrobbantása
+Felfedezés
+Mappa felfedezése
+Mappa felfedezése
+Felfedezés
+Tartalom exportálása
+Lista exportálása
+Kijelöltek exportálása fájlba
+Kijelöltek exportálása fájlba
+Kiterjesztés
+Több kategóriában is elõforduló kiterjesztések számára
+Duplikált kiterjesztések kihagyása az egyéni kategóriákban (az általános kategóriák élveznek elsõbbséget)
+Duplikált kiterjesztések kihagyása az általános kategóriákban  (az egyéni kategóriák élveznek elsõbbséget)
+Kiterjesztések használata a összes kategóriában meghatározottak szerint (grafikonok és jelentések pontatlanok lehetnek)
+Kiterjesztések
+Kedvencek
+Kedvencek
+Mezõ adattípus
+Fájl
+Fájlhozzáférési elõzmények
+Fájl kora
+Fájlattribútumok
+Fájllétrehozási elõzmény
+Fájldátumok
+Fájlkiterjesztések
+Fájlelõzmények összehasonlítása
+Fájlelõzmény adatbázis információ
+Fájlelõzmények keresése
+Fájlmódosítási elõzmények
+Fájlméret
+Fájltulajdonos
+Fájlútvonal
+Fájltulajdonságok
+Fájlok
+Fájlméret
+Fájlméret (bájt)
+Fájl mérete a lemezen (bájt)
+Fájlméret szórás
+Fájl a BAL oldalon, amik nincsenek a JOBB oldalon
+Fájl a JOBB oldalon, amik nincsenek a BAL oldalon
+Fájl, ahol a méret változott
+Fájlhozzárendelések
+Szûrõ
+Mappa
+Mappa részletek
+Nem kereshetsz ebben a mappában, mert nem látezik!
+Mappa elõzmányek
+Mappa elõzmények: Számítógép
+Mappa elõzmények: Mappa
+Mappa elõzmények
+Mappa elõzmények infó
+Mappalista
+Mappa tulajdonságok
+Mappák
+Mappa keresések
+Mappák a gyökérben, fájlmennyiség szerint
+Mappák a gyökérben, fájlméret szerint
+Átvizsgálni kívánt mappák
+Folder structure
+Talált
+Megtalálva
+Ettõl
+FTP kiszolgáló
+FTP jelszó
+FTP felhasználónév
+Teljes fájlista
+Teljes fájlútvonal
+Általános
+Fájlnevek generálása
+MD5 checksum generálása
+MD5 checksum generálása
+Gfx
+Átmenetes színek
+Átmenet ebbõl
+Átmenet ebbe
+Graph background
+Grafika
+Zöld
+Szürke
+Merevlemez
+került kijelölésre, de nincs meghatározott fájlnév
+# Files
+Súgó
+Hex szerk
+Rejtett
+Elrejt
+fájl létrehozás dátumának mutatása
+legutóbbi hozzáférés dátumának mutatása
+legutóbbi módosítás dátumának mutatása
+fájltulajdonos (felhasználó) mutatása
+fájlattribútumok mutatása
+méret (aktuális lemezfoglalás) mutatása
+bejegyzések színkódolása fájltípus alapján
+azon fájlok kijelölése ezen az oldalon, amelyek nem találhatóak meg a másikon
+elõzõ oldal
+következõ oldal
+fõmenü
+adatvédelmi mód ki/be
+mappa elõzmények ki/be
+Elõzmények
+Óra
+HTML összehasonlítási jelentés elmentve mint
+HTML fájlok
+HTML jelentés
+Grafikonok és képek
+Fájldátumok (Létrehozva)
+Fájldátumok (Hozzáférve)
+Fájldátumok (Módosítva)
+Felhasználó részletek
+101 legnagyobb fájl
+101 legkisebb fájl
+101 legújabb fájl
+101 legrégebbi fájl
+Fejléc
+Egyszerû összegzés
+Fájlattribútumok
+Kategóriák
+Mappák a gyökérben
+Jelentõs adat
+Kategóriák és fájlkiterjesztések
+Nulla méretû fájlok / mappák
+HTML jelentés beállítások
+HTML jelentés elmentve mint
+Kihagyás
+Elsõ rekord kihagyása
+Import
+Lista importálása
+Keresési részletek importálása
+Oszlopcímek tartalmazása
+Include full file path
+Képek beleszámítása
+Information pages
+Kezdõ mappa
+Idõköz
+Épp-idõben feldolgozás
+Kilobájt
+Címke
+Címke színe
+Címke Százalék
+Címke százalék összesen
+Címke Érték
+Nyelv
+Legnagyobb
+Legnagyobb fájl
+Last Month
+Last Week
+Szerkezet fájlok
+Bal oldali folyamatsáv
+Magyarázat
+Link hover
+Link normal
+Betöltés
+Loading Folder History data...
+Logaritmikus
+Jelentõség
+Fõ diagram
+Ezek lassíthatják a HTML jelentés generálásának sebességét
+Megabájt
+Módosítva
+Módosítás dátuma
+Módosítás dátuma (NN/HH/ÉÉÉÉ)
+Módosítás dátuma (NN/HH/ÉÉÉÉ)
+Módosítva ma
+Hónap
+Hónap/Év
+Több részlet
+Legmegfelelõbb
+Mov
+Mozgatás
+Mozgatás ide
+Film
+Legújabb
+Legújabb fájlok
+Nincs "mappa elõzmény" kiválasztva!
+Sajnáljuk, de nem érhetõ el fájladat ehhez
+Nem talált fájlokat
+Nincs tömörítenivaló fájl!
+Nincs egyezés.
+Nem talált
+Normál
+Normál elosztás
+Nem tartalom indexelt
+Nem találtam "ideiglenes" fájlt
+Nem egyenlõ
+NEM_MEGHATÁROZOTT
+Null
+Nulla méretû fájlok
+Fájlok száma
+Mappák száma
+of
+Iro
+Iroda
+Offline
+Idõsebb mint
+Legrégebbi
+Legrégebbi fájlok
+Ekkor
+Megnyitás
+Megnyitás az alkalmazásban
+Megnyitások az alkalmazásban (alapértelmezett a Jegyzettömb)
+Megnyitás a fájlelõzményekben
+Legutóbbi jelentés megnyitása
+Megnyitás "egyéni megjelenítõvel"
+Optimalizációk
+Beállítások
+Narancssárga
+Jelentések rendszerezése
+Fejléc
+Fájl / mappa szám
+Fájlméret
+Nulla méretû fájlok / mappák
+Átlagok
+Legnagyobb fájl / mappa
+Felhasználó
+kategória statisztika
+Meghajtó
+Egyéb
+Kimenet mint CSV
+Kimenet mint HTML
+Kimenet mint XML
+Diagram beállítások
+Tulajdonos
+Page background
+Útvonal
+Útvonalak
+Minta a kihagyáshoz
+Százalék
+Százalék összesen
+Kérlek várj
+Kérlek várj, amíg a Mappa elõzmények befejezõdnek
+PNG képfájlok
+Keresés küldése
+Elõnézet
+Prg
+Feldolgozva
+Programozás
+Programok
+Lila
+Menny.
+Fájlok mennyisége
+Mennyiség
+Fájlmennyiség felhasználó szerint listázva
+Gyors
+$$ Mappa már létezik a "Gyorsmappákban"!
+Gyorsjelentés tulajdonságai
+Gyorsjelentések
+RAM lemez
+Tartomány
+Csak olvasható
+Prios
+Referencia
+Frissítés
+Relatív az elõzõhöz
+Relatív a mához
+Távoli (hálózati) meghajtó
+Removable disk
+Egyéni kategória átnevezése
+Újraelemzési fájl
+Jelentés
+Jelentés böngészõ
+Hiba jelentése / Újdonság ajánlása
+Jelentés színek
+The selected report contains only selected data.
+This will cause certain displays to be inaccurate!
+jelentés ehhez
+Jelentés elemek
+elentés megjelenés
+Jelentési beállítások
+Mappa jelentése
+URL jeletése
+Biztosan vissza akarod állítani az alapértelmezett "fájlkiterjesztés hozzárendeléseket"?
+Alapértelmezések visszaállítása
+Jobb oldali folyamatsáv
+Mentése
+Minden mentése (alapértelmezett)
+Mentés mint
+Diagram mentése
+Adat mentése
+Csak azok mentése, amelyek léteznek másik dátumon
+Csak azok mentése, amelyek nem léteznek másik dátumon
+Jelentések mentése
+Minden mentése
+Jelentések mentése
+Keresés
+Keresés egy meghajtón vagy mappában
+Keresési adatok
+Keresés egy meghajtón vagy mappában
+Keresési elõzmények
+Keresés a mappában
+Scanning progress
+Keressen a következõ meghajtón vagy mappában
+Keresés
+Keresési eredmény határa
+Keresési szintaxis
+Válassz
+Select categories
+Keresési dátum/idõ kiválasztása
+Válassz kategóriát
+Keresési dátum/idõ kiválasztása
+Elválasztó
+Sávgrafikonok egy színre állítása
+Beállítások
+Sfx
+Mutat
+Mindent mutat
+Kategorizáltak mutatása
+Egyéni mutatása
+Fájlok mutatása
+Fájlméretek mutatása mint
+Teljes útvonal mutatása
+Mutat
+Címkék mutatása
+Nevek mutatása
+Csak nem nulla mutatása
+Méret mutatása ebben
+Kategória nélküliek mutatása
+Méret
+Méret elõtte
+Méretváltozások
+Fájlméret felhasználó szerint listázva
+Méret most
+Méret (lemezen)
+Fájlok mérete
+Fájlméret (bájt)
+Méret lemezen
+Legkisebb
+Legkisebb fájlok
+Elemzési fájl
+Speciális
+Started scan of
+Állapot
+Ajánlott fájltípus
+Összegzés
+             Analizálva :
+Átlagos fájlok/mappák   :
+Legnagyobb mappa        :
+Legnagyobb mappa        : <gyökér>
+Legnagyobb fájl         :
+Felh. a legtöbb adattal :
+                        : Távoli (hálózati) meghajtó
+Fájlok száma            :
+Mappák száma            :
+Fájlok mérete           :
+Fájlok mérete (lemezen) :
+Helyveszteség           :
+Nulla méretû fájlok     :
+Üres mappák             :
+Átlagos fájlméret       :
+Támogatott fájltípusok
+Ren
+Rendszer
+Tábla
+Tábla háttér
+Tábla megjelenítés
+Tábla fejléc
+Tábla neve
+Tábla sormagassága
+Táblák
+Tábla szövegszín
+Tábla szövegszín 2
+Ideiglenes
+Ideiglenes fájlok, mint az összes fájl %-a
+Ideiglenes fájlok, mint a teljes fájlméret %-a
+Ideiglenes fájlok
+Ideiglenes fájllista
+Ideiglenes
+Szöveg
+Szöveg színe
+Text fájlok
+Szöveges jelentés
+================================================================================
+-- Nulla méretû fájlok ---------------------------------------------------------
+-- Üres mappák -----------------------------------------------------------------
+-- Felhasználók ----------------------------------------------------------------
+Név --------------------------------- Menny --- Mint % ---- Méret -- Mint % ----
+-- 101 legnagyobb fájl ---------------------------------------------------------
+-- 101 legkisebb fájl ----------------------------------------------------------
+-- 101 legújabb fájl -----------------------------------------------------------
+-- 101 legrégebbi fájl ---------------------------------------------------------
+-- Fájltípusok -----------------------------------------------------------------
+Kategória --------------------------- Menny --- Mint % ---- Méret -- Mint % ----
+-- Attribútumok ----------------------------------------------------------------
+Attribútumok ------------------------ Menny --- Mint % ---- Méret -- Mint % ----
+-- Mappalista ------------------------------------------------------------------
+Mappa ------------------------------- Menny --- Mint % ---- Méret -- Mint % ----
+-- Jelentõs --------------------------------------------------------------------
+-- Kiterjesztés részletek ------------------------------------------------------
+Szöveges jelentés fájlnév
+Text jelentés elmentve mint
+Root does not exist
+Ezen a héten
+Idõ
+TMP
+Eddig
+Átmenet ki/be
+Eszközök
+101 leg-
+Teljes méret
+Analizált teljes fáljméret
+Fa
+Fa diagram
+Fa jelentés fájlnév
+Fa fájlok
+Fa jelentés
+Tree jelentés elmentve mint
+Trial
+Típus
+"Ideiglenes fájlok" típusai
+UCD
+Nincs kategóriában
+Ismeretlen
+Ismeretlen fájltípus
+Highest progress update (Slowest)
+Progress Update Level 2
+Progress Update Level 3
+Progress Update Level 4
+Progress Update Level 5
+Lowest progress update (Fastest)
+Mappa elõzmények frissítése
+Feltöltés
+Feltöltés
+HTML grafikon feltöltése
+Index oldalak feltöltése
+Felhasználó általi használat
+Használva
+Felhasznált hely
+Egyéni beállítás szerint
+Felhasználó részletek
+Kézikönyv
+Felhasználók
+Érték
+Feladatok
+Fájl megnézése/megnyitása
+Web jelentések
+Hét
+Hét/Év
+Üdvözlet
+Amikor kevesebb van, mint ezek a fájlok
+Melyik adat
+Fehér
+Windows fájlok
+Az utolsó idõponton belül
+Varázsló
+Bájt
+Xinorbis fájllista
+Gigabájt
+Xinorbis adatmappa
+Az adatmappát érintõ változások a Xinorbis következõ megnyitásánál kerülnek érvényesítésre
+Xinorbis fájllista
+Xinorbis fõlap
+Xinorbis jelentés fájlnév
+Kilobájt
+Megabájt
+XML összehasonlítási jelentés elmentve mint
+XML fájlok
+XML jelentés
+XML jelentés elmentve mint
+XÉrték
+Év
+Sárga
+Yesterday
+Zip  
+Jelentés nem található
+Checking for updates
+Másolja a vágólapra
+Figyelem
+Hiba történt a mentés jelentés
+Hiba történt a mentés
+Csak a Pro verzióban
+Testreszabása Gyors Mappa menüjében
+Add Xinorbis a Explorer menüből
+Oktatói
+Vásárlás Xinorbis
+Engedélyezett
+Tiltva
+Kérjük, válasszon ki egy időpontot a bal és jobb oldalán.
+Keresés ...
+Egy új verzió!
+Nincs új verzió elérhető!
+Hiba!
+Közösségi média
+Kösz
+Hordozható
+Alapértelmezett
+Cím szín
+Sokszínű
+Gradiens
+Alapértelmezett
+Keresési eredmények
+Elrejtése nevek
+Nem sikerült csatlakozni a
+Import CSV-adatok
+Órák
+Perc
+Percek
+Második
+Másodperc
+Név
+Email cím
+Aktiváló kód
+Sajnos ez a funkció nem áll rendelkezésre az ingyenes verzió.
+Hiba fájlok tömörítése
+Telepített verzió
+Legújabb elérhető Online
+Letöltés
+Frissítse most
+Változat
+Weboldal
+Xinorbis foglalt
+Nem sikerült megnyitni Xinorbis rendszer file
+Elérhető mappa előzmények megkeresése Kiválasztott mappa
+Vizsgálatok
+Kizárás üres
+Kiválasztott
+Kérjük, várjon, amíg a Web Reports feltölteni, hogy befejezze
+Érvénytelen Név / E-mail / Kód kombináció
+Export
+Kérjük, ellenőrizze még Xinorbis van behelyezve!
+Adatbázis üres
+Bad CSV-fájl
+nem létezik
+Több mappa
+Adatbázis kapcsolat
+Hiba az ODBC a mellékelt csatlakozási karaktersorozat.
+Hibás bemenet
+Hiányzó fájl
+Keresés kész
+Ebben a hónapban
+Folder Térkép
+Visszaállítása kör színátmenetek
+Figyelmeztetés: A felhasználói név megszerzése le van tiltva. Kattintson ide az engedélyezéshez.
+Idővonal
+Kijelző színe
+Balra
+Jobb
+Mutasd a naplót
+Napló mentése
+Állítsa vissza az összes beállítást az alapértelmezettre
+Mindet kiválaszt
+Válasszon semmit
+Másolja az eredményeket a vágólapra
+Adatforrás
+új
+nem találja a "%$" fájlt
+FTP feltöltési teszt sikertelen
+Folder Exploder
+Web Reports FTP settings are missing
+Ne dolgozzon át ideiglenes fájlokat
+Figyelmeztetés: Az ideiglenes fájlfelvétel le van tiltva. Kattintson ide az engedélyezéshez.
+Keresés
+Minden egyéb táblázat megjelenítése
+Hajónapló
+// a légpárnásom tele van angolnákka

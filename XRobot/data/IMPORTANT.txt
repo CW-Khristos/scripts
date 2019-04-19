@@ -1,0 +1,9 @@
+Xinorbis will save your extensions in here if you select to use "portable mode", where everything gets saved to an ini file and here.
+
+If Xinorbis cannot find these files then it will go to:
+
+\system\defaultextensions
+
+and load them from there. The Xinorbis installer will upadte the files in \system\defaultextensions, so keep a copy if you edit things, in fact keep a copy of both sets, just in case!!
+
+Paul

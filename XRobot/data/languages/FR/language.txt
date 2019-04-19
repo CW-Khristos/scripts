@@ -1,0 +1,775 @@
+﻿Jan
+Fév
+Mar
+Avr
+Mai
+Jun
+Jul
+Aôu
+Sep
+Oct
+Nov
+Déc
+Janvier
+Février
+Mars
+Avril
+Mai
+Juin
+Juillet
+Août
+Septembre
+Octobre
+Novembre
+Décembre
+A propos
+Accédés
+Date dernier accès
+Date du dernier accès (jj/mm/aaaa)
+Date du dernier accès (mm/jj/aaaa)
+Accédés Aujourd'hui
+Ajouter dossier courant
+Ajouter le nom des fichiers dans l'onglet "Date"
+Ajouter à
+Enregistrer au format ZIP
+Avancé
+Options avançées
+Après
+Tous
+Tous les autres fichiers
+Autoriser les requêtes SQL dans le mode recherche
+Tous les utilisateurs
+à
+Analyser ce dossier
+Analyse des Données
+et
+Apparence
+Archive
+Etes-vous sûr de vouloir continuer?
+En %
+Extensions Fichiers Associées
+Attr
+Audios
+Rechercher les mises à jour au démarrage
+Ouverture Auto
+Actualisation Auto
+Sauvegarde Automatique
+Sauveg. Auto Dossiers
+Options Sauvegardes Automatiques
+Sauveg. Auto Rapports
+Rapports
+Merci d'avoir acheté Xinorbis! SVP, entrez l'adresse de messagerie et la clé d'activation qui vous ont été envoyées.
+Périodes Disponible
+Avancé
+Sauvegarder vos données Xinorbis
+Couleur Histogrammes
+Résolution du graphique
+Avant
+Noir
+Bleu
+Construction
+Building Web Reports
+par Date
+par Nbre
+par Taille
+Octets
+P1
+P10
+P2
+P3
+P4
+P5
+P6
+P7
+P8
+P9
+Annuler
+Catégories
+Catégorie
+Couleurs par catégories
+CDROM drive
+Mofifier
+Graphique
+Options du Graphique
+Zoom du Graphique
+Rechercher mises à jour
+Sélectionner dossiers à ajouter pour analyse
+Type de rapport
+Effacer Historique des Analyses
+Confirmer "Effacement Historique des Analyses" ?
+Cliquer pour ajouter
+Close
+Réduire
+Code couleur
+Multiple
+Combine drives / folders
+Compare Folder
+Compare Folder Tree
+Compressé
+Fichiers compressés
+Ordinateur
+Configurer
+Texte Contenu
+Contient
+Cette analyse comporte une ou plusieurs exclusions. Voulez-vous inclure les dossiers et fichiers initialement exclus ?
+Contenu du premier enregistrement
+Aide contextuelle
+Copier
+Copier graphique dans presse-papiers
+Copier dernier rapport dans presse-papiers
+Copier tableau dans presse-papiers
+Copy to
+Copier tableau dans presse-papiers
+Créés
+Date Création
+Date de création (jj/mm/aaaa)
+Date de création (mm/jj/aaaa)
+Créés Aujourd'hui
+Fichiers CSV
+Rapport CSV
+Rapport CSV enregistré sous
+En Cumulé
+Personnaliser
+Personnalisé 1
+Personnalisé 10
+Personnalisé 2
+Personnalisé 3
+Personnalisé 4
+Personnalisé 5
+Personnalisé 6
+Personnalisé 7
+Personnalisé 8
+Personnalisé 9
+Rapports
+Rapports personnalisés
+Visualiseur personnalisé
+Cyan
+Date
+Date format 
+Dates
+Date / Heure
+Affichage Dates
+Jour
+MLMJVSD
+Jour/Mois
+Paramètres par défaut de la sortie au format CSV
+Paramètres par défaut du rapport au format TEXTE
+Supprimer
+Confirmer Suppression Fichier Historique ?
+Variation
+Détail
+Détaillé
+Vous ne pouvez pas analyser ce dossier! Il n'existe pas!
+Les paramètres actuels interdisent les recherches directes en SQL!
+Bienvenue à
+Pas assez de mémoire pour dérouler la totalité de l'arborescence!
+Une erreur très grave s'est produite!#13SVP - Prévenez l'auteur si celà se reproduit.
+Format de fichier non supporté!
+Etes-vous sûr de vouloir envoyer le fichier sélectionné dans la corbeille?
+Etes-vous sûr de vouloir envoyer tous ces fichiers dans la corbeille?
+Réparation Réussie!
+Réparation Echouée :(
+Xinorbis pense pouvoir réparer le fichier manquant.
+Voulez-vous essayer une réparation du fichier?
+Dossier déjà existant dans les "Favoris"
+Différences à gauche
+Différences à droite
+Espace Disque Libre
+Espace Disque Utilisé
+Espace Disque Perdu
+Alter the style or contents of Xinorbis reports
+Ne contient pas
+Ne rien faire
+Ne pas construire l'arborescence des dates
+Ne pas inclure les infos propriétaire des fichiers
+Impossible d'identifier le type de lecteur
+Détail du Lecteur pour
+Espace Libre
+Type de Lecteur         :
+Système de Fichiers     :
+Type de Lecteur         : Distant (Réseau)
+Espace sur Lecteur      :
+Espace Libre            :
+Secteurs par Cluster    : 
+Octets par Secteur      :
+Clusters Libres         :
+Total Clusters          :
+Nom du Lecteur          :
+Numéro de Série         :
+Espace Utilisé
+doublons
+Doublons (Nom du fichier)
+Doublons (Taille du fichier)
+Doublons (Nom du fichier)
+Doublons (Taille du fichier)
+Modifier
+Exclusions
+Dossiers Vides
+Activer l'historique des dossiers
+Activer l'enregistrement en mode complet
+Crypté
+Entrer un nouveau nom pour
+Egale à
+Error opening
+Error opening Xinorbis system file
+Exclure
+Fichier(s) Exclus
+Dossiers exclus de l'analyse
+Dossiers exclus de l'analyse
+Fichiers à exclure de l'analyse
+Exclude from scan
+Exe
+Existe
+Quitter
+Eclater plus Grand Secteur
+Parcourir
+Parcourir dossier
+Parcourir ce dossier
+Parcourir
+Exporter contenu
+Exporter Liste
+Exporter sélection dans fichier
+Exporter sélection dans fichier
+Extensions
+Pour extensions appartenant à plusieurs catégories
+Ignore duplicate extensions in custom categories (standard categories take precedence)
+Ignore duplicate extensions in standard categories (custom categories take precedence)
+Use extensions as specified in all categories (charts and reports may be inaccurate)
+Extensions
+Favoris
+Favoris
+Type de donnée des champs
+Fichier
+Fichier historique des accès
+Ancienneté des fichiers
+Attributs Fichiers
+Historique de Création
+Dates Fichiers
+Extensions Fichiers
+Comparaison Fichiers
+Folder History Database Information
+Recherche Fichiers
+Fichier historique des modifications
+Nom des fichiers
+Propriétaire Fichier
+Chemin des fichiers
+Propriétés fichier
+Fichiers
+Taille Fichiers
+Taille des fichiers (octets)
+Taille des fichiers sur disque (octets)
+Répartition par taille des fichiers
+Fichiers à GAUCHE inexistants à DROITE
+Fichiers à DROITE inexistants à GAUCHE
+Fichiers dont la taille a changée
+Type de Fichiers
+Filtre
+Dossier
+Détail du dossier
+You cannot scan this folder! It does not exist!
+Dossier des Historiques
+Historique: Ordinateur
+Historique: Dossier
+Historique pour
+Dossiers
+Liste Dossiers
+Informations détaillées
+Dossiers
+Dossier des Analyses
+Dossiers à la racine, par nbre de fichiers
+Dossiers à la racine, par taille de fichiers
+Dossiers à analyser
+Structure des Dossiers
+Trouvés
+Trouver dans
+A partir de
+Serveur FTP
+Mot de Passe FTP
+Compte FTP
+Liste complète
+Chemin complet des fichiers
+Général
+Générer nom de fichiers
+Générer MD5 checksum
+Générer MD5 checksum
+Gfx
+Couleur des Dégradés
+Dégradé à partir de
+Dégradé jusqu'à
+Arrière plan Graphiques
+Images
+Vert
+Gris
+Disque Dur
+à été sélectionné mais aucun fichier n'a été spécifié
+# Fichers
+Aide
+Éditeur hexadécimal
+Caché
+Fermer
+show file created date
+show date the file was last accessed
+show date the file was last modified
+show file owner (user)
+show file attributes
+show size (actual on-disk usage)
+colour code entries according to file type
+highlight the files on this side which are not found on the other side
+previous page
+next page
+Accueil
+Activer/Désactiver mode Privé
+Activer/Désactiver mode Historique
+Historique
+Heure
+Rapport HTML comparaison enregistré sous
+Fichiers HTML
+Rapport HTML
+Avec affichage des Graphiques
+Dates Fichiers (Création)
+Dates Fichiers (Dernier accès)
+Dates Fichiers (Modification)
+Détail Utilisateur
+Top 101 des Fichiers les plus Gros
+Top 101 des Fichiers les plus Petits
+Top 101 des Fichiers les plus Récents
+Top 101 des Fichiers les plus Vieux
+En-tête
+Résumé simple
+File attributes
+Catégories
+Dossiers à la racine
+Volumes des données
+Catégories et extensions fichiers
+Fichiers / Dossiers Vides
+Options HTML rapport
+Rapport HTML enregistré sous
+Ignorer
+Ignorer le premier enregistrement
+Import
+Importer Liste
+Importer des données
+Inclure titre des colonnes
+Include full file path
+Afficher les Graphiques
+Pages d'Information
+Dossier Racine
+Intervalle
+Traitement juste à temps
+Kilo-octets
+Légende
+Couleur Légende
+Légende %
+Légende % Total
+Légende Valeurs
+Langue
+Plus gros
+Les plus Gros Fichiers
+Le mois dernier
+La semaine dernière
+Fichiers description
+Barre de progression côté gauche
+Légende
+Survol lien
+Lien normal
+Charger
+Loading Folder History data
+Logarithmique
+Volumes
+Graphique Principal
+Peut ralentir la génération des rapports HTML
+Méga-octets
+Modifiés
+Date Modification
+Date de modification (jj/mm/aaaa)
+Date de modification (mm/jj/aaaa)
+Modifiés Aujourd'hui
+Mois
+Mois/Année
+Plus de détails
+Automatique
+Mov
+Déplacer
+Déplacer vers
+Vidéos
+Plus récents
+Fichiers les plus Récents
+No "Folder History" folder selected!
+Sorry, but there is no file data available for
+Aucun fichiers trouvés
+Aucun fichiers à compresser!
+Aucune correspondance trouvée
+Rien trouvé
+Normal
+Distribution normale
+Non indexé
+Aucun fichier temporaire trouvé.
+Différent de
+NON_DEFINI
+Vides
+Fichiers vides
+Nombre de Fichiers
+Nombre de Dossiers
+de
+Bur
+Bureautique
+Hors ligne
+Au-delà des
+Plus vieux
+Fichiers les plus Vieux
+Le
+Ouvrir
+Ouvrir avec
+Ouvrir avec (notepad par défaut)
+Ouvrir dans historique des dossiers
+Dernier rapport
+Ouvrir avec "visualiseur personnalisé"
+Optimisations
+Options
+Orange
+Organise reports
+En-tête
+Nbre Fichiers / Dossiers
+Taille Fichiers
+Fichiers / Dossiers Vides
+Moyennes
+Fichier / Dossier le plus Grand
+Utilisateur
+Statistiques par Catégories
+Drive
+Autres
+Nom du rapport CSV
+Nom du rapport HTML
+Nom du rapport XML
+Graphique Options
+Propriétaire
+Arrière plan Pages
+Chemin
+Chemins
+Modèle d'exclusion
+%
+% Total
+Veuillez patienter
+Veuillez attendre la fin du Dossier Historique
+Fichiers PNG
+Après Analyse
+Pé-visualiser
+Prg
+Exécuté en
+Programmation
+Programmes
+Violet
+Qté.
+Nbre de fichiers
+Nombre
+Nbre de fichiers par utilisateur
+Rapide
+Dossier déjà dans la "Sélection Rapide"!
+Préférences Rapports
+Rapports Rapides
+Disque Virtuel
+Plage
+Lecture Seule
+Rouge
+Référence
+Actualiser
+Ecarts analyse précéd
+Ecarts dernière analyse
+Remote drive
+Amovible
+Renommer cat. personnalisée
+Fichier "Reparse"
+Rapport
+Parcourir les rapports
+Rapporter bug ou Suggestion
+Couleurs Rapport
+Le rapport sélectionné contient des données partielles
+Celà produira un affichage inexact!
+Rapport d'Analyse pour
+Champs disponibles
+Sélection des champs
+Définition Rapport
+Dossier Rapports
+URL des Rapports
+Etes-vous sûr de vouloir continuer?
+Valeurs par Défaut
+Barre de progression côté droit
+Enregistrer
+Enregistrer Tout (par défaut)
+Enregistrer sous
+Enregistrer graphique
+Enregistrer données
+Enregistrer ceux qui existent sous d'autres dates
+Enregistrer ceux qui n'existent pas sous d'autres dates
+Enregistrer rapports
+Tout Enreg.
+Enregistrement Rapports
+Analyser
+Analyser un lecteur ou un dossier
+Analyser donnée
+Analyser un lecteur ou un dossier
+Historique Analyses
+Analyse Dossier
+Scanning progress
+Analyser le lecteur ou dossier suivant
+Recherche
+Plage de recherche
+Syntaxe de la recherche
+Sélectionner
+Catégories à inclure
+Sélection date/heure
+Dossier sélectionné
+Sélection date/heure
+Séparateur
+Histogrammes mono-couleur
+Paramètres
+Sfx
+Afficher
+Tout montrer
+Afficher catégories connues
+Afficher catégories personnalisées
+Voir fichiers
+Afficher taille fichiers en
+Chemin complet
+Afficher
+Afficher légende
+Montrer Noms
+Non vides seulement
+Afficher taille
+Afficher sans catégorie
+Taille
+Taille Précédente
+Changements de Taille
+Taille des fichiers par utilisateur
+Taille Actuelle
+Taille (sur disque)
+Taille
+Taille des Fichiers (octets)
+Taille sur disque
+Plus petits
+Les plus Petits Fichiers
+Fichier "Sparse"
+Spécial
+Started scan of
+Attrib.
+Types de Fichiers Proposés
+Résumé
+               Analysé  :
+Moyenne Fichier/Dossier : 
+Plus Gros Dossier       :
+Plus Gros Dossier       : <racine>
+Plus Gros Fichier       :
+Plus Gros Consommateur  : 
+                        : Nombre         Taille
+Nombre de Fichiers      :
+Nombre de Dossiers      :
+Taille Fichiers         :
+Tail. Fic. (Sur disque) :
+Espace Disque Perdu     :
+Fichiers Vides          :
+Dossiers Vides          :
+Taille Moyenne Fichiers :
+Fichiers acceptés
+Sys
+Système
+Tableau
+Arrière plan Tableaux
+Afficher Tableau
+En-tête Tableaux
+Nom du tableau
+Hauteur lignes tableau
+Tableaux
+Couleur texte Tableaux
+Couleur 2 texte Tableaux
+Temporaires
+Temp files as % of total number of files
+Fichiers temporaires en % de la taille totale des fichiers
+Fichiers Temporaires
+Liste des fichiers temporaires
+Temporaires
+Texte
+Couleur Texte
+Fichiers texte
+Rapport TEXTE
+================================================================================
+-- Fichiers Vides --------------------------------------------------------------
+-- Dossiers Vides --------------------------------------------------------------
+-- Utilisateurs ----------------------------------------------------------------
+Nom ---------------------------------- Qté ----- En % ----- Tail ---- En % -----
+-- Top 101 des Fichiers les plus Gros ------------------------------------------
+-- Top 101 des Fichiers les plus Petits ----------------------------------------
+-- Top 101 des Fichiers les plus Vieux -----------------------------------------
+-- Top 101 des Fichiers les plus Récents ---------------------------------------
+-- File Types ------------------------------------------------------------------
+Catégorie ---------------------------- Qté ----- En % ----- Tail ---- En % -----
+-- Attributs -------------------------------------------------------------------
+Attribut ----------------------------- Qté ----- En % ----- Tail ---- En % -----
+-- Dossiers --------------------------------------------------------------------
+Dossier ------------------------------ Qté ----- En % ----- Tail ---- En % -----
+-- Volumes ---------------------------------------------------------------------
+-- Détail par Extension --------------------------------------------------------
+Nom du rapport texte
+Rapport Texte enregistré sous
+Le dossier racine n'existe pas
+Cette semaine
+Heure
+TMP
+au
+Outil Dégradé de couleurs
+Outils
+Top 101
+Taille totale
+Taille Fichiers Analysés
+Arborescence
+Graphique Arborescence
+Nom du rapport de l'arborescence
+Fichiers d'Arborescence
+Fichier de l'arborescence
+Rapport Arborescence enregistré sous
+Trial
+Genre
+Modèles des "Fichiers Temporaires"
+UCD
+Sans catégorie
+Inconnu
+Type de Fichier Inconnu
+Fréquence élévée de rafraîchissement (Ralentit l'analyse)
+Fréquence niveau 2
+Fréquence de niveau 3
+Fréquence de niveau 4
+Fréquence de niveau 5
+Faible fréquence de rafraîchissement (Accélère l'analyse)
+Mise à jour Historique Dossier
+Télécharger
+Chargement
+Chargement graphiques HTML
+Téléchargement index pages
+Volumes Fichiers par Utilisateur
+Utilisé
+Espace occupé
+Personnalisés
+Détail Utilisateur
+Manuel utilisateur
+Utilisateurs
+Valeurs
+Afficher
+Afficher/Ouvrir fichier
+Rapports Web
+Semaine
+Semaine/Année
+Bienvenue
+Quand le nombre de fichiers est inférieur à
+Données
+Blanc
+Fichiers Windows
+Dans les
+Assistants
+Bytes
+Fichiers Xinorbis
+Gigabytes
+Dossier des données Xinorbis
+Modifications prises en compte au prochain démarrage de Xinorbis
+Fichiers Xinorbis
+Xinorbis Site Web
+Nom du rapport Xinorbis
+Kilo-octets
+Méga-octets
+Rapport XML comparaison enregistré sous
+Fichiers XML
+Rapport XML
+Rapport XML enregistré sous
+XValeur
+Année
+Jaune
+Hier
+Zip
+Rapport non trouvé
+Checking for updates
+Copier dans le presse-papier
+Attention
+Erreur lors de l'enregistrement du rapport
+Erreur d'enregistrement
+Version Pro uniquement
+Personnaliser le menu Quick Folder
+Ajouter Xinorbis à l'Explorateur menu contextuel
+Tutorial
+Achat Xinorbis
+Activée
+Désactivé
+Veuillez sélectionner une date pour les côtés GAUCHE et DROIT.
+Recherche...
+Une nouvelle version est disponible!
+Aucune nouvelle version n'est disponible!
+Erreur!
+Des médias sociaux
+Merci
+Portable
+La norme
+Couleur du titre
+Multicolore
+Pente
+Défaut
+Résultats de la recherche
+Masquer les noms
+Impossible de se connecter
+Importer des données CSV
+Heures
+Minute
+Minutes
+Seconde
+Secondes
+Nom
+Adresse e-mail
+Code d'activation
+Désolé, cette fonctionnalité n'est pas disponible dans la version gratuite.
+Erreur de compression des fichiers
+Version installée
+Derniers disponibles en ligne
+Télécharger
+Mettre à jour maintenant
+Version
+Site Internet
+Xinorbis est occupé
+Erreur lors de l'ouverture du fichier système Xinorbis
+Historique des dossiers disponibles pour le dossier sélectionné
+Scans
+Exclure vide
+Choisi
+Euillez attendre que le téléchargement des rapports Web se termine.
+Combinaison Invalid Name / Email / Code
+Exportation
+S'il vous plaît vérifier ne Xinorbis est installé correctement!
+Base de données est vide
+Fichier incorrect CSV
+ne pas exister
+Plusieurs dossiers
+Connexion à la base de données
+Erreur lors de la connexion à ODBC avec la chaîne de connexion fournie.
+Entrée invalide
+Fichier manquant
+Recherche terminée
+Ce mois-ci
+Carte du dossier
+Réinitialiser les couleurs du Gradient
+Attention: l'acquisition de nom d'utilisateur est désactivée. Cliquez ici pour activer.
+Chronologie
+Couleur de l'affichage
+Gauche
+Droit
+Afficher le journal
+Enregistrer journal
+Restaurer tous les paramètres par défaut
+Tout sélectionner
+Ne rien sélectionner
+Copier les résultats dans le presse-papier
+La source de données
+Nouveau
+Ne peut pas trouver le fichier "%$"
+Échec du test de téléchargement FTP
+Exploseur de dossier
+Web Reports FTP settings are missing
+Ne pas traiter les fichiers temporaires
+Avertissement: L'acquisition de fichier temporaire est désactivée. Cliquez ici pour activer
+Analyser
+Tous les autres affichages de table
+Registre

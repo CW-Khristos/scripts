@@ -1,0 +1,775 @@
+﻿1Gen
+Feb
+Mar
+Apr
+May
+Giu
+Lug
+Ago
+Set
+Ott
+Nov
+Dic
+Gennaio
+Febbraio
+Marzo
+Aprile
+May
+Giugno
+Luglio
+Agosto
+Settembre
+Ottobre
+Novembre
+Dicembre
+Info
+Accesso
+Data ultimo accesso
+Data ultimo accesso (gg/mm/aaaa)
+Data ultimo accesso (gg/mm/aaaa) 
+Accessi di oggi
+Aggiungi cartella attuale
+Aggiungi i nomi dei file alla scheda "Data"
+Aggiungi a
+Aggiungi al file zip
+Avanzate
+Opzioni avanzate
+Dopo
+Tutto
+Tutti gli altri file
+Consenti istruzioni SQL per la ricerca
+Tutti gli utenti
+Analizzato in
+Analizza questa cartella
+Analisi dei dati
+e
+Appearance
+Archivio
+Sei sicuro di voler continuare?
+In % 
+Associazioni estensioni file
+Attr
+Audio
+Verifica automaticamente disponibilità aggiornamenti all'avvio
+Auto-apertura
+Auto-Aggiorna
+Salvataggio automatico
+Rapporto auto-salvataggio cartella 
+Opzioni auto-salvataggio
+Rapporto auto-salvataggi
+Disponibile
+Grazie per aver acquistato Xinorbis! Inserisci l'indirizzo e-mail e il codice di attivazione che ti è stato inviato
+Tempi disponibili
+Advanced
+Esegui backup dei dati Xinorbis
+Colore barra grafico
+Risoluzione grafico a barre
+Prima
+Nero
+Blu
+Costruzione
+Costruzione rapporti Web
+per Data 
+Quantità
+Dimensione
+byte
+P1
+P10
+P2
+P3
+P4
+P5
+P6
+P7
+P8
+P9
+Cancel
+Categorie
+Categoria
+Colori categoria
+CD-ROM
+Cambia
+Grafico
+Opzioni grafico
+Livello zoom grafico
+Controlla aggiornamenti
+Scegli cartelle da aggiungere alla lista di scansione
+Scegli il tipo di rapporto
+Cancella "Cronologia Scansione"
+Cancella "Cronologia Scansione". Sei sicuro?
+Clicca per aggiunger
+Close
+Comprimi nodi
+Colore
+Combina
+Combina le unità/cartelle
+Compare Folder
+Compare Folder Tree
+Compresso
+File compressi
+Computer
+Configura
+Contenuto del testo
+Contiene
+Questa scansione contiene uno o più esclusioni. Vuoi eseguire la scansione con i file/cartelle esclusi?
+Contenuto del primo record
+Aiuto contestuale
+Copia
+Copia grafico negli appunti
+Copia ultimo rapporto negli appunti
+Copia tabella negli appunti
+Copia in
+Copia albero negli appunti
+Creazione
+Data di creazione
+Data di creazione (gg/mm/aaaa)
+Data di creazione (gg/mm/aaaa) 
+Creazione di oggi
+File CSV
+Rapporto CSV
+Rapporto CSV salvato come
+Cumulativo
+Personalizza
+Personalizza 1
+Personalizza 10
+Personalizza 2
+Personalizza 3
+Personalizza 4
+Personalizza 5
+Personalizza 6
+Personalizza 7
+Personalizza 8
+Personalizza 9
+Personalizza
+Personalizza file rapporto
+Visualizzatore personalizzato
+Ciano
+Data
+Formato data
+Date
+Data / Ora
+Visualizza data
+Giorno
+MTWTFSS
+Giorno / Mese
+Impostazioni di uscita CSV predefinite
+Impostazioni di uscita rapporto Testo predefinito 
+Elimina
+Elimina cronologia file dati. Sei sicuro?
+delta
+Dettagli
+Dettagliato
+Impossibile scansionare questa cartella! Non esiste!
+Le impostazioni attuali vietano di entrare direttamente nelle ricerche SQL!
+benvenuto a
+Memoria insufficiente per la ricostruzione dell'albero!
+Si è verificato un errore molto grave!#13Invia una e-mail all'autore se ciò accade nuovamente.
+Formato file non supportato!
+Sei sicuro di voler inviare il file selezionato nel cestino?
+Sei sicuro di voler inviare tutti i file nel cestino?
+Riparazione riuscita!
+Riparazione non riuscita :(
+Xinorbis può ripristinare il file mancante.
+Vuoi tentare la riparazione del file?
+Cartella già esistente nei "Preferiti"
+Differenza di sinistra
+Differenza di destra
+Spazio libero su disco
+Spazio usato su disco
+Spazio sprecato su disco
+Modifica stile o contenuti dei raporti Xinorbis
+Non contiene
+Non fare nulla
+Non costruire data albero
+Non scaricare info sul proprietario file
+Tipo di unità indeterminata
+Dettagli per Unità
+Drive free
+ Tipo di Unità       :
+ File System         :
+ Tipo di Unità       : Unità Remota (Rete)
+ Spazio su disco     :
+ Spazio libero       :
+ Settori per cluster :
+ Bytes per settore   :
+ Cluster liberi      :
+  Cluster totali     :
+ Nome Volume         :
+ Numero di serie     :
+Unità usata
+nomi di file duplicati
+Duplicati (nome file)
+Duplicati (dimensioni file)
+Duplicati (nome file)
+Duplicati (dimensioni file)
+Modifica
+Modifica Esclusione
+Cartelle vuote
+Abilita cronologia cartella
+Abilita registrazione file completo
+Codificato
+Inserisci un nuovo nome per
+Uguale a
+Error opening
+Error opening Xinorbis system file
+Escludi
+File Esclusi
+Cartella(e) esclusa
+Cartella(e) esclusa
+Escludi i file dalla scansione
+Escludi cartelle dalla scansione
+Exe
+esistenti
+Exit
+Esplora fetta più grande
+Esplora
+Esplora cartella
+Esplora questa cartella
+Esplora
+Esporta contenuto
+Esporta lista
+Esporta selezionato su file
+Esporta selezionato su file
+Estensione
+Per estensioni che compaiono in più di una categoria
+Ignora estensioni duplicate nelle categorie personalizzate (le categorie standard hanno la precedenza)
+Ignora estensioni duplicate nelle categorie standard (le categorie personalizzate hanno la precedenza)
+Usa estensioni specificate in tutte le categorie (i grafici ed i rapporti possono essere imprecisi)
+Estensioni
+Preferiti
+Preferiti
+Campo tipo di dati
+File
+Cronologia accesso file
+Età file
+Attributi dei file
+Cronologia file creazione
+Date dei file
+Estensioni file
+Confronta cronologia file
+Info file cronologia database
+Ricerca cronologia file
+Cronologia modifica file
+Nome file
+Proprietario File
+Percorso file
+Proprietà file
+Files
+Dimensioni del file
+Dimensione file (byte) 
+Dimensione file su disco (byte)
+Differenza dimensione file
+File a SINISTRA che non esistono sulla DESTRA
+File a DESTRA che non esistono sulla SINISTRA
+File cui la dimensione è cambiata
+Associazioni file
+Filtro
+Cartella
+Dettagli cartella
+You cannot scan this folder! It does not exist!
+Cronologia cartella
+Cronologia cartella: Computer
+Cronologia cartella: Cartella
+Cronologia cartella per
+Info cronologia cartella
+Lista cartella
+Proprietà cartella
+Cartelle
+Scansioni cartelle
+Le cartelle nella radice, per quantità dei file
+Le cartelle nella radice, per dimensioni dei file
+Cartelle da analizzare
+Struttura cartella
+Trovato
+Trovato in
+Da
+Host FTP
+Password FTP
+Nome utente FTP
+Lista file completa
+Percorso completo file
+Generale
+Genera i nomi dei file
+Genera checksum MD5
+
+Gfx
+Colori gradiente
+Sfumatura da
+Sfumatura a
+Sfondo grafico
+Grafici
+Verde
+Grey
+Disco rigido
+è stato selezionato, ma nessun nome di file è stato specificato
+# Files
+Aiuto
+Modifica Hex
+Nascosto
+Nascondi
+mostra data creazione del file
+mostra data ultimo accesso al file
+mostra data ultima modifica al file
+mostra proprietario file (utente)
+mostra attributi del file
+mostra dimensioni (effettivo utilizzo su disco)
+colore in base al tipo di file
+evidenzia in questo lato i file che non sono sul lato opposto
+pagina precedente
+pagina successiva
+finestra principale
+alterna modalità privacy
+alterna cronologia cartella
+Cronologia
+Ora
+Rapporto di confronto HTML salvato come
+File HTML 
+Rapporto HTML
+Grafici e immagini
+Date dei file (Creazione)
+Date dei file (Ultimo Accesso)
+Date dei file (Modifica)
+User details
+Primi 101 file più grandi
+Primi 101 file più piccoli
+Primi 101 file più recenti
+Primi 101 file più vecchi
+Intestazione
+Simple summary
+Attributi dei file
+Categorie
+Cartelle nella radice
+Grandezza dei dati
+Categorie ed estensioni file
+Dim. zero file/cartelle
+Opzioni rapporto HTML
+Rapporto HTML salvato come
+Ignora
+Ignora il primo record
+Importa
+Importa lista
+Importa dettagli scansione
+Includi titoli colonne
+Include full file path
+Includi immagini
+Pagine informazioni
+Cartella iniziale
+Intervallo
+Elaborazione in tempo reale
+Kilobyte
+Etichetta
+Colore etichetta
+Percentuale etichetta
+Totale percentuale etichetta
+Valore etichetta
+Lingua
+Più grandi
+File più grandi
+Lo scorso mese
+La settimana scorsa
+Struttura file
+Avanzamento barra lato sinistro
+Legenda
+Link temporaneo
+Link normale
+Carica
+Loading Folder History data
+Logaritmica
+Grandezza
+Grafico principale
+Questo può rallentare la generazione del rapporto HTML
+Megabyte
+Modifica
+Data di modifica
+Data di modifica (gg/mm/aaaa)
+Data di modifica (gg/mm/aaaa)
+Modifiche di oggi
+Mese
+Mese / Anno
+Maggiori dettagli
+Più convenienti
+Mov
+Sposta
+Sposta in
+Filmato
+Più recenti
+File più recenti
+Nessuna cartella selezionata "Cronologia cartella"!
+Spiacente, dati del file non disponibili
+Nessun file trovato
+Nessun file da comprimere!
+Nessun riscontro trovato
+Nessuno trovato
+Normale
+Distribuzione normale
+Contenuto non indicizzato
+Nessun file "temporaneo" trovato
+Non uguale a
+NON SPECIFICATO
+File dim. zero
+File dim. zero
+Numero dei file
+Numero di cartelle
+di
+Off
+Office
+Non in linea
+Più vecchi di
+Più vecchi
+File più vecchi
+Su
+Apri
+Apri nell'applicazione
+Apri nelle applicazioni (predefinito è notepad)
+Apri cronologia file
+Apri ultimo rapporto
+Apri con "visualizzatore personalizzato"
+Ottimizzazioni
+Opzioni
+Arancione
+Organizza rapporti
+Header
+Conteggio file/cartella
+Dimensioni del file
+Dim. zero file/cartelle
+Media
+File/cartella più grande
+Utente
+Stato Categorie
+Unità
+Altro
+Uscita in formato CSV
+Uscita in formato HTML
+Uscita in formato XML
+Opzioni grafico
+Proprietario
+Sfondo pagina
+Percorso
+Percorsi
+Pattern di escludere
+Percentuale
+Percentuale totale
+Attendere
+Attendi fine cronologia cartella
+File immagini PNG
+Dopo la scansione
+Anteprima
+Prg
+Elaborato in
+Programmazione
+Programmi
+Porpora
+Qtà.
+Qtà dei file
+Quantità
+Quantità di file elencati dall'utente
+Veloce
+Cartella già esistente in "Cartelle Veloci"!
+Rapporto veloce Preferenze
+Rapporti rapidi
+RAM disco
+Intervallo da
+Solo lettura
+Rosso
+Riferimento
+Aggiorna
+Relativo a precedenti
+Relativo ad oggi
+Disco remoto (Rete)
+Disco rimovibile
+Rinomina categoria specifica
+Analisi file
+Rapporto
+Rapporto browser
+Segnala bug/Suggerisci funzione
+Colori rapporto
+Il rapporto selezionato contiene solo i dati selezionati
+Questo farà sì che alcuni siano imprecisi!
+rapporto per
+elementi del rapporto
+Struttura rapporto
+Opzioni di uscita
+Rapporti cartella
+Rapporti URL
+Sei sicuro di voler ripristinare le impostazioni predefinite "associazioni estensione file"?
+Ripristina predefinite
+Avanzamento barra lato destro
+Salva
+Salva tutto (predefinito)
+Salva come
+Salva grafico
+Salva i dati
+Salva quelli esistenti con altra data
+Salva quelli non esistenti con altra data
+Salva rapporti
+Salva tutto
+Saving reports
+Scansione
+Scansiona una unità o cartella
+Dati della scansione
+Scansiona una unità o cartella
+Scansiona cronologia
+Scansione cartella
+Scanning progress
+Scansiona la seguente unità o cartella
+Cerca
+Limite ricerca risultato
+Cerca sintassi
+Scegli
+Select categories
+Data/Ora scansione
+Cartella selezionata
+Data/Ora scansione
+Separatore
+Barra grafici in colore singolo
+Impostazioni
+Sfx
+Mostra
+Mostra tutto
+Categorizzati
+Personalizzati
+Mostra file
+Mostra dimensioni file come
+Mostra percorso
+Risultati
+Mostra etichette
+Mostra nomi
+Mostra solo file dim. non-zero
+Mostra
+Non categorizzati
+Dimensioni
+Dimensione iniziale
+Dimensione modifiche
+Dimensioni di file elencati dall'utente
+Dimensione attuale
+Dimensioni (su disco)
+Dimensioni dei file
+Dimensioni dei file (byte)
+Dimensioni su disco
+Più piccoli
+File più piccoli
+File raro
+Speciale
+Started scan of
+Stato
+Tipo di file consigliati
+Riepilogo
+                     Analizzati :
+ Media File/Cartella            :
+ Cartella più grande            :
+ Cartella più grande            : <root>
+ File più grande                :
+ Utente con una quota più grande:
+                         : Quantità Dimensione
+ Numero di file                 :
+ Numero di cartelle             :
+ Dimensione dei file            :
+ Dimensione dei file (su disco) :
+ Spazio sprecato su disco       :
+ File dim. zero                 :
+ Cartelle vuote                 :
+ Dimensione media file          :
+Tipi di file supportati
+Sys
+Sistema
+Tabella
+Sfondo tabella
+Visualizza tabella
+Intestazione tabella
+Nome tabella
+Altezza riga tabella
+Tabelle
+Colore testo tabella
+Colore testo tabella 2
+Temp
+File temporanei in % del numero totale di file
+File temporanei in % della dimensione totale dei file
+File temporanei
+Lista file temporanei
+Temporaneo
+Testo
+Colore testo
+File di testo
+Rapporto Testo
+==================================================================
+-- File dim. zero ------------------------------------------------
+-- Cartelle vuote ------------------------------------------------
+-- Utenti --------------------------------------------------------
+Nome ------------------------- Qtà --- In % --- Dim ---- In % ----
+-- Primi 101 file più grandi ------------------------------------- 
+-- Primi 101 file più piccoli ------------------------------------
+-- Primi 101 file più recenti ------------------------------------
+-- Primi 101 file più vecchi -------------------------------------
+-- Tipi di file --------------------------------------------------
+Categoria -------------------- Qtà --- In % --- Dim ---- In % ----
+-- Attributi -----------------------------------------------------
+Attributi -------------------- Qtà --- In % --- Dim ---- In % ----
+-- Lista cartelle ------------------------------------------------
+Cartella --------------------- Qtà --- In % --- Dim ---- In % ----
+-- Grandezze -----------------------------------------------------
+-- Dettagli Estensioni -------------------------------------------
+Rapporto testo nomefile
+Rapporto Testo salvato come
+Root does not exist
+This Week
+Ora
+TMP
+A
+Alterna sfumatura
+Strumenti
+Primi 101
+Dim.totale
+Dimensione totale dei file analizzati
+Albero
+rafico albero
+Nome rapporto albero
+Albero dei file
+Rapporto ad albero
+Rapporto Albero salvato come
+Trial
+Tipo
+Tipi di "file temporanei"
+UCD
+Non classificato
+Sconosciuto
+Tipo di file sconosciuto
+Massimo avanzamento aggiornamento (più lento)
+Progress Update Level 2 $$ Avanzamento livello aggiornamento 2 
+Progress Update Level 3 $$ Avanzamento livello aggiornamento 3 
+Progress Update Level 4 $$ Avanzamento livello aggiornamento 4 
+Progress Update Level 5 $$ Avanzamento livello aggiornamento 5 
+Left side progress bar $$ Avanzamento barra lato sinistro
+Aggiornamento cronologia cartella
+Carica
+Caricamento
+Caricamento grafici HTML
+Caricamento pagine indice
+Utilizzo da parte dell'utente
+Usato
+Spazio usato
+Definito dall'utente
+Dettagli utente
+Manuale utente
+Utenti
+Valore
+Attività
+Visualizza/Apri file
+Rapporti Web
+Settimana
+Settimana/Anno
+Benvenuti
+Quando il numero dei file è meno di
+Quali dati
+Bianco
+File di Windows
+Negli ultimi
+Procedura guidata
+Byte
+Lista file Xinorbis
+Gigabyte
+Dati cartella Xinorbis
+Le modifiche alla cartella dati saranno applicate al riavvio di Xinorbis
+Lista file Xinorbis
+Xinorbis Homepage
+Rapporto nomefile Xinorbis
+Kilobyte
+Megabyte
+Rapporto di confronto XML salvato come
+File XML
+Rapporto XML
+Rapporto XML salvato come
+Valore X
+Anno
+Giallo
+Yesterday
+Zip  
+Rapporto non trovato
+Verifica aggiornamenti
+Copia negli appunti
+Avvertimento
+rapporto Errore durante il salvataggio
+Errore durante il salvataggio
+solo versione Pro
+Personalizzazione del menu Quick Folder
+Aggiungere Xinorbis al menu contestuale di Explorer
+lezione
+acquisto Xinorbis
+Abilitato
+Disabilitato
+Si prega di selezionare una data per la sinistra ea destra.
+Ricerca in corso ...
+Una nuova versione è disponibile!
+Nessun nuove versioni!
+Errore!
+Social media
+Grazie
+Portatile
+Standard
+Titolo di colore
+Multicolore
+Pendenza
+Predefinito
+Risultati di ricerca
+Nascondere i nomi
+Impossibile connettersi al
+Importazione di dati CSV
+Ore
+Minuto
+Minuti
+Secondo
+Secondi
+Nome
+Indirizzo email
+Codice di attivazione
+Siamo spiacenti, questa funzione non è disponibile nella versione gratuita.
+File di errore comprimere
+Versione installata
+Ultimo disponibile sulla versione digitale
+Scaricare
+Aggiorna ora
+Versione
+Sito web
+Xinorbis è occupato
+Errore file system Xinorbis apertura
+Disponibile Scansioni Storia cartella per cartella selezionata
+Scansioni
+Escludere vuoto
+Selezionato
+Si prega di attendere che i Web Reports Carica per terminare
+Nome / Email / combinazione di codice non valido
+Esportare
+Si prega di verificare lo Xinorbis è installato correttamente!
+Database è vuoto
+File di Bad CSV
+non esiste
+Cartelle multiple
+Connessione al database
+Errore durante la connessione a ODBC con stringa di connessione in dotazione.
+Inserimento non valido
+File mancante
+Ricerca finito
+Questo mese
+Mappa cartella
+Ripristinare Grafico Gradiente Colori
+Avviso: L'acquisizione di nome utente è disattivata. Clicca qui per abilitare.
+Sequenza temporale
+Colore del display
+Sinistra
+Destra
+Mostra registro
+Salva registro
+Ripristinare tutte le impostazioni di default
+Seleziona tutto
+Non selezionare niente
+Copia i risultati negli appunti
+Fonte di dati
+Nuovo
+Non è possibile trovare il file "%$"
+Test di caricamento FTP fallito
+Esploditore cartella
+Web Reports FTP settings are missing
+Non elaborare i file temporanei
+Avviso: l'acquisizione temporanea di file è disabilitata. Clicca qui per abilitare.
+Scansione
+Tutti gli altri display da tavolo
+Solcometro

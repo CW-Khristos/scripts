@@ -1,0 +1,12 @@
+apk
+app
+bat
+bundle
+com
+exe
+ipa
+msi
+nlm
+pif
+xex
+xpe
