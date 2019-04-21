@@ -1,7 +1,7 @@
 ''QSMART.VBS
 ''DESIGNED TO QUERY AND REPORT SMART STATUS FOR ALL CONNECTED DRIVES
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strIN, strCOMP
@@ -9,15 +9,15 @@ dim arrDRV(), arrSMART()
 dim intDRV, intTOT, intSMART
 ''SCRIPT OBJECTS
 dim objWMI, objFPD, arrFPD
-dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, SMART.VBS, REF #2
-strVER = 1
+dim objLOG, objHOOK, objEXEC, objHTTP, objXML
+''VERSION FOR SCRIPT UPDATE , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
-''INITIALIZE ENUMERATED DRIVE ARRAY
+''INITIALIZE ENUMERATED DRIVE ARRAY , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 redim arrDRV(0)
-''INITIALIZE SMART ATTRIBUTE ARRAY
+''INITIALIZE SMART ATTRIBUTE ARRAY , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 redim arrSMART(0,0)
 arrSMART(0,0) = vbnullstring
 ''STDIN / STDOUT
@@ -32,7 +32,7 @@ set objFSO = createobject("scripting.filesystemobject")
 Set objWMI = GetObject("winmgmts:" & "{impersonationLevel=impersonate}!\\" & strCOMP & "\root\wmi")
 set objFPD = objWMI.instancesof("MSStorageDriver_FailurePredictData", 1) ''=" & chr(34) & strDRV & chr(34))
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\QSMART")) then              ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\QSMART")) then               ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\QSMART", true
   set objLOG = objFSO.createtextfile("C:\temp\QSMART")
   objLOG.close
@@ -62,25 +62,29 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING QSMART" & vbnewline
-''AUTOMATIC UPDATE, QSMART.VBS, REF #2 , FIXES #42
+''AUTOMATIC UPDATE , 'ERRRET'=10 , QSMART.VBS , REF #2 , REF #42 , FIXES #42
 call CHKAU()
-''CHECK FOR SMARTCTL.EXE IN C:\TEMP , REF #44
+''CHECK FOR SMARTCTL.EXE IN C:\TEMP , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 if (not objFSO.fileexists("c:\temp\smartctl.exe")) then
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SMART/smartctl.exe", "smartctl.exe")
 end if
-''GET LIST OF AVAILABLE DRIVES , 'ERRRET'=2
+''GET LIST OF AVAILABLE DRIVES , 'ERRRET'=2 , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 intDRV = 0
 intSMART = 0
 objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING CONNECTED DRIVES" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING CONNECTED DRIVES" & vbnewline
+''ENUMERATE AND COLLECT DRIVE LIST , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 set objEXEC = objWSH.exec("c:\temp\smartctl.exe --scan-open")
 while (not objEXEC.stdout.atendofstream)
   strIN = objEXEC.stdout.readline
   'objOUT.write vbnewline & now & vbtab & vbtab & strIN
   'objLOG.write vbnewline & now & vbtab & vbtab & strIN
   if (trim(strIN) <> vbnullstring) then
+    ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
     redim arrSMART((intDRV + 1), 0)
+    ''RE-SIZE 'ARRDRV'('DRIVE INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
     redim preserve arrDRV(intDRV + 1)
+    ''COLLECT 'SMARTCTL' DRIVE PATH , QSMART.VBS, REF #2 , REF #42 , FIXES #44
     arrDRV(intDRV) = trim(split(strIN, " ")(0))
     intDRV = (intDRV + 1)
     intTOT = intDRV
@@ -91,151 +95,162 @@ while (not objEXEC.stdout.atendofstream)
 wend
 set objEXEC = nothing
 err.clear
+''LIST COLLECTED 'SMARTCTL' DRIVE LIST , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 for intDRV = 0 to ubound(arrDRV)
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & arrDRV(intDRV)
+  if (arrDRV(intDRV) <> vbnullstring) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & arrDRV(intDRV)
+  end if
 next
-''QUERY SMART STATUS FOR ALL ENUMERATED DRIVES , FIXES #44
+''QUERY 'SMART STATUS' FOR ALL ENUMERATED DRIVES , 'ERRRET'=3 , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVES' 'SMART' STATUS" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVES' 'SMART' STATUS" & vbnewline
 if (intTOT > 0) then
+  ''ENUMERATE THROUGH EACH DRIVE
   for intDRV = 0 to (intTOT - 1)
+    ''RESET 'SMART' INDEX
+    intSMART = 0
     if (arrDRV(intDRV) <> vbnullstring) then
+      ''QUERY 'SMART' ATTRIBUTES USING 'SMARTCTL' , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+      objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVE : " & arrDRV(intDRV) & vbnewline
+      objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVE : " & arrDRV(intDRV) & vbnewline
       set objEXEC = objWSH.exec("c:\temp\smartctl.exe -A " & arrDRV(intDRV))
+      ''ENUMERATE THROUGH EACH 'SMART' ATTRIBUTE
       while (not objEXEC.stdout.atendofstream)
         strIN = objEXEC.stdout.readline
         'objOUT.write vbnewline & now & vbtab & vbtab & strIN
         'objLOG.write vbnewline & now & vbtab & vbtab & strIN
         if (trim(strIN) <> vbnullstring) then
+          ''EXCLUDE 'HEADERS'
           if ((instr(1, strIN, "smartctl") = 0) and (instr(1, strIN, "Copyright (C)") = 0) and (instr(1, strIN, "=== START") = 0) _ 
             and (instr(1, strIN, "SMART Attributes Data") = 0) and (instr(1, strIN, "Vendor Specific SMART") = 0) and (instr(1, strIN, "ID#") = 0)) then
-              redim preserve arrSMART(intTOT, intSMART + 1)
-              'wscript.echo vbnewline & strIN & vbnewline
-              arrSMART(intDRV, intSMART) = trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, " ")(ubound(split(strIN, " ")))) & "]"
-              intSMART = (intSMART + 1)
+              ''PARSE 'SMARTCTL' OUTPUT , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+              for intTMP = 0 to ubound(split(strIN, " "))
+                if (split(strIN, " ")(intTMP) <> vbnullstring) then
+                  ''VALIDATE 'SMART' ATTRIBUTE NAME , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+                  if (blnSMART(split(strIN, " ")(intTMP))) then
+                    ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
+                    redim preserve arrSMART(intTOT, intSMART + 1)
+                    ''COLLECT 'SMARTCTL' DRIVE SMART ATTRIBUTES , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+                    wscript.echo vbnewline & trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
+                    arrSMART(intDRV, intSMART) = trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]"
+                    intSMART = (intSMART + 1)
+                  end if
+                end if
+              next
           end if
         end if
         if (err.number <> 0) then
-          call LOGERR(2)
+          call LOGERR(3)
         end if
-        wscript.sleep 1000
+        wscript.sleep 100
       wend
       set objEXEC = nothing
     end if
   next
 end if
+''LIST COLLECTED 'SMARTCTL' DRIVE SMART ATTRIBUTES , QSMART.VBS , REF #2 , REF #42 , FIXES #44
+objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - QSMART 'SMART' STATUS" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - QSMART 'SMART' STATUS" & vbnewline
 for intDRV = 0 to (intTOT - 1)
-  for intSMART = 0 to ubound(arrSMART(intDRV))
+  objOUT.write vbnewline & vbtab & now & vbtab & arrDRV(intDRV)
+  for intSMART = 0 to ubound(arrSMART)
     objOUT.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
   next
 next
-
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
 ''------------
  
-for each objDRV in objFPD
-	arrFPD = objDRV.VendorSpecific
-	objOUT.writeline vbnewline & "OBTAINING SMART STATUS : " & objDRV.instancename & " : "
-  for intPOS = 0 to ubound(arrFPD)
-    intATT = (intPOS * 12)
-    if ((intATT + 2) < ubound(arrFPD)) then
-      select case (arrFPD(intATT + 2))
-        ''ROTATIONAL
-        case 1
-          objOUT.write "RAW READ ERROR RATE" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 5
-          objOUT.write "REALLOCATED SECTOR COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 7
-          objOUT.write "SEEK ERROR COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 9
-          objOUT.write "POWER ON HOURS" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 10
-          objOUT.write "SPIN-UP RETRY COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        ''SSD
-        case 170
-          objOUT.write "AVAILABLE SPACE" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 171
-          objOUT.write "PROGRAM FAIL" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 172
-          objOUT.write "ERASE FAIL" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 173
-          objOUT.write "WEAR LEVELING" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 176
-          objOUT.write "ERASE FAIL" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 177
-          objOUT.write "WEAR RANGE" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 179
-          objOUT.write "USED RESERVED" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 180
-          objOUT.write "UN-USED RESERVED" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 181
-          objOUT.write "PROGRAM FAIL COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 182
-          objOUT.write "ERASE FAIL COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 230
-          objOUT.write "DRIVE LIFE PROTECTION" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 231
-          objOUT.write "LIFE LEFT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 232
-          objOUT.write "ENDURANCE REMAINING" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 233
-          objOUT.write "MEDIA WEAROUT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 234
-          objOUT.write "AVG / MAX ERASE" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 235
-          objOUT.write "GOOD BLOCK / SYSTEM FREE COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        ''ROTATIONAL
-        case 194
-          objOUT.write "TEMPERATURE (C)" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 196
-          objOUT.write "REALLOCATION EVENT COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 197
-          objOUT.write "CURRENT PENDING SECTOR COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case 198
-          objOUT.write "OFFLINE / UNRECOVERABLE SECTOR COUNT" & vbtab & ":"
-          call wrtVAL(intPOS)
-        case else
-          objOUT.write "UNKNOWN ATTRIBUTE" & vbtab & ":"
-          call wrtVAL(intPOS)
-      end select
-    end if
-	next
-next
+ ''FUNCTIONS
+function blnSMART(varVAL)												            ''VALIDATE 'SMART' ATTRIBUTE NAME , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+  blnSMART = false
+  varVAL = ucase(replace(varVAL, "_", " "))
+  select case varVAL
+    ''ROTATIONAL
+    ''SMART ID 1
+    case "RAW READ ERROR RATE"
+      blnSMART = true
+    ''SMART ID 5
+    case "REALLOCATED SECTOR CT"
+      blnSMART = true
+    ''SMART ID 7
+    case "SEEK ERROR RATE"
+      blnSMART = true
+    ''SMART ID 9
+    case "POWER ON HOURS"
+      blnSMART = true
+    ''SMART ID 10
+    case "SPIN RETRY COUNT"
+      blnSMART = true
+    ''SMART ID 194
+    case "TEMPERATURE CELSIUS"
+      blnSMART = true
+    ''SMART ID 196
+    case "REALLOCATION EVENT COUNT"
+      blnSMART = true
+    ''SMART ID 197
+    case "CURRENT PENDING SECTOR"
+      blnSMART = true
+    ''SMART ID 198
+    case "OFFLINE UNCORRECTABLE"
+      blnSMART = true
+    ''SSD
+    ''SMART ID 170
+    case "AVAILABLE SPACE"
+      blnSMART = true
+    ''SMART ID 171
+    case "PROGRAM FAIL"
+      blnSMART = true
+    ''SMART ID 172
+    case "ERASE FAIL"
+      blnSMART = true
+    ''SMART ID 173
+    case "WEAR LEVELING"
+      blnSMART = true
+    ''SMART ID 176
+    case "ERASE FAIL"
+      blnSMART = true
+    ''SMART ID 177
+    case "WEAR RANGE"
+      blnSMART = true
+    ''SMART ID 179
+    case "USED RESERVED"
+      blnSMART = true
+    ''SMART ID 180
+    case "UN-USED RESERVED"
+      blnSMART = true
+    ''SMART ID 181
+    case "PROGRAM FAIL COUNT"
+      blnSMART = true
+    ''SMART ID 182
+    case "ERASE FAIL COUNT"
+      blnSMART = true
+    ''SMART ID 230
+    case "DRIVE LIFE PROTECTION"
+      blnSMART = true
+    ''SMART ID 231
+    case "LIFE LEFT"
+      blnSMART = true
+    ''SMART ID 232
+    case "ENDURANCE REMAINING"
+      blnSMART = true
+    ''SMART ID 233
+    case "MEDIA WEAROUT"
+      blnSMART = true
+    ''SMART ID 234
+    case "AVG / MAX ERASE"
+      blnSMART = true
+    ''SMART ID 235
+    case "GOOD BLOCK / SYSTEM FREE COUNT"
+      blnSMART = true
+    ''UNKNOWNS
+    case else
+  end select
+end function
 
 ''SUB-ROUTINES
-sub wrtVAL(posFPD)
-    for y = 0 to 11
-      if (((posFPD * 12) + y) <= ubound(arrFPD)) then
-        objOUT.write " " & arrFPD((posFPD * 12) + y) & ","
-      end if
-    next
-    objOUT.write vbnewline
-end sub
-
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, QSNART.VBS, REF #2 , FIXES #42
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , QSMART.VBS , REF #2 , FIXES #42
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -324,13 +339,13 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   end if
 end sub
 
-sub HOOK(strCMD)                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   on error resume next
   'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then         ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
@@ -363,12 +378,12 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
 end sub
 
-sub CLEANUP()                                           ''SCRIPT CLEANUP
-  if (errRET = 0) then                                 ''SCRIPT COMPLETED SUCCESSFULLY
+sub CLEANUP()                                               ''SCRIPT CLEANUP
+  if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - QSMART COMPLETE : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - QSMART COMPLETE : " & now
     err.clear
-  elseif (errRET <> 0) then                            ''SCRIPT FAILED
+  elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - QSMART FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - QSMART FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
