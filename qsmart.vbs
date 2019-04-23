@@ -77,8 +77,6 @@ objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING CONNE
 set objEXEC = objWSH.exec("c:\temp\smartctl.exe --scan-open")
 while (not objEXEC.stdout.atendofstream)
   strIN = objEXEC.stdout.readline
-  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
   if (trim(strIN) <> vbnullstring) then
     ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
     redim arrSMART((intDRV + 1), 0)
@@ -117,23 +115,28 @@ if (intTOT > 0) then
       ''ENUMERATE THROUGH EACH 'SMART' ATTRIBUTE
       while (not objEXEC.stdout.atendofstream)
         strIN = objEXEC.stdout.readline
-        'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-        'objLOG.write vbnewline & now & vbtab & vbtab & strIN
         if (trim(strIN) <> vbnullstring) then
           ''EXCLUDE 'HEADERS'
           if ((instr(1, strIN, "smartctl") = 0) and (instr(1, strIN, "Copyright (C)") = 0) and (instr(1, strIN, "=== START") = 0) _ 
             and (instr(1, strIN, "SMART Attributes Data") = 0) and (instr(1, strIN, "Vendor Specific SMART") = 0) and (instr(1, strIN, "ID#") = 0)) then
+              'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+              'objLOG.write vbnewline & now & vbtab & vbtab & strIN
               ''PARSE 'SMARTCTL' OUTPUT , QSMART.VBS, REF #2 , REF #42 , FIXES #44
-              for intTMP = 0 to ubound(split(strIN, " "))
+              for intTMP = 1 to ubound(split(strIN, " "))
                 if (split(strIN, " ")(intTMP) <> vbnullstring) then
                   ''VALIDATE 'SMART' ATTRIBUTE NAME , QSMART.VBS, REF #2 , REF #42 , FIXES #44
+                  'objOUT.write vbnewline & blnSMART(split(strIN, " ")(intTMP))
+                  'objLOG.write vbnewline & blnSMART(split(strIN, " ")(intTMP))
                   if (blnSMART(split(strIN, " ")(intTMP))) then
                     ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
-                    redim preserve arrSMART(intTOT, intSMART + 1)
+                    redim preserve arrSMART(intTOT, intATT + 1)
                     ''COLLECT 'SMARTCTL' DRIVE SMART ATTRIBUTES , QSMART.VBS, REF #2 , REF #42 , FIXES #44
-                    wscript.echo vbnewline & trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
+                    'objOUT.write vbnewline & trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
+                    'objLOG.write vbnewline & trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
                     arrSMART(intDRV, intSMART) = trim(split(strIN, " ")(intTMP)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]"
                     intSMART = (intSMART + 1)
+                    intATT = (intATT + 1)
+                    exit for
                   end if
                 end if
               next
@@ -151,10 +154,12 @@ end if
 ''LIST COLLECTED 'SMARTCTL' DRIVE SMART ATTRIBUTES , QSMART.VBS , REF #2 , REF #42 , FIXES #44
 objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - QSMART 'SMART' STATUS" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - QSMART 'SMART' STATUS" & vbnewline
-for intDRV = 0 to (intTOT - 1)
+for intDRV = 0 to ubound(arrDRV)
   objOUT.write vbnewline & vbtab & now & vbtab & arrDRV(intDRV)
   for intSMART = 0 to ubound(arrSMART)
-    objOUT.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
+    if (arrSMART(intDRV, intSMART) <> vbnullstring) then
+      objOUT.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
+    end if
   next
 next
 ''END SCRIPT
