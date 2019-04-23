@@ -116,9 +116,9 @@ sub SAGECOPY()                                              ''COPY SAGE FOLDER
   objOUT.write vbnewline & "COPYING SAGE DATA : " & now
   ''USE ROBOCOPY TO COPY D:\SAGE FOLDER, OLVERWRITE ALL FILES IN DESTINATION , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #49
   call HOOK("robocopy " & chr(34) & "D:\Sage" & chr(34) & " " & chr(34) & "D:\CW MSP Sage\Sage" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
-  if (errRET = 0) then                                      ''SUCCESSFULLY COPIED DATA
+  if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY SAGE DATA COMPLETE : " & now
-  elseif (errRET <> 0) then                                 ''ERROR RETURNED
+  elseif (errRET < 5) then                                 ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY D:\SAGE D:\CW MSP SAGE\SAGE : " & now
     call LOGERR(7)
   end if

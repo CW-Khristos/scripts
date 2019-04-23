@@ -28,6 +28,8 @@
 	<rndds_msp_prebackup.vbs>2</rndds_msp_prebackup.vbs>
   <set_msparchive.vbs>1</set_msparchive.vbs>
 	<SNMPparam.vbs>4</SNMPparam.vbs>
+	<ss_msp_postbackup.vbs>2</ss_msp_postbackup.vbs>
+	<ss_msp_prebackup.vbs>2</ss_msp_prebackup.vbs>
 	<SVCperm.vbs>10</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>

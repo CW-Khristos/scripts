@@ -1,4 +1,4 @@
-''RNDDS_MSP_PREBACKUP.VBS
+''SS_MSP_PREBACKUP.VBS
 ''DESIGNED TO STOP EAGLESOFT SERVICES AND DATABASE TO ALLOW FOR FILE COPY TO 'OFFLINE' DIRECTORY
 ''SCRIPT UTILIZES ROBOCOPY TO 'MIRROR' SOURCE TO DESTINATION EXACTLY
 ''MSP BACKUPS EXCLUDE 'ONLINE' EAGLESOFT DIRECTORY AND INCLUDE 'OFFLINE' DIRECTORY
@@ -16,7 +16,7 @@ dim errRET, strVER, strIN
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
-''VERSION FOR SCRIPT UPDATE , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
+''VERSION FOR SCRIPT UPDATE , SS_MSP_PREBACKUP.VBS , REF #2 , REF #50
 strVER = 2
 ''DEFAULT FAIL
 errRET = 5
@@ -49,9 +49,9 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
-objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
-''AUTOMATIC UPDATE , 'ERRRET'=10 , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SS_MSP_PREBACKUP" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SS_MSP_PREBACKUP" & vbnewline
+''AUTOMATIC UPDATE , 'ERRRET'=10 , SS_MSP_PREBACKUP.VBS , REF #2 , REF #50
 call CHKAU()
 ''INITIATE STOP SERVICES
 call STOPEAGLE()
@@ -96,8 +96,8 @@ end sub
 
 sub DBCOPY()                                                ''COPY EAGLESOFT DATA FOLDER
   objOUT.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
-  ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #49
-  call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "E:\Backup" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
+  ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , SS_MSP_PREBACKUP.VBS , REF #2 , REF #49
+  call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "B:\EaglesoftBackup" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
   if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
   elseif (errRET < 5) then                                 ''ERROR RETURNED
@@ -106,7 +106,7 @@ sub DBCOPY()                                                ''COPY EAGLESOFT DAT
   end if
 end sub
 
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , SS_MSP_PREBACKUP.VBS , REF #2 , REF #50
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -131,7 +131,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , RNDDS_MSP_PR
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/rndds_msp_prebackup.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/ss_msp_prebackup.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
