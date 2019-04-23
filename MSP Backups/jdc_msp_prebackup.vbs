@@ -1,107 +1,277 @@
-on error resume next
+''JDC_MSP_PREBACKUP.VBS
+''DESIGNED TO STOP SAGE SERVICES AND DATABASE TO ALLOW FOR FILE COPY TO 'OFFLINE' DIRECTORY
+''SCRIPT UTILIZES ROBOCOPY TO 'MIRROR' SOURCE TO DESTINATION EXACTLY
+''MSP BACKUPS EXCLUDE 'ONLINE' SAGE DIRECTORY AND INCLUDE 'OFFLINE' DIRECTORY
+''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
+'on error resume next
 ''DECLARE VARIABLES
-dim retSTOP
+dim errRET, strVER
 dim objWSH, objFSO, objOUT, objHOOK
 ''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
 set objOUT = wscript.stdout
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''SCRIPT VARIABLES
+dim errRET, strVER, strIN
+''SCRIPT OBJECTS
+dim objIN, objOUT, objARG, objWSH, objFSO
+dim objLOG, objHOOK, objEXEC, objHTTP, objXML
+''VERSION FOR SCRIPT UPDATE , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #50
+strVER = 2
 ''DEFAULT FAIL
-retSTOP = 5
-''INITIATE SERVICE STOPS
-call STOPSAGE
+errRET = 5
+''PREPARE LOGFILE
+if (objFSO.fileexists("C:\temp\MSP_PREBACKUP")) then        ''LOGFILE EXISTS
+  objFSO.deletefile "C:\temp\MSP_PREBACKUP", true
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_PREBACKUP")
+  objLOG.close
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_PREBACKUP", 8)
+else                                                        ''LOGFILE NEEDS TO BE CREATED
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_PREBACKUP")
+  objLOG.close
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_PREBACKUP", 8)
+end if
+''READ PASSED COMMANDLINE ARGUMENTS
+if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
+  for x = 0 to (wscript.arguments.count - 1)
+    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  next 
+  if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
+  else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
+    'errRET = 1
+    'call CLEANUP()
+  end if
+else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
+  'errRET = 1
+  'call CLEANUP()
+end if
+
+''------------
+''BEGIN SCRIPT
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
+''AUTOMATIC UPDATE , 'ERRRET'=10 , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
+call CHKAU()
+''INITIATE STOP SERVICES
+call STOPSAGE()
+''END SCRIPT
+call CLEANUP()
+''END SCRIPT
+''------------
 
 ''SUB-ROUTINES
-sub STOPSAGE()                  ''STOP SAGE SERVICES
-  objOUT.write vbnewline & vbnewline & "STOPPING SAGE SERVICES : " & NOW
+sub STOPSAGE()                                              ''STOP SAGE SERVICES
+  objOUT.write vbnewline & vbnewline & "STOPPING SAGE SERVICES : " & now
   ''STOP SAGE AUTOUPDATE MANAGER SERVICE
   call HOOK("net stop " & chr(34) & "Sage AutoUpdate Manager Service" & chr(34))
-  if (retSTOP <> 0) then        ''ERROR RETURNED
-    if (retSTOP = 2) then       ''SERVICE ALREADY STOPPED
-      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STOPPED : Sage AutoUpdate Manager Service : " & NOW
-      retSTOP = 0
-    elseif (retSTOP <> 2) then  ''ANY OTHER ERROR RETURNED
-      objOUT.write vbnewline & retSTOP & vbtab & "ERROR STOPPING : Sage AutoUpdate Manager Service : " & NOW
-      retSTOP = 1
+  if (errRET <> 0) then                                     ''ERROR RETURNED
+    if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
+      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage AutoUpdate Manager Service : " & now
+      errRET = 0
+    elseif (errRET <> 2) then                               ''ANY OTHER ERROR RETURNED
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage AutoUpdate Manager Service : " & now
+      call LOGERR(4)
       ''END SCRIPT, RETURN EXIT CODE
-      call CLEANUP
+      call CLEANUP()
     end if
   end if
   ''STOP SAGE 50 SMARTPOSTING SERVICE
   call HOOK("net stop " & chr(34) & "Sage 50 SmartPosting 2017" & chr(34))
-  if (retSTOP <> 0) then        ''ERROR RETURNED
-    if (retSTOP = 2) then       ''SERVICE ALREADY STOPPED
-      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & NOW
-      retSTOP = 0
-    elseif (retSTOP <> 2) then  ''ANY OTHER ERROR
-      objOUT.write vbnewline & retSTOP & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & NOW
-      retSTOP = 2
+  if (errRET <> 0) then                                     ''ERROR RETURNED
+    if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
+      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & now
+      errRET = 0
+    elseif (errRET <> 2) then                               ''ANY OTHER ERROR
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & now
+      call LOGERR(5)
       ''END SCRIPT, RETURN EXIT CODE
-      call CLEANUP
+      call CLEANUP()
     end if
   end if
   ''STOP PERVASIVE SQL SERVICE
-  call STOPPSQL
+  call STOPPSQL()
 end sub
 
-sub STOPPSQL()                  ''STOP PERVASIVE SQL SERVICE
-  objOUT.write vbnewline & "STOPPING PERVASIVE SQL SERVICE : " & NOW
+sub STOPPSQL()                                              ''STOP PERVASIVE SQL SERVICE
+  objOUT.write vbnewline & "STOPPING PERVASIVE SQL SERVICE : " & now
   ''STOP PERVASIVE SQL SERVICE
   call HOOK("net stop " & chr(34) & "psqlWGE" & chr(34))
-  if (retSTOP <> 0) then        ''ERROR RETURNED
-    if (retSTOP = 2) then       ''SERVICE ALREADY STOPPED
-      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STOPPED : psqlWGE : " & NOW
-      retSTOP = 0
-    elseif (retSTOP <> 2) then  ''ANY OTHER ERROR
-      objOUT.write vbnewline & retSTOP & vbtab & "ERROR STOPPING : psqlWGE : " & NOW
-      retSTOP = 3
+  if (errRET <> 0) then                                     ''ERROR RETURNED
+    if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
+      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : psqlWGE : " & now
+      errRET = 0
+    elseif (errRET <> 2) then                               ''ANY OTHER ERROR
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : psqlWGE : " & now
+      call LOGERR(6)
       ''END SCRIPT, RETURN EXIT CODE
-      call CLEANUP
+      call CLEANUP()
     end if
   end if
   ''COPY SAGE DATA
-  call SAGECOPY
+  call SAGECOPY()
 end sub
 
-sub SAGECOPY()                  ''COPY SAGE FOLDER
-  objOUT.write vbnewline & "COPYING SAGE DATA : " & NOW
-  ''USE XCOPY TO COPY D:\SAGE FOLDER, OLVERWRITE ALL FILES IN DESTINATION
-  call HOOK("xcopy " & chr(34) & "D:\Sage" & chr(34) & " " & chr(34) & "D:\CW MSP Sage\Sage" & chr(34) & " /E /F /H /I /K /R /Y")
-  if (retSTOP = 0) then         ''SUCCESSFULLY COPIED DATA
-    objOUT.write vbnewline & "COPY SAGE DATA COMPLETE : " & NOW
-  elseif (retSTOP <> 0) then    ''ERROR RETURNED
-    objOUT.write vbnewline & retSTOP & vbtab & "ERROR : XCOPY D:\SAGE D:\CW MSP SAGE\SAGE : " & NOW
-    retSTOP = 4
+sub SAGECOPY()                                              ''COPY SAGE FOLDER
+  objOUT.write vbnewline & "COPYING SAGE DATA : " & now
+  ''USE ROBOCOPY TO COPY D:\SAGE FOLDER, OLVERWRITE ALL FILES IN DESTINATION , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #49
+  call HOOK("robocopy " & chr(34) & "D:\Sage" & chr(34) & " " & chr(34) & "D:\CW MSP Sage\Sage" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
+  if (errRET = 0) then                                      ''SUCCESSFULLY COPIED DATA
+    objOUT.write vbnewline & "COPY SAGE DATA COMPLETE : " & now
+  elseif (errRET <> 0) then                                 ''ERROR RETURNED
+    objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY D:\SAGE D:\CW MSP SAGE\SAGE : " & now
+    call LOGERR(7)
   end if
-  ''END SCRIPT, RETURN EXIT CODE
-  call CLEANUP
 end sub
 
-sub CLEANUP()                   ''SCRIPT CLEANUP
-  if (retSTOP = 0) then         ''PRE-BACKUP COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "PRE-BACKUP COMPLETE : " & NOW
-  elseif (retSTOP <> 0) then    ''PRE-BACKUP FAILED
-    objOUT.write vbnewline & "PRE-BACKUP FAILURE : " & NOW
-    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + retSTOP, "pre-backup", "fail")
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #50
+  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
-  ''EMPTY OBJECTS
-  set objOUT = nothing
-  set objFSO = nothing
-  set objWSH = nothing
-  ''END SCRIPT, RETURN ERROR
-  wscript.quit err.number
+	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+	''SCRIPT OBJECT FOR PARSING XML
+	set objXML = createobject("Microsoft.XMLDOM")
+	''FORCE SYNCHRONOUS
+	objXML.async = false
+	''LOAD SCRIPT VERSIONS DATABASE XML
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
+		set colVER = objXML.documentelement
+		for each objSCR in colVER.ChildNodes
+			''LOCATE CURRENTLY RUNNING SCRIPT
+			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+				''CHECK LATEST VERSION
+				if (cint(objSCR.text) > cint(strVER)) then
+					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+					''DOWNLOAD LATEST VERSION OF SCRIPT
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/jdc_msp_prebackup.vbs", wscript.scriptname)
+					''RUN LATEST VERSION
+					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+						for x = 0 to (wscript.arguments.count - 1)
+							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
+						next
+            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
+						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+					end if
+					''END SCRIPT
+					call CLEANUP()
+				end if
+			end if
+		next
+	end if
+	set colVER = nothing
+	set objXML = nothing
 end sub
 
-sub HOOK(strCMD)                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
+  strSAV = vbnullstring
+  ''SET DOWNLOAD PATH
+  strSAV = "C:\temp\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
+  if objFSO.fileexists(strSAV) then
+    objFSO.deletefile(strSAV)
+  end if
+  if (objHTTP.status = 200) then
+    dim objStream
+    set objStream = createobject("ADODB.Stream")
+    with objStream
+      .Type = 1 'adTypeBinary
+      .Open
+      .Write objHTTP.ResponseBody
+      .SaveToFile strSAV
+      .Close
+    end with
+    set objStream = nothing
+  end if
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists(strSAV) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+  end if
+	set objHTTP = nothing
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
+    call LOGERR(2)
+    err.clear
+  end if
+end sub
+
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  while (objHOOK.status = 0)
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
-      objOUT.write vbnewline & (objHOOK.stdout.readline())
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
     wend
     wscript.sleep 10
-  wend
-  objOUT.write vbnewline & objHOOK.stdout.readall()
-  retSTOP = objHOOK.exitcode
+    strIN = objHOOK.stdout.readall
+    if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    end if
+  end if
+  ''CHECK FOR ERRORS
+  errRET = objHOOK.exitcode
   set objHOOK = nothing
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    call LOGERR(3)
+    err.clear
+  end if
+end sub
+
+sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+		errRET = intSTG
+		err.clear
+  end if
+end sub
+
+sub CLEANUP()                                               ''SCRIPT CLEANUP
+  if (errRET = 0) then                                      ''PRE-BACKUP COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP COMPLETE : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP COMPLETE : " & now
+    err.clear
+  elseif (errRET <> 0) then                                 ''PRE-BACKUP FAILED
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP FAILURE : " & errRET & " : " & now
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "PRE-BACKUP", "FAIL")
+  end if
+  ''EMPTY OBJECTS
+  set objEXEC = nothing
+  set objLOG = nothing
+  set objFSO = nothing
+  set objWSH = nothing
+  set objARG = nothing
+  set objOUT = nothing
+  set objIN = nothing
+  ''END SCRIPT, RETURN ERROR
+  wscript.quit err.number
 end sub
