@@ -392,7 +392,7 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
     objOUT.write vbnewline & vbnewline & now & vbtab & " - QSMART FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - QSMART FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "QSMART", "fail")
+    call err.raise(vbObjectError + errRET, "QSMART", "FAIL")
   end if
   ''EMPTY OBJECTS
   set objFPD = nothing
