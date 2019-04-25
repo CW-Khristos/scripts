@@ -159,6 +159,7 @@ for intDRV = 0 to ubound(arrDRV)
   for intSMART = 0 to ubound(arrSMART)
     if (arrSMART(intDRV, intSMART) <> vbnullstring) then
       objOUT.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
+      objLOG.write vbnewline & vbtab & now & vbtab & arrSMART(intDRV, intSMART)
     end if
   next
 next
