@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 10
+strVER = 11
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -45,9 +45,6 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count > 0) then                     ''REQUIRED ARGUMENTS PASSED
     strUSR = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRUSR' ; TARGET USER FOR SERVICE LOGON PERMISSIONS
-    if (instr(1, strUSR, "\")) then                         ''INPUT VALIDATION FOR 'STRUSR'
-      strUSR = split(strUSR, "\")(1)                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
-    end if
     if (wscript.arguments.count > 1) then                   ''OPTIONAL ARGUMENTS PASSED
       strPWD = objARG.item(1)                               ''SET OPTIONAL PARAMETER 'STRPWD', TARGET USER CREDENTIALS
       strSVC = objARG.item(2)                               ''SET OPTIONAL PARAMETER 'STRSVC', TARGET SERVICE FOR USER CREDENTIALS
