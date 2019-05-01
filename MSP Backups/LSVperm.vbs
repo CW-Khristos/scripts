@@ -109,7 +109,7 @@ elseif (errRET = 0) then                                                    ''AR
       ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
       ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
       if (instr(1, lcase(strUSR), "\")) then
-        if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
+        if (lcase(colUSR(intUSR)) = lcase(split(strUSR, "\")(1))) then
           redim preserve arrSID(intSID + 1)
           arrSID(intSID) = colSID(intUSR)
           intSID = intSID + 1
@@ -118,7 +118,7 @@ elseif (errRET = 0) then                                                    ''AR
         end if
       ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
       elseif (instr(1, lcase(strUSR), "\") = 0) then
-        if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
+        if (lcase(colUSR(intUSR)) = lcase(strUSR)) then
           redim preserve arrSID(intSID + 1)
           arrSID(intSID) = colSID(intUSR)
           intSID = intSID + 1
@@ -130,18 +130,18 @@ elseif (errRET = 0) then                                                    ''AR
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     next
     ''RETRIEVE WORKGROUP / DOMAIN INFORMATION FROM NETWORK
-    if (instr(1, strUSR, "\") = 0) then
-      strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-      if (lcase(strDMN) = "workgroup") then
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      elseif (lcase(strDMN) <> "workgroup") then
-        strUSR = strDMN & "\" & strUSR
-      else
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      end if
-    end if
+    'if (instr(1, strUSR, "\") = 0) then
+    '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+    '  if (lcase(strDMN) = "workgroup") then
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  elseif (lcase(strDMN) <> "workgroup") then
+    '    strUSR = strDMN & "\" & strUSR
+    '  else
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  end if
+    'end if
     ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
@@ -159,7 +159,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
+      if (instr(1, strUSR, lcase(colUSR(intUSR))) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant " & colUSR(intUSR) & ":(OI)(CI)F /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant *" & colSID(intSID) & ":(OI)(CI)F /T /C /Q")
       end if
@@ -180,7 +180,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - REMOVING ALL OTHER ENUMERATED USERS' PERMISSIONS"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, lcase(colUSR(intUSR)), "rmmtech") = 0)) then
+      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, strUSR, lcase(colUSR(intUSR))) = 0)) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g " & colUSR(intUSR) & " /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g *" & colSID(intSID) & " /T /C /Q")
       end if
