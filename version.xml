@@ -22,7 +22,7 @@
 	<reagent.vbs>8</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
-	<reprobe.vbs>9</reprobe.vbs>
+	<reprobe.vbs>10</reprobe.vbs>
   <rmm_logo.vbs>1</rmm_logo.vbs>
 	<rndds_msp_postbackup.vbs>2</rndds_msp_postbackup.vbs>
 	<rndds_msp_prebackup.vbs>2</rndds_msp_prebackup.vbs>
