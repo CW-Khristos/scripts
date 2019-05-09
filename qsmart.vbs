@@ -18,7 +18,7 @@ errRET = 0
 ''INITIALIZE ENUMERATED DRIVE ARRAY , QSMART.VBS, REF #2 , REF #42 , FIXES #44
 redim arrDRV(0)
 ''INITIALIZE SMART ATTRIBUTE ARRAY , QSMART.VBS, REF #2 , REF #42 , FIXES #44
-redim arrSMART(1,1)
+redim arrSMART(1,9)
 arrSMART(0,0) = vbnullstring
 ''STDIN / STDOUT
 strCOMP = "."
@@ -79,7 +79,7 @@ while (not objEXEC.stdout.atendofstream)
   strIN = objEXEC.stdout.readline
   if (trim(strIN) <> vbnullstring) then
     ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
-    redim arrSMART((intDRV + 1), 0)
+    redim arrSMART((intDRV + 2), 9)
     ''RE-SIZE 'ARRDRV'('DRIVE INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
     redim preserve arrDRV(intDRV + 1)
     ''COLLECT 'SMARTCTL' DRIVE PATH , QSMART.VBS, REF #2 , REF #42 , FIXES #44
@@ -104,10 +104,11 @@ objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVES' 
 objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - QUERYING DRIVES' 'SMART' STATUS" & vbnewline
 if (intTOT > 0) then
   intATT = 0
+  intCOL = 9
   ''ENUMERATE THROUGH EACH DRIVE
   for intDRV = 0 to (intTOT)
     ''RESET 'SMART' INDEX
-    'intATT = 0
+    intATT = 0
     intSMART = 0
     if (arrDRV(intDRV) <> vbnullstring) then
       ''QUERY 'SMART' ATTRIBUTES USING 'SMARTCTL' , QSMART.VBS, REF #2 , REF #42 , FIXES #44
@@ -116,6 +117,7 @@ if (intTOT > 0) then
       set objEXEC = objWSH.exec("c:\temp\smartctl.exe -A " & arrDRV(intDRV))
       ''ENUMERATE THROUGH EACH 'SMART' ATTRIBUTE
       while (not objEXEC.stdout.atendofstream)
+        on error resume next
         strIN = trim(objEXEC.stdout.readline)
         if (strIN <> vbnullstring) then
           ''EXCLUDE 'HEADERS'
@@ -125,18 +127,26 @@ if (intTOT > 0) then
               'objLOG.write vbnewline & now & vbtab & vbtab & split(strIN, " ")(1)
               ''PARSE 'SMARTCTL' OUTPUT , QSMART.VBS, REF #2 , REF #42 , FIXES #44
               'for intTMP = 1 to ubound(split(strIN, " "))
-                if (split(strIN, " ")(1) <> vbnullstring) then
+                if ((instr(1, strIN, "  ") and (split(strIN, " ")(1) <> vbnullstring))) then
                   ''VALIDATE 'SMART' ATTRIBUTE NAME , QSMART.VBS, REF #2 , REF #42 , FIXES #44
                   'objOUT.write vbnewline & blnSMART(split(strIN, " ")(intTMP))
                   'objLOG.write vbnewline & blnSMART(split(strIN, " ")(intTMP))
                   if (blnSMART(split(strIN, " ")(1))) then
                     ''RE-SIZE 'ARRSMART'('DRIVE INDEX', 'SMART INDEX') ARRAY , QSMART.VBS, REF #2 , REF #42 , REF #44
-                    redim preserve arrSMART(intTOT, intATT + 1)
+                    if (intATT >= intCOL) then
+                      intCOL = intATT + 1
+                      wscript.echo "TEST"
+                      wscript.echo vbnewline & vbtab & "REDEFINE : " & ubound(arrSMART , intDRV + 1) & vbtab & " / " & vbtab & intATT
+                      redim preserve arrSMART(intTOT, intCOL)
+                    end if
                     ''COLLECT 'SMARTCTL' DRIVE SMART ATTRIBUTES , QSMART.VBS, REF #2 , REF #42 , FIXES #44
-                    objOUT.write vbnewline & trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
+                    objOUT.write vbnewline & "DRIVE : " & intDRV & " - SMART ATT : " & intSMART 
+                    objOUT.write vbnewline & intSMART & vbtab & trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
+                    objOUT.write vbnewline & strIN
+                    
                     'objLOG.write vbnewline & trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]" & vbnewline
                     arrSMART(intDRV, intSMART) = trim(split(strIN, " ")(1)) & "[" & trim(split(strIN, "  ")(ubound(split(strIN, "  ")))) & "]"
-                    wscript.echo vbnewline & vbtab & ubound(arrSMART , intDRV + 1) & vbtab & " / " & vbtab & intATT
+                    'wscript.echo vbnewline & vbtab & ubound(arrSMART , intDRV + 1) & vbtab & " / " & vbtab & intATT
                     intSMART = (intSMART + 1)
                     intATT = (intATT + 1)
                     'exit for
@@ -148,7 +158,7 @@ if (intTOT > 0) then
         if (err.number <> 0) then
           call LOGERR(3)
         end if
-        wscript.sleep 100
+        wscript.sleep 200
       wend
       set objEXEC = nothing
     end if
