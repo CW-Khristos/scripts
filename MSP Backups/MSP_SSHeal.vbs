@@ -84,7 +84,7 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
   'end if
   
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  call VSSSVC()
+  'call VSSSVC()
   ''CHECK VSS WRITERS AFTER RESTART
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
