@@ -18,7 +18,7 @@ dim blnAHS, blnBIT, blnCSVC, blnRDP
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-strVER = 6
+strVER = 7
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
 ''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
@@ -70,31 +70,40 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
   ''DEFAULT RESTART OF VSS, DISABLED TO CHECK WRITERS PRIOR TO RESET, SUSPECT CONFLICT WITH MSP BACKUP VSS COMPONENT , REF #1
   'call HOOK("net stop VSS")
   'call HOOK ("net start VSS")
+  
+  ''DISABLED VSS CHECKS TO TEST
   ''EXPORT CURRENT VSS WRITER STATUSES
-  call CHKVSS()
-  if (errRET = 2) then
-    x = 0
-    while x <= 60
-      x = x + 1
-      wscript.sleep 1000
-    wend
-    call CHKVSS()
-  end if
+  'call CHKVSS()
+  'if (errRET = 2) then
+  '  x = 0
+  '  while x <= 60
+  '    x = x + 1
+  '    wscript.sleep 1000
+  '  wend
+  '  call CHKVSS()
+  'end if
+  
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   call VSSSVC()
   ''CHECK VSS WRITERS AFTER RESTART
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+  
   ''EXPORT CURRENT VSS WRITER STATUSES
-  call CHKVSS()
+  'call CHKVSS()
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  call VSSSVC()
+  'call VSSSVC()
+  
+  ''RESTART WMI ONLY
+  blnRUN = true
+  call HOOK("net stop Winmgmt /y")
+  call HOOK ("net start Winmgmt")
   ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
   call CHKDEP()
   if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
-    'call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
+    call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
   elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
@@ -326,7 +335,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 	''FORCE SYNCHRONOUS
 	objXML.async = false
 	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
 		set colVER = objXML.documentelement
 		for each objSCR in colVER.ChildNodes
 			''LOCATE CURRENTLY RUNNING SCRIPT
@@ -336,7 +345,7 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
