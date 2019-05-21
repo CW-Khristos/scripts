@@ -68,14 +68,14 @@ if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   blnLOG = bool(objARG.item(0))
   strFOL = objARG.item(1)
-else                                              ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
+else                                                        ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
   blnLOG = false
 end if
 
@@ -87,12 +87,12 @@ objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
 call CHKAU()
 ''CREATE LOGFILE, IF ENABLED
 if (blnLOG) then
-  if (objFSO.fileexists("C:\temp\cclutter.txt")) then  ''LOGFILE EXISTS
+  if (objFSO.fileexists("C:\temp\cclutter.txt")) then       ''LOGFILE EXISTS
     objFSO.deletefile "C:\temp\cclutter.txt", true
     set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
     objLOG.close
     set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
-  else                                            ''LOGFILE NEEDS TO BE CREATED
+  else                                                      ''LOGFILE NEEDS TO BE CREATED
     set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
     objLOG.close
     set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
@@ -100,19 +100,19 @@ if (blnLOG) then
 end if
 ''ENUMERATE THROUGH FOLDER COLLECTION
 for x = 0 to ubound(colFOL)
-  if (colFOL(x) <> vbnullstring) then             ''ENSURE COLFOL(X) IS NOT EMPTY
-    if (objFSO.folderexists(colFOL(x))) then      ''ENSURE FOLDER EXISTS BEFORE CLEARING
+  if (colFOL(x) <> vbnullstring) then                       ''ENSURE COLFOL(X) IS NOT EMPTY
+    if (objFSO.folderexists(colFOL(x))) then                ''ENSURE FOLDER EXISTS BEFORE CLEARING
       set objFOL = objFSO.getfolder(colFOL(x))
       strNEW = vbnewline & "CLEARING : " & objFOL.path
       objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
       ''CLEAR NORMAL FOLDERS
       if (objFOL.path <> objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
         strNEW = vbnewline & "CLEARING : " & objFOL.path
         objOUT.write strNEW
-        if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+        if (blnLOG) then                                    ''WRITE TO LOGFILE, IF ENABLED
           objLOG.write strNEW
         end if
         call cFolder(objFOL)
@@ -122,13 +122,13 @@ for x = 0 to ubound(colFOL)
         if (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml")) then
           strNEW = vbnewline & "'PENDING.XML' FOUND : SKIPPING : " & objFOL.path
           objOUT.write strNEW
-          if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+          if (blnLOG) then                                  ''WRITE TO LOGFILE, IF ENABLED
             objLOG.write strNEW
           end if
         elseif (not (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml"))) then
           strNEW = vbnewline & "'PENDING.XML' NOT FOUND : CLEARING : " & objFOL.path
           objOUT.write strNEW
-          if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+          if (blnLOG) then                                  ''WRITE TO LOGFILE, IF ENABLED
             objLOG.write strNEW
           end if
           ''STOP WINDOWS UPDATE SERVICE TO CLEAR WINDOWS UPDATE FOLDER
@@ -138,10 +138,10 @@ for x = 0 to ubound(colFOL)
           call HOOK("net start wuauserv")
         end if
       end if
-    else                                          ''NON-EXISTENT FOLDER
+    else                                                    ''NON-EXISTENT FOLDER
       strNEW = vbnewline & "NON-EXISTENT : " & colFOL(x)
       objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
     end if
@@ -149,7 +149,7 @@ for x = 0 to ubound(colFOL)
 next
 ''ENUMERATE THROUGH PASSED FOLDER PATH
 'if (strFOL <> vbnullstring) then
-'  if (objFSO.folderexists(strFOL)) then           ''ENSURE FOLDER EXISTS BEFORE CLEARING
+'  if (objFSO.folderexists(strFOL)) then                    ''ENSURE FOLDER EXISTS BEFORE CLEARING
 '    set objFOL = objFSO.getfolder(strFOL)
 '    strNEW = vbnewline & "CLEARING : " & objFOL.path
 '    objOUT.write strNEW
@@ -159,7 +159,7 @@ next
 '    end if
 '    ''CLEAR CONTENTS OF FOLDER
 '    call cFolder(objFOL)
-'  else                                            ''NON-EXISTENT FOLDER
+'  else                                                     ''NON-EXISTENT FOLDER
 '    strNEW = vbnewline & "NON-EXISTENT : " & colFOL(x)
 '    objOUT.write strNEW
 '    ''WRITE TO LOGFILE, IF ENABLED
@@ -174,98 +174,100 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub cFolder (ByVal Folder)                        ''SUB-ROUTINE TO CLEAR CONTENTS OF FOLDER
+sub cFolder (ByVal Folder)                                  ''SUB-ROUTINE TO CLEAR CONTENTS OF FOLDER
   ''SUB-ROUTINE IS RECURSIVE, WILL CLEAR FOLDER AND SUB-FOLDERS!
   on error resume next
   dim colFIL, colFOL
   ''DELETE FILES
   set colFIL = Folder.files
-  for each objFIL in colFIL                       ''ENUMERATE EACH FILE
+  for each objFIL in colFIL                                 ''ENUMERATE EACH FILE
     filSIZ = round((objFIL.size / 1024), 2)
     strFIL = objFIL.path
     objFIL.delete(True)
-    if (err.number = 0) then                      ''SUCCESSFULLY DELETED FILE
+    if (err.number = 0) then                                ''SUCCESSFULLY DELETED FILE
       lngSIZ = (lngSIZ + filSIZ)
       strNEW = vbnewline & "DELETED FILE: " & strFIL
       'objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
-    elseif (err.number <> 0) then                 ''ERROR ENCOUNTERED DELETING FILE
+    elseif (err.number <> 0) then                           ''ERROR ENCOUNTERED DELETING FILE
       strNEW = vbnewline & "ERROR : " &  err.number & vbtab & err.description & vbtab & strFIL
       objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
     end if
   next
   ''EMPTY AND DELETE SUB-FOLDERS
   set colFOL = Folder.SubFolders
-  for each subFOL in colFOL                       ''ENUMERATE EACH SUB-FOLDER
+  for each subFOL in colFOL                                 ''ENUMERATE EACH SUB-FOLDER
     strFOL = subFOL.path
     call cFolder(subFOL)
     subFOL.delete(True)
-    if (err.number = 0 ) then                     ''SUCCESSFULLY DELETED FOLDER
+    if (err.number = 0 ) then                               ''SUCCESSFULLY DELETED FOLDER
       strNEW = vbnewline & "REMOVED FOLDER : " & strFOL
       objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
-    elseif (err.number <> 0) then                 ''ENCOUNTERED ERROR TRYING TO DELETE FOLDER
+    elseif (err.number <> 0) then                           ''ENCOUNTERED ERROR TRYING TO DELETE FOLDER
       strNEW = vbnewline & "ERROR : " &  err.number & vbtab & err.description & vbtab & strFOL
       objOUT.write strNEW
-      if (blnLOG) then                            ''WRITE TO LOGFILE, IF ENABLED
+      if (blnLOG) then                                      ''WRITE TO LOGFILE, IF ENABLED
         objLOG.write strNEW
       end if
     end if
   next
 end sub
 
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , FIXES #21
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , FIXES #21
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/cclutter.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+  ''SCRIPT OBJECT FOR PARSING XML
+  set objXML = createobject("Microsoft.XMLDOM")
+  ''FORCE SYNCHRONOUS
+  objXML.async = false
+  ''LOAD SCRIPT VERSIONS DATABASE XML
+  if objXML.load("https://github.com/CW-Khristos/scripts/raw/master/version.xml") then
+    set colVER = objXML.documentelement
+    for each objSCR in colVER.ChildNodes
+      ''LOCATE CURRENTLY RUNNING SCRIPT
+      if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+        ''CHECK LATEST VERSION
+        if (cint(objSCR.text) > cint(strVER)) then
+          objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+          ''DOWNLOAD LATEST VERSION OF SCRIPT
+          call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/cclutter.vbs", wscript.scriptname)
+          ''RUN LATEST VERSION
+          if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+            for x = 0 to (wscript.arguments.count - 1)
+              strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
+            next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+          elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
+            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+          end if
+          ''END SCRIPT
+          call CLEANUP()
+        end if
+      end if
+    next
+  end if
+  set colVER = nothing
+  set objXML = nothing
 end sub
 
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL

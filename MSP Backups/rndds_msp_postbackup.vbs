@@ -9,55 +9,39 @@ set objFSO = createobject("scripting.filesystemobject")
 ''DEFAULT FAIL
 retSTART = 5
 ''INITIATE START SERVICES
-call STARTDB
+call STARTDB()
 
 ''SUB-ROUTINES
 sub STARTDB()                    ''START EAGLESOFT DATABASE
-  objOUT.write vbnewline & "STARTING EAGLESOFT DATABASE : " & NOW
+  objOUT.write vbnewline & "STARTING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE WITH 'START' SWITCH, DO NOT MONITOR, PROCESS DOES NOT EXIT
   retSTART = objWSH.run(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -start", 0, false)
   if (retSTART = 0) then         ''DATABASE SUCCESSFULLY STARTED
-    objOUT.write vbnewline & vbnewline & retSTART & vbtab & "EAGLESOFT DATABASE STARTED : " & NOW
+    objOUT.write vbnewline & vbnewline & retSTART & vbtab & "EAGLESOFT DATABASE STARTED : " & now
   elseif (retSTART <> 0) then    ''ERROR RETURNED
-    objOUT.write vbnewline & vbnewline & retSTART & vbtab & "ERROR STARTING EAGLESOFT DATABASE : " & NOW
+    objOUT.write vbnewline & vbnewline & retSTART & vbtab & "ERROR STARTING EAGLESOFT DATABASE : " & now
     retSTART = 1
     ''END SCRIPT, RETURN EXIT CODE
-    call CLEANUP
+    call CLEANUP()
   end if
-  call STARTEAGLE
+  call STARTEAGLE()
 end sub
 
 sub STARTEAGLE()                 ''START EAGLESOFT SERVICES
-  objOUT.write vbnewline & vbnewline & "STARTING EAGLESOFT SERVICES : " & NOW
+  objOUT.write vbnewline & vbnewline & "STARTING EAGLESOFT SERVICES : " & now
   ''START PATTERSON APP SERVICE
   call HOOK("net start " & chr(34) & "PattersonAppService" & chr(34))
   if (retSTART <> 0) then        ''ERROR RETURNED
     if (retSTART = 2) then       ''SERVICE ALREADY STARTED
-      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : PattersonAppService : " & NOW
+      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : PattersonAppService : " & now
       retSTART = 0
     elseif (retSTART <> 2) then  ''ANY OTHER ERROR
-      objOUT.write vbnewline & retSTART & vbtab & "ERROR STARTING : PattersonAppService : " & NOW
+      objOUT.write vbnewline & retSTART & vbtab & "ERROR STARTING : PattersonAppService : " & now
       retSTART = 2
     end if
   end if
   ''END SCRIPT, RETURN EXIT CODE
-  call CLEANUP
-end sub
-
-sub CLEANUP()                    ''SCRIPT CLEANUP
-  if (retSTART = 0) then         ''POST-BACKUP COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "POST-BACKUP COMPLETE : " & NOW
-  elseif (retSTART <> 0) then    ''POST-BACKUP FAILED
-    objOUT.write vbnewline & "POST-BACKUP FAILURE : " & NOW
-    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + retSTART, "post-backup", "fail")
-  end if
-  ''EMPTY OBJECTS
-  set objOUT = nothing
-  set objFSO = nothing
-  set objWSH = nothing
-  ''END SCRIPT, RETURN ERROR
-  wscript.quit err.number
+  call CLEANUP()
 end sub
 
 sub HOOK(strCMD)                 ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
@@ -71,4 +55,20 @@ sub HOOK(strCMD)                 ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   objOUT.write vbnewline & objHOOK.stdout.readall()
   retSTART = objHOOK.exitcode
   set objHOOK = nothing
+end sub
+
+sub CLEANUP()                    ''SCRIPT CLEANUP
+  if (retSTART = 0) then         ''POST-BACKUP COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "POST-BACKUP COMPLETE : " & now
+  elseif (retSTART <> 0) then    ''POST-BACKUP FAILED
+    objOUT.write vbnewline & "POST-BACKUP FAILURE : " & now
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + retSTART, "post-backup", "fail")
+  end if
+  ''EMPTY OBJECTS
+  set objOUT = nothing
+  set objFSO = nothing
+  set objWSH = nothing
+  ''END SCRIPT, RETURN ERROR
+  wscript.quit err.number
 end sub

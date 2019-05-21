@@ -1,11 +1,16 @@
-@echo off
-cscript.exe //nologo "C:\Scripts\msp_prebackup.vbs" > "C:\Scripts\prebackup_output.txt" 
-if errorlevel == 0 goto end
+set errorlevel=
+cscript.exe //nologo "C:\Scripts\msp_prebackup.vbs" > "C:\Scripts\prebackup_vbsoutput.txt"
+if %errorlevel% == 0 goto end
 
 :fail
 set /A interr=%errorlevel%+2147221504
+set errorlevel=
+echo %date% : %time% : PRE-BACKUP.CMD FAIL : %interr% >> "C:\Scripts\prebackup_cmdout.txt"
 echo %interr%
-exit /B %interr%
+exit %interr%
 
 :end
-exit /B 0
+set /A interr=%errorlevel%+2147221504
+set errorlevel=
+echo %date% : %time% : PRE-BACKUP.CMD SUCCESS : %interr% >> "C:\Scripts\prebackup_cmdout.txt"
+exit 0
