@@ -3,21 +3,18 @@
 ''SCRIPT UTILIZES ROBOCOPY TO 'MIRROR' SOURCE TO DESTINATION EXACTLY
 ''MSP BACKUPS EXCLUDE 'ONLINE' SAGE DIRECTORY AND INCLUDE 'OFFLINE' DIRECTORY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
-''DECLARE VARIABLES
-dim errRET, strVER
-dim objWSH, objFSO, objOUT, objHOOK
-''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
-set objOUT = wscript.stdout
-set objWSH = createobject("wscript.shell")
-set objFSO = createobject("scripting.filesystemobject")
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
+''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
+set objOUT = wscript.stdout
+set objWSH = createobject("wscript.shell")
+set objFSO = createobject("scripting.filesystemobject")
 ''VERSION FOR SCRIPT UPDATE , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #50
-strVER = 2
+strVER = 3
 ''DEFAULT FAIL
 errRET = 5
 ''PREPARE LOGFILE
@@ -37,7 +34,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
+  if (wscript.arguments.count > 0) then                     ''SET PASSED ARG7UMENTS
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     'errRET = 1
     'call CLEANUP()
@@ -49,13 +46,13 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
-objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING JDC_MSP_PREBACKUP" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING JDC_MSP_PREBACKUP" & vbnewline
 ''AUTOMATIC UPDATE , 'ERRRET'=10 , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
 call CHKAU()
 ''INITIATE STOP SERVICES
 call STOPSAGE()
-''END SCRIPT
+''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
 ''------------
@@ -63,14 +60,18 @@ call CLEANUP()
 ''SUB-ROUTINES
 sub STOPSAGE()                                              ''STOP SAGE SERVICES
   objOUT.write vbnewline & vbnewline & "STOPPING SAGE SERVICES : " & now
+  objLOG.write vbnewline & vbnewline & "STOPPING SAGE SERVICES : " & now
   ''STOP SAGE AUTOUPDATE MANAGER SERVICE
   call HOOK("net stop " & chr(34) & "Sage AutoUpdate Manager Service" & chr(34))
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage AutoUpdate Manager Service : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage AutoUpdate Manager Service : " & now
       errRET = 0
+      err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR RETURNED
       objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage AutoUpdate Manager Service : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage AutoUpdate Manager Service : " & now
       call LOGERR(4)
       ''END SCRIPT, RETURN EXIT CODE
       call CLEANUP()
@@ -81,9 +82,12 @@ sub STOPSAGE()                                              ''STOP SAGE SERVICES
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & now
       errRET = 0
+      err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR
       objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & now
       call LOGERR(5)
       ''END SCRIPT, RETURN EXIT CODE
       call CLEANUP()
@@ -95,14 +99,18 @@ end sub
 
 sub STOPPSQL()                                              ''STOP PERVASIVE SQL SERVICE
   objOUT.write vbnewline & "STOPPING PERVASIVE SQL SERVICE : " & now
+  objLOG.write vbnewline & "STOPPING PERVASIVE SQL SERVICE : " & now
   ''STOP PERVASIVE SQL SERVICE
   call HOOK("net stop " & chr(34) & "psqlWGE" & chr(34))
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : psqlWGE : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : psqlWGE : " & now
       errRET = 0
+      err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR
       objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : psqlWGE : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : psqlWGE : " & now
       call LOGERR(6)
       ''END SCRIPT, RETURN EXIT CODE
       call CLEANUP()
@@ -114,12 +122,15 @@ end sub
 
 sub SAGECOPY()                                              ''COPY SAGE FOLDER
   objOUT.write vbnewline & "COPYING SAGE DATA : " & now
+  objLOG.write vbnewline & "COPYING SAGE DATA : " & now
   ''USE ROBOCOPY TO COPY D:\SAGE FOLDER, OLVERWRITE ALL FILES IN DESTINATION , JDC_MSP_PREBACKUP.VBS , REF #2 , REF #49
   call HOOK("robocopy " & chr(34) & "D:\Sage" & chr(34) & " " & chr(34) & "D:\CW MSP Sage\Sage" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
   if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY SAGE DATA COMPLETE : " & now
+    objLOG.write vbnewline & "COPY SAGE DATA COMPLETE : " & now
   elseif (errRET < 5) then                                 ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY D:\SAGE D:\CW MSP SAGE\SAGE : " & now
+    objLOG.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY D:\SAGE D:\CW MSP SAGE\SAGE : " & now
     call LOGERR(7)
   end if
 end sub

@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 10
+strVER = 11
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -45,9 +45,6 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count > 0) then                     ''REQUIRED ARGUMENTS PASSED
     strUSR = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRUSR' ; TARGET USER FOR SERVICE LOGON PERMISSIONS
-    if (instr(1, strUSR, "\")) then                         ''INPUT VALIDATION FOR 'STRUSR'
-      strUSR = split(strUSR, "\")(1)                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
-    end if
     if (wscript.arguments.count > 1) then                   ''OPTIONAL ARGUMENTS PASSED
       strPWD = objARG.item(1)                               ''SET OPTIONAL PARAMETER 'STRPWD', TARGET USER CREDENTIALS
       strSVC = objARG.item(2)                               ''SET OPTIONAL PARAMETER 'STRSVC', TARGET SERVICE FOR USER CREDENTIALS
@@ -140,19 +137,19 @@ elseif (errRET = 0) then
       strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
     elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
       ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
-      if (instr(1, strUSR, "\") = 0) then
-        ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
-        strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-        if (lcase(strDMN) = "workgroup") then         ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-          strDMN = ".\"
-          strUSR = strDMN & strUSR
-        elseif (lcase(strDMN) <> "workgroup") then    ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
-          strUSR = strDMN & "\" & strUSR
-        else                                          '' 'DEFAULT' TO A LOCAL ACCOUNT
-          strDMN = ".\"
-          strUSR = strDMN & strUSR
-        end if
-      end if
+      'if (instr(1, strUSR, "\") = 0) then
+      '  ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
+      '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+      '  if (lcase(strDMN) = "workgroup") then         ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
+      '    strDMN = ".\"
+      '    strUSR = strDMN & strUSR
+      '  elseif (lcase(strDMN) <> "workgroup") then    ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
+      '    strUSR = strDMN & "\" & strUSR
+      '  else                                          '' 'DEFAULT' TO A LOCAL ACCOUNT
+      '    strDMN = ".\"
+      '    strUSR = strDMN & strUSR
+      '  end if
+      'end if
       strREP = "SeServiceLogonRight = " & strUSR & ","
     end if
     ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
@@ -182,19 +179,19 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
   if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
     ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
-    if (instr(1, strUSR, "\") = 0) then
-      ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
-      strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-      if (lcase(strDMN) = "workgroup") then           ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      elseif (lcase(strDMN) <> "workgroup") then      ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
-        strUSR = strDMN & "\" & strUSR
-      else                                            '' 'DEFAULT' TO A LOCAL ACCOUNT
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      end if
-    end if
+    'if (instr(1, strUSR, "\") = 0) then
+    '  ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
+    '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+    '  if (lcase(strDMN) = "workgroup") then           ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  elseif (lcase(strDMN) <> "workgroup") then      ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
+    '    strUSR = strDMN & "\" & strUSR
+    '  else                                            '' 'DEFAULT' TO A LOCAL ACCOUNT
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  end if
+    'end if
     ''UPDATE SERVICE LOGON CREDENTIALS USING 'SC CONFIG' CMD , 'ERRRET'=6
     objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
     objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
@@ -244,7 +241,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", wscript.scriptname)
+					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SVCperm.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)

@@ -18,7 +18,7 @@ dim strORG, strREP, strSID, strDMN
 ''VARIABLES ACCEPTING PARAMETERS
 dim strLSV, strUSR, strPWD
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
-strVER = 4
+strVER = 5
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -49,9 +49,6 @@ if (wscript.arguments.count > 0) then                                       ''AR
   strLSV = objARG.item(0)
   if (wscript.arguments.count > 1) then                                     ''SET RMMTECH LOGON ARGUMENTS FOR UPDATING 'BACKUP SERVICE CONTROLLER' LOGON
     strUSR = objARG.item(1)
-    if (instr(1, strUSR, "\")) then                                         ''INPUT VALIDATION FOR 'STRUSR'
-      strUSR = split(strUSR, "\")(1)                                        ''STRIP WORKGROUP / DOMAIN FROM PASSED VARIABLE TO ENSURE WE HAVE USER NAME ONLY
-    end if
     strPWD = objARG.item(2)
   elseif (wscript.arguments.count <= 1) then                                ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     call LOGERR(1)
@@ -81,11 +78,13 @@ elseif (errRET = 0) then                                                    ''AR
     ''GET SIDS OF ALL USERS , 'ERRRET'=20
     intUSR = 0
     intSID = 0
-    objOUT.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS"
+    objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS, THIS MAY TAKE A FEW MOMENTS"
+    objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ENUMERATING USERNAMES AND SIDS, THIS MAY TAKE A FEW MOMENTS"
     set objEXEC = objWSH.exec("wmic useraccount get name,sid /format:csv")
     while (not objEXEC.stdout.atendofstream)
       strIN = objEXEC.stdout.readline
+      'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+      'objLOG.write vbnewline & now & vbtab & vbtab & strIN
       if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, ","))) then
         if ((trim(split(strIN, ",")(1)) <> vbnullstring) and (trim(split(strIN, ",")(1)) <> "Name")) then
           redim preserve colUSR(intUSR + 1)
@@ -97,34 +96,52 @@ elseif (errRET = 0) then                                                    ''AR
         end if
       end if
       if (err.number <> 0) then
-        call LOGERR(20)
+        call LOGERR(2)
       end if
     wend
     err.clear
     ''VALIDATE COLLECTED USERNAMES AND SIDS
+    intUSR = 0
+    intSID = 0
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES AND SIDS"
     for intUSR = 0 to ubound(colUSR)
-      intSID = intUSR
-      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
-        strSID = colSID(intUSR)
+      ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
+      ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
+      if (instr(1, lcase(strUSR), "\")) then
+        if (lcase(colUSR(intUSR)) = lcase(split(strUSR, "\")(1))) then
+          redim preserve arrSID(intSID + 1)
+          arrSID(intSID) = colSID(intUSR)
+          intSID = intSID + 1
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+        end if
+      ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
+      elseif (instr(1, lcase(strUSR), "\") = 0) then
+        if (lcase(colUSR(intUSR)) = lcase(strUSR)) then
+          redim preserve arrSID(intSID + 1)
+          arrSID(intSID) = colSID(intUSR)
+          intSID = intSID + 1
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
+        end if
       end if
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intSID)
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     next
     ''RETRIEVE WORKGROUP / DOMAIN INFORMATION FROM NETWORK
-    if (instr(1, strUSR, "\") = 0) then
-      strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-      if (lcase(strDMN) = "workgroup") then
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      elseif (lcase(strDMN) <> "workgroup") then
-        strUSR = strDMN & "\" & strUSR
-      else
-        strDMN = ".\"
-        strUSR = strDMN & strUSR
-      end if
-    end if
+    'if (instr(1, strUSR, "\") = 0) then
+    '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
+    '  if (lcase(strDMN) = "workgroup") then
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  elseif (lcase(strDMN) <> "workgroup") then
+    '    strUSR = strDMN & "\" & strUSR
+    '  else
+    '    strDMN = ".\"
+    '    strUSR = strDMN & strUSR
+    '  end if
+    'end if
     ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
@@ -142,7 +159,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
+      if (instr(1, strUSR, lcase(colUSR(intUSR))) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant " & colUSR(intUSR) & ":(OI)(CI)F /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant *" & colSID(intSID) & ":(OI)(CI)F /T /C /Q")
       end if
@@ -163,7 +180,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - REMOVING ALL OTHER ENUMERATED USERS' PERMISSIONS"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, lcase(colUSR(intUSR)), "rmmtech") = 0)) then
+      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, strUSR, lcase(colUSR(intUSR))) = 0)) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g " & colUSR(intUSR) & " /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g *" & colSID(intSID) & " /T /C /Q")
       end if
@@ -174,7 +191,7 @@ elseif (errRET = 0) then                                                    ''AR
     ''DOWNLOAD SVCPERM.VBS SCRIPT TO GRANT USER SERVICE LOGON , 'ERRRET'=30 , REF #2 , FIXES #32
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "SVCperm.vbs")
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SVCperm.vbs", "SVCperm.vbs")
     if (errRET <> 0) then
       call LOGERR(30)
     end if

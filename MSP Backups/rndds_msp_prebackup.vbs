@@ -3,21 +3,18 @@
 ''SCRIPT UTILIZES ROBOCOPY TO 'MIRROR' SOURCE TO DESTINATION EXACTLY
 ''MSP BACKUPS EXCLUDE 'ONLINE' EAGLESOFT DIRECTORY AND INCLUDE 'OFFLINE' DIRECTORY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
-''DECLARE VARIABLES
-dim errRET, strVER
-dim objWSH, objFSO, objOUT, objHOOK
-''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
-set objOUT = wscript.stdout
-set objWSH = createobject("wscript.shell")
-set objFSO = createobject("scripting.filesystemobject")
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
+''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
+set objOUT = wscript.stdout
+set objWSH = createobject("wscript.shell")
+set objFSO = createobject("scripting.filesystemobject")
 ''VERSION FOR SCRIPT UPDATE , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
-strVER = 2
+strVER = 3
 ''DEFAULT FAIL
 errRET = 5
 ''PREPARE LOGFILE
@@ -37,7 +34,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
+  if (wscript.arguments.count > 0) then                     ''SET PASSED ARG7UMENTS
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     'errRET = 1
     'call CLEANUP()
@@ -55,7 +52,7 @@ objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBA
 call CHKAU()
 ''INITIATE STOP SERVICES
 call STOPEAGLE()
-''END SCRIPT
+''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
 ''------------
@@ -63,15 +60,18 @@ call CLEANUP()
 ''SUB-ROUTINES
 sub STOPEAGLE()                                             ''STOP EAGLESOFT SERVICES
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
+  objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   ''STOP PATTERSON APP SERVICE
   call HOOK("net stop " & chr(34) & "PattersonAppService" & chr(34))
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : PattersonAppService : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : PattersonAppService : " & now
       errRET = 0
       err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR RETURNED
       objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : PattersonAppService : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : PattersonAppService : " & now
       call LOGERR(4)
     end if
   end if
@@ -81,27 +81,33 @@ end sub
 
 sub STOPDB()                                                ''STOP EAGLESOFT DATABASE
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
+  objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE UTILITY WITH 'STOP' SWITCH
   call HOOK(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -stop")
   if (errRET <> 0) then                                     ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
+    objLOG.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     call LOGERR(5)
     ''END SCRIPT, RETURN EXIT CODE
     call CLEANUP()
   end if
   objOUT.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
+  objLOG.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
   ''COPY EAGLESOFT DATA
   call DBCOPY()
 end sub
 
 sub DBCOPY()                                                ''COPY EAGLESOFT DATA FOLDER
   objOUT.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
+  objLOG.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #49
   call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "E:\Backup" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
   if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
+    objLOG.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
   elseif (errRET < 5) then                                 ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
+    objLOG.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     call LOGERR(6)
   end if
 end sub
