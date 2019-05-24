@@ -18,7 +18,7 @@ dim strORG, strREP, strSID, strDMN
 ''VARIABLES ACCEPTING PARAMETERS
 dim strLSV, strUSR, strPWD
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
-strVER = 5
+strVER = 6
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -129,19 +129,24 @@ elseif (errRET = 0) then                                                    ''AR
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     next
-    ''RETRIEVE WORKGROUP / DOMAIN INFORMATION FROM NETWORK
-    'if (instr(1, strUSR, "\") = 0) then
-    '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-    '  if (lcase(strDMN) = "workgroup") then
-    '    strDMN = ".\"
-    '    strUSR = strDMN & strUSR
-    '  elseif (lcase(strDMN) <> "workgroup") then
-    '    strUSR = strDMN & "\" & strUSR
-    '  else
-    '    strDMN = ".\"
-    '    strUSR = strDMN & strUSR
-    '  end if
-    'end if
+    ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
+    set objEXEC = objWSH.exec("net config workstation")
+    while (not objEXEC.stdout.atendofstream)
+      strIN = objEXEC.stdout.readline
+      'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+      'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+      if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
+        if (instr(1, lcase(strUSR), "\")) then
+          strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
+        elseif (instr(1, lcase(strUSR), "\") = 0) then
+          strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
+        end if
+      end if
+      if (err.number <> 0) then
+        call LOGERR(2)
+      end if
+    wend
+    set objEXEC = nothing
     ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"

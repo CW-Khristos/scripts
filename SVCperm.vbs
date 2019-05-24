@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 11
+strVER = 12
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -86,6 +86,7 @@ elseif (errRET = 0) then
       call LOGERR(2)
     end if
   wend
+  set objEXEC = nothing
   err.clear
   ''VALIDATE COLLECTED USERNAMES AND SIDS
   intUSR = 0
@@ -136,20 +137,24 @@ elseif (errRET = 0) then
     if (arrSID(intSID) <> vbnullstring) then          ''MATCHING USER SID FOUND
       strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
     elseif (arrSID(intSID) = vbnullstring) then       ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
-      ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
-      'if (instr(1, strUSR, "\") = 0) then
-      '  ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
-      '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-      '  if (lcase(strDMN) = "workgroup") then         ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-      '    strDMN = ".\"
-      '    strUSR = strDMN & strUSR
-      '  elseif (lcase(strDMN) <> "workgroup") then    ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
-      '    strUSR = strDMN & "\" & strUSR
-      '  else                                          '' 'DEFAULT' TO A LOCAL ACCOUNT
-      '    strDMN = ".\"
-      '    strUSR = strDMN & strUSR
-      '  end if
-      'end if
+      ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
+      set objEXEC = objWSH.exec("net config workstation")
+      while (not objEXEC.stdout.atendofstream)
+        strIN = objEXEC.stdout.readline
+        'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+        'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+        if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
+          if (instr(1, lcase(strUSR), "\")) then
+            strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
+          elseif (instr(1, lcase(strUSR), "\") = 0) then
+            strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
+          end if
+        end if
+        if (err.number <> 0) then
+          call LOGERR(2)
+        end if
+      wend
+      set objEXEC = nothing
       strREP = "SeServiceLogonRight = " & strUSR & ","
     end if
     ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
@@ -178,20 +183,24 @@ elseif (errRET = 0) then
   objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
   objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
   if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
-    ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS
-    'if (instr(1, strUSR, "\") = 0) then
-    '  ''USE SYSTEM ENVIRONMENT VARIABLES TO RETRIEVE DOMAIN NAME
-    '  strDMN = objWSH.ExpandEnvironmentStrings("%USERDOMAIN%")
-    '  if (lcase(strDMN) = "workgroup") then           ''PASSED USER ACCOUNT IS A LOCAL ACCOUNT
-    '    strDMN = ".\"
-    '    strUSR = strDMN & strUSR
-    '  elseif (lcase(strDMN) <> "workgroup") then      ''PASSED USER ACCOUNT IS A DOMAIN ACCOUNT
-    '    strUSR = strDMN & "\" & strUSR
-    '  else                                            '' 'DEFAULT' TO A LOCAL ACCOUNT
-    '    strDMN = ".\"
-    '    strUSR = strDMN & strUSR
-    '  end if
-    'end if
+    ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
+    set objEXEC = objWSH.exec("net config workstation")
+    while (not objEXEC.stdout.atendofstream)
+      strIN = objEXEC.stdout.readline
+      'objOUT.write vbnewline & now & vbtab & vbtab & strIN
+      'objLOG.write vbnewline & now & vbtab & vbtab & strIN
+      if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
+        if (instr(1, lcase(strUSR), "\")) then
+          strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
+        elseif (instr(1, lcase(strUSR), "\") = 0) then
+          strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
+        end if
+      end if
+      if (err.number <> 0) then
+        call LOGERR(2)
+      end if
+    wend
+    set objEXEC = nothing
     ''UPDATE SERVICE LOGON CREDENTIALS USING 'SC CONFIG' CMD , 'ERRRET'=6
     objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
     objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC

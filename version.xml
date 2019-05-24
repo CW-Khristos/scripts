@@ -1,6 +1,6 @@
 <SCRIPTS>
 	<all_av_removal.vbs>1</all_av_removal.vbs>
-	<auto_plan.vbs>10</auto_plan.vbs>
+	<auto_plan.vbs>11</auto_plan.vbs>
 	<CClutter.vbs>3</CClutter.vbs>
 	<CSize.vbs>1</CSize.vbs>
 	<disk_usage.vbs>1</disk_usage>
@@ -9,7 +9,7 @@
 	<iasdatasync.vbs>1</iasdatasync.vbs>
 	<jdc_msp_postbackup.vbs>3</jdc_msp_postbackup.vbs>
 	<jdc_msp_prebackup.vbs>3</jdc_msp_prebackup.vbs>
-	<LSVperm.vbs>5</LSVperm.vbs>
+	<LSVperm.vbs>6</LSVperm.vbs>
 	<MSP_Config.vbs>3</MSP_Config.vbs>
 	<MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
@@ -34,7 +34,7 @@
 	<SNMPparam.vbs>4</SNMPparam.vbs>
 	<ss_msp_postbackup.vbs>3</ss_msp_postbackup.vbs>
 	<ss_msp_prebackup.vbs>3</ss_msp_prebackup.vbs>
-	<SVCperm.vbs>11</SVCperm.vbs>
+	<SVCperm.vbs>12</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>
