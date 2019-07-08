@@ -110,7 +110,7 @@ function remAVD()                               ''AV DEFENDER
   ''RUN REMOVAL TOOL AND WAIT FOR COMPLETION - AV DEFENDER REMOVAL ONLY - SCRIPT WILL WAIT FOR REMOVAL TOOL
   objOUT.write vbnewline & now & vbtab & "RUNNING NRC UNINSTALLER (RUN 1)..." & vbnewline
   objLOG.write vbnewline & now & vbtab & "RUNNING NRC UNINSTALLER (RUN 1)..." & vbnewline
-  objWSH.run "UninstallTool.exe", , true
+  'objWSH.run "UninstallTool.exe", , true
   ''RECORD / UPDATE / DELETE AVD REGISTRY ENTRIES
   ''HKEY_LOCAL_MACHINE
   ''CLEAR ASSIGNED REGISTRY KEYS
@@ -132,7 +132,7 @@ function remAVD()                               ''AV DEFENDER
   ''RUN REMOVAL TOOL AND WAIT FOR COMPLETION - AV DEFENDER REMOVAL ONLY - SCRIPT WILL WAIT FOR REMOVAL TOOL
   objOUT.write vbnewline & vbnewline & now & vbtab & "RUNNING NRC UNINSTALLER (RUN 2)..." & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & "RUNNING NRC UNINSTALLER (RUN 2)..." & vbnewline
-  objWSH.run "UninstallTool.exe", , true
+  'objWSH.run "UninstallTool.exe", , true
   ''DELETE AVD INSTALLATION
   objOUT.write vbnewline & now & vbtab & "CHECKING FOLDERS..."
   objLOG.write vbnewline & now & vbtab & "CHECKING FOLDERS..."

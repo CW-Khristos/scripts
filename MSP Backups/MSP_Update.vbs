@@ -210,9 +210,11 @@ end sub
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   if (errRET = 0) then         												      ''MSP_UPDATE COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "MSP_UPDATE SUCCESSFUL : " & NOW
+    objLOG.write vbnewline & "MSP_UPDATE SUCCESSFUL : " & NOW
     err.clear
   elseif (errRET <> 0) then    												      ''MSP_UPDATE FAILED
     objOUT.write vbnewline & "MSP_UPDATE FAILURE : " & NOW & " : " & errRET
+    objLOG.write vbnewline & "MSP_UPDATE FAILURE : " & NOW & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_UPDATE", "FAILURE")
   end if
