@@ -214,11 +214,6 @@ elseif (errRET = 0) then                                                    ''AR
       objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
       objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
       objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUP SERVICE CONTROLLER UPDATED"
-      ''RESTART 'BACKUP SERVICE CONTROLLER'
-      wscript.sleep 90
-      objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - RESTARTING BACKUP SERVICE CONTROLLER"
-      objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - RESTARTING BACKUP SERVICE CONTROLLER"
-      call HOOK("sc.exe start " & chr(34) & "Backup Service Controller" & chr(34))
     elseif (errRET <> 0) then                                                           ''SERVICE PERMISSIONS UPDATE UNSUCCESFUL , 'ERRRET'=32
       call LOGERR(32)
     end if
