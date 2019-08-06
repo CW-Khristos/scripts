@@ -17,13 +17,14 @@
 	<msp_prebackup.vbs>3</msp_prebackup.vbs>
 	<MSP_Rotate.vbs>5</MSP_Rotate.vbs>
 	<MSP_SSHeal.vbs>7</MSP_SSHeal.vbs>
+  <MSP_Sync.vbs>1</MSP_Sync.vbs>
 	<MSP_Update.vbs>3</MSP_Update.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
 	<post-backup.cmd>3</post-backup.cmd>
 	<pre-backup.cmd>3</pre-backup.cmd>
 	<PWDchg.vbs>2</PWDchg.vbs>
 	<qsmart.vbs>2</qsmart.vbs>
-	<reagent.vbs>8</reagent.vbs>
+	<reagent.vbs>9</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
 	<reprobe.vbs>12</reprobe.vbs>
