@@ -18,7 +18,7 @@ dim blnAHS, blnBIT, blnCSVC, blnRDP
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-strVER = 7
+strVER = 8
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
 ''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
@@ -73,26 +73,26 @@ if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then           
   
   ''DISABLED VSS CHECKS TO TEST
   ''EXPORT CURRENT VSS WRITER STATUSES
-  'call CHKVSS()
-  'if (errRET = 2) then
-  '  x = 0
-  '  while x <= 60
-  '    x = x + 1
-  '    wscript.sleep 1000
-  '  wend
-  '  call CHKVSS()
-  'end if
+  call CHKVSS()
+  if (errRET = 2) then
+    x = 0
+    while x <= 60
+      x = x + 1
+      wscript.sleep 1000
+    wend
+    call CHKVSS()
+  end if
   
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  'call VSSSVC()
+  call VSSSVC()
   ''CHECK VSS WRITERS AFTER RESTART
   objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
   
   ''EXPORT CURRENT VSS WRITER STATUSES
-  'call CHKVSS()
+  call CHKVSS()
   ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  'call VSSSVC()
+  call VSSSVC()
   
   ''RESTART WMI ONLY
   blnRUN = true
