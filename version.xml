@@ -7,6 +7,7 @@
 	<disk_usage.vbs>1</disk_usage>
 	<drvmap.vbs>1</drvmap.vbs>
 	<fileback.vbs>1</fileback.vbs>
+  <gtfo.vbs>1</gtfo.vbs>
 	<iasdatasync.vbs>1</iasdatasync.vbs>
 	<jdc_msp_postbackup.vbs>3</jdc_msp_postbackup.vbs>
 	<jdc_msp_prebackup.vbs>3</jdc_msp_prebackup.vbs>

@@ -145,8 +145,8 @@ sub STAGE2()
   ''------------REF #6
   ''STAGE2 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   ''RENAME COMPUTER - REQUIRES RESTART; REQUIRES 'STRNEWPC'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
-  objOUT.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
-  objLOG.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)"
+  objOUT.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & "RENAME COMPUTER? (WILL REQUIRE RESTART PRIOR TO CONTINUING, Y / N)" & vbnewline
   strSEL = objIN.readline
   ''DEFAULT NO REBOOT
   blnRBT = false
@@ -306,7 +306,7 @@ sub STAGE3()
             ''JOIN COMPUTER TO DOMAIN
             strJOIN = "wmic /interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & chr(34) & strDMN & chr(34) & _
               " UserName=" & chr(34) & strDUSR & chr(34) & " Password=" & chr(34) & strDPWD & chr(34) & " AccountOU=" & chr(34) & strOU & chr(34)
-            call HOOK("wmic.exe " & strJOIN)
+            call HOOK(strJOIN)
           end if
         end if
       end if
@@ -354,11 +354,11 @@ sub STAGE4()
   ''INSTALL AND CONFIGURE SNMP - REQUIRES 'STRTRP', 'STRSNMP'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   objOUT.write vbnewline & vbnewline & vbtab & "INSTALLING AND CONFIGURING SNMP"
   objLOG.write vbnewline & vbnewline & vbtab & "INSTALLING AND CONFIGURING SNMP"
-  objOUT.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :"
-  objLOG.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :"
+  objOUT.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :" & vbnewline
+  objLOG.write vbnewline & vbtab & vbtab & "ENTER WINDOWS SOFTWARE PROBE IP / SNMP MONITOR AGENT IP (SEPARATE MULTIPLE ENTRIES WITH ',') :" & vbnewline
   strTRP = objIN.readline
-  objOUT.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :"
-  objLOG.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :"
+  objOUT.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :" & vbnewline
+  objLOG.write vbnewline & vbtab & vbtab & "ENTER SNMP COMMUNITY STRING (USE '<CO INITIALS>SNMP'; DO NOT USE 'PUBLIC') :" & vbnewline
   strSNMP = objIN.readline
   if ((strTRP <> vbnullstring) and (strSNMP <> vbnullstring)) then
     ''DOWNLOAD SNMP SETUP : SNMPPARAM, REF #6 , FIXES #15
@@ -414,21 +414,21 @@ sub STAGE5()
   ''STAGE5 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   ''INSTALL WINDOWS AGENT - REQUIRES 'STRCID', 'STRCNAM'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   if (strAGT = vbnullstring) then
-    objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?"
-    objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?"
+    objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?" & vbnewline
+    objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS AGENT (Y / N)?" & vbnewline
     strSEL = objIN.readline
     if (ucase(strSEL) = "Y") then
       ''CUSTOMER ID
-      objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :"
-      objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :"
+      objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :" & vbnewline
+      objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :" & vbnewline
       strCID = objIN.readline
       ''CUSTOMER NAME
-      objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
-      objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
+      objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :" & vbnewline
+      objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :" & vbnewline
       strCNAM = objIN.readline
       ''SERVER ADDRESS
-      objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
-      objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+      objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :" & vbnewline
+      objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :" & vbnewline
       strSRV = objIN.readline
       if (strSRV = vbnullstring) then
         strSRV = "ncentral.cwitsupport.com"
@@ -486,13 +486,13 @@ sub STAGE6()
   ''STAGE6 - REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS - NEED DOMAIN / WORKGROUP SELECTION
   ''INSTALL PROBE - REQUIRES 'STRCID', 'STRCNAM', 'STRDMN', 'STRDUSR', 'STRDPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
   if (strPRB = vbnullstring) then
-    objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?"
-    objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?"
+    objOUT.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?" & vbnewline
+    objLOG.write vbnewline & vbnewline & vbtab & "INSTALL WINDOWS PROBE (Y / N)?" & vbnewline
     strSEL = objIN.readline
     if (ucase(strSEL) = "Y") then
       ''PROBE TYPE - Workgroup_Windows / Network_Windows
-      objOUT.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :"
-      objLOG.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :"
+      objOUT.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :" & vbnewline
+      objLOG.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :" & vbnewline
       strTYP = objIN.readline
       if (strTYP = 1) then
         strTYP = "Workgroup_Windows"
@@ -503,31 +503,31 @@ sub STAGE6()
       end if
       if (errRET <> 61) then
         ''CUSTOMER ID
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER ID :" & vbnewline
         strCID = objIN.readline
         ''CUSTOMER NAME
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER CUSTOMER NAME :" & vbnewline
         strCNAM = objIN.readline
         ''DOMAIN
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :" & vbnewline
         strDMN = objIN.readline
         if (instr(1, strDMN, "\")) then
           strDMN = replace(strDMN, "\", vbnullstring)
         end if
         ''DOMAIN USER
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :" & vbnewline
         strDUSR = objIN.readline
         ''DOMAIN USER PASSWORD
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :" & vbnewline
         strDPWD = objIN.readline
         ''SERVER ADDRESS
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :"
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER SERVER ADDRESS ('ncentral.cwitsupport.com') :" & vbnewline
         strSRV = objIN.readline
         if (strSRV = vbnullstring) then
           strSRV = "ncentral.cwitsupport.com"
@@ -670,8 +670,8 @@ sub STAGE9()
   objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
   strNUL = objIN.readline
   ''PAUSE TO ENABLE MSP BACKUP LOCAL SPEEDVAULT
-  objOUT.write vbnewline & vbtab & "ENABLE MSP BACKUP LSV (Y / N)?"
-  objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP LSV (Y / N)?"
+  objOUT.write vbnewline & vbtab & "ENABLE MSP BACKUP LSV (Y / N)?" & vbnewline
+  objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP LSV (Y / N)?" & vbnewline
   strLSV = objIN.readline
   if (lcase(strLSV) = "y") then
     ''STEP TO CONNECT LOCAL SPEEDVAULT DRIVE
@@ -681,15 +681,15 @@ sub STAGE9()
     objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
     strNUL = objIN.readline
     ''REQUEST LOCAL SPEEDVAULT PATH
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : "
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : "
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : " & vbnewline
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : " & vbnewline
     strLSVL = objIN.readline
     ''REQUEST RMMTECH CREDENTIALS FOR LOCAL SPEEDVAULT
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : "
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : "
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : " & vbnewline
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : " & vbnewline
     strLSVU = objIN.readline
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : "
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : "
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : " & vbnewline
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : " & vbnewline
     strLSVP = objIN.readline
     ''SET MSP BACKUP LOCAL SPEEDVAULT SETTINGS, REF #6 , FIXES #12
     objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
@@ -733,16 +733,16 @@ sub STAGE9()
     strNUL = objIN.readline
   end if
   ''PAUSE TO ENABLE MSP BACKUP ARCHIVES, REF #6 , FIXES #12
-  objOUT.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?"
-  objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?"
+  objOUT.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?" & vbnewline
+  objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?" & vbnewline
   strARC = objIN.readline
   if (lcase(strARC) = "y") then
     objOUT.write vbnewline & vbtab & "SELECT MSP BACKUP ARCHIVE SCHEDULE : "
     objLOG.write vbnewline & vbtab & "SELECT MSP BACKUP ARCHIVE SCHEDULE : "
     objOUT.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
     objLOG.write vbnewline & vbtab & "(1) - 'DEFAULT' - 1ST & 15TH OF EVERY MONTH, AFTER 10PM"
-    objOUT.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
-    objLOG.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE"
+    objOUT.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE" & vbnewline
+    objLOG.write vbnewline & vbtab & "(2 - WIP, NOT AUTOMATED) - 'CUSTOM' - ENTER OPTIONS FOR A CUSTOM ARCHIVE SCHEDULE" & vbnewline
     strARC = objIN.readline
     select case strARC
       case 1                    ''SET DEFAULT 'CW_DEFAULT_MSPARCHIVE" ARCHIVING SCHEDULE, REF #6 , FIXES #12
@@ -771,12 +771,12 @@ sub STAGE9()
     strNUL = objIN.readline
   end if
   ''DOWNLOAD AND INSTALL MSP BACKUP VIRTUAL DRIVE, REF #6 , FIXES #12
-  objOUT.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?"
-  objLOG.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?"
+  objOUT.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?" & vbnewline
+  objLOG.write vbnewline & vbtab & "INSTALL MSP BACKUP VIRTUAL DRIVE (THIS WILL USE DRIVE B:) (Y / N)?" & vbnewline
   strMSPVD = objIN.readline
   if (ucase(strMSPVD) = "Y") then
-    objOUT.write vbnewline & vbtab & "SELECT MSP BACKUP VIRTUAL DRIVE URL : (1) - (X86) / (2) - (X64)"
-    objLOG.write vbnewline & vbtab & "SELECT MSP BACKUP VIRTUAL DRIVE URL : (1) - (X86) / (2) - (X64)"
+    objOUT.write vbnewline & vbtab & "SELECT MSP BACKUP VIRTUAL DRIVE URL : (1) - (X86) / (2) - (X64)" & vbnewline
+    objLOG.write vbnewline & vbtab & "SELECT MSP BACKUP VIRTUAL DRIVE URL : (1) - (X86) / (2) - (X64)" & vbnewline
     strMSPVDdl = objIN.readline
   end if
   ''SELECT URL
