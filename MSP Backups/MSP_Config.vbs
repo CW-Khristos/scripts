@@ -140,6 +140,8 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_CONFIG.VBS, REF #
 			''LOCATE CURRENTLY RUNNING SCRIPT
 			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
 				''CHECK LATEST VERSION
+        objOUT.write vbnewline & now & vbtab & " - MSP_Config :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
+        objLOG.write vbnewline & now & vbtab & " - MSP_Config :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
 				if (cint(objSCR.text) > cint(strVER)) then
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
