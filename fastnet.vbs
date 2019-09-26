@@ -21,15 +21,27 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\fastnet")) then              ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\fastnet", true
-  set objLOG = objFSO.createtextfile("C:\temp\fastnet")
+if (cstr(hour(now)) < 10) then
+  strHR = "0" & cstr(hour(now))
+else
+  strHR = cstr(hour(now))
+end if
+if (cstr(minute(now)) < 10) then
+  strMIN = "0" & cstr(minute(now))
+else
+  strMIN = cstr(minute(now))
+end if
+strLOG = "C:\temp\fastnet_" & formatdatetime(now, 1) & "_" & strHR & "-" & strMIN
+objOUT.writeline strLOG
+if (objFSO.fileexists(strLOG)) then              ''LOGFILE EXISTS
+  objFSO.deletefile strLOG, true
+  set objLOG = objFSO.createtextfile(strLOG)
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\fastnet", 8)
+  set objLOG = objFSO.opentextfile(strLOG, 8)
 else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\fastnet")
+  set objLOG = objFSO.createtextfile(strLOG)
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\fastnet", 8)
+  set objLOG = objFSO.opentextfile(strLOG, 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
