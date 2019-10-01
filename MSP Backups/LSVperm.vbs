@@ -321,18 +321,20 @@ end sub
 sub HOOK(strCMD)                                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   set objHOOK = objWSH.exec(strCMD)
-  while (not objHOOK.stdout.atendofstream)
-    strIN = objHOOK.stdout.readline
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    while (not objHOOK.stdout.atendofstream)
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
+    wend
+    wscript.sleep 10
+    strIN = objHOOK.stdout.readall
     if (strIN <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-      objLOG.write vbnewline & now & vbtab & vbtab & strIN 
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     end if
-  wend
-  wscript.sleep 10
-  strIN = objHOOK.stdout.readall
-  if (strIN <> vbnullstring) then
-    objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-    objLOG.write vbnewline & now & vbtab & vbtab & strIN 
   end if
   set objHOOK = nothing
   if (err.number <> 0) then                                                             ''ERROR RETURNED , 'ERRRET'=12
