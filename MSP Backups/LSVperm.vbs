@@ -164,7 +164,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if (instr(1, strUSR, lcase(colUSR(intUSR))) then
+      if (instr(1, strUSR, lcase(colUSR(intUSR)))) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant " & colUSR(intUSR) & ":(OI)(CI)F /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant *" & colSID(intSID) & ":(OI)(CI)F /T /C /Q")
       end if
