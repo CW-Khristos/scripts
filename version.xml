@@ -13,6 +13,7 @@
 	<jdc_msp_postbackup.vbs>3</jdc_msp_postbackup.vbs>
 	<jdc_msp_prebackup.vbs>3</jdc_msp_prebackup.vbs>
 	<LSVperm.vbs>6</LSVperm.vbs>
+  <md5.vbs>1</md5.vbs>
 	<MSP_Config.vbs>3</MSP_Config.vbs>
 	<MSP_Debug.vbs>3</MSP_Debug.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
