@@ -31,6 +31,7 @@
 	<reagent.vbs>9</reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
+  <reprobe.vbs>12</reprobe.vbs>
 	<msi_reprobe.vbs>12</msi_reprobe.vbs>
   <exe_reprobe.vbs>12</exe_reprobe.vbs>
 	<rmm_logo.vbs>1</rmm_logo.vbs>
