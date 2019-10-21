@@ -1,12 +1,14 @@
 ''MSP_FILTER.VBS
 ''DESIGNED TO AUTOMATE PASSING OF BACKUP FILTERS TO MSP BACKUP SOFTWARE VIA CLIENTTOOL
 ''DOWNLOADS 'FILTERS.TXT' FROM GITHUB; THIS FILE CONTAINS EACH BACKUP FILTER IN A 'LINE BY LINE' FORMAT
+''ACCEPTS 1 PARAMETER , REQUIRES 0 PARAMETERS
+''OPTIONAL PARAMETER 'STRFILTER' ; STRING VALURE TO HOLD PASSED 'FILTERS' ; SEPARATE MULTIPLE 'FILTERS' VIA '|'
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
-''VARIABLES ACCEPTING PARAMETERS - CONFIGURES WINDOWS AGENT MSI
-dim strIN, strOUT, strRCMD
+''VARIABLES ACCEPTING PARAMETERS
+dim strIN, strOUT, strRCMD, strFILTER, arrFILTER
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -38,13 +40,16 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  if (wscript.arguments.count > 0) then                     ''SET REQUIRED VARIABLES ACCEPTING ARGUMENTS
-    strCID = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRCID' , CUSTOMER ID
-    if (wscript.arguments.count = 1) then                   ''NO OPTIONAL ARGUMENTS PASSED
-    elseif (wscript.arguments.count >= 2) then              ''OPTIONAL ARGUMENTS PASSED
-    end if
+  if (wscript.arguments.count > 0) then                     ''SET VARIABLES ACCEPTING ARGUMENTS
+    strFILTER = objARG.item(0)                              ''SET OPTIONAL PARAMETER 'STRFILTER' , BACKUP FILTERS STRING
+    ''FILL 'ARRFILTER' BACKUP FILTER ARRAY
+    objOUT.write vbnewline & vbtab & strFILTER
+    arrFILTER = split(strFILTER, "|")
+    for intTMP = 0 to ubound(arrFILTER)
+      objOUT.write vbnewline & vbtab & ubound(arrFILTER) & vbtab & arrFILTER(intTMP)
+    next
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
-    call LOGERR(1)
+    'call LOGERR(1)
   end if
 end if
 
@@ -71,9 +76,16 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   arrTMP = split(strTMP, "|")
   for intTMP = 0 to ubound(arrTMP)
     if (arrTMP(intTMP) <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & arrTMP(intTMP) & chr(34)
-      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & arrTMP(intTMP) & chr(34)
-      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & chr(34) & arrTMP(intTMP) & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+    end if
+  next
+  for intTMP = 0 to ubound(arrFILTER)
+    if (arrFILTER(intTMP) <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
     end if
   next
 end if
