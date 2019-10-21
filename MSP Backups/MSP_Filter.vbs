@@ -64,13 +64,17 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/filters.txt", "filters.txt")
   set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
   while (not objTMP.stdout.atendofstream)
-    strIN = objTMP.stdout.readline
-    if (strIN <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & strIN
-      objLOG.write vbnewline & now & vbtab & vbtab & strIN
-      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & strIN)
-    end if
+    strIN = objTMP.stdout.readall
+    arrTMP() = split(strIN, "|")
+    for intTMP = 0 to ubound(arrTMP)
+      if (arrTMP(intTMP) <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & strIN
+        objLOG.write vbnewline & now & vbtab & vbtab & strIN
+        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & arrTMP(intTMP))
+      end if
+    next
   wend
+  objTMP.close
   set objTMP = nothing
 end if
 ''END SCRIPT
