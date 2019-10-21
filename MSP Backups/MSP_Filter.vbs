@@ -61,7 +61,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
 	objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
   objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
-  call FILEDL("https://github.com/CW-Khristos/scripts/dev/MSP%20Backups/filters.txt", "filters.txt")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/filters.txt", "filters.txt")
   set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
   while (not objTMP.stdout.atendofstream)
     strIN = objTMP.stdout.readline
