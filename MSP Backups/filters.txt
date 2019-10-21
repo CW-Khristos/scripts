@@ -1,0 +1,3 @@
+C:\Temp
+C:\Windows.old
+C:\Windows\Temp
