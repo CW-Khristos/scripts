@@ -2,12 +2,11 @@
 ''DESIGNED TO AUTOMATE PASSING OF BACKUP FILTERS TO MSP BACKUP SOFTWARE VIA CLIENTTOOL
 ''DOWNLOADS 'FILTERS.TXT' FROM GITHUB; THIS FILE CONTAINS EACH BACKUP FILTER IN A 'LINE BY LINE' FORMAT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS - CONFIGURES WINDOWS AGENT MSI
 dim strIN, strOUT, strRCMD
-dim strCID, strCNM, strSVR
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -51,6 +50,7 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
+strTMP = vbnullstring
 if (errRET <> 0) then                                       ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
   call CLEANUP()
 elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, CONTINUE SCRIPT
@@ -63,19 +63,19 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/filters.txt", "filters.txt")
   set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
-  while (not objTMP.stdout.atendofstream)
-    strIN = objTMP.stdout.readall
-    arrTMP() = split(strIN, "|")
-    for intTMP = 0 to ubound(arrTMP)
-      if (arrTMP(intTMP) <> vbnullstring) then
-        objOUT.write vbnewline & now & vbtab & vbtab & strIN
-        objLOG.write vbnewline & now & vbtab & vbtab & strIN
-        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & arrTMP(intTMP))
-      end if
-    next
+  while (not objTMP.atendofstream)
+    strTMP = strTMP & objTMP.readline
   wend
   objTMP.close
   set objTMP = nothing
+  arrTMP = split(strTMP, "|")
+  for intTMP = 0 to ubound(arrTMP)
+    if (arrTMP(intTMP) <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & arrTMP(intTMP) & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & arrTMP(intTMP) & chr(34)
+      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & chr(34) & arrTMP(intTMP) & chr(34))
+    end if
+  next
 end if
 ''END SCRIPT
 call CLEANUP()
