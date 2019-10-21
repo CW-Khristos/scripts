@@ -66,9 +66,12 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   while (not objTMP.stdout.atendofstream)
     strIN = objTMP.stdout.readline
     if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & strIN
+      objLOG.write vbnewline & now & vbtab & vbtab & strIN
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filer.modify -add " & strIN)
     end if
   wend
+  set objTMP = nothing
 end if
 ''END SCRIPT
 call CLEANUP()
