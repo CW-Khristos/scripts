@@ -1,3 +1,179 @@
+C:\$AV_ASW|
+C:\$Recycle.Bin|
+C:\$Windows.~BT|
+C:\$Windows.~WS|
+C:\ADWCleaner|
+C:\AMD|
+C:\cclutter.txt|
+C:\ComboFix|
+C:\GRBData|
+C:\OneDriveTemp|
+C:\NVIDIA|
+C:\PerfLogs|
+C:\Qoobox|
+%PROGRAMFILES%\Backup Manager|
+%PROGRAMFILES%\N-able Technologies|
+%PROGRAMFILES(X86)%\BeAnywhere Support Express|
+%PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
+%PROGRAMFILES(X86)%\N-able Technologies\PatchManagement|
+%PROGRAMFILES(X86)%\N-able Technologies\Reactive|
+%PROGRAMFILES(X86)%\N-able Technologies\Tools|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Agent|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe|
+%PROGRAMFILES(X86)%\SolarWinds MSP|
+%PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
+%PROGRAMDATA%\*.bdinstall.bin|
+%PROGRAMDATA%\bdlogging|
+%PROGRAMDATA%\GetSupportService|
+%PROGRAMDATA%\GetSupportService_N-Central|
+%PROGRAMDATA%\Malwarebytes\*\Quarantine|
+%PROGRAMDATA%\Microsoft\Search\Data\Temp|
+%PROGRAMDATA%\Microsoft\Windows\Caches|
+%PROGRAMDATA%\Microsoft\Windows\DeviceMetadataCache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Groups Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Planned Snapshots Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Planned Virtual Machines Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Snapshot Groups Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Snapshots Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\UndoLog Configuration Cache|
+%PROGRAMDATA%\Microsoft\Windows\Hyper-V\Virtual Machines Cache|
+%PROGRAMDATA%\Microsoft\Windows\WER|
+%PROGRAMDATA%\Microsoft\Windows\Windows Defender\Quarantine|
+%PROGRAMDATA%\Microsoft\Windows\Windows Defender\Scans|
+%PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
+%PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
+%PROGRAMDATA%\MXB|
+%PROGRAMDATA%\MXB.*|
+%PROGRAMDATA%\N-Able Technologies|
+%PROGRAMDATA%\restored_quar|
+%PROGRAMDATA%\SolarWinds|
+%PROGRAMDATA%\SolarWinds MSP|
+C:\Recovery|
+C:\TDSSKiller*.txt|
 C:\Temp|
-C:\Windows.old|
-C:\Windows\Temp|
+C:\tempini|
+C:\Users\*\AppData\Local\Apple Computer\MobileSync\Backup|
+C:\Users\*\AppData\Local\CrashDumps|
+C:\Users\*\AppData\Local\D3DSCache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Default\Cache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Default\Code Cache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Default\GPUCache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Default\old_Cache_*|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Guest Profile\Cache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\Guest Profile\Code Cache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\ShaderCache|
+C:\Users\*\AppData\Local\Google\Chrome\User Data\SwReporter|
+C:\Users\*\AppData\Local\Google\CrashReports|
+C:\Users\*\AppData\Local\Google\Software Reporter Tool|
+C:\Users\*\AppData\Local\mbam\cache|
+C:\Users\*\AppData\Local\mbamtray\cache|
+C:\Users\*\AppData\Local\Microsoft\Feeds Cache|
+C:\Users\*\AppData\Local\Microsoft\FontCache|
+C:\Users\*\AppData\Local\Microsoft\Internet Explorer\CacheStorage|
+C:\Users\*\AppData\Local\Microsoft\Media Player\Transcoded Files Cache|
+C:\Users\*\AppData\Local\Microsoft\Outlook\*.ost|
+C:\Users\*\AppData\Local\Microsoft\Windows\ActionCenterCache|
+C:\Users\*\AppData\Local\Microsoft\Windows\Caches|
+C:\Users\*\AppData\Local\Microsoft\Windows\Explorer\iconcache*.db|
+C:\Users\*\AppData\Local\Microsoft\Windows\Explorer\thumbcache*.db|
+C:\Users\*\AppData\Local\Microsoft\Windows\PPBCompatCache|
+C:\Users\*\AppData\Local\Microsoft\Windows\PPBCompatUaCache|
+C:\Users\*\AppData\Local\Microsoft\Windows\PRICache|
+C:\Users\*\AppData\Local\Microsoft\Windows\SchCache|
+C:\Users\*\AppData\Local\Microsoft\Windows\Terminal Server Client\Cache|
+C:\Users\*\AppData\Local\Microsoft\Windows\WebCache|
+C:\Users\*\AppData\Local\Microsoft\Windows\WER|
+C:\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\cache2|
+C:\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\jumpListCache|
+C:\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\OfflineCache|
+C:\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\shortcutCache|
+C:\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\startupCache|
+C:\Users\*\AppData\Local\SquirrelTemp|
+C:\Users\*\AppData\Local\Temp|
+C:\Users\*\Apple\MobileSync\Backup|
+C:\Users\*\Searches|
+C:\Users\Redirected\RMMTech\AppData|
+C:\Users\Redirected\RMMTech\Contacts|
+C:\Users\Redirected\RMMTech\Desktop|
+C:\Users\Redirected\RMMTech\Documents|
+C:\Users\Redirected\RMMTech\Downloads|
+C:\Users\Redirected\RMMTech\Favorites|
+C:\Users\Redirected\RMMTech\Links|
+C:\Users\Redirected\RMMTech\Music|
+C:\Users\Redirected\RMMTech\Pictures|
+C:\Users\Redirected\RMMTech\Saved Games|
+C:\Users\Redirected\RMMTech\Videos|
+C:\Users\Redirected\RMMTech.*\AppData|
+C:\Users\Redirected\RMMTech.*\Contacts|
+C:\Users\Redirected\RMMTech.*\Desktop|
+C:\Users\Redirected\RMMTech.*\Documents|
+C:\Users\Redirected\RMMTech.*\Downloads|
+C:\Users\Redirected\RMMTech.*\Favorites|
+C:\Users\Redirected\RMMTech.*\Links|
+C:\Users\Redirected\RMMTech.*\Music|
+C:\Users\Redirected\RMMTech.*\Pictures|
+C:\Users\Redirected\RMMTech.*\Saved Games|
+C:\Users\Redirected\RMMTech.*\Videos|
+C:\Users\RMMTech\AppData|
+C:\Users\RMMTech\Contacts|
+C:\Users\RMMTech\Desktop|
+C:\Users\RMMTech\Documents|
+C:\Users\RMMTech\Downloads|
+C:\Users\RMMTech\Favorites|
+C:\Users\RMMTech\Links|
+C:\Users\RMMTech\Music|
+C:\Users\RMMTech\Pictures|
+C:\Users\RMMTech\Saved Games|
+C:\Users\RMMTech\Videos|
+C:\Users\RMMTech.*\AppData|
+C:\Users\RMMTech.*\Contacts|
+C:\Users\RMMTech.*\Desktop|
+C:\Users\RMMTech.*\Documents|
+C:\Users\RMMTech.*\Downloads|
+C:\Users\RMMTech.*\Favorites|
+C:\Users\RMMTech.*\Links|
+C:\Users\RMMTech.*\Music|
+C:\Users\RMMTech.*\Pictures|
+C:\Users\RMMTech.*\Saved Games|
+C:\Users\RMMTech.*\Videos|
+%SystemRoot%\CbsTemp|
+%SystemRoot%\LiveKernelReports|
+%SystemRoot%\Logs|
+%SystemRoot%\minidump|
+%SystemRoot%\ModemLogs|
+%SystemRoot%\rescache|
+%SystemRoot%\SchCache|
+%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\INetCache|
+%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Temp|
+%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization|
+%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\INetCache|
+%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\SchCache|
+%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Temp|
+%SystemRoot%\SoftwareDistribution|
+%SystemRoot%\System32\config\systemprofile\AppData\Local\D3DSCache|
+%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\Caches|
+%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\CloudAPCache|
+%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\PRICache|
+%SystemRoot%\Temp|
+%SystemRoot%\WinSxS\ManifestCache|
+%SystemRoot%.old|
+%SystemRoot%.00*|
+C:\wu_output|
+*:\hiberfil.sys|
+*:\pagefile.sys|
+*:\swapfile.sys|
+*:\System Volume Information|
+*:\Folder Redirection\RMMTech|
+*:\FolderRedirection\RMMTech|
+*:\Redirected\RMMTech|
+*:\Redirected Files\RMMTech|
+*:\Redirected Folders\RMMTech|
+*:\Redirected Users\RMMTech|
+*:\RedirectedFiles\RMMTech|
+*:\RedirectedFolders\RMMTech|
+*:\Redirection\RMMTech|
+*:\User Files\RMMTech|
+*:\User Folders\RMMTech|
+*:\UserFiles\RMMTech|
+*:\UserFolders\RMMTech|
