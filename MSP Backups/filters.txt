@@ -160,20 +160,20 @@ C:\Users\RMMTech.*\Videos|
 %SystemRoot%.old|
 %SystemRoot%.00*|
 C:\wu_output|
-*:\hiberfil.sys|
-*:\pagefile.sys|
-*:\swapfile.sys|
-*:\System Volume Information|
-*:\Folder Redirection\RMMTech|
-*:\FolderRedirection\RMMTech|
-*:\Redirected\RMMTech|
-*:\Redirected Files\RMMTech|
-*:\Redirected Folders\RMMTech|
-*:\Redirected Users\RMMTech|
-*:\RedirectedFiles\RMMTech|
-*:\RedirectedFolders\RMMTech|
-*:\Redirection\RMMTech|
-*:\User Files\RMMTech|
-*:\User Folders\RMMTech|
-*:\UserFiles\RMMTech|
-*:\UserFolders\RMMTech|
+*\hiberfil.sys|
+*\pagefile.sys|
+*\swapfile.sys|
+*\System Volume Information|
+*\Folder Redirection\RMMTech|
+*\FolderRedirection\RMMTech|
+*\Redirected\RMMTech|
+*\Redirected Files\RMMTech|
+*\Redirected Folders\RMMTech|
+*\Redirected Users\RMMTech|
+*\RedirectedFiles\RMMTech|
+*\RedirectedFolders\RMMTech|
+*\Redirection\RMMTech|
+*\User Files\RMMTech|
+*\User Folders\RMMTech|
+*\UserFiles\RMMTech|
+*\UserFolders\RMMTech|
