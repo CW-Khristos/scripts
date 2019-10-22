@@ -11,6 +11,35 @@ C:\OneDriveTemp|
 C:\NVIDIA|
 C:\PerfLogs|
 C:\Qoobox|
+C:\Recovery|
+C:\TDSSKiller*.txt|
+C:\Temp|
+C:\tempini|
+C:\wu_output|
+C:\hiberfil.sys|
+C:\pagefile.sys|
+C:\swapfile.sys|
+D:\hiberfil.sys|
+D:\pagefile.sys|
+D:\swapfile.sys|
+E:\hiberfil.sys|
+E:\pagefile.sys|
+E:\swapfile.sys|
+F:\hiberfil.sys|
+F:\pagefile.sys|
+F:\swapfile.sys|
+G:\hiberfil.sys|
+G:\pagefile.sys|
+G:\swapfile.sys|
+H:\hiberfil.sys|
+H:\pagefile.sys|
+H:\swapfile.sys|
+C:\System Volume Information|
+D:\System Volume Information|
+E:\System Volume Information|
+F:\System Volume Information|
+G:\System Volume Information|
+H:\System Volume Information|
 %PROGRAMFILES%\Backup Manager|
 %PROGRAMFILES%\N-able Technologies|
 %PROGRAMFILES(X86)%\BeAnywhere Support Express|
@@ -49,10 +78,6 @@ C:\Qoobox|
 %PROGRAMDATA%\restored_quar|
 %PROGRAMDATA%\SolarWinds|
 %PROGRAMDATA%\SolarWinds MSP|
-C:\Recovery|
-C:\TDSSKiller*.txt|
-C:\Temp|
-C:\tempini|
 C:\Users\*\AppData\Local\Apple Computer\MobileSync\Backup|
 C:\Users\*\AppData\Local\CrashDumps|
 C:\Users\*\AppData\Local\D3DSCache|
@@ -159,11 +184,6 @@ C:\Users\RMMTech.*\Videos|
 %SystemRoot%\WinSxS\ManifestCache|
 %SystemRoot%.old|
 %SystemRoot%.00*|
-C:\wu_output|
-*\hiberfil.sys|
-*\pagefile.sys|
-*\swapfile.sys|
-*\System Volume Information|
 *\Folder Redirection\RMMTech|
 *\FolderRedirection\RMMTech|
 *\Redirected\RMMTech|
