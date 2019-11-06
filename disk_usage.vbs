@@ -8,7 +8,7 @@ dim errRET, strVER, strIN, intOPT
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''ZIP ARCHIVE OPTIONS
@@ -108,6 +108,7 @@ elseif (errRET = 0) then
       objTGT.copyhere objSRC, intOPT
     end if
   end if
+  ''CHECK FOR EXTRACTED X.ROBOT
   if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
     strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
     if (ucase(strFORM) = "HTM") then
@@ -115,17 +116,26 @@ elseif (errRET = 0) then
     elseif (ucase(strFORM) = "CSV") then
       strRCMD = strRCMD & " /CSV{113};c:\temp\robot.csv"
     end if
+    ''EXECUTE X.ROBOT
     call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     ''DISABLED ZIP ARCHIVE CALLS
     'wscript.sleep 5000
+    ''CONVERT TO HTM FORMAT
     if (ucase(strFORM) = "HTM") then
       call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/SavePage.exe", "savepage.exe")
       strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\" & chr(34)
       call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      ''ARCHIVE HTM REPORT DATA
     '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
     '  wscript.sleep 1000
     '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
     end if
+  end if
+  if (objFSO.folderexists("C:\Windows\CSC")) then
+    set objFOL = objFSO.getfolder("C:\Windows\CSC")
+    intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
+    objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
   end if
 end if
 ''END SCRIPT

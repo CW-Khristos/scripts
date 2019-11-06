@@ -4,7 +4,7 @@
 	<CClutter.vbs>3</CClutter.vbs>
   <CloudClient.vbs>2</CloudClient.vbs>
 	<CSize.vbs>1</CSize.vbs>
-	<disk_usage.vbs>1</disk_usage>
+	<disk_usage.vbs>2</disk_usage>
 	<drvmap.vbs>1</drvmap.vbs>
 	<fastnet.vbs>1</fastnet.vbs>
 	<fileback.vbs>1</fileback.vbs>
