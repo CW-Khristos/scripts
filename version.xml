@@ -29,7 +29,9 @@
 	<pre-backup.cmd>3</pre-backup.cmd>
 	<PWDchg.vbs>2</PWDchg.vbs>
 	<qsmart.vbs>2</qsmart.vbs>
-	<reagent.vbs>9</reagent.vbs>
+	<reagent.vbs>10</reagent.vbs>
+	<msi_reagent.vbs>10</msi_reagent.vbs>
+  <exe_reagent.vbs>10</exe_reagent.vbs>
 	<reboot_check.vbs>1</reboot_check.vbs>
 	<reboot_force.vbs>1</reboot_force.vbs>
   <reprobe.vbs>12</reprobe.vbs>
