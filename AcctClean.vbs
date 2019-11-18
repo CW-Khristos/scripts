@@ -57,6 +57,8 @@ arrUSR(1) = "admin"
 arrUSR(2) = "administrator"
 arrUSR(3) = "owner"
 arrUSR(4) = "cloud"
+arrUSR(5) = "DefaultAccount"
+arrUSR(6) = "Guest"
 ''------------
 ''BEGIN SCRIPT
 if (errRET <> 0) then
@@ -95,16 +97,16 @@ elseif (errRET = 0) then
     ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
     for intCOL = 0 to ubound(arrUSR)
       ''ENUMERATED USER ACCOUNT MATCHES 'PRTOTECTED' USER ACCOUNT LIST
-      if (colUSR(intUSR) = arrUSR(intCOL)) then
+      if (lcase(colUSR(intUSR)) = lcase(arrUSR(intCOL))) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
       ''ENUMERATED USER ACCOUNT DOES NOT MATCH 'PRTOTECTED' USER ACCOUNT LIST
-      elseif (colUSR(intUSR) <> arrUSR(intCOL)) then
+      elseif (lcase(colUSR(intUSR)) <> lcase(arrUSR(intCOL))) then
         ''CHECK IF A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
         if (strUSR <> vbnullstring) then
           ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
           ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR'
-          if (instr(1, lcase(strUSR), "\")) then
+          if (instr(1, strUSR, "\")) then
             ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
             if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1))) = 0) then
               objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
@@ -122,7 +124,7 @@ elseif (errRET = 0) then
               objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
             end if
           ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR'
-          elseif (instr(1, lcase(strUSR), "\") = 0) then
+          elseif (instr(1, strUSR, "\") = 0) then
             ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
             if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR)) = 0) then
               objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
