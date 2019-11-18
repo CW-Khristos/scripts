@@ -352,6 +352,7 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 		errRET = intSTG
 		err.clear
   end if
+  ''CUSTOM ERROR CODES
   select case intSTG
     case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
       objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
