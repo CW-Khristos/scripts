@@ -132,7 +132,7 @@ elseif (errRET = 0) then
               ''REMOVE USER ACCOUNT
               'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
               ''CHECK FOR USER FOLDER
-              if (objFSO.folderexists("C:\Users\" & colUSR(intUSR)) then
+              if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)              
               end if
@@ -149,7 +149,7 @@ elseif (errRET = 0) then
         ''REMOVE USER ACCOUNT
         'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
         ''CHECK FOR USER FOLDER
-        if (objFSO.folderexists("C:\Users\" & colUSR(intUSR)) then
+        if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)        
         end if
