@@ -1,7 +1,7 @@
 ''ACCTCLEAN.VBS
 ''DESIGNED TO AUTOMATE IDENTIFYING AND REMOVING ALL UNNECESSARY LOCAL USER ACCOUNTS FROM A TARGET DEVICE
 ''ACCEPTS 1 PARAMETER
-''OPTIONAL PARAMETER : 'STRUSER' , STRING TO OF USER TO LEAVE INTACT
+''OPTIONAL PARAMETER : 'STRUSR' , STRING TO OF USER TO LEAVE INTACT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
@@ -114,7 +114,7 @@ elseif (errRET = 0) then
               ''REMOVE USER ACCOUNT
               'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
               ''CHECK FOR USER FOLDER
-              if (objFSO.folderexists("C:\Users\" & colUSR(intUSR)) then
+              if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)              
               end if
