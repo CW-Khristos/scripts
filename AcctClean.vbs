@@ -14,7 +14,7 @@ dim colUSR(), arrUSR()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, ACCTCLEAN.VBS, REF #2 , FIXES #57
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -198,7 +198,8 @@ elseif (errRET = 0) then
         ''CHECK FOR USER FOLDER
         if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)        
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
+          objFSO.deletefolder "C:\Users\" & colUSR(intUSR)    
         end if
       end if
     end if
