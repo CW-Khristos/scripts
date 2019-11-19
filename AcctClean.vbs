@@ -123,11 +123,12 @@ elseif (errRET = 0) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 ''REMOVE USER ACCOUNT
-                'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
+                call HOOK("net user " & colUSR(intUSR) & " /delete /y")
                 ''CHECK FOR USER FOLDER
                 if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
                   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)              
+                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
+                  objFSO.deletefolder "C:\Users\" & colUSR(intUSR)
                 end if
               end if
             ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR'
@@ -143,11 +144,12 @@ elseif (errRET = 0) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 ''REMOVE USER ACCOUNT
-                'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
+                call HOOK("net user " & colUSR(intUSR) & " /delete /y")
                 ''CHECK FOR USER FOLDER
                 if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
                   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)              
+                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
+                  objFSO.deletefolder "C:\Users\" & colUSR(intUSR)
                 end if
               end if
             end if
