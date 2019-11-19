@@ -92,44 +92,80 @@ elseif (errRET = 0) then
   err.clear
   ''VALIDATE COLLECTED USERNAMES
   intUSR = 0
+  intCOL = 0
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES"
   for intUSR = 0 to ubound(colUSR)
+    blnFND = false
     if (colUSR(intUSR) <> vbnullstring) then
       ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
       for intCOL = 0 to ubound(arrUSR)
         blnFND = false
-        ''ENUMERATED USER ACCOUNT MATCHES 'PRTOTECTED' USER ACCOUNT LIST
+        ''ENUMERATED USER ACCOUNT MATCHES 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
         if (lcase(colUSR(intUSR)) = lcase(arrUSR(intCOL))) then
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+          ''MARK 'PROTECTED'
           blnFND = true
           exit for
-        ''ENUMERATED USER ACCOUNT DOES NOT MATCH 'PRTOTECTED' USER ACCOUNT LIST
-        elseif (lcase(colUSR(intUSR)) <> lcase(arrUSR(intCOL))) then
-          ''CHECK IF A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
-          if (strUSR <> vbnullstring) then
-            ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
+        end if
+      next
+      ''NO MATCH FOUND IN 'PROTECTED' USER ACCOUNTS 'ARRUSR'
+      if (not blnFND) then
+        ''A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
+        if (strUSR <> vbnullstring) then
+          ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
+          ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR'
+          if (instr(1, strUSR, "\")) then
+            ''MATCHES PASSED 'PROTECTED' USER 'STRUSR'
+            if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+              ''MARK 'PROTECTED'
+              blnFND = true        
+            ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
+            elseif (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1))) = 0) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
+              ''MARK FOR REMOVAL
+              blnFND = false
+            end if
+          ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR'
+          elseif (instr(1, strUSR, "\") = 0) then
+            ''MATCHES PASSED 'PROTECTED' USER 'STRUSR'
+            if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+              ''MARK 'PROTECTED'
+              blnFND = true
+            ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
+            elseif (instr(1, lcase(colUSR(intUSR)), lcase(strUSR)) = 0) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
+              ''MARK FOR REMOVAL
+              blnFND = false
+            end if
+          end if
+        ''NO 'PROTECTED' USER ACCOUNT PASSED TO 'STRUSR'
+        elseif (strUSR = vbnullstring) then
+          for intCOL = 0 to ubound(arrUSR)
+            ''SET 'STRUSR' TARGET USER TO 'ARRUSR' 'PROTECTED' USER ACCOUNT
+            strUSR = arrUSR(intCOL)
             ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR'
             if (instr(1, strUSR, "\")) then
               ''MATCHES PASSED 'PROTECTED' USER 'STRUSR'
               if (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1)))) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+                ''MARK 'PROTECTED'
                 blnFND = true
-                exit for            
+                exit for
               ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
               elseif (instr(1, lcase(colUSR(intUSR)), lcase(split(strUSR, "\")(1))) = 0) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
-                ''REMOVE USER ACCOUNT
-                call HOOK("net user " & colUSR(intUSR) & " /delete /y")
-                ''CHECK FOR USER FOLDER
-                if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
-                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objFSO.deletefolder "C:\Users\" & colUSR(intUSR)
-                end if
+                ''MARK FOR REMOVAL
+                blnFND = false
               end if
             ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR'
             elseif (instr(1, strUSR, "\") = 0) then
@@ -137,35 +173,32 @@ elseif (errRET = 0) then
               if (instr(1, lcase(colUSR(intUSR)), lcase(strUSR))) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & colUSR(intUSR)
+                ''MARK 'PROTECTED'
                 blnFND = true
                 exit for
               ''DOES NOT MATCH PASSED 'PROTECTED' USER 'STRUSR'
               elseif (instr(1, lcase(colUSR(intUSR)), lcase(strUSR)) = 0) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
-                ''REMOVE USER ACCOUNT
-                call HOOK("net user " & colUSR(intUSR) & " /delete /y")
-                ''CHECK FOR USER FOLDER
-                if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
-                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-                  objFSO.deletefolder "C:\Users\" & colUSR(intUSR)
-                end if
+                ''MARK FOR REMOVAL
+                blnFND = false
               end if
             end if
-          end if
+          next
+          ''CLEAR 'STRUSR' TARGET USER FOR NEXT VALUE
+          strUSR = vbnullstring
         end if
-      next
+      end if
+      ''NO MATCH TO 'PROTECTED' USER ACCOUNTS, REMOVE USER ACCOUNT
       if (not blnFND) then
-        ''NO MATCH TO 'PROTECTED' USER ACCOUNTS, REMOVE USER ACCOUNT
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : " & colUSR(intUSR)
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         ''REMOVE USER ACCOUNT
-        'call HOOK("net user " & colUSR(intUSR) & " /delete /y")
+        call HOOK("net user " & colUSR(intUSR) & " /delete /y")
         ''CHECK FOR USER FOLDER
         if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "TARGET FOR REMOVAL : C:\Users\" & colUSR(intUSR)        
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)        
         end if
       end if
     end if
