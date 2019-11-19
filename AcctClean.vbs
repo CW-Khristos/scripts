@@ -3,7 +3,7 @@
 ''ACCEPTS 1 PARAMETER
 ''OPTIONAL PARAMETER : 'STRUSR' , STRING TO OF USER TO LEAVE INTACT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strIN, strOUT, strSEL
@@ -51,7 +51,7 @@ else                                                        ''NO ARGUMENTS PASSE
 end if
 
 ''PROTECTED USER ACCOUNTS
-redim arrUSR(13)
+redim arrUSR(14)
 arrUSR(0) = "rmmtech"
 arrUSR(1) = "admin"
 arrUSR(2) = "administrator"
@@ -65,6 +65,7 @@ arrUSR(10) = "Default"
 arrUSR(11) = "Default User"
 arrUSR(12) = "DefaultAccount"
 arrUSR(13) = "WDAGUtilityAccount"
+'arrUSR(14) = "CJ"
 ''------------
 ''BEGIN SCRIPT
 if (errRET <> 0) then
@@ -220,26 +221,27 @@ elseif (errRET = 0) then
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strFOL
     for intCOL = 0 to ubound(arrUSR)
       blnFND = false
-      '' 'PRTOTECTED' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
-      if (instr(1, strFOL, lcase(arrUSR(intCOL)))) then
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrUSR(intCOL)
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrUSR(intCOL)
-        ''MARK 'PROTECTED'
-        blnFND = true
-        exit for
-      end if
-      ''A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
-      if (wscript.arguments.count > 0) then
-        '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
-        if (instr(1, strFOL, lcase(objARG.item(0)))) then
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
+      if (arrUSR(intCOL) <> vbnullstring) then
+        '' 'PRTOTECTED' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
+        if (instr(1, lcase(strFOL), lcase(arrUSR(intCOL)))) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrUSR(intCOL)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrUSR(intCOL)
           ''MARK 'PROTECTED'
           blnFND = true
           exit for
-        end if          
+        end if
       end if
     next
+    ''A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
+    if (wscript.arguments.count > 0) then
+      '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
+      if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
+        ''MARK 'PROTECTED'
+        blnFND = true
+      end if          
+    end if
     ''NO MATCH TO 'PROTECTED' USER ACCOUNTS
     if (not blnFND) then
       ''CHECK FOR USER FOLDER
