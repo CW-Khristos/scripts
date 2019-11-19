@@ -216,6 +216,8 @@ elseif (errRET = 0) then
     blnFND = false
     strFOL = subFOL.path
     ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strFOL
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strFOL
     for intCOL = 0 to ubound(arrUSR)
       blnFND = false
       '' 'PRTOTECTED' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
@@ -254,12 +256,7 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
-        ''CHECK FOR USER FOLDER
-        if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
-          objFSO.deletefolder "C:\Users\" & colUSR(intUSR)    
-        end if
+
 ''SUB-ROUTINES
 sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , ACCTCLEAN.VBS , REF #2 , FIXES #57
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
