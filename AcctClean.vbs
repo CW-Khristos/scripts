@@ -261,7 +261,8 @@ elseif (errRET = 0) then
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
           ''REMOVE FOLDER
           call HOOK("takeown /f " & chr(34) & strFOL & chr(34))
-          call HOOK("rmdir /s /q " & chr(34) & strFOL & chr(34))
+          wscript.sleep 1000
+          call HOOK("cmd /c rmdir /s /q " & chr(34) & strFOL & chr(34))
           blnFND = false
         end if
       end if
