@@ -3,7 +3,7 @@
 ''ACCEPTS 1 PARAMETER
 ''OPTIONAL PARAMETER : 'STRUSR' , STRING TO OF USER TO LEAVE INTACT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strIN, strOUT, strSEL
@@ -51,7 +51,7 @@ else                                                        ''NO ARGUMENTS PASSE
 end if
 
 ''PROTECTED USER ACCOUNTS
-redim arrUSR(13)
+redim arrUSR(14)
 arrUSR(0) = "rmmtech"
 arrUSR(1) = "admin"
 arrUSR(2) = "administrator"
@@ -65,6 +65,7 @@ arrUSR(10) = "Default"
 arrUSR(11) = "Default User"
 arrUSR(12) = "DefaultAccount"
 arrUSR(13) = "WDAGUtilityAccount"
+arrUSR(14) = "UpdatusUser"
 ''------------
 ''BEGIN SCRIPT
 if (errRET <> 0) then
@@ -202,6 +203,7 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         ''REMOVE USER ACCOUNT
+        call HOOK("takeown /f " & chr(34) & strFOL & chr(34))
         call HOOK("net user " & colUSR(intUSR) & " /delete /y")
         blnFND = false
       end if
@@ -249,7 +251,7 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         ''REMOVE FOLDER
-        'objFSO.deletefolder strFOL, true
+        call HOOK("rmdir /s /q " & chr(34) & strFOL & chr(34))
         blnFND = false
       end if
     end if
