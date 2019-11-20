@@ -203,7 +203,6 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         ''REMOVE USER ACCOUNT
-        call HOOK("takeown /f " & chr(34) & strFOL & chr(34))
         call HOOK("net user " & colUSR(intUSR) & " /delete /y")
         blnFND = false
       end if
@@ -251,6 +250,7 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         ''REMOVE FOLDER
+        call HOOK("takeown /f " & chr(34) & strFOL & chr(34))
         call HOOK("rmdir /s /q " & chr(34) & strFOL & chr(34))
         blnFND = false
       end if
