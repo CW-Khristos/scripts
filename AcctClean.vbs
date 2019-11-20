@@ -3,7 +3,7 @@
 ''ACCEPTS 1 PARAMETER
 ''OPTIONAL PARAMETER : 'STRUSR' , STRING TO OF USER TO LEAVE INTACT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strIN, strOUT, strSEL
@@ -362,7 +362,8 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES & LACK OF OUTPUT ON 'RMDIR /S /Q'
+  if ((instr(1, strCMD, "rmdir /s /q") = 0) and (instr(1, strCMD, "takeown /F ") = 0)) then
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
