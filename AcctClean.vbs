@@ -3,7 +3,7 @@
 ''ACCEPTS 1 PARAMETER
 ''OPTIONAL PARAMETER : 'STRUSR' , STRING TO OF USER TO LEAVE INTACT
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strIN, strOUT, strSEL
@@ -51,7 +51,7 @@ else                                                        ''NO ARGUMENTS PASSE
 end if
 
 ''PROTECTED USER ACCOUNTS
-redim arrUSR(14)
+redim arrUSR(13)
 arrUSR(0) = "rmmtech"
 arrUSR(1) = "admin"
 arrUSR(2) = "administrator"
@@ -65,7 +65,6 @@ arrUSR(10) = "Default"
 arrUSR(11) = "Default User"
 arrUSR(12) = "DefaultAccount"
 arrUSR(13) = "WDAGUtilityAccount"
-'arrUSR(14) = "CJ"
 ''------------
 ''BEGIN SCRIPT
 if (errRET <> 0) then
@@ -217,8 +216,6 @@ elseif (errRET = 0) then
     blnFND = false
     strFOL = subFOL.path
     ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strFOL
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strFOL
     for intCOL = 0 to ubound(arrUSR)
       blnFND = false
       if (arrUSR(intCOL) <> vbnullstring) then
@@ -231,17 +228,18 @@ elseif (errRET = 0) then
           exit for
         end if
       end if
+      ''A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
+      if (wscript.arguments.count > 0) then
+        '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
+        if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
+          ''MARK 'PROTECTED'
+          blnFND = true
+          exit for
+        end if          
+      end if
     next
-    ''A 'PROTECTED' USER ACCOUNT WAS PASSED TO 'STRUSR'
-    if (wscript.arguments.count > 0) then
-      '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
-      if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & objARG.item(0)
-        ''MARK 'PROTECTED'
-        blnFND = true
-      end if          
-    end if
     ''NO MATCH TO 'PROTECTED' USER ACCOUNTS
     if (not blnFND) then
       ''CHECK FOR USER FOLDER
@@ -249,7 +247,7 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         ''REMOVE FOLDER
-        objFSO.deletefolder strFOL, true   
+        'objFSO.deletefolder strFOL, true   
       end if
     end if
   next
@@ -258,7 +256,12 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
-
+        ''CHECK FOR USER FOLDER
+        if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
+          objFSO.deletefolder "C:\Users\" & colUSR(intUSR)    
+        end if
 ''SUB-ROUTINES
 sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , ACCTCLEAN.VBS , REF #2 , FIXES #57
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
