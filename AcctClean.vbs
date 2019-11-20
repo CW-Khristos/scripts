@@ -97,10 +97,10 @@ elseif (errRET = 0) then
   err.clear
   ''VALIDATE COLLECTED USERNAMES
   intUSR = 0
-  intCOL = 0
   objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES"
   objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - COLLECTED USERNAMES"
   for intUSR = 0 to ubound(colUSR)
+    intCOL = 0
     blnFND = false
     if (colUSR(intUSR) <> vbnullstring) then
       ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
@@ -203,6 +203,7 @@ elseif (errRET = 0) then
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & colUSR(intUSR)
         ''REMOVE USER ACCOUNT
         call HOOK("net user " & colUSR(intUSR) & " /delete /y")
+        blnFND = false
       end if
     end if
   next
@@ -213,6 +214,7 @@ elseif (errRET = 0) then
   set colFOL = objFOL.subfolders
   ''ENUMERATE 'C:\USERS' SUB-FOLDERS
   for each subFOL in colFOL
+    intCOL = 0
     blnFND = false
     strFOL = subFOL.path
     ''ENUMERATRE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
@@ -247,7 +249,8 @@ elseif (errRET = 0) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : " & strFOL
         ''REMOVE FOLDER
-        'objFSO.deletefolder strFOL, true   
+        'objFSO.deletefolder strFOL, true
+        blnFND = false
       end if
     end if
   next
@@ -256,12 +259,7 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
-        ''CHECK FOR USER FOLDER
-        if (objFSO.folderexists("C:\Users\" & colUSR(intUSR))) then
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "REMOVING : C:\Users\" & colUSR(intUSR)
-          objFSO.deletefolder "C:\Users\" & colUSR(intUSR)    
-        end if
+
 ''SUB-ROUTINES
 sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , ACCTCLEAN.VBS , REF #2 , FIXES #57
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
