@@ -18,7 +18,7 @@ dim strORG, strREP, strSID, strDMN
 ''VARIABLES ACCEPTING PARAMETERS
 dim strLSV, strUSR, strPWD
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
-strVER = 6
+strVER = 7
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -109,7 +109,12 @@ elseif (errRET = 0) then                                                    ''AR
       ''FIND USER/S MATCHING PASSED 'STRUSR' TARGET USER
       ''HANDLE '\' IS PASSED TARGET USERNAME 'STRUSR' , REF #37
       if (instr(1, lcase(strUSR), "\")) then
-        if (lcase(colUSR(intUSR)) = lcase(split(strUSR, "\")(1))) then
+        ''ENUMERATED USER ACCOUNT DOES NOT MATCH PASSED 'STRUSR'
+        if (lcase(colUSR(intUSR)) <> lcase(split(strUSR, "\")(1))) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+        ''ENUMERATED USER ACCOUNT DOES MATCH PASSED 'STRUSR'
+        elseif (lcase(colUSR(intUSR)) = lcase(split(strUSR, "\")(1))) then
           redim preserve arrSID(intSID + 1)
           arrSID(intSID) = colSID(intUSR)
           intSID = intSID + 1
@@ -118,7 +123,12 @@ elseif (errRET = 0) then                                                    ''AR
         end if
       ''HANDLE WITHOUT '\' IN PASSED TARGET USERNAME 'STRUSR' , REF #37
       elseif (instr(1, lcase(strUSR), "\") = 0) then
-        if (lcase(colUSR(intUSR)) = lcase(strUSR)) then
+        ''ENUMERATED USER ACCOUNT DOES NOT MATCH PASSED 'STRUSR'
+        if (lcase(colUSR(intUSR)) <> lcase(strUSR)) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
+        ''ENUMERATED USER ACCOUNT DOES MATCH PASSED 'STRUSR'
+        elseif (lcase(colUSR(intUSR)) = lcase(strUSR)) then
           redim preserve arrSID(intSID + 1)
           arrSID(intSID) = colSID(intUSR)
           intSID = intSID + 1
@@ -126,8 +136,6 @@ elseif (errRET = 0) then                                                    ''AR
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "MARKED : " & colUSR(intUSR) & " : " & arrSID(intSID - 1)
         end if
       end if
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & colUSR(intUSR) & " : " & colSID(intUSR)
     next
     ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
     set objEXEC = objWSH.exec("net config workstation")
@@ -186,6 +194,8 @@ elseif (errRET = 0) then                                                    ''AR
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
       if ((colUSR(intUSR) <> vbnullstring) and (instr(1, strUSR, lcase(colUSR(intUSR))) = 0)) then
+        objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING " & colUSR(intUSR) & " : " & colSID(intSID)
+        objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING " & colUSR(intUSR) & " : " & colSID(intSID)
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g " & colUSR(intUSR) & " /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g *" & colSID(intSID) & " /T /C /Q")
       end if
@@ -321,15 +331,17 @@ end sub
 sub HOOK(strCMD)                                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
-    while (not objHOOK.stdout.atendofstream)
+  while (not objHOOK.stdout.atendofstream)
+    if (instr(1, strCMD, "takeown /F ") = 0) then                                       ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
       end if
-    wend
-    wscript.sleep 10
+    end if
+  wend
+  wscript.sleep 10
+  if (instr(1, strCMD, "takeown /F ") = 0) then                                         ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     strIN = objHOOK.stdout.readall
     if (strIN <> vbnullstring) then
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
