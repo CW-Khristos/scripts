@@ -74,7 +74,7 @@ elseif (errRET = 0) then                                                    ''AR
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
   set objHOOK = nothing
-  if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then     ''BACKUPS NOT IN PROGRESS , CONTINUE SCRIPT
+  if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then     ''BACKUPS NOT IN PROGRESS , CONTINUE SCRIPT
     ''GET SIDS OF ALL USERS , 'ERRRET'=20
     intUSR = 0
     intSID = 0
@@ -163,7 +163,7 @@ elseif (errRET = 0) then                                                    ''AR
     ''TAKEOWN USING CURRENT USER, THIS SHOULD BE RMMTECH
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
-    call HOOK("takeown /F " & chr(34) & strLSV & chr(34) & " /R /D Y")
+    'call HOOK("takeown /F " & chr(34) & strLSV & chr(34) & " /R /D Y")
     if (errRET <> 0) then
       call LOGERR(21)
     end if
@@ -172,7 +172,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " FULL CONTROL"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if (instr(1, strUSR, lcase(colUSR(intUSR)))) then
+      if (instr(1, lcase(colUSR(intUSR)), strUSR)) then
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant " & colUSR(intUSR) & ":(OI)(CI)F /T /C /Q")
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /grant *" & colSID(intSID) & ":(OI)(CI)F /T /C /Q")
       end if
@@ -193,7 +193,7 @@ elseif (errRET = 0) then                                                    ''AR
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - REMOVING ALL OTHER ENUMERATED USERS' PERMISSIONS"
     for intUSR = 0 to ubound(colUSR)
       intSID = intUSR
-      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, strUSR, lcase(colUSR(intUSR))) = 0)) then
+      if ((colUSR(intUSR) <> vbnullstring) and (instr(1, lcase(colUSR(intUSR)), strUSR) = 0)) then
         objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING " & colUSR(intUSR) & " : " & colSID(intSID)
         objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING " & colUSR(intUSR) & " : " & colSID(intSID)
         call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /remove:g " & colUSR(intUSR) & " /T /C /Q")
