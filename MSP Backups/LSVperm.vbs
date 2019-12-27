@@ -18,7 +18,7 @@ dim strORG, strREP, strSID, strDMN
 ''VARIABLES ACCEPTING PARAMETERS
 dim strLSV, strUSR, strPWD
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
-strVER = 7
+strVER = 8
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -161,9 +161,11 @@ elseif (errRET = 0) then                                                    ''AR
     call HOOK("sc.exe stop " & chr(34) & "Backup Service Controller" & chr(34))
     ''RESTRICT FILE-SYSTEM PERMISSIONS PRIOR TO APPLYING SERVICE LOGON AND RESTARTING SERVICE , 'ERRRET'=21 , REF #2 , REF #32
     ''TAKEOWN USING CURRENT USER, THIS SHOULD BE RMMTECH
+    ''TAKEOWN REPLACED BY 'ICACLS /SETOWNER'
     objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
     objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - ASSIGNING " & strUSR & " OWNERSHIP"
     'call HOOK("takeown /F " & chr(34) & strLSV & chr(34) & " /R /D Y")
+    call HOOK("icacls " & chr(34) & strLSV & chr(34) & " /setowner " & strUSR)
     if (errRET <> 0) then
       call LOGERR(21)
     end if
