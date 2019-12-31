@@ -13,8 +13,8 @@ dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''VSS WRITER FLAGS
 dim blnIIS, blnNPS, blnTSG
-dim blnSQL, blnTSK, blnVSS, blnWMI
 dim blnAHS, blnBIT, blnCSVC, blnRDP
+dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
@@ -199,7 +199,12 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
             ''CHECK VSS WRITER STATE
             blnVSS = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnVSS : " & blnVSS  
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnVSS : " & blnVSS 
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnVSS : " & blnVSS
+          case "MSSearch Service Writer"
+            ''CHECK WINDOWS SEARCH WRITER STATE
+            blnWSCH = CHKSTAT(arrTMP(intTMP + 3))
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnWSCH : " & blnWSCH  
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnWSCH : " & blnWSCH
           case "WMI Writer"
             ''CHECK VSS WRITER STATE
             blnWMI = CHKSTAT(arrTMP(intTMP + 3))
@@ -253,14 +258,14 @@ end sub
 sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   if ((not blnAHS) and (not blnIIS) and (not blnBIT) and (not blnCSVC) and (not blnRDP) and _
-    (not blnTSG) and (not blnSQL) and (not blnTSK) and (not blnVSS) and (not blnWMI) and (not blnNPS)) then
+    (not blnTSG) and (not blnSQL) and (not blnTSK) and (not blnVSS) and (not blnWMI) and (not blnNPS) and (not blnWSCH)) then
       ''SET 'BLNRUN' FLAG
       if (not blnRUN) then
         blnRUN = false
       end if
   ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnCSVC) or (blnRDP) or _
-    (blnTSG) or (blnSQL) or (blnTSK) or (blnVSS) or (blnWMI) or (blnNPS)) then
+    (blnTSG) or (blnSQL) or (blnTSK) or (blnVSS) or (blnWMI) or (blnNPS) or (blnWSCH)) then
     ''SET 'BLNRUN' FLAG
     blnRUN = true
     ''IIS
@@ -305,6 +310,11 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
     if (blnNPS) then
       call HOOK("net stop EventSystem /y")
       call HOOK ("net start EventSystem")
+    end if
+    ''WINDOWS SEARCH SERVICE - WSearch
+    if (blnWSCH) then
+      call HOOK("net stop WSearch /y")
+      call HOOK ("net start WSearch")
     end if
     ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
     if (blnWMI) then
