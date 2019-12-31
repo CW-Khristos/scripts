@@ -1,5 +1,5 @@
-''MSP_SSHEAL.VBS
-''SCRIPT IS DESIGNED TO ATTEMPT SELF-HEAL OF MSP BACKUP SYSTEM STATE USING CLIENTTOOL.EXE UTILITY
+''MSP_SSHEAL_FORCE.VBS
+''SCRIPT IS DESIGNED TO ATTEMPT FORCE SELF-HEAL OF MSP BACKUP SYSTEM STATE USING CLIENTTOOL.EXE UTILITY
 ''SCRIPT WILL CHECK STATUS OF BACKUPS PRIOR TO EXECUTION; IF BACKUPS ARE IN PROGRESS, SCRIPT WILL NOT PROCEED
 ''CHECKS STATUS OF BACKUPS, RESTARTS SERVICES IF NEEDED, CHECKS VSS WRITERS, RE-RUNS SYSTEM STATE BACKUPS
 ''MUST BE USED IN CONJUNCTION WITH MSP BACKUP SYSTEM STATE BACKUP MONITORED SERVICE
@@ -64,50 +64,95 @@ strIDL = objHOOK.stdout.readall
 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
-if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then            			''BACKUPS NOT IN PROGRESS
-  objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, CHECKING VSS WRITERS"
-  ''DEFAULT RESTART OF VSS, DISABLED TO CHECK WRITERS PRIOR TO RESET, SUSPECT CONFLICT WITH MSP BACKUP VSS COMPONENT , REF #1
-  'call HOOK("net stop VSS")
-  'call HOOK ("net start VSS")
+if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or _
+  (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then     			''BACKUPS NOT IN PROGRESS
+    objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
+    ''STOP BACKUP SERVICE
+    call HOOK("net stop Backup Service Controller")
+    ''DEFAULT RESTART OF VSS, DISABLED TO CHECK WRITERS PRIOR TO RESET, SUSPECT CONFLICT WITH MSP BACKUP VSS COMPONENT , REF #1
+    'call HOOK("net stop VSS")
+    'call HOOK ("net start VSS")
   
-  ''DISABLED VSS CHECKS TO TEST
-  ''EXPORT CURRENT VSS WRITER STATUSES
-  call CHKVSS()
-  if (errRET = 2) then
-    x = 0
-    while x <= 60
-      x = x + 1
-      wscript.sleep 1000
-    wend
+    ''DISABLED 31122019 AS PART OF INTENT TO FORCE RESTART OF ALL SERVICE , REF #1
+    ''EXPORT CURRENT VSS WRITER STATUSES
+    'call CHKVSS()
+    'if (errRET = 2) then
+    '  x = 0
+    '  while x <= 60
+    '    x = x + 1
+    '    wscript.sleep 1000
+    '  wend
+    '  call CHKVSS()
+    'end if
+  
+    ''DISABLED 31122019 AS PART OF INTENT TO FORCE RESTART OF ALL SERVICE , REF #1
+    ''EXPORT CURRENT VSS WRITER STATUSES
+    ''call CHKVSS()
+    
+    ''SET ALL VSS 'FLAGS' TO 'TRUE' TO FORCE RESTART , REF #1
+    blnAHS = true
+    blnBIT = true
+    blnCSVC = true
+    blnIIS = true
+    blnNPS = true
+    blnRDP = true
+    blnSQL = true
+    blnSUP = true
+    blnTSG = true
+    blnTSK = true
+    blnVSS = true
+    blnWMI = true
+    ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+    call VSSSVC()
+
+    ''CHECK VSS WRITERS AFTER RESTART
+    objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+    ''EXPORT CURRENT VSS WRITER STATUSES
     call CHKVSS()
-  end if
-  
-  ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  call VSSSVC()
-  ''CHECK VSS WRITERS AFTER RESTART
-  objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-  
-  ''EXPORT CURRENT VSS WRITER STATUSES
-  call CHKVSS()
-  ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-  call VSSSVC()
-  
-  ''RESTART WMI ONLY
-  blnRUN = true
-  call HOOK("net stop Winmgmt /y")
-  call HOOK ("net start Winmgmt")
-  ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
-  call CHKDEP()
-  if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET"
-    call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
-  elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
-  end if
+    ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+    call VSSSVC()
+    ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
+    call CHKDEP()
+    ''RESTART BACKUP SERVICE
+    call HOOK("net start Backup Service Controller")
+    wscript.sleep 5000
+    ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY AFTER RESTART
+    for intLOOP = 0 to 10
+      objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+      objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+      set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
+      strIDL = objHOOK.stdout.readall
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+      set objHOOK = nothing
+      if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then     			''BACKUPS NOT IN PROGRESS
+          ''FORCE RUN OF SYSTEM STATE
+          blnRUN = true
+          if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
+            call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
+            blnRUN = false
+          elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
+          end if
+          exit for
+      elseif ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle") = 0) or _
+        (instr(1, strIDL, "RegSync") = 0) or (instr(1, strIDL, "Suspended") = 0)) then					''BACKUPS IN PROGRESS, SERVICE NOT READY
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "BACKUPS IN PROGRESS, SERVICE NOT READY" 
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "BACKUPS IN PROGRESS, SERVICE NOT READY"
+          blnRUN = true
+      end if
+      wscript.sleep 12000
+    next
+    ''SERVICE DID NOT INITIALIZE
+    if (blnRUN) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
+    end if
 elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or (instr(1, strIDL, "Suspended") = 0)) then					''BACKUPS IN PROGRESS
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
@@ -256,7 +301,7 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
     (not blnTSG) and (not blnSQL) and (not blnTSK) and (not blnVSS) and (not blnWMI) and (not blnNPS)) then
       ''SET 'BLNRUN' FLAG
       if (not blnRUN) then
-        blnRUN = false
+        blnRUN = true
       end if
   ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnCSVC) or (blnRDP) or _

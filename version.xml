@@ -23,7 +23,8 @@
 	<msp_postbackup.vbs>3</msp_postbackup.vbs>
 	<msp_prebackup.vbs>3</msp_prebackup.vbs>
 	<MSP_Rotate.vbs>5</MSP_Rotate.vbs>
-	<MSP_SSHeal.vbs>8</MSP_SSHeal.vbs>
+	<MSP_SSHeal.vbs>9</MSP_SSHeal.vbs>
+  <MSP_SSHeal_Force.vbs>9</MSP_SSHeal_Force.vbs>
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
 	<MSP_Update.vbs>3</MSP_Update.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>

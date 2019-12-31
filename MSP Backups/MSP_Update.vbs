@@ -12,7 +12,7 @@ dim errRET, strVER, strIDL, strTMP, arrTMP, strIN
 dim blnSQL, blnTSK, blnVSS, blnWMI
 dim blnAHS, blnBIT, blnCSVC, blnRDP, blnRUN
 ''VERSION FOR SCRIPT UPDATE, MSP_UPDATE.VBS, REF #2
-strVER = 3
+strVER = 4
 ''SET 'ERRRET' CODE
 errRET = 0
 ''DEFAULT 'BLNRUN' FLAG
@@ -68,9 +68,17 @@ objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
 if (strIDL = vbnullstring) then
-  objOUT.write vbnewline & now & vbtab & vbtab & " - CLIENTTOOL NOT AVAILABLE, PLEASE START BACKUP SERVICE"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - CLIENTTOOL NOT AVAILABLE, PLEASE START BACKUP SERVICE"
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CLIENTTOOL NOT AVAILABLE"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CLIENTTOOL NOT AVAILABLE"
   call LOGERR(2)
+  ''DOWNLOAD MSP BACKUP CLIENT
+  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING LATEST MSP BACKUP CLIENT"
+  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING LATEST MSP BACKUP CLIENT"
+  call FILEDL("https://cdn.cloudbackup.management/maxdownloads/mxb-windows-x86_x64.exe", "mxb-windows-x86_x64.exe")
+  ''INSTALL MSP BACKUP MANAGER
+  objOUT.write vbnewline & now & vbtab & " - INSTALLING LATEST MSP BACKUP CLIENT"
+  objLOG.write vbnewline & now & vbtab & " - INSTALLING LATEST MSP BACKUP CLIENT"
+  call HOOK("C:\temp\mxb-windows-x86_x64.exe")
 elseif ((instr(1, strIDL, "Idle") = 0) and (instr(1, strIDL, "RegSync") = 0)) then    ''BACKUPS IN PROGRESS , 'ERRRET'=1
   objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_UPDATE"
   objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_UPDATE"
