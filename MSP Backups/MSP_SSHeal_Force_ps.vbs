@@ -538,8 +538,10 @@ end sub
 sub CLEANUP()                                 			''SCRIPT CLEANUP
   if (errRET = 0) then         											''MSP_SSHEAL COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
+    objLOG.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
   elseif (errRET <> 0) then    											''MSP_SSHEAL FAILED
     objOUT.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
+    objLOG.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_SSHEAL", "FAILURE")
   end if
