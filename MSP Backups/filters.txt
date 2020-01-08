@@ -1,3 +1,4 @@
+*.IDLK
 C:\$AV_ASW|
 C:\$Recycle.Bin|
 C:\$Windows.~BT|
