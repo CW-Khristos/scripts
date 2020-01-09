@@ -30,6 +30,7 @@
 	<MSP_Update.vbs>3</MSP_Update.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
 	<post-backup.cmd>3</post-backup.cmd>
+  <powerCFG.vbs>2</powerCFG.vbs>
 	<pre-backup.cmd>3</pre-backup.cmd>
 	<PWDchg.vbs>2</PWDchg.vbs>
 	<qsmart.vbs>2</qsmart.vbs>

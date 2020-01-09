@@ -1,5 +1,7 @@
 ''POWERCFG.VBS
 ''DESIGNED TO AUTOMATE CONFIGURATION OF HIBERNATION FEATURE
+''ACCEPTS 1 PARAMETER , REQUIRES 1 PARAMETER
+''REQUIRED PARAMETER : 'STRPWR' , STRING TO SET HIBERNATION ON / OFF
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
@@ -8,7 +10,7 @@ dim errRET, strVER, strPWR
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , POWERCFG.VBS, REF #2
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -54,6 +56,12 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING POWERCFG" & vbnewline
   ''AUTOMATIC UPDATE , 'ERRRET'=10 , POWERCFG.VBS , REF #2
   call CHKAU()
+  if (lcase(strPWR) = "off") then
+    ''CHANGE ACTIVE POWER PLAN
+    objOUT.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+    objLOG.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+    call HOOK("powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c")
+  end if
   ''CHANGE POWERCFG HIBERNATION OPTION
   objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
