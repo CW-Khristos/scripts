@@ -2,6 +2,7 @@
 ''DESIGNED TO STOP EAGLESOFT SERVICES AND DATABASE TO ALLOW FOR FILE COPY TO 'OFFLINE' DIRECTORY
 ''SCRIPT UTILIZES ROBOCOPY TO 'MIRROR' SOURCE TO DESTINATION EXACTLY
 ''MSP BACKUPS EXCLUDE 'ONLINE' EAGLESOFT DIRECTORY AND INCLUDE 'OFFLINE' DIRECTORY
+''CUSTOMIZED FOR ROBERT NYBERG DDS CUSTOMER SETUP ONLY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
@@ -14,7 +15,7 @@ set objOUT = wscript.stdout
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''VERSION FOR SCRIPT UPDATE , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
-strVER = 3
+strVER = 4
 ''DEFAULT FAIL
 errRET = 5
 ''PREPARE LOGFILE
@@ -101,11 +102,11 @@ sub DBCOPY()                                                ''COPY EAGLESOFT DAT
   objOUT.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   objLOG.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #49
-  call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "E:\Backup" & chr(34) & " /MIR /z /w:1 /r:1 /mt /v")
+  call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "E:\Backup" & chr(34) & " /e /COPYALL /DCOPY:T /MIR /z /w:5 /r:3 /mt /v")
   if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
     objLOG.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
-  elseif (errRET < 5) then                                 ''ERROR RETURNED
+  elseif (errRET < 5) then                                  ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     objLOG.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     call LOGERR(6)
@@ -117,48 +118,48 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , RNDDS_MSP_PR
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
   end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/rndds_msp_prebackup.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
+  ''SCRIPT OBJECT FOR PARSING XML
+  set objXML = createobject("Microsoft.XMLDOM")
+  ''FORCE SYNCHRONOUS
+  objXML.async = false
+  ''LOAD SCRIPT VERSIONS DATABASE XML
+  if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
+    set colVER = objXML.documentelement
+    for each objSCR in colVER.ChildNodes
+      ''LOCATE CURRENTLY RUNNING SCRIPT
+      if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
+        ''CHECK LATEST VERSION
+        if (cint(objSCR.text) > cint(strVER)) then
+          objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
+          ''DOWNLOAD LATEST VERSION OF SCRIPT
+          call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/rndds_msp_prebackup.vbs", wscript.scriptname)
+          ''RUN LATEST VERSION
+          if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+            for x = 0 to (wscript.arguments.count - 1)
+              strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
+            next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
+          elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
+            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
+          end if
+          ''END SCRIPT
+          call CLEANUP()
+        end if
+      end if
+    next
+  end if
+  set colVER = nothing
+  set objXML = nothing
 end sub
 
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
@@ -172,7 +173,9 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
+  ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
   if (objHTTP.status = 200) then
@@ -192,7 +195,8 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
-	set objHTTP = nothing
+  set objHTTP = nothing
+  ''ERROR RETURNED
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
@@ -236,21 +240,21 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-		errRET = intSTG
-		err.clear
+    errRET = intSTG
+    err.clear
   end if
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   if (errRET = 0) then                                      ''PRE-BACKUP COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP COMPLETE : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP COMPLETE : " & now
     err.clear
   elseif (errRET <> 0) then                                 ''PRE-BACKUP FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP FAILURE : " & errRET & " : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - PRE-BACKUP FAILURE : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "PRE-BACKUP", "FAIL")
+    call err.raise(vbObjectError + errRET, "MSP_PRE-BACKUP", "FAIL")
   end if
   ''EMPTY OBJECTS
   set objEXEC = nothing
