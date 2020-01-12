@@ -31,12 +31,12 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		        ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHeal", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
-else                                                ''LOGFILE NEEDS TO BE CREATED
+else                                                        ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
@@ -64,8 +64,8 @@ strIDL = objHOOK.stdout.readall
 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
 set objHOOK = nothing
-if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or _
-  (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then     			''BACKUPS NOT IN PROGRESS
+if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or _
+  (instr(1, strIDL, "Suspended"))) then     			          ''BACKUPS NOT IN PROGRESS
     objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
     objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
     ''STOP BACKUP SERVICE
@@ -110,12 +110,12 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or _
       if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then     			      ''BACKUPS NOT IN PROGRESS
           ''FORCE RUN OF SYSTEM STATE
           blnRUN = true
-          if (blnRUN) then														''RE-RUN SYSTEM STATE BACKUPS
+          if (blnRUN) then														      ''RE-RUN SYSTEM STATE BACKUPS
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
             call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
             blnRUN = false
-          elseif (not blnRUN) then										''DO NOT RE-RUN SYSTEM STATE BACKUPS
+          elseif (not blnRUN) then										      ''DO NOT RE-RUN SYSTEM STATE BACKUPS
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
           end if
@@ -128,14 +128,13 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or _
       end if
       wscript.sleep 12000
     next
-    ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
-    if (blnRUN) then
+    if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
       call LOGERR(1)
     end if
 elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
-  (instr(1, strIDL, "Suspended") = 0)) then                                                 ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
+  (instr(1, strIDL, "Suspended") = 0)) then                 ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
     objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
     call LOGERR(1)
@@ -145,18 +144,18 @@ call CLEANUP()
 ''END SCRIPT
 ''------------
 
-function CHKSTAT(strSTAT)                           ''CHECK VSS WRITER STATE
+function CHKSTAT(strSTAT)                                   ''CHECK VSS WRITER STATE
   if (instr(1, strSTAT, "State:")) then
-    if (instr(1, strSTAT, "Stable") = 0) then       ''VSS WRITER IN ERROR STATE
+    if (instr(1, strSTAT, "Stable") = 0) then               ''VSS WRITER IN ERROR STATE
       CHKSTAT = true
-    elseif (instr(1, strSTAT, "Stable")) then       ''VSS WRITER STABLE
+    elseif (instr(1, strSTAT, "Stable")) then               ''VSS WRITER STABLE
       CHKSTAT = false
     end if
   end if
 end function
 
 ''SUB-ROUTINES
-sub CHKDEP()                                        ''RESTART WMI DEPENDENT SERVICES, REF #19
+sub CHKDEP()                                                ''RESTART WMI DEPENDENT SERVICES, REF #19
 ''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
   objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
   objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
@@ -173,7 +172,7 @@ sub CHKDEP()                                        ''RESTART WMI DEPENDENT SERV
   call HOOK("net start " & chr(34) & "System Event Notification Service" & chr(34))
 end sub
 
-sub CHKVSS()																				''CHECK VSS WRITER STATUSES , 'ERRRET'=4
+sub CHKVSS()																				        ''CHECK VSS WRITER STATUSES , 'ERRRET'=4
   ''CAPTURE 'VSSADMIN LIST WRITERS' OUTPUT
   set objHOOK = objWSH.exec("vssadmin list writers")
   strTMP = objHOOK.stdout.readall
@@ -278,7 +277,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES , 'ERRRET'=4
       end if
     end if
   next
-  ''ERROR RETURNED INTERFACING VSS
+  ''ERROR RETURNED INTERFACING VSS , 'ERRRET'=4
   if ((err.number <> 0) or (errRET = 4)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
@@ -302,8 +301,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     ''IIS
     ''APPLICATION HOST HELPER - AppHostSvc
     if (blnAHS) then
-      'call HOOK("net stop AppHostSvc /y")
-      'call HOOK("net start AppHostSvc")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query AppHostSvc", 0, true)
       if (intRET = 0) then
@@ -312,8 +309,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''IISADMIN - IIS ADMIN
     if (blnIIS) then
-      'call HOOK("net stop IISADMIN /y")
-      'call HOOK("net start IISADMIN")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query IISADMIN", 0, true)
       if (intRET = 0) then
@@ -322,8 +317,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''BITS SERVICES - BITS
     if (blnBIT) then
-      'call HOOK("net stop BITS /y")
-      'call HOOK("net start BITS")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query BITS", 0, true)
       if (intRET = 0) then
@@ -332,8 +325,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''CRYPTOGRAPHIC SERVICES - CryptSvc
     if (blnCSVC) then
-      'call HOOK("net stop CryptSvc /y")
-      'call HOOK("net start CryptSvc")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query CryptSvc", 0, true)
       if (intRET = 0) then
@@ -343,8 +334,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     ''TERMINAL SERVICES
     ''REMOTE DESKTOP LICENSING - TermServLicensing
     if (blnRDP) then
-      'call HOOK("net stop TermServLicensing /y")
-      'call HOOK("net start TermServLicensing")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query TermServLicensing", 0, true)
       if (intRET = 0) then
@@ -353,8 +342,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''REMOTE DESKTOP GATEWAY - TSGateway
     if (blnTSG) then
-      'call HOOK("net stop TSGateway /y")
-      'call HOOK("net start TSGateway")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query TSGateway", 0, true)
       if (intRET = 0) then
@@ -364,8 +351,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     ''SQL SERVICES
     ''SQL SERVER VSS WRITER - SQLWriter
     if (blnSQL) then
-      'call HOOK("net stop SQLWriter /y")
-      'call HOOK("net start SQLWriter")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query SQLWriter", 0, true)
       if (intRET = 0) then
@@ -374,8 +359,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''NPS VSS WRITER - EventSystem
     if (blnNPS) then
-      'call HOOK("net stop EventSystem /y")
-      'call HOOK("net start EventSystem")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query EventSystem", 0, true)
       if (intRET = 0) then
@@ -384,8 +367,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''WINDOWS SEARCH SERVICE - WSearch
     if (blnWSCH) then
-      'call HOOK("net stop WSearch /y")
-      'call HOOK("net start WSearch")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query WSearch", 0, true)
       if (intRET = 0) then
@@ -394,8 +375,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     end if
     ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
     if (blnWMI) then
-      'call HOOK("net stop Winmgmt /y")
-      'call HOOK("net start Winmgmt")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query Winmgmt", 0, true)
       if (intRET = 0) then
@@ -405,8 +384,6 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
     wscript.sleep 1000
     ''VOLUME SHADOW COPY - VSS
     if (blnVSS) then
-      'call HOOK("net stop VSS /y")
-      'call HOOK ("net start VSS")
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query VSS", 0, true)
       if (intRET = 0) then
