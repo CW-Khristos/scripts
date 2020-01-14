@@ -208,7 +208,7 @@ sub CHKVSS()																				        ''CHECK VSS WRITER STATUSES , 'ERRRET'=4
         exit for
       end if
       ''LOCATE VSS WRITERS
-      if (instr(1, arrTMP(intTMP), "name: ")) then
+      if ((errRET <> 4) and (instr(1, arrTMP(intTMP), "name: "))) then
         select case (replace(split(arrTMP(intTMP), "name: ")(1), "'", vbnullstring))
           case "BITS Writer"
             ''CHECK VSS WRITER STATE
@@ -296,111 +296,111 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnCSVC) or (blnRDP) or _
     (blnTSG) or (blnSQL) or (blnTSK) or (blnVSS) or (blnWMI) or (blnNPS) or (blnWSCH)) then
-    ''SET 'BLNRUN' FLAG
-    blnRUN = true
-    ''IIS
-    ''APPLICATION HOST HELPER - AppHostSvc
-    if (blnAHS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query AppHostSvc", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop AppHostSvc /y")
-        call HOOK ("net start AppHostSvc")
+      ''SET 'BLNRUN' FLAG
+      blnRUN = true
+      ''IIS
+      ''APPLICATION HOST HELPER - AppHostSvc
+      if (blnAHS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query AppHostSvc", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop AppHostSvc /y")
+          call HOOK ("net start AppHostSvc")
+        end if
       end if
-    end if
-    ''IISADMIN - IIS ADMIN
-    if (blnIIS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query IISADMIN", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop IISADMIN /y")
-        call HOOK ("net start IISADMIN")
+      ''IISADMIN - IIS ADMIN
+      if (blnIIS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query IISADMIN", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop IISADMIN /y")
+          call HOOK ("net start IISADMIN")
+        end if
       end if
-    end if
-    ''BITS SERVICES - BITS
-    if (blnBIT) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query BITS", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop BITS /y")
-        call HOOK ("net start BITS")
+      ''BITS SERVICES - BITS
+      if (blnBIT) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query BITS", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop BITS /y")
+          call HOOK ("net start BITS")
+        end if
       end if
-    end if
-    ''CRYPTOGRAPHIC SERVICES - CryptSvc
-    if (blnCSVC) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query CryptSvc", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop CryptSvc /y")
-        call HOOK ("net start CryptSvc")
+      ''TERMINAL SERVICES
+      ''REMOTE DESKTOP LICENSING - TermServLicensing
+      if (blnRDP) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query TermServLicensing", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop TermServLicensing /y")
+          call HOOK ("net start TermServLicensing")
+        end if
       end if
-    end if
-    ''TERMINAL SERVICES
-    ''REMOTE DESKTOP LICENSING - TermServLicensing
-    if (blnRDP) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query TermServLicensing", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop TermServLicensing /y")
-        call HOOK ("net start TermServLicensing")
+      ''REMOTE DESKTOP GATEWAY - TSGateway
+      if (blnTSG) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query TSGateway", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop TSGateway /y")
+          call HOOK ("net start TSGateway")
+        end if
       end if
-    end if
-    ''REMOTE DESKTOP GATEWAY - TSGateway
-    if (blnTSG) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query TSGateway", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop TSGateway /y")
-        call HOOK ("net start TSGateway")
+      ''SQL SERVICES
+      ''SQL SERVER VSS WRITER - SQLWriter
+      if (blnSQL) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query SQLWriter", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop SQLWriter /y")
+          call HOOK ("net start SQLWriter")
+        end if
       end if
-    end if
-    ''SQL SERVICES
-    ''SQL SERVER VSS WRITER - SQLWriter
-    if (blnSQL) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query SQLWriter", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop SQLWriter /y")
-        call HOOK ("net start SQLWriter")
+      ''NPS VSS WRITER - EventSystem
+      if (blnNPS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query EventSystem", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop EventSystem /y")
+          call HOOK ("net start EventSystem")
+        end if
       end if
-    end if
-    ''NPS VSS WRITER - EventSystem
-    if (blnNPS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query EventSystem", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop EventSystem /y")
-        call HOOK ("net start EventSystem")
+      ''WINDOWS SEARCH SERVICE - WSearch
+      if (blnWSCH) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query WSearch", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop WSearch /y")
+          call HOOK ("net start WSearch")
+        end if
       end if
-    end if
-    ''WINDOWS SEARCH SERVICE - WSearch
-    if (blnWSCH) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query WSearch", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop WSearch /y")
-        call HOOK ("net start WSearch")
+      ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
+      if (blnWMI) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query Winmgmt", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop Winmgmt /y")
+          call HOOK ("net start Winmgmt")
+        end if
       end if
-    end if
-    ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
-    if (blnWMI) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query Winmgmt", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop Winmgmt /y")
-        call HOOK ("net start Winmgmt")
+      ''CRYPTOGRAPHIC SERVICES - CryptSvc
+      if (blnCSVC) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query CryptSvc", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop CryptSvc /y")
+          call HOOK ("net start CryptSvc")
+        end if
       end if
-    end if
-    wscript.sleep 1000
-    ''VOLUME SHADOW COPY - VSS
-    if (blnVSS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-      intRET = objWSH.run ("sc query VSS", 0, true)
-      if (intRET = 0) then
-        call HOOK("net stop VSS /y")
-        call HOOK ("net start VSS")
+      wscript.sleep 1000
+      ''VOLUME SHADOW COPY - VSS
+      if (blnVSS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
+        intRET = objWSH.run ("sc query VSS", 0, true)
+        if (intRET = 0) then
+          call HOOK("net stop VSS /y")
+          call HOOK ("net start VSS")
+        end if
       end if
-    end if
   end if
 end sub
 

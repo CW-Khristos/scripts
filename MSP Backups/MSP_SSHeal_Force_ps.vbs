@@ -208,7 +208,7 @@ sub CHKVSS()																				        ''CHECK VSS WRITER STATUSES , 'ERRRET'=4
         exit for
       end if
       ''LOCATE VSS WRITERS
-      if (instr(1, arrTMP(intTMP), "name: ")) then
+      if ((errRET <> 4) and (instr(1, arrTMP(intTMP), "name: "))) then
         select case (replace(split(arrTMP(intTMP), "name: ")(1), "'", vbnullstring))
           case "BITS Writer"
             ''CHECK VSS WRITER STATE
@@ -296,100 +296,100 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP , ADDED 'SC QUERY' CALLS TO AVOID ATTEMPTING PS CALL TO NON-EXISTENT SERVICES
   elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnCSVC) or (blnRDP) or _
     (blnTSG) or (blnSQL) or (blnTSK) or (blnVSS) or (blnWMI) or (blnNPS) or (blnWSCH)) then
-    ''SET 'BLNRUN' FLAG
-    blnRUN = true
-    ''IIS
-    ''APPLICATION HOST HELPER - AppHostSvc
-    if (blnAHS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query AppHostSvc", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service AppHostSvc -Force -PassThru" & chr(34), 0, true)
+      ''SET 'BLNRUN' FLAG
+      blnRUN = true
+      ''IIS
+      ''APPLICATION HOST HELPER - AppHostSvc
+      if (blnAHS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query AppHostSvc", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service AppHostSvc -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''IISADMIN - IIS ADMIN
-    if (blnIIS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query IISADMIN", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service IISADMIN -Force -PassThru" & chr(34), 0, true)
+      ''IISADMIN - IIS ADMIN
+      if (blnIIS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query IISADMIN", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service IISADMIN -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''BITS SERVICES - BITS
-    if (blnBIT) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query BITS", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service BITS -Force -PassThru" & chr(34), 0, true)
+      ''BITS SERVICES - BITS
+      if (blnBIT) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query BITS", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service BITS -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''CRYPTOGRAPHIC SERVICES - CryptSvc
-    if (blnCSVC) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query CryptSvc", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service CryptSvc -Force -PassThru" & chr(34), 0, true)
+      ''TERMINAL SERVICES
+      ''REMOTE DESKTOP LICENSING - TermServLicensing
+      if (blnRDP) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query TermServLicensing", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service TermServLicensing -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''TERMINAL SERVICES
-    ''REMOTE DESKTOP LICENSING - TermServLicensing
-    if (blnRDP) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query TermServLicensing", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service TermServLicensing -Force -PassThru" & chr(34), 0, true)
+      ''REMOTE DESKTOP GATEWAY - TSGateway
+      if (blnTSG) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query TSGateway", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service TSGateway -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''REMOTE DESKTOP GATEWAY - TSGateway
-    if (blnTSG) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query TSGateway", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service TSGateway -Force -PassThru" & chr(34), 0, true)
+      ''SQL SERVICES
+      ''SQL SERVER VSS WRITER - SQLWriter
+      if (blnSQL) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query SQLWriter", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service SQLWriter -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''SQL SERVICES
-    ''SQL SERVER VSS WRITER - SQLWriter
-    if (blnSQL) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query SQLWriter", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service SQLWriter -Force -PassThru" & chr(34), 0, true)
+      ''NPS VSS WRITER - EventSystem
+      if (blnNPS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query EventSystem", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service EventSystem -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''NPS VSS WRITER - EventSystem
-    if (blnNPS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query EventSystem", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service EventSystem -Force -PassThru" & chr(34), 0, true)
+      ''WINDOWS SEARCH SERVICE - WSearch
+      if (blnWSCH) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query WSearch", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service WSearch -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''WINDOWS SEARCH SERVICE - WSearch
-    if (blnWSCH) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query WSearch", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service WSearch -Force -PassThru" & chr(34), 0, true)
+      ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
+      if (blnWMI) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query Winmgmt", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service winmgmt -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    ''WINDOWS MANAGEMENT INSTRUMENTATION - Winmgmt
-    if (blnWMI) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query Winmgmt", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service winmgmt -Force -PassThru" & chr(34), 0, true)
+      ''CRYPTOGRAPHIC SERVICES - CryptSvc
+      if (blnCSVC) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query CryptSvc", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service CryptSvc -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
-    wscript.sleep 1000
-    ''VOLUME SHADOW COPY - VSS
-    if (blnVSS) then
-      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-      intRET = objWSH.run ("sc query VSS", 0, true)
-      if (intRET = 0) then
-        intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service VSS -Force -PassThru" & chr(34), 0, true)
+      wscript.sleep 1000
+      ''VOLUME SHADOW COPY - VSS
+      if (blnVSS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query VSS", 0, true)
+        if (intRET = 0) then
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service VSS -Force -PassThru" & chr(34), 0, true)
+        end if
       end if
-    end if
   end if
 end sub
 
