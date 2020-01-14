@@ -69,7 +69,7 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "
     objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
     objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
     ''STOP BACKUP SERVICE
-    call HOOK("net stop Backup Service Controller")
+    call HOOK("net stop " & chr(34) & "Backup Service Controller" & chr(34)
     ''SET ALL VSS 'FLAGS' TO 'TRUE' TO FORCE RESTART , REF #1
     blnAHS = true
     blnBIT = true
@@ -96,7 +96,7 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "
     ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
     call CHKDEP()
     ''RESTART BACKUP SERVICE
-    call HOOK("net start Backup Service Controller")
+    call HOOK("net start " & chr(34) & "Backup Service Controller" & chr(34)
     wscript.sleep 5000
     ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY AFTER RESTART
     for intLOOP = 0 to 10
