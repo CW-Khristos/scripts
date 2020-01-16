@@ -99,6 +99,8 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "
           ''FORCE RUN OF SYSTEM STATE
           blnRUN = true
           if (blnRUN) then														      ''RE-RUN SYSTEM STATE BACKUPS
+            ''ADDITIONAL DELAY TO GIVE SERVICE A BIT EXTRA Time
+            wscript.sleep (60000)
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
             call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
