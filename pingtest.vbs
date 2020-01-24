@@ -67,7 +67,7 @@ objLOG.write vbnewline & now & vbtab & " - LOOPING"
 while (strLOOP = vbnullstring)
   set objEXEC = objWSH.exec("%SystemRoot%\system32\ping.exe -n 5 " & strIP)
   while (not objEXEC.stdout.atendofstream)
-    wscript.sleep 100
+    wscript.sleep 10
     strIN = objEXEC.stdout.readall
     if (strIN <> vbnullstring) then
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN
@@ -75,9 +75,9 @@ while (strLOOP = vbnullstring)
     end if
   wend
   set objEXEC = nothing
-  wscript.sleep 1000
+  wscript.sleep 100
   if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then
-    call HOOK("tracert "& strIP & " >> C:\temp\PINGTEST")
+    call HOOK("tracert -d " & strIP)
   end if
 wend
 ''END SCRIPT
