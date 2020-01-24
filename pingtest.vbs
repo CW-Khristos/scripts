@@ -77,7 +77,7 @@ while (strLOOP = vbnullstring)
   set objEXEC = nothing
   wscript.sleep 100
   if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then
-    call HOOK("tracert -d " & strIP)
+    call HOOK("tracert -d -w 400 " & strIP)
   end if
 wend
 ''END SCRIPT
