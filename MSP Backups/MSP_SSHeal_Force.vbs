@@ -210,7 +210,7 @@ sub CHKVSS()																				        ''CHECK VSS WRITER STATUSES , 'ERRRET'=4
         exit for
       end if
       ''LOCATE VSS WRITERS
-      if ((errRET <> 4) and (instr(1, arrTMP(intTMP), "name: "))) then
+      if ((instr(1, arrTMP(intTMP), "name: "))) then
         select case (replace(split(arrTMP(intTMP), "name: ")(1), "'", vbnullstring))
           case "BITS Writer"
             ''CHECK VSS WRITER STATE
