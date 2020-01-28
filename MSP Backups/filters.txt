@@ -79,6 +79,7 @@ H:\System Volume Information|
 %PROGRAMDATA%\restored_quar|
 %PROGRAMDATA%\SolarWinds|
 %PROGRAMDATA%\SolarWinds MSP|
+C:\Windows10Upgrade|
 C:\Users\*\AppData\Local\Apple Computer\MobileSync\Backup|
 C:\Users\*\AppData\Local\CrashDumps|
 C:\Users\*\AppData\Local\D3DSCache|
