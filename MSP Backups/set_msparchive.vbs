@@ -141,6 +141,7 @@ sub EXECUTE()                                         ''CALL HOOK TO EXECUTE SCR
         if (strIDL = vbnullstring) then
           objOUT.write vbnewline & now & vbtab & " - CLIENTTOOL NOT READY, RESTARTING BACKUP SERVICE"
           objLOG.write vbnewline & now & vbtab & " - CLIENTTOOL NOT READY, RESTARTING BACKUP SERVICE"
+          call HOOK("net start " & chr(34) & "Backup Service Controller" & chr(34))
           set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
           strIDL = objHOOK.stdout.readall
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
