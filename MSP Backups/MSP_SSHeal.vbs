@@ -18,7 +18,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-strVER = 10
+strVER = 11
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
 ''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
@@ -191,6 +191,20 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
           x = x + 1
           wscript.sleep 1000
         wend
+        ''SET ALL VSS 'FLAGS' TO 'TRUE' TO FORCE RESTART , REF #1
+        blnAHS = true
+        blnBIT = true
+        blnCSVC = true
+        blnIIS = true
+        blnNPS = true
+        blnRDP = true
+        blnSQL = true
+        blnSUP = true
+        blnTSG = true
+        blnTSK = true
+        blnVSS = true
+        blnWMI = true
+        blnWSCH = true
         exit for
       end if
       ''LOCATE VSS WRITERS
