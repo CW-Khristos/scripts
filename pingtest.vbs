@@ -2,8 +2,8 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-dim strIDL, strTMP, arrTMP, strIN,strIP
-dim errRET, strVER, blnRUN, blnSUP
+dim strIDL, strTMP, arrTMP, strIN, strIP
+dim errRET, strVER, blnRUN, blnSUP, strPath
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
@@ -23,6 +23,12 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
+strPath = "c:\temp"
+if (objFSO.FolderExists(strPath)) then
+  ''do nothing
+else
+  objFSO.CreateFolder(strPath)
+ end if
 if (objFSO.fileexists("C:\temp\PINGTEST")) then		''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PINGTEST", true
   set objLOG = objFSO.createtextfile("C:\temp\PINGTEST")
