@@ -16,7 +16,7 @@ dim strUSR, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , FIXES #21 , FIXES #31
-strVER = 12
+strVER = 13
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -346,10 +346,10 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
 end sub
 
 sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-		errRET = intSTG
 		err.clear
   end if
   ''CUSTOM ERROR CODES

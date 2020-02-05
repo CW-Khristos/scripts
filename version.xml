@@ -51,10 +51,10 @@
 	<SNMPparam.vbs>4</SNMPparam.vbs>
 	<ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
 	<ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
-	<SVCperm.vbs>12</SVCperm.vbs>
+	<SVCperm.vbs>13</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>
-  <WMI_FIX_NORESTART.VBS>1</WMI_FIX_NORESTART.VBS>
-  <WMI_FIX_RESTART.VBS>1</WMI_FIX_RESTART.VBS>
+  <WMI_FIX_NORESTART.VBS>2</WMI_FIX_NORESTART.VBS>
+  <WMI_FIX_RESTART.VBS>2</WMI_FIX_RESTART.VBS>
 </SCRIPTS>

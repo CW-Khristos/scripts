@@ -10,7 +10,7 @@ dim strIN, strOUT, strORG, strREP
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, WMI_FIX_RESTART.VBS , REF #2
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -55,10 +55,10 @@ elseif (errRET = 0) then
   call CHKAU()
   ''RESET WMI WEBM REPOSITORY
   call HOOK("sc config winmgmt start= disabled")
-  call HOOK("net stop winmgmt")
-  call HOOK("REN %windir%\System32\wbem\repository %windir%\System32\wbem\repository.old")
-  call HOOK("Winmgmt /salvagerepository %windir%\System32\wbem") 
-  call HOOK("Winmgmt /resetrepository %windir%\System32\wbem")
+  call HOOK("net stop winmgmt /y")
+  call HOOK("cmd.exe /C " & chr(34) & "ren %windir%\System32\wbem\repository repository.old" & chr(34))
+  call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /salvagerepository %windir%\System32\wbem" & chr(34)) 
+  call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /resetrepository %windir%\System32\wbem" & chr(34))
   call HOOK("sc config winmgmt start= auto")
   call HOOK("net start winmgmt")
   ''RESTART WMI DEPENDENT SERVICES, REF #19
@@ -210,10 +210,10 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
 end sub
 
 sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-		errRET = intSTG
 		err.clear
   end if
   ''CUSTOM ERROR CODES
