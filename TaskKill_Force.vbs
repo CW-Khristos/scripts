@@ -66,7 +66,7 @@ elseif (errRET = 0) then
   call CHKAU()
   ''DOWNLOAD 'PSKILL', DOES NOT ACCEPT ADDITIONAL PARAMETERS CURRENTLY
   if (blnPSK) then
-    call FILEDL("https://github.com/CW-Khristos/scripts/PSTools/raw/dev/pskill.exe", "pskill.exe")
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PSTools/pskill.exe", "pskill.exe")
     call HOOK("c:\temp\pskill.exe -t " & strPROC)
   ''CALL 'TASKKILL /F /FI 'USERNAME EQ USER' /IM 'PROCESS' /T'
   elseif (not blnPSK) then
