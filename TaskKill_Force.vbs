@@ -67,7 +67,7 @@ elseif (errRET = 0) then
   ''DOWNLOAD 'PSKILL', DOES NOT ACCEPT ADDITIONAL PARAMETERS CURRENTLY
   if (blnPSK) then
     call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PSTools/pskill.exe", "pskill.exe")
-    call HOOK("c:\temp\pskill.exe -accepteuila -t " & strPROC)
+    call HOOK("c:\temp\pskill.exe -accepteula -t " & strPROC)
   ''CALL 'TASKKILL /F /FI 'USERNAME EQ USER' /IM 'PROCESS' /T'
   elseif (not blnPSK) then
     if (strUSR = vbnullstring) then                           ''OPTIONAL 'STRUSR' USERNAME WAS NOT PASSED
