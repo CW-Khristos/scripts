@@ -3,19 +3,22 @@
 ''THIS WILL UTILIZE 'TASKKILL' CMD IN INTERNAL WINDOWS CMD TO KILL TARGET PROCESS
 ''SCRIPT CAN 'TASKKILL' ALL PROCESSES BY /IM PROCESS NAME : 'SAMPLE.EXE'
 ''ALTERNATELY, SCRIPT CAN 'TASKKILL' ALL PROCESSES FILTERED BY A SPECIFIC USER, IF A USERNAME IS PASSED
-''ACCEPTS 2 PARAMETERS , REQUIRES 1 PARAMETER
+''ACCEPTS 3 PARAMETERS , REQUIRES 1 PARAMETER
 ''REQUIRED PARAMETER : 'STRPROC' , STRING TO SET TARGET PROCESS TO KILL
-''OPTIONAL PARAMETER : 'STRUSR' , STRING TO SET PASSWORD
+''OPTIONAL PARAMETER : 'STRUSR' , STRING TO SET USERNAME TO FILTER 'TASKKILL' TARGET BY
+''OPTIONAL PARAMETER : 'BLNPSK' , BOOLEAN TO D/L 'PSKILL' AND USE THIS INSTEAD, DOES NOT ACCEPT ADDITIONAL PARAMETERS CURRENTLY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strSEL
 dim strIN, strOUT, strORG, strREP
+''VARIABLES ACCEPTING PARAMETERS
+dim strPROC, strUSR, blnPSK
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, TASKKILL_FORCE.VBS , REF #2
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -46,6 +49,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     strPROC = objARG.item(0)                                ''SET REQUIRED PARAMETER 'STRPROC' ; TARGET PROCESS TO 'TASKKILL'
     if (wscript.arguments.count > 1) then                   ''OPTIONAL ARGUMENTS PASSED
       strUSR = objARG.item(1)                               ''SET OPTIONAL PARAMETER 'STRUSR' ; USERNAME TO FILTER 'TASKKILL' TARGET BY
+      blnPSK = objARG.item(2)                               ''SET OPTIONAL PARAMETER 'BLNPSK' ; BOOLEAN TO D/L 'PSKILL' AND USE THIS INSTEAD
     end if
   end if
 else                                                        ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
@@ -60,11 +64,17 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING TASKKILL_FORCE"
   ''AUTOMATIC UPDATE , 'ERRRET'=10 , TASKKILL_FORCE.VBS , REF #2
   call CHKAU()
+  ''DOWNLOAD 'PSKILL', DOES NOT ACCEPT ADDITIONAL PARAMETERS CURRENTLY
+  if (blnPSK) then
+    call FILEDL("https://github.com/CW-Khristos/scripts/PSTools/raw/dev/pskill.exe", "pskill.exe")
+    call HOOK("c:\temp\pskill.exe -t " & strPROC)
   ''CALL 'TASKKILL /F /FI 'USERNAME EQ USER' /IM 'PROCESS' /T'
-  if (strUSR = vbnullstring) then                           ''OPTIONAL 'STRUSR' USERNAME WAS NOT PASSED
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
-  elseif (strUSR <> vbnullstring) then                      ''OPTIONAL 'STRUSR' USERNAME TO FILTER 'TASKKILL' TARGET WAS PASSED
-    call HOOK("taskkill /F /FI " & chr(34) & "USERNAME eq " & strUSR & chr(34) & " /IM " & strPROC & " /T")
+  elseif (not blnPSK) then
+    if (strUSR = vbnullstring) then                           ''OPTIONAL 'STRUSR' USERNAME WAS NOT PASSED
+      call HOOK("taskkill /F /IM " & strPROC & " /T")
+    elseif (strUSR <> vbnullstring) then                      ''OPTIONAL 'STRUSR' USERNAME TO FILTER 'TASKKILL' TARGET WAS PASSED
+      call HOOK("taskkill /F /FI " & chr(34) & "USERNAME eq " & strUSR & chr(34) & " /IM " & strPROC & " /T")
+    end if
   end if
 end if
 ''END SCRIPT
