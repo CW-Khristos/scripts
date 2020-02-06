@@ -10,7 +10,7 @@ dim strIN, strOUT, strORG, strREP
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, WMI_FIX_RESTART.VBS , REF #2
-strVER = 2
+strVER = 3
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -56,6 +56,7 @@ elseif (errRET = 0) then
   ''RESET WMI WEBM REPOSITORY
   call HOOK("sc config winmgmt start= disabled")
   call HOOK("net stop winmgmt /y")
+  wscript.sleep 10000
   call HOOK("cmd.exe /C " & chr(34) & "ren %windir%\System32\wbem\repository repository.old" & chr(34))
   call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /salvagerepository %windir%\System32\wbem" & chr(34)) 
   call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /resetrepository %windir%\System32\wbem" & chr(34))
