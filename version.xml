@@ -53,6 +53,7 @@
 	<ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
 	<SVCperm.vbs>13</SVCperm.vbs>
 	<sysnfo.vbs>1</sysnfo.vbs>
+  <TaskKill_Force.vbs>1</TaskKill_Force.vbs>
 	<VSS_Fix.vbs>1</VSS_Fix.vbs>
 	<wmi_disk.vbs>1</wmi_disk.vbs>
   <WMI_FIX_NORESTART.VBS>3</WMI_FIX_NORESTART.VBS>
