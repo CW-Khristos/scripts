@@ -140,7 +140,7 @@ function remAVD()                               ''AV DEFENDER
   colFOL(0) = "C:\ProgramData\N-Able Technologies"
   colFOL(1) = "C:\Program Files\N-able Technologies\AVDefender"
   colFOL(2) = "C:\Program Files(x86)\N-able Technologies\Windows Agent\AVDefender"
-  call delFOL
+  call delFOL()
 end function
 
 function remAVG()                               ''AVG AV
@@ -358,51 +358,6 @@ sub delFOL()                                    ''DELETE FOLDERS SUB-ROUTINE
   wend
 end sub
 
-sub HOOK(strCMD)                                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
-  on error resume next
-  'comspec = objWSH.ExpandEnvironmentStrings("%comspec%")
-  set objHOOK = objWSH.exec(strCMD)
-  'while (objHOOK.status = 0)
-    while (not objHOOK.stdout.atendofstream)
-      strIN = objHOOK.stdout.readline
-      if (strIN <> vbnullstring) then
-        objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-        objLOG.write vbnewline & now & vbtab & vbtab & strIN 
-      end if
-    wend
-    wscript.sleep 10
-  'wend
-  strIN = objHOOK.stdout.readall
-  if (strIN <> vbnullstring) then
-    objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-    objLOG.write vbnewline & now & vbtab & vbtab & strIN 
-  end if
-  'retSTOP = objHOOK.exitcode
-  set objHOOK = nothing
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-  end if
-end sub
-
-sub CLEANUP()                                   ''SCRIPT CLEANUP
-  objOUT.write vbnewline & vbnewline & now & " - REMOVAL COMPLETE. PLEASE REBOOT." & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - REMOVAL COMPLETE. PLEASE REBOOT." & vbnewline
-  objLOG.close
-  ''EMPTY OBJECTS
-  set objLOG = nothing
-  set objREG = nothing
-  set objNAME = nothing
-  set objNET = nothing
-  set objWMI = nothing
-  set objFSO = nothing
-  set objWSH = nothing
-  set objARG = nothing
-  set objOUT = nothing
-  set objIN = nothing
-  ''END SCRIPT, RETURN DEFAULT NO ERROR
-  wscript.quit 0
-end sub
-
 ''REGISTRY SUB-ROUTINES
 sub msiKEY(strHIVE, strKEY, strFIND)            ''SEARCH FOR MSIEXEC INSTALL / UNINSTALL GUID
   on error resume next
@@ -549,4 +504,65 @@ sub delKEY(strHIVE, strPATH)                    ''DELETE KEY SUB-ROUTINE
     objOUT.write "SUCCESS" & vbnewline
     objLOG.write "SUCCESS" & vbnewline
   end if
+end sub
+
+''SCRIPT LOGGING AND CLEANUP
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+  on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  set objHOOK = objWSH.exec(strCMD)
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    while (not objHOOK.stdout.atendofstream)
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
+    wend
+    wscript.sleep 10
+    strIN = objHOOK.stdout.readall
+    if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    end if
+  end if
+  set objHOOK = nothing
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+    call LOGERR(12)
+  end if
+end sub
+
+sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
+  if (err.number <> 0) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+		err.clear
+  end if
+  ''CUSTOM ERROR CODES
+  select case intSTG
+    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+      'objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+      'objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
+  end select
+end sub
+
+sub CLEANUP()                                   ''SCRIPT CLEANUP
+  objOUT.write vbnewline & vbnewline & now & " - REMOVAL COMPLETE. PLEASE REBOOT." & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - REMOVAL COMPLETE. PLEASE REBOOT." & vbnewline
+  objLOG.close
+  ''EMPTY OBJECTS
+  set objLOG = nothing
+  set objREG = nothing
+  set objNAME = nothing
+  set objNET = nothing
+  set objWMI = nothing
+  set objFSO = nothing
+  set objWSH = nothing
+  set objARG = nothing
+  set objOUT = nothing
+  set objIN = nothing
+  ''END SCRIPT, RETURN DEFAULT NO ERROR
+  wscript.quit err.number
 end sub
