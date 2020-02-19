@@ -18,7 +18,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-strVER = 10
+strVER = 11
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
 ''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
@@ -289,15 +289,15 @@ end sub
 
 sub VSSSVC()                                 				        ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
-  if ((not blnAHS) and (not blnIIS) and (not blnBIT) and (not blnCSVC) and (not blnRDP) and _
-    (not blnTSG) and (not blnSQL) and (not blnTSK) and (not blnVSS) and (not blnWMI) and (not blnNPS) and (not blnWSCH)) then
+  if ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
+    (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
       ''SET 'BLNRUN' FLAG TO RUN SYSTEM STATE BACKUPS FOLLOWING MSP_SSHEAL
       if (not blnRUN) then
         blnRUN = true
       end if
-  ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP
-  elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnCSVC) or (blnRDP) or _
-    (blnTSG) or (blnSQL) or (blnTSK) or (blnVSS) or (blnWMI) or (blnNPS) or (blnWSCH)) then
+  ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP , ADDED 'SC QUERY' CALLS TO AVOID ATTEMPTING PS CALL TO NON-EXISTENT SERVICES
+  elseif ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
+    (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
       ''SET 'BLNRUN' FLAG
       blnRUN = true
       ''IIS
@@ -384,23 +384,21 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
           call HOOK ("net start Winmgmt")
         end if
       end if
-      ''CRYPTOGRAPHIC SERVICES - CryptSvc
-      if (blnCSVC) then
-        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-        intRET = objWSH.run ("sc query CryptSvc", 0, true)
+      ''VOLUME SHADOW COPY - VSS
+      if (blnVSS) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query VSS", 0, true)
         if (intRET = 0) then
-          call HOOK("net stop CryptSvc /y")
-          call HOOK ("net start CryptSvc")
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service VSS -Force -PassThru" & chr(34), 0, true)
         end if
       end if
       wscript.sleep 1000
-      ''VOLUME SHADOW COPY - VSS
-      if (blnVSS) then
-        ''CHECK FOR SERVICE PRIOR TO RUNNING 'NET STOP' AND 'NET START'
-        intRET = objWSH.run ("sc query VSS", 0, true)
+      ''CRYPTOGRAPHIC SERVICES - CryptSvc
+      if (blnCSVC) then
+        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+        intRET = objWSH.run ("sc query CryptSvc", 0, true)
         if (intRET = 0) then
-          call HOOK("net stop VSS /y")
-          call HOOK ("net start VSS")
+          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service CryptSvc -Force -PassThru" & chr(34), 0, true)
         end if
       end if
   end if
