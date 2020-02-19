@@ -17,7 +17,7 @@ dim blnAHS, blnBIT, blnCSVC, blnRDP
 dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
-''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
 strVER = 11
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
@@ -31,15 +31,15 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		        ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\MSP_SSHeal", true
-  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
+if (objFSO.fileexists("C:\temp\MSP_SSHEAL_FORCE")) then		        ''LOGFILE EXISTS
+  objFSO.deletefile "C:\temp\MSP_SSHEAL_FORCE", true
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE", 8)
 else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE", 8)
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -52,9 +52,9 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
+objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
+''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
 objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -137,8 +137,8 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "
     end if
 elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
   (instr(1, strIDL, "Suspended") = 0)) then					        ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
-    objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE"
     call LOGERR(1)
 end if
 ''END SCRIPT
@@ -291,7 +291,7 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   if ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
     (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
-      ''SET 'BLNRUN' FLAG TO RUN SYSTEM STATE BACKUPS FOLLOWING MSP_SSHEAL
+      ''SET 'BLNRUN' FLAG TO RUN SYSTEM STATE BACKUPS FOLLOWING MSP_SSHEAL_FORCE
       if (not blnRUN) then
         blnRUN = true
       end if
@@ -404,7 +404,7 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   end if
 end sub
 
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -538,15 +538,15 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
-  if (errRET = 0) then         											        ''MSP_SSHEAL COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
-  elseif (errRET <> 0) then    											        ''MSP_SSHEAL FAILED
-    objOUT.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
+  if (errRET = 0) then         											        ''MSP_SSHEAL_FORCE COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "MSP_SSHEAL_FORCE SUCCESSFUL : " & NOW
+  elseif (errRET <> 0) then    											        ''MSP_SSHEAL_FORCE FAILED
+    objOUT.write vbnewline & "MSP_SSHEAL_FORCE FAILURE : " & NOW & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "MSP_SSHEAL", "FAILURE")
+    call err.raise(vbObjectError + errRET, "MSP_SSHEAL_FORCE", "FAILURE")
   end if
-  objOUT.write vbnewline & vbnewline & now & " - MSP_SSHEAL COMPLETE" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - MSP_SSHEAL COMPLETE" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & " - MSP_SSHEAL_FORCE COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - MSP_SSHEAL_FORCE COMPLETE" & vbnewline
   objLOG.close
   ''EMPTY OBJECTS
   set objLOG = nothing

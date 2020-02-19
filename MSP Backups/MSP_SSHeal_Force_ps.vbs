@@ -31,15 +31,15 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		        ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\MSP_SSHeal", true
-  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
+if (objFSO.fileexists("C:\temp\MSP_SSHEAL_FORCE_PS")) then		        ''LOGFILE EXISTS
+  objFSO.deletefile "C:\temp\MSP_SSHEAL_FORCE_PS", true
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE_PS")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE_PS", 8)
 else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE_PS")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE_PS", 8)
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -52,8 +52,8 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
-objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
+objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
+objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
@@ -137,8 +137,8 @@ if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "
     end if
 elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
   (instr(1, strIDL, "Suspended") = 0)) then                 ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
-    objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE_PS"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE_PS"
     call LOGERR(1)
 end if
 ''END SCRIPT
@@ -291,7 +291,7 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
   if ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
     (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
-      ''SET 'BLNRUN' FLAG FOR RUNNING SYSTEM STATE BACKUPS FOLLOWING MSP_SSHEAL
+      ''SET 'BLNRUN' FLAG FOR RUNNING SYSTEM STATE BACKUPS FOLLOWING MSP_SSHEAL_FORCE_PS
       if (not blnRUN) then
         blnRUN = true
       end if
@@ -395,7 +395,7 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   end if
 end sub
 
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
+sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , FIXES #4
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -416,8 +416,8 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VB
       ''LOCATE CURRENTLY RUNNING SCRIPT
       if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
         ''CHECK LATEST VERSION
-        objOUT.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-        objLOG.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
+        objOUT.write vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
+        objLOG.write vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
         if (cint(objSCR.text) > cint(strVER)) then
           objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
@@ -529,17 +529,17 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
-  if (errRET = 0) then         											        ''MSP_SSHEAL COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
-    objLOG.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
-  elseif (errRET <> 0) then    											        ''MSP_SSHEAL FAILED
-    objOUT.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
-    objLOG.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
+  if (errRET = 0) then         											        ''MSP_SSHEAL_FORCE_PS COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "MSP_SSHEAL_FORCE_PS SUCCESSFUL : " & NOW
+    objLOG.write vbnewline & "MSP_SSHEAL_FORCE_PS SUCCESSFUL : " & NOW
+  elseif (errRET <> 0) then    											        ''MSP_SSHEAL_FORCE_PS FAILED
+    objOUT.write vbnewline & "MSP_SSHEAL_FORCE_PS FAILURE : " & NOW & " : " & errRET
+    objLOG.write vbnewline & "MSP_SSHEAL_FORCE_PS FAILURE : " & NOW & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "MSP_SSHEAL", "FAILURE")
+    call err.raise(vbObjectError + errRET, "MSP_SSHEAL_FORCE_PS", "FAILURE")
   end if
-  objOUT.write vbnewline & vbnewline & now & " - MSP_SSHEAL COMPLETE" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - MSP_SSHEAL COMPLETE" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & " - MSP_SSHEAL_FORCE_PS COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - MSP_SSHEAL_FORCE_PS COMPLETE" & vbnewline
   objLOG.close
   ''EMPTY OBJECTS
   set objLOG = nothing
