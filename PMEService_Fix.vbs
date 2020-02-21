@@ -45,17 +45,25 @@ objLOG.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 ''AUTOMATIC UPDATE, PMESERVICE_FIX.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''DOWNLOAD PME SERVICE SUPPORTING FILES
+objOUT.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
 call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/AnniversaryUpdates_details.xml", "AnniversaryUpdates_details.xml")
-call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/SecurityUpdates_details.xml", "SecurityUpdates_details.xml")
+objOUT.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
 call FILEDL("https://sis.n-able.com/PatchManagement/AnniversaryUpdates.zip", "AnniversaryUpdates.zip")
+objOUT.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
+call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/SecurityUpdates_details.xml", "SecurityUpdates_details.xml")
+objOUT.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
 call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.2.11.20.zip", "SecurityUpdates.zip")
 ''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.11.2083
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
 call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe", "PMESetup.exe")
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
 ''END SCRIPT
 call CLEANUP()
@@ -116,11 +124,7 @@ end sub
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  if (isntr(1, lcase(strFILE), "updates")) then
-    strSAV = "C:\ProgramData\SolarWinds MSP\PME\Archives"
-  elseif (isntr(1, lcase(strFILE), "updates") = 0) then
-    strSAV = "C:\temp\" & strFILE
-  end if
+  strSAV = "C:\temp\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
@@ -149,6 +153,10 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   if objFSO.fileexists(strSAV) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+    if (instr(1, lcase(strFILE), "updates")) then
+      call HOOK("cmd.exe /C move " & chr(34) & strSAV & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+    end if
   end if
   set objHTTP = nothing
   ''ERROR RETURNED
