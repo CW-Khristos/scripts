@@ -10,7 +10,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, PMESERVICE_FIX.VBS, REF #2
-strVER = 1
+strVER = 2
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -44,10 +44,15 @@ objOUT.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 objLOG.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 ''AUTOMATIC UPDATE, PMESERVICE_FIX.VBS, REF #2 , FIXES #4
 call CHKAU()
-''DOWNLOAD PME SERVICE UPDATE
+''DOWNLOAD PME SERVICE SUPPORTING FILES
+call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/AnniversaryUpdates_details.xml", "AnniversaryUpdates_details.xml")
+call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/SecurityUpdates_details.xml", "SecurityUpdates_details.xml")
+call FILEDL("https://sis.n-able.com/PatchManagement/AnniversaryUpdates.zip", "AnniversaryUpdates.zip")
+call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.2.11.20.zip", "SecurityUpdates.zip")
+''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.11.2083
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
-call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.9.1990/PMESetup.exe", "PMESetup.exe")
+call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe", "PMESetup.exe")
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
@@ -111,7 +116,11 @@ end sub
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  if (isntr(1, lcase(strFILE), "updates")) then
+    strSAV = "C:\ProgramData\SolarWinds MSP\PME\Archives"
+  elseif (isntr(1, lcase(strFILE), "updates") = 0) then
+    strSAV = "C:\temp\" & strFILE
+  end if
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
