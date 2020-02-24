@@ -18,7 +18,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
-strVER = 11
+strVER = 12
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
 ''DEFAULT 'BLNSUP' FLAG - SUPPRESS ERRORS IN CALL HOOK(), REF #19
@@ -54,6 +54,10 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
+''CHECK POWERSHELL EXECUTION POLICY
+objOUT.write vbnewline & now & " - CHECK POWERSHELL EXECUTION POLICY"
+objLOG.write vbnewline & now & " - CHECK POWERSHELL EXECUTION POLICY"
+call HOOK("cmd.exe /C " & chr(34) & "C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" & chr(34) & " -Command " & chr(34) & "Get-ExecutionPolicy" & chr(34))
 ''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
