@@ -98,6 +98,8 @@ if (blnLOG) then
     set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
   end if
 end if
+''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
+call HOOK("cmd.exe /C icacls C:\Windows\Temp /grant administrators:f")
 ''ENUMERATE THROUGH FOLDER COLLECTION
 for x = 0 to ubound(colFOL)
   if (colFOL(x) <> vbnullstring) then                       ''ENSURE COLFOL(X) IS NOT EMPTY

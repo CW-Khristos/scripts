@@ -4,13 +4,16 @@
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN
+''REGISTRY CONSTANTS
+const HKCR = &H80000000
+const HKLM = &H80000002
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, PMESERVICE_FIX.VBS, REF #2
-strVER = 2
+strVER = 3
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -44,6 +47,25 @@ objOUT.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 objLOG.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 ''AUTOMATIC UPDATE, PMESERVICE_FIX.VBS, REF #2 , FIXES #4
 call CHKAU()
+''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
+objOUT.write vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST" & vbnewline
+call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:32")
+call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
+call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:32")
+call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
+call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:32")
+call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
+call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:32")
+call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
+  " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
 ''DOWNLOAD PME SERVICE SUPPORTING FILES
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
 objLOG.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
@@ -64,7 +86,7 @@ call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe"
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+'call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
