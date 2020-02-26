@@ -87,6 +87,20 @@ call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe"
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+''RESET WINDOWS UPDATE COMPONENTS
+objOUT.write vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
+objLOG.write vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
+call HOOK("net stop bits")
+call HOOK("net stop wuauserv")
+call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v AccountDomainSid /f")
+call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v PingID /f")
+call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientId /f")
+call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientIDValidation /f")
+call HOOK("rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
+call HOOK("net start bits")
+call HOOK("net start wuauserv")
+call HOOK("wuauclt /resetauthorization /detectnow")
+call HOOK("cmd.exe /C " & chr(34) & "PowerShell.exe (New-Object -ComObject Microsoft.Update.AutoUpdate).DetectNow()" & chr(34))
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
