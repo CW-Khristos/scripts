@@ -48,8 +48,8 @@ objLOG.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 ''AUTOMATIC UPDATE, PMESERVICE_FIX.VBS, REF #2 , FIXES #4
 call CHKAU()
 ''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
-objOUT.write vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
+objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
 call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
   " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:32")
 call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" & chr(34) & _
@@ -67,29 +67,29 @@ call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main
 call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
   " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
 ''DOWNLOAD PME SERVICE SUPPORTING FILES
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
 call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/AnniversaryUpdates_details.xml", "AnniversaryUpdates_details.xml")
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES.ZIP" & vbnewline
 call FILEDL("https://sis.n-able.com/PatchManagement/AnniversaryUpdates.zip", "AnniversaryUpdates.zip")
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
 call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/SecurityUpdates_details.xml", "SecurityUpdates_details.xml")
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
 call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.2.11.20.zip", "SecurityUpdates.zip")
 ''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.11.2083
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
 call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe", "PMESetup.exe")
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
-objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
 ''RESET WINDOWS UPDATE COMPONENTS
-objOUT.write vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
-objLOG.write vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
+objOUT.write vbnewline & vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
 call HOOK("net stop bits")
 call HOOK("net stop wuauserv")
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v AccountDomainSid /f")
