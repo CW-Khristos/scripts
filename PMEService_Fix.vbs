@@ -96,7 +96,7 @@ call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVers
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v PingID /f")
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientId /f")
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientIDValidation /f")
-call HOOK("rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
+call HOOK("cmd.exe /C rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
 call HOOK("net start bits")
 call HOOK("net start wuauserv")
 call HOOK("wuauclt /resetauthorization /detectnow")
