@@ -86,7 +86,7 @@ call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.11.2083/PMESetup.exe"
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-'call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
