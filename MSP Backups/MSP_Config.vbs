@@ -14,7 +14,7 @@ dim strHDR, strCHG, strVAL, blnFORCE
 ''SCRIPT OBJECTS
 dim objLOG, objCFG
 dim objIN, objOUT, objARG, objWSH, objFSO
-''SET 'errRET' CODE
+''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
 strVER = 4
