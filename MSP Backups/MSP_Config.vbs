@@ -7,20 +7,22 @@
 dim blnHDR, blnINJ, blnMOD
 dim errRET, strVER, strIN, arrIN
 ''VARIABLES ACCEPTING PARAMETERS
-dim strHDR, strCHG
+dim strHDR, strCHG, strVAL, blnFORCE
 ''SCRIPT OBJECTS
 dim objLOG, objCFG
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''SET 'errRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
-strVER = 3
+strVER = 4
 ''SET 'BLNHDR' FLAG
 blnHDR = false
 ''SET 'BLNINJ' FLAG
 blnINJ = false
 ''SET 'BLNMOD' FLAG
 blnMOD = true
+''SET 'BLNFORCE' FLAG
+blnFORCE = false
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -39,35 +41,40 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_CONFIG")) then               ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_CONFIG")) then                     ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_CONFIG", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_CONFIG")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_CONFIG", 8)
-else                                                            ''LOGFILE NEEDS TO BE CREATED
+else                                                                  ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_CONFIG")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_CONFIG", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                           ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count <= 2) then                                ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
+  call LOGERR(1)
+  call CLEANUP()
+elseif (wscript.arguments.count > 0) then                             ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  ''ARGUMENT 0 - TARGET 'HEADER'
-  strHDR = objARG.item(0)
-  if (wscript.arguments.count > 1) then                         ''SET STRING TO INSERT INTO CONFIG.INI
-    strCHG = objARG.item(1)
-  else                                                          ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    errRET = 1
-    call CLEANUP
+  strHDR = objARG.item(0)                                             ''SET STRING 'STRHDR', TARGET 'HEADER'
+  if (wscript.arguments.count > 2) then
+    strCHG = objARG.item(1)                                           ''SET STRING 'STRCHG', TARGET STRING TO INSERT
+    strVAL = objARG.item(2)                                           ''SET STRING 'STRVAL', TARGET VALUE TO INSERT
+    if (wscript.arguments.count > 3) then
+      blnFORCE = objARG.item(3)                                       ''SET BOOLEAN 'BLNFORCE', FLAG TO FORCE MODIFY VALUE
+    end if
+  elseif (wscript.arguments.count <= 2) then                          ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
+    call LOGERR(1)
+    call CLEANUP()  
   end if
-else                                                            ''NO ARGUMENTS PASSED, END SCRIPT
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION AND STRING TO INJECT"
-  errRET = 1
-  call CLEANUP
 end if
 
 ''------------
@@ -81,19 +88,35 @@ objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
 strIN = objCFG.readall
 arrIN = split(strIN, vbnewline)
-for intIN = 0 to ubound(arrIN)                                  ''CHECK CONFIG.INI LINE BY LINE
+for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
   objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
   objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
-  if (arrIN(intIN) = strHDR) then                               ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
+  if (arrIN(intIN) = strHDR) then                                     ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
     blnHDR = true
   end if
-  if (arrIN(intIN) = strCHG) then                               ''STRING TO INJECT ALREADY IN CONFIG.INI
+  if (instr(1, arrIN(intIN), strCHG)) then                            ''STRING TO INJECT ALREADY IN CONFIG.INI
+    blnINJ = false
     blnMOD = false
+    if (strVAL = split(arrIN(intIN), "=")(1)) then                    ''PASSED VALUE 'STRVAL' MATCHES INTERNAL STRING VALUE
+      blnINJ = false
+      blnMOD = false
+    elseif (strVAL <> split(arrIN(intIN), "=")(1)) then               ''PASSED VALUE 'STRVAL' DOES NOT MATCH INTERNAL STRING VALUE
+      if (not blnFORCE) then
+        blnINJ = false
+        blnMOD = false
+      elseif (blnFORCE) then
+        blnINJ = true
+        blnMOD = false
+        arrIN(intIN) = strCHG & "=" & strVAL
+        exit for
+      end if  
+    end if
+    exit for
   end if
   if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
     blnINJ = true
     blnHDR = false
-    arrIN(intIN) = strCHG & vbCrlf
+    arrIN(intIN) = strCHG & "=" & strVAL & vbCrlf
   end if
 next
 objCFG.close
@@ -119,7 +142,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_CONFIG.VBS, REF #2 , FIXES #25
+sub CHKAU()																					                  ''CHECK FOR SCRIPT UPDATE, MSP_CONFIG.VBS, REF #2 , FIXES #25
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -148,19 +171,20 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_CONFIG.VBS, REF #
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/MSP_Config.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+					if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
 							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
 						next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+					elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
 					end if
-					''END SCRIPT
+					''SET 'ERRRET'=13, END SCRIPT
+          call LOGERR(13)
 					call CLEANUP()
 				end if
 			end if
@@ -168,47 +192,25 @@ sub CHKAU()																					''CHECK FOR SCRIPT UPDATE, MSP_CONFIG.VBS, REF #
 	end if
 	set colVER = nothing
 	set objXML = nothing
-end sub
-
-sub HOOK(strCMD)                              			''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
-  on error resume next
-  set objHOOK = objWSH.exec(strCMD)
-	while (not objHOOK.stdout.atendofstream)
-		strIN = objHOOK.stdout.readline
-		if (strIN <> vbnullstring) then
-			objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-			objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-		end if
-	wend
-	wscript.sleep 10
-  strIN = objHOOK.stdout.readall
-  if (strIN <> vbnullstring) then
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-  end if
-  set objHOOK = nothing
-  if ((not blnSUP) and (err.number <> 0)) then
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    errRET = 3
-    err.clear
+  if (err.number <> 0) then                                           ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
+    call LOGERR(10)
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strFILE)                                           ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  if objFSO.fileexists(strSAV) then
+    objFSO.deletefile(strSAV)
+  end if
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
-  if objFSO.fileexists(strSAV) then
-    objFSO.deletefile(strSAV)
-  end if
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -223,21 +225,59 @@ sub FILEDL(strURL, strFILE)                   			''CALL HOOK TO DOWNLOAD FILE FR
   end if
   ''CHECK THAT FILE EXISTS
   if objFSO.fileexists(strSAV) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    set objHTTP = nothing
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
+	set objHTTP = nothing
+  if (err.number <> 0) then                                           ''ERROR RETURNED , 'ERRRET'=11
+    call LOGERR(11)
+  end if
+end sub
+
+sub HOOK(strCMD)                                                      ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+  on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  set objHOOK = objWSH.exec(strCMD)
+  if (instr(1, strCMD, "takeown /F ") = 0) then                       ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    while (not objHOOK.stdout.atendofstream)
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
+    wend
+    wscript.sleep 10
+    strIN = objHOOK.stdout.readall
+    if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    end if
+  end if
+  ''CHECK FOR ERRORS
+  errRET = objHOOK.exitcode
+  set objHOOK = nothing
+  if ((not blnSUP) and (err.number <> 0)) then
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
+    call LOGERR(12)
+  end if
+end sub
+
+sub LOGERR(intSTG)                                                    ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
-    errRET = 2
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		err.clear
   end if
 end sub
 
-sub CLEANUP()                                 			''SCRIPT CLEANUP
-  if (errRET = 0) then         											''MSP_CONFIG COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_CONFIG SUCCESSFUL : " & NOW
-  elseif (errRET <> 0) then    											''MSP_CONFIG FAILED
-    objOUT.write vbnewline & "MSP_CONFIG FAILURE : " & NOW & " : " & errRET
+sub CLEANUP()                                 			                  ''SCRIPT CLEANUP
+  if (errRET = 0) then         											                  ''MSP_CONFIG COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & "MSP_CONFIG SUCCESSFUL : " & now
+  elseif (errRET <> 0) then    											                  ''MSP_CONFIG FAILED
+    objOUT.write vbnewline & "MSP_CONFIG FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_CONFIG", "FAILURE")
   end if
@@ -253,5 +293,5 @@ sub CLEANUP()                                 			''SCRIPT CLEANUP
   set objOUT = nothing
   set objIN = nothing
   ''END SCRIPT, RETURN ERROR NUMBER
-  wscript.quit errRET
+  wscript.quit err.number
 end sub
