@@ -191,7 +191,7 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
     if (instr(1, lcase(strFILE), "updates")) then
-      call HOOK("cmd.exe /C move " & chr(34) & strSAV & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+      call HOOK("cmd.exe /C move /y " & chr(34) & strSAV & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
     end if
   end if
   set objHTTP = nothing

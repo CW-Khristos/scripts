@@ -1,7 +1,7 @@
 ''CODEDROP_FIX.VBS
 ''SCRIPT IS DESIGNED TO DOWNLOAD AND AUTOMATE 'CODEDROP' FIX FROM SOLARWINDS FOR SELF-HEAL ISSUE, REF #2 , REF #1
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN, strCDD
 ''SCRIPT OBJECTS
@@ -12,7 +12,7 @@ errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
 strVER = 1
 ''WINDOWS AGENT CODEDROP Directory
-strCDD = "C:\Program Files(x86)\N-able Technologies\Windows Agent\bin"
+strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -51,6 +51,7 @@ objOUT.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
 call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
+wscript.sleep 5000
 ''DOWNLOAD CODEDROP 'FIX' FILES
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
 objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
@@ -60,27 +61,29 @@ call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/CodeDropMet
 objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
 objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
 if objFSO.fileexists(strSAV) then
-  call HOOK("cmd.exe /C move " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
+  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
 end if
-if objFSO.fileexists(strSAV) then
-  call HOOK("cmd.exe /C move " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
-end if
+'if objFSO.fileexists(strSAV) then
+'  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
+'end if
 ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
 objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
 objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
 ''CHECK THAT FILE EXISTS
-if objFSO.fileexists("c:\temp\agent.exe") then
-  call HOOK("cmd.exe /C move " & chr(34) & "c:\temp\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.exe" & chr(34))
+if objFSO.fileexists("C:\Temp\agent.exe") then
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\agent.exe" & chr(34) & " " & chr(34) & strCDD & chr(34))
+  'objFSO.copyfile "C:\Temp\agent.exe", strCDD & "\agent.exe", true
 end if
 ''CHECK THAT FILE EXISTS
-if objFSO.fileexists("c:\temp\CodeDropMeta.xml") then
-  call HOOK("cmd.exe /C move " & chr(34) & "c:\temp\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34))
+if objFSO.fileexists("C:\Temp\CodeDropMeta.xml") then
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & chr(34))
+  'objFSO.copyfile "C:\Temp\CodeDropMeta.xml", strCDD & "\CodeDropMeta.xml", true
 end if
 ''RESTART WINDOWS AGENT SERVICES
 objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
-call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
-call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
+call HOOK("net start " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+call HOOK("net start " & chr(34) & "Windows Agent Service" & chr(34))
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
