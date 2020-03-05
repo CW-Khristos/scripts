@@ -97,6 +97,7 @@ K:\System Volume Information|
 %PROGRAMDATA%\restored_quar|
 %PROGRAMDATA%\SolarWinds|
 %PROGRAMDATA%\SolarWinds MSP|
+%PROGRAMDATA%\Sentinel|
 C:\Windows10Upgrade|
 C:\Users\Redirected\RMMTech\AppData|
 C:\Users\Redirected\RMMTech\Contacts|
