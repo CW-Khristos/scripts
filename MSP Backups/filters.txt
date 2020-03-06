@@ -16,6 +16,7 @@ C:\RECYCLED|
 C:\Temp|
 C:\tempini|
 C:\wu_output|
+C:\Windows10Upgrade|
 C:\hiberfil.sys|
 C:\pagefile.sys|
 C:\swapfile.sys|
@@ -56,19 +57,33 @@ J:\System Volume Information|
 K:\System Volume Information|
 %PROGRAMFILES%\Backup Manager|
 %PROGRAMFILES%\N-able Technologies|
+%PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMFILES(X86)%\SolarWinds MSP|
 %PROGRAMFILES(X86)%\BeAnywhere Support Express|
+%PROGRAMFILES(X86)%\N-able Technologies\Tools|
+%PROGRAMFILES(X86)%\N-able Technologies\Reactive|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Agent|
 %PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
 %PROGRAMFILES(X86)%\N-able Technologies\PatchManagement|
-%PROGRAMFILES(X86)%\N-able Technologies\Reactive|
-%PROGRAMFILES(X86)%\N-able Technologies\Tools|
-%PROGRAMFILES(X86)%\N-able Technologies\Windows Agent|
 %PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe|
-%PROGRAMFILES(X86)%\SolarWinds MSP|
-%PROGRAMFILES(X86)%\StorageCraft|
-%PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
-%PROGRAMDATA%\bdlogging|
+%PROGRAMDATA%\MXB|
+%PROGRAMDATA%\MXB.old|
+%PROGRAMDATA%\MXB.old2|
+%PROGRAMDATA%\MXB.old3|
+%PROGRAMDATA%\MXB.older|
+%PROGRAMDATA%\MXB_old|
+%PROGRAMDATA%\MXB_old2|
+%PROGRAMDATA%\MXB_old3|
+%PROGRAMDATA%\MXB_older|
+%PROGRAMDATA%\Sentinel|
+%PROGRAMDATA%\SolarWinds|
+%PROGRAMDATA%\SolarWinds MSP|
+%PROGRAMDATA%\N-Able Technologies|
 %PROGRAMDATA%\GetSupportService|
 %PROGRAMDATA%\GetSupportService_N-Central|
+%PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
+%PROGRAMDATA%\bdlogging|
+%PROGRAMDATA%\restored_quar|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
 %PROGRAMDATA%\Microsoft\Windows\Caches|
 %PROGRAMDATA%\Microsoft\Windows\DeviceMetadataCache|
@@ -84,21 +99,6 @@ K:\System Volume Information|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Scans|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
 %PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
-%PROGRAMDATA%\MXB|
-%PROGRAMDATA%\MXB.old|
-%PROGRAMDATA%\MXB.old2|
-%PROGRAMDATA%\MXB.old3|
-%PROGRAMDATA%\MXB.older|
-%PROGRAMDATA%\MXB_old|
-%PROGRAMDATA%\MXB_old2|
-%PROGRAMDATA%\MXB_old3|
-%PROGRAMDATA%\MXB_older|
-%PROGRAMDATA%\N-Able Technologies|
-%PROGRAMDATA%\restored_quar|
-%PROGRAMDATA%\SolarWinds|
-%PROGRAMDATA%\SolarWinds MSP|
-%PROGRAMDATA%\Sentinel|
-C:\Windows10Upgrade|
 C:\Users\Redirected\RMMTech\AppData|
 C:\Users\Redirected\RMMTech\Contacts|
 C:\Users\Redirected\RMMTech\Desktop|
@@ -157,6 +157,7 @@ C:\Users\RMMTech.%COMPUTERNAME%\Videos|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\SchCache|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Temp|
 %SystemRoot%\SoftwareDistribution|
+%SystemRoot%\System32\LogFiles|
 %SystemRoot%\System32\config\systemprofile\AppData\Local\D3DSCache|
 %SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\Caches|
 %SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\CloudAPCache|
@@ -183,3 +184,4 @@ C:\User Files\RMMTech|
 C:\User Folders\RMMTech|
 C:\UserFiles\RMMTech|
 C:\UserFolders\RMMTech|
+%LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|
