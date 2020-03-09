@@ -21,6 +21,7 @@
 	<MSP_Config.vbs>4</MSP_Config.vbs>
 	<MSP_Debug.vbs>3</MSP_Debug.vbs>
   <MSP_Filter.vbs>1</MSP_Filter.vbs>
+  <MSP_Includes.vbs>1</MSP_Includes.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
 	<msp_postbackup.vbs>4</msp_postbackup.vbs>
 	<msp_prebackup.vbs>4</msp_prebackup.vbs>
