@@ -42,8 +42,8 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                     ''SET VARIABLES ACCEPTING ARGUMENTS
-    strINCL = objARG.item(0)                                ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP FILTERS STRING
-    ''FILL 'ARRINCL' BACKUP FILTER ARRAY
+    strINCL = objARG.item(0)                                ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP INCLUDES STRING
+    ''FILL 'ARRINCL' BACKUP INCLUDES ARRAY
     objOUT.write vbnewline & vbtab & strINCL
     arrINCL = split(strINCL, "|")
     for intTMP = 0 to ubound(arrINCL)
@@ -64,11 +64,11 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_INCLUDES"
 	''AUTOMATIC UPDATE, MSP_INCLUDES.VBS, REF #2
 	call CHKAU()
-	''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
-	objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/includes.txt", "filters.txt")
-  set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
+	''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
+	objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/includes.txt", "includes.txt")
+  set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
   while (not objTMP.atendofstream)
     strTMP = strTMP & objTMP.readline
   wend
