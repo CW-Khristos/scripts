@@ -58,7 +58,7 @@ if (intRET = 0) then
 end if
 wscript.sleep 5000
 ''DOWNLOAD AND RUN 'CCLUTTERV2.VBS' WHICH INCLUDES NABLEPATCHCACHE AND NABLEUPDATECACHE DIRECTORIES
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/cclutter.vbs", "CClutterV2.vbs")
+call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CClutterV2.vbs", "CClutterV2.vbs")
 call HOOK("cscript.exe " & chr(34) & "c:\temp\CClutterV2.vbs" & chr(34) & " " & chr(34) & "true" & chr(34))
 ''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
