@@ -64,7 +64,7 @@ if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
   colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
   colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
   colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(36) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
