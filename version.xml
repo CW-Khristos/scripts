@@ -33,7 +33,7 @@
 	<MSP_Update.vbs>3</MSP_Update.vbs>
 	<percent_rename.vbs>1</percent_rename.vbs>
   <pingtest.vbs>2</pingtest.vbs>
-  <PMEService_Fix.vbs>4</PMEService_Fix.vbs>
+  <PMEService_Fix.vbs>5</PMEService_Fix.vbs>
 	<post-backup.cmd>3</post-backup.cmd>
   <powerCFG.vbs>2</powerCFG.vbs>
 	<pre-backup.cmd>3</pre-backup.cmd>

@@ -13,7 +13,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, PMESERVICE_FIX.VBS, REF #2
-strVER = 4
+strVER = 5
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -47,6 +47,19 @@ objOUT.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 objLOG.write vbnewline & now & " - STARTING PMESERVICE_FIX" & vbnewline
 ''AUTOMATIC UPDATE, PMESERVICE_FIX.VBS, REF #2 , FIXES #4
 call CHKAU()
+''STOP WINDOWS PROBE SERVICES
+objOUT.write vbnewline & vbnewline & now & vbtab & " - STOPPING WINDOWS PROBE SERVICES" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - STOPPING WINDOWS PROBE SERVICES" & vbnewline
+intRET = objWSH.run("sc query " & chr(34) & "Windows Software Probe Service" & chr(34), 0, true)
+if (intRET = 0) then
+  call HOOK("net stop " & chr(34) & "N-able Patch Repository Service" & chr(34))
+  call HOOK("net stop " & chr(34) & "Windows Software Probe Maintenance Service" & chr(34))
+  call HOOK("net stop " & chr(34) & "Windows Software Probe Service" & chr(34))
+end if
+wscript.sleep 5000
+''DOWNLOAD AND RUN 'CCLUTTERV2.VBS' WHICH INCLUDES NABLEPATCHCACHE AND NABLEUPDATECACHE DIRECTORIES
+call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/cclutter.vbs", "CClutterV2.vbs")
+call HOOK("cscript.exe " & chr(34) & "c:\temp\CClutterV2.vbs" & chr(34) & " " & chr(34) & "true" & chr(34))
 ''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
 objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
@@ -99,6 +112,16 @@ call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVers
 call HOOK("cmd.exe /C rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
 call HOOK("net start bits")
 call HOOK("net start wuauserv")
+''RESTART WINDOWS PROBE SERVICES
+objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTARTING WINDOWS PROBE SERVICES" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - RESTARTING WINDOWS PROBE SERVICES" & vbnewline
+intRET = objWSH.run("sc query " & chr(34) & "Windows Software Probe Service" & chr(34), 0, true)
+if (intRET = 0) then
+  call HOOK("net start " & chr(34) & "N-able Patch Repository Service" & chr(34))
+  call HOOK("net start " & chr(34) & "Windows Software Probe Maintenance Service" & chr(34))
+  call HOOK("net start " & chr(34) & "Windows Software Probe Service" & chr(34))
+end if
+wscript.sleep 10000
 call HOOK("wuauclt /resetauthorization /detectnow")
 call HOOK("cmd.exe /C " & chr(34) & "PowerShell.exe (New-Object -ComObject Microsoft.Update.AutoUpdate).DetectNow()" & chr(34))
 ''END SCRIPT
