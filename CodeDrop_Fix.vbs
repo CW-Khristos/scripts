@@ -11,7 +11,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-strVER = 2
+strVER = 3
 ''WINDOWS AGENT CODEDROP Directory
 strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
 ''STDIN / STDOUT
