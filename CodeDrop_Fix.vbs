@@ -2,6 +2,7 @@
 ''SCRIPT IS DESIGNED TO DOWNLOAD AND AUTOMATE 'CODEDROP' FIX FROM SOLARWINDS FOR SELF-HEAL ISSUE, REF #2 , REF #1
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
+dim strFIX
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN, strCDD
 ''SCRIPT OBJECTS
@@ -39,6 +40,19 @@ if (strIN <> "cscript.exe") Then
   objWSH.run "cscript.exe //nologo " & chr(34) & Wscript.ScriptFullName & chr(34)
   wscript.quit
 end if
+''READ PASSED COMMANDLINE ARGUMENTS
+if (wscript.arguments.count < 1) then                                ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
+  call LOGERR(1)
+  call CLEANUP()
+elseif (wscript.arguments.count = 1) then                             ''ARGUMENTS WERE PASSED
+  for x = 0 to (wscript.arguments.count - 1)
+    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  next 
+  strFIX = objARG.item(0)                                             ''SET STRING 'STRFIX', CODE DROP FIX SELECTION
+end if
 
 ''------------
 ''BEGIN SCRIPT
@@ -55,8 +69,13 @@ wscript.sleep 5000
 ''DOWNLOAD CODEDROP 'FIX' FILES
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
 objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/agent.exe", "agent.exe")
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/CodeDropMeta.xml", "CodeDropMeta.xml")
+if (ucase(strFIX) = "SELFHEAL") then
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/agent.exe", "agent.exe")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/CodeDropMeta.xml", "CodeDropMeta.xml")
+elseif (ucase(strFIX) = "COPYPASTE") then
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/copypaste/agent.exe", "agent.exe")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/copypaste/CodeDropMeta.xml", "CodeDropMeta.xml")
+end if
 ''RENAME 'OLD' CODEDROP FILES
 objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
 objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
