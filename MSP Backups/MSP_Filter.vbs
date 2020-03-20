@@ -54,13 +54,14 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
       objOUT.write vbnewline & vbtab & ubound(arrFILTER) & vbtab & arrFILTER(intTMP)
     next
     if (wscript.arguments.count > 1) then
-    strINCL = objARG.item(1)                                ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP INCLUDES STRING
-    ''FILL 'ARRINCL' BACKUP INCLUDES ARRAY
-    objOUT.write vbnewline & vbtab & strINCL
-    arrINCL = split(strINCL, "|")
-    for intTMP = 0 to ubound(arrINCL)
-      objOUT.write vbnewline & vbtab & ubound(arrINCL) & vbtab & arrINCL(intTMP)
-    next
+      strINCL = objARG.item(1)                                ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP INCLUDES STRING
+      ''FILL 'ARRINCL' BACKUP INCLUDES ARRAY
+      objOUT.write vbnewline & vbtab & strINCL
+      arrINCL = split(strINCL, "|")
+      for intTMP = 0 to ubound(arrINCL)
+        objOUT.write vbnewline & vbtab & ubound(arrINCL) & vbtab & arrINCL(intTMP)
+      next
+    end if
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     'call LOGERR(1)
   end if
@@ -236,7 +237,7 @@ end sub
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   set objHOOK = objWSH.exec(strCMD)
-	while (not objHOOK.stdout.atendofstream)
+  while (not objHOOK.stdout.atendofstream)
 		strIN = objHOOK.stdout.readline
 		if (strIN <> vbnullstring) then
 			objOUT.write vbnewline & now & vbtab & vbtab & strIN 
