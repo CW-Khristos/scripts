@@ -1,19 +1,24 @@
 ''MSP_FILTER.VBS
 ''DESIGNED TO AUTOMATE PASSING OF BACKUP FILTERS TO MSP BACKUP SOFTWARE VIA CLIENTTOOL
 ''DOWNLOADS 'FILTERS.TXT' FROM GITHUB; THIS FILE CONTAINS EACH BACKUP FILTER IN A 'LINE BY LINE' FORMAT
-''ACCEPTS 1 PARAMETER , REQUIRES 0 PARAMETERS
+''DESIGNED TO AUTOMATE PASSING OF BACKUP INCLUSIONS TO MSP BACKUP SOFTWARE VIA CLIENTTOOL
+''DOWNLOADS 'INCLUDES.TXT' FROM GITHUB; THIS FILE CONTAINS EACH BACKUP FILTER IN A 'LINE BY LINE' FORMAT
+''ACCEPTS 2 PARAMETER , REQUIRES 0 PARAMETERS
 ''OPTIONAL PARAMETER 'STRFILTER' ; STRING VALURE TO HOLD PASSED 'FILTERS' ; SEPARATE MULTIPLE 'FILTERS' VIA '|'
+''OPTIONAL PARAMETER 'STRINCL' ; STRING VALURE TO HOLD PASSED 'INCLUSIONS' ; SEPARATE MULTIPLE 'INCLUSIONS' VIA '|'
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
-dim strIN, strOUT, strRCMD, strFILTER, arrFILTER
+dim strINCL, arrINCL
+dim strFILTER, arrFILTER
+dim strIN, strOUT, strRCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
-strVER = 1
+strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -48,6 +53,14 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     for intTMP = 0 to ubound(arrFILTER)
       objOUT.write vbnewline & vbtab & ubound(arrFILTER) & vbtab & arrFILTER(intTMP)
     next
+    if (wscript.arguments.count > 1) then
+    strINCL = objARG.item(1)                                ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP INCLUDES STRING
+    ''FILL 'ARRINCL' BACKUP INCLUDES ARRAY
+    objOUT.write vbnewline & vbtab & strINCL
+    arrINCL = split(strINCL, "|")
+    for intTMP = 0 to ubound(arrINCL)
+      objOUT.write vbnewline & vbtab & ubound(arrINCL) & vbtab & arrINCL(intTMP)
+    next
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     'call LOGERR(1)
   end if
@@ -81,13 +94,44 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
     end if
   next
-  for intTMP = 0 to ubound(arrFILTER)
-    if (arrFILTER(intTMP) <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+  ''CUSTOM 'FILTER' PASSED
+  if (strFILTER <> vbnullstring) then
+    for intTMP = 0 to ubound(arrFILTER)
+      if (arrFILTER(intTMP) <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+        objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+      end if
+    next
+  end if
+  ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
+	objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/includes.txt", "includes.txt")
+  set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
+  while (not objTMP.atendofstream)
+    strTMP = strTMP & objTMP.readline
+  wend
+  objTMP.close
+  set objTMP = nothing
+  arrTMP = split(strTMP, "|")
+  for intTMP = 0 to ubound(arrTMP)
+    if (arrTMP(intTMP) <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
     end if
   next
+  ''CUSTOM 'INCLUDE' PASSED
+  if (strINCL <> vbnullstring) then
+    for intTMP = 0 to ubound(arrINCL)
+      if (arrINCL(intTMP) <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+        objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+      end if
+    next
+  end if
 end if
 ''END SCRIPT
 call CLEANUP()
