@@ -1,5 +1,5 @@
 ''CODEDROP_FIX.VBS
-''SCRIPT IS DESIGNED TO DOWNLOAD AND AUTOMATE 'CODEDROP' FIX FROM SOLARWINDS FOR SELF-HEAL ISSUE, REF #2 , REF #1
+''SCRIPT IS DESIGNED TO DOWNLOAD AND AUTOMATE 'CODEDROP' FIX FROM SOLARWINDS FOR SELF-HEAL AND COPY/PASTE ISSUES, REF #2 , REF #1
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 dim strFIX
@@ -11,9 +11,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-strVER = 3
-''WINDOWS AGENT CODEDROP Directory
-strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
+strVER = 4
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -22,12 +20,12 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\CODEDROP_FIX")) then		        ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\CODEDROP_FIX")) then		               ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\CODEDROP_FIX", true
   set objLOG = objFSO.createtextfile("C:\temp\CODEDROP_FIX")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\CODEDROP_FIX", 8)
-else                                                            ''LOGFILE NEEDS TO BE CREATED
+else                                                                 ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\CODEDROP_FIX")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\CODEDROP_FIX", 8)
@@ -70,33 +68,62 @@ wscript.sleep 5000
 objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
 objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
 if (ucase(strFIX) = "SELFHEAL") then
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/agent.exe", "agent.exe")
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/CodeDropMeta.xml", "CodeDropMeta.xml")
+  ''WINDOWS AGENT CODEDROP Directory
+  strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
+  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
+  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  ''RENAME 'OLD' CODEDROP FILES
+  objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+  objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+  if objFSO.fileexists(strCDD & "\agent.exe") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
+  end if
+  'if objFSO.fileexists(strSAV) then
+  '  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
+  'end if
+  ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
+  objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+  objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists("C:\Temp\agent.exe") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\agent.exe" & chr(34) & " " & chr(34) & strCDD & chr(34))
+    'objFSO.copyfile "C:\Temp\agent.exe", strCDD & "\agent.exe", true
+  end if
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists("C:\Temp\CodeDropMeta.xml") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & chr(34))
+    'objFSO.copyfile "C:\Temp\CodeDropMeta.xml", strCDD & "\CodeDropMeta.xml", true
+  end if
 elseif (ucase(strFIX) = "COPYPASTE") then
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/copypaste/agent.exe", "agent.exe")
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/copypaste/CodeDropMeta.xml", "CodeDropMeta.xml")
-end if
-''RENAME 'OLD' CODEDROP FILES
-objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-if objFSO.fileexists(strSAV) then
-  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
-end if
-'if objFSO.fileexists(strSAV) then
-'  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
-'end if
-''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
-objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-''CHECK THAT FILE EXISTS
-if objFSO.fileexists("C:\Temp\agent.exe") then
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\agent.exe" & chr(34) & " " & chr(34) & strCDD & chr(34))
-  'objFSO.copyfile "C:\Temp\agent.exe", strCDD & "\agent.exe", true
-end if
-''CHECK THAT FILE EXISTS
-if objFSO.fileexists("C:\Temp\CodeDropMeta.xml") then
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & chr(34))
-  'objFSO.copyfile "C:\Temp\CodeDropMeta.xml", strCDD & "\CodeDropMeta.xml", true
+  strCDD = "C:\Program Files (x86)\N-Able Technologies\Reactive\bin"
+  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
+  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
+  call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper32.dll", "ConsoleAPIWrapper32.dll")
+  call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper64.dll", "ConsoleAPIWrapper64.dll")
+  ''RENAME 'OLD' CODEDROP FILES
+  objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+  objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+  if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper32.dll") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper32.old" & chr(34))
+  end if
+  if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper64.dll") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper64.old" & chr(34))
+  end if
+  ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
+  objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+  objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists("C:\Temp\ConsoleAPIWrapper32.dll") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
+    'objFSO.copyfile "C:\Temp\ConsoleAPIWrapper32.dll", strCDD & "\ConsoleAPIWrapper32.dll", true
+  end if
+  ''CHECK THAT FILE EXISTS
+  if objFSO.fileexists("C:\Temp\ConsoleAPIWrapper64.dll") then
+    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
+    'objFSO.copyfile "C:\Temp\ConsoleAPIWrapper64.dll", strCDD & "\ConsoleAPIWrapper64.dll", true
+  end if
 end if
 ''RESTART WINDOWS AGENT SERVICES
 objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
