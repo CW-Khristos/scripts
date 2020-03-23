@@ -6,7 +6,7 @@
 	<CClutter.vbs>4</CClutter.vbs>
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
-  <CodeDrop_Fix.vbs>3</CodeDrop_Fix.vbs>
+  <CodeDrop_Fix.vbs>4</CodeDrop_Fix.vbs>
 	<CSize.vbs>1</CSize.vbs>
 	<disk_usage.vbs>2</disk_usage>
 	<drvmap.vbs>1</drvmap.vbs>
@@ -20,7 +20,7 @@
   <md5.vbs>1</md5.vbs>
 	<MSP_Config.vbs>4</MSP_Config.vbs>
 	<MSP_Debug.vbs>3</MSP_Debug.vbs>
-  <MSP_Filter.vbs>2</MSP_Filter.vbs>
+  <MSP_Filter.vbs>3</MSP_Filter.vbs>
   <MSP_Includes.vbs>1</MSP_Includes.vbs>
 	<msp_lsv.vbs>1</msp_lsv.vbs>
 	<msp_postbackup.vbs>4</msp_postbackup.vbs>
