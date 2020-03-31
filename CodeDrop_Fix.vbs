@@ -272,9 +272,9 @@ end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   if (errRET = 0) then         											        ''CODEDROP_FIX COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now
+    objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now & vbnewline
   elseif (errRET <> 0) then    											        ''CODEDROP_FIX FAILED
-    objOUT.write vbnewline & "CODEDROP_FIX FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & "CODEDROP_FIX FAILURE : " & now & " : " & errRET & vbnewline
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CODEDROP_FIX", "FAILURE")
   end if
