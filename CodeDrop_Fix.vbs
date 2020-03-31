@@ -62,6 +62,7 @@ call CHKAU()
 objOUT.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+wscript.sleep 5000
 call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
 wscript.sleep 5000
 ''DOWNLOAD CODEDROP 'FIX' FILES
@@ -76,6 +77,7 @@ if (ucase(strFIX) = "SELFHEAL") then
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR30_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
   'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
   'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  wscript.sleep 5000
   ''RENAME 'OLD' CODEDROP FILES
   objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
   objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
@@ -104,6 +106,7 @@ elseif (ucase(strFIX) = "COPYPASTE") then
   objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
   call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper32.dll", "ConsoleAPIWrapper32.dll")
   call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper64.dll", "ConsoleAPIWrapper64.dll")
+  wscript.sleep 5000
   ''RENAME 'OLD' CODEDROP FILES
   objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
   objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
@@ -130,8 +133,11 @@ end if
 ''RESTART WINDOWS AGENT SERVICES
 objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
+wscript.sleep 5000
 call HOOK("net start " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+wscript.sleep 5000
 call HOOK("net start " & chr(34) & "Windows Agent Service" & chr(34))
+wscript.sleep 5000
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
