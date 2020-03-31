@@ -5,18 +5,27 @@ C:\$Windows.~BT|
 C:\$Windows.~WS|
 C:\ADWCleaner|
 C:\AMD|
+C:\Apps|
 C:\cclutter.txt|
 C:\ComboFix|
+C:\Dell|
+C:\Drivers|
 C:\GRBData|
+C:\Images|
+C:\Intel|
 C:\OneDriveTemp|
 C:\NVIDIA|
 C:\PerfLogs|
+C:\Program Files|
+C:\Program Files (x86)|
+C:\ProgramData|
 C:\Qoobox|
 C:\Recovery|
 C:\RECYCLED|
 C:\Temp|
 C:\tempini|
 C:\wu_output|
+C:\Windows|
 C:\Windows10Upgrade|
 C:\hiberfil.sys|
 C:\pagefile.sys|
@@ -91,6 +100,7 @@ K:\System Volume Information|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Scans|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
 %PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
+C:\Users\Default|
 C:\Users\Redirected\RMMTech\AppData|
 C:\Users\Redirected\RMMTech\Contacts|
 C:\Users\Redirected\RMMTech\Desktop|
@@ -102,6 +112,7 @@ C:\Users\Redirected\RMMTech\Music|
 C:\Users\Redirected\RMMTech\Pictures|
 C:\Users\Redirected\RMMTech\Saved Games|
 C:\Users\Redirected\RMMTech\Videos|
+C:\Users\RMMTech|
 C:\Users\RMMTech\AppData|
 C:\Users\RMMTech\Contacts|
 C:\Users\RMMTech\Desktop|
@@ -176,4 +187,5 @@ C:\User Files\RMMTech|
 C:\User Folders\RMMTech|
 C:\UserFiles\RMMTech|
 C:\UserFolders\RMMTech|
+C:\Documents and Settings|
 %LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|
