@@ -11,7 +11,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-strVER = 4
+strVER = 5
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -72,8 +72,10 @@ if (ucase(strFIX) = "SELFHEAL") then
   strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
   objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
   objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR30_NCI-15758/agent.exe", "agent.exe")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR30_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
+  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
   ''RENAME 'OLD' CODEDROP FILES
   objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
   objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
