@@ -11,7 +11,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-strVER = 4
+strVER = 5
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -62,6 +62,7 @@ call CHKAU()
 objOUT.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
 call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+wscript.sleep 5000
 call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
 wscript.sleep 5000
 ''DOWNLOAD CODEDROP 'FIX' FILES
@@ -72,8 +73,11 @@ if (ucase(strFIX) = "SELFHEAL") then
   strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
   objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
   objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR30_NCI-15758/agent.exe", "agent.exe")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR30_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
+  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
+  wscript.sleep 5000
   ''RENAME 'OLD' CODEDROP FILES
   objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
   objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
@@ -102,6 +106,7 @@ elseif (ucase(strFIX) = "COPYPASTE") then
   objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
   call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper32.dll", "ConsoleAPIWrapper32.dll")
   call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper64.dll", "ConsoleAPIWrapper64.dll")
+  wscript.sleep 5000
   ''RENAME 'OLD' CODEDROP FILES
   objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
   objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
@@ -128,8 +133,11 @@ end if
 ''RESTART WINDOWS AGENT SERVICES
 objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
 objLOG.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
+wscript.sleep 5000
 call HOOK("net start " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+wscript.sleep 5000
 call HOOK("net start " & chr(34) & "Windows Agent Service" & chr(34))
+wscript.sleep 5000
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
@@ -270,9 +278,9 @@ end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   if (errRET = 0) then         											        ''CODEDROP_FIX COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now
+    objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now & vbnewline
   elseif (errRET <> 0) then    											        ''CODEDROP_FIX FAILED
-    objOUT.write vbnewline & "CODEDROP_FIX FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & "CODEDROP_FIX FAILURE : " & now & " : " & errRET & vbnewline
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CODEDROP_FIX", "FAILURE")
   end if
