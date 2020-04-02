@@ -86,7 +86,7 @@ objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE S
 call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
 wscript.sleep 5000
 ''DOWNLOAD SUPPORTING FILES
-while (not objFSO.fileexists("c:\temp\PMEService.zip")) then
+while (not objFSO.fileexists("c:\temp\PMEService.zip"))
   'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
   wscript.sleep 1000
 wend
