@@ -21,6 +21,7 @@ set objOUT = wscript.stdout
 set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
+Set objAPP = createobject("shell.application")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\PMESERVICE_INSTALL")) then		        ''LOGFILE EXISTS
