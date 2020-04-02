@@ -122,10 +122,10 @@ if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
   call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\SecurityUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
-if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
+if (objFSO.fileexists("c:\temp\PMEService\PMESetup.exe")) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMEService\PMESetup.exe" & chr(34) & " /verysilent")
 end if
 ''RESTART WINDOWS PROBE SERVICES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTARTING WINDOWS PROBE SERVICES" & vbnewline
