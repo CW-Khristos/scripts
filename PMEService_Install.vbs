@@ -81,14 +81,16 @@ call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main
 call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
   " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
 ''DOWNLOAD PME SERVICE SUPPORTING FILES
+objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE SUPPORTING FILES" & vbnewline
+objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE SUPPORTING FILES" & vbnewline
 call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
 wscript.sleep 5000
-''EXTRACT SUPPORTING FILES
+''DOWNLOAD SUPPORTING FILES
 if (not objFSO.fileexists("c:\temp\PMEService.zip")) then
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
 end if
 if (objFSO.fileexists("C:\temp\PMEService.zip")) then
-  ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
+  ''EXTRACT PME SERVICE SUPPORTING FILES
   set objSRC = objAPP.namespace("C:\temp\PMEService.zip").items()
   set objTGT = objAPP.namespace("C:\temp")
   objTGT.copyhere objSRC, intOPT
@@ -110,15 +112,15 @@ end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES_DETAILS.XML" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
   call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\SecurityUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
   call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\SecurityUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
