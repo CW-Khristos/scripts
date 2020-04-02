@@ -13,9 +13,12 @@ dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
+''ZIP ARCHIVE OPTIONS
+intOPT = 256
 ''VERSION FOR SCRIPT UPDATE, PMESERVICE_INSTALL.VBS, REF #2
-strVER = 1
+strVER = 2
 ''STDIN / STDOUT
+blnSUP = false
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
 set objARG = wscript.arguments
@@ -87,49 +90,51 @@ objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE S
 call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
 wscript.sleep 5000
 ''DOWNLOAD SUPPORTING FILES
-while (not objFSO.fileexists("c:\temp\PMEService.zip"))
-  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
-  wscript.sleep 1000
-wend
+if (not objFSO.fileexists("c:\temp\PMEService.zip")) then
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PMEService.zip", "PMEService.zip")
+  wscript.sleep 10000
+end if
 if (objFSO.fileexists("C:\temp\PMEService.zip")) then
   ''EXTRACT PME SERVICE SUPPORTING FILES
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXTRACTING PME SERVICE SUPPORTING FILES" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXTRACTING PME SERVICE SUPPORTING FILES" & vbnewline
   set objSRC = objAPP.namespace("C:\temp\PMEService.zip").items()
   set objTGT = objAPP.namespace("C:\temp")
   objTGT.copyhere objSRC, intOPT
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
-if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
+if (objFSO.fileexists("c:\temp\AnniversaryUpdates_details.xml")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\AnniversaryUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\AnniversaryUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
-if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
+if (objFSO.fileexists("c:\temp\AnniversaryUpdates.zip")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES.ZIP" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES.ZIP" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\AnniversaryUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\AnniversaryUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
-if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
+if (objFSO.fileexists("c:\temp\SecurityUpdates_details.xml")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\SecurityUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\SecurityUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
-if (objFSO.fileexists("c:\temp\PMEService\AnniversaryUpdates_details.xml")) then
+if (objFSO.fileexists("c:\temp\SecurityUpdates-2020.2.11.20.zip")) then
   ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\PMEService\SecurityUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\SecurityUpdates-2020.2.11.20.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
-if (objFSO.fileexists("c:\temp\PMEService\PMESetup.exe")) then
+if (objFSO.fileexists("c:\temp\PMESetup.exe")) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMEService\PMESetup.exe" & chr(34) & " /verysilent")
+  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
 end if
 ''RESTART WINDOWS PROBE SERVICES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTARTING WINDOWS PROBE SERVICES" & vbnewline
