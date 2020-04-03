@@ -15,11 +15,17 @@ dim errRET, strVER
 dim strINCL, arrINCL
 dim strFILTER, arrFILTER
 dim strIN, strOUT, strOPT, strRCMD
+''PRE-DEFINED ARRAYS
+dim arrUSR(), arrPROT()
+''USER AND USER FOLDER ARRAYS
+dim objFOL, arrFOL()
+''USER FOLDER AND SUB-FOLDER ARRAYS
+dim objUFOL, arrUFOL()
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
-strVER = 4
+strVER = 5
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -70,6 +76,21 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
 else                                                        ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
 end if
+''UNNEEDED / TO EXCLUDE USER ACCOUNTS
+redim arrUSR(9)
+arrUSR(0) = "rmmtech"
+arrUSR(1) = "Guest"
+arrUSR(2) = "__sbs_netsetup__"
+arrUSR(3) = "Default"
+arrUSR(4) = "Default.migrated"
+arrUSR(5) = "Default User"
+arrUSR(6) = "DefaultAccount"
+arrUSR(7) = "WDAGUtilityAccount"
+arrUSR(8) = "UpdatusUser"
+''PROTECTED EXT / FILES / DIRECTORIES
+redim arrPROT(2)
+arrPROT(0) = ".OST"
+arrPROT(1) = ".PST"
 
 ''------------
 ''BEGIN SCRIPT
@@ -203,6 +224,122 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
           end if
         next
       end if
+      ''PERFORM FINAL EXCLUDES
+      objOUT.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
+      ''ENUMERATE 'C:\USERS' SUB-FOLDERS
+      objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
+      set objFOL = objFSO.getfolder("C:\Users")
+      set colFOL = objFOL.subfolders
+      intFOL = 0
+      for each subFOL in colFOL
+        redim preserve arrFOL(intFOL + 1)
+        arrFOL(intFOL) = subFOL.path
+        intFOL = intFOL + 1
+      next
+      set colFOL = nothing
+      set objFOL = nothing
+      intFOL = 0
+      ''CHECK EACH 'C:\USERS\<USERNAME>' FOLDER
+      for intFOL = 0 to ubound(arrFOL)
+        intCOL = 0
+        blnFND = false
+        strFOL = arrFOL(intFOL)
+        if (strFOL <> vbnullstring) then
+        
+            ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
+            for intCOL = 0 to ubound(arrUSR)
+              blnFND = false
+              if (arrUSR(intCOL) <> vbnullstring) then
+                '' 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
+                if (instr(1, lcase(strFOL), lcase(arrUSR(intCOL)))) then
+                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
+                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
+                  ''MARK 'UNNEEDED / TO EXCLUDE'
+                  blnFND = true
+                  ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
+                  
+                  exit for
+                end if
+              end if
+              ''AN 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
+              if (wscript.arguments.count > 0) then
+                '' PASSED 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR'
+                if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                  ''MARK 'UNNEEDED / TO EXCLUDE'
+                  blnFND = true
+                  ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
+                  
+                  exit for
+                end if          
+              end if
+            next
+            ''NO MATCH TO 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
+            if (not (blnFND)) then
+              ''CHECK FOR USER FOLDER
+              if (objFSO.folderexists(strFOL)) then
+                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+                ''EXCLUDE FROM BACKUPS
+                blnFND = false
+                
+                ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
+                set objUFOL = objFSO.getfolder(strFOL)
+                set colUFOL = objUFOL.subfolders
+                intUFOL = 0
+                for each subUFOL in colUFOL
+                  redim preserve arrUFOL(intUFOL + 1)
+                  arrUFOL(intUFOL) = subUFOL.path
+                  intUFOL = intUFOL + 1
+                next
+                set colUFOL = nothing
+                set objUFOL = nothing
+                intUFOL = 0
+                ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
+                ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
+                ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
+                ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
+                for intUFOL = 0 to ubound(arrUFOL)
+                  intUCOL = 0
+                  blnFND = false
+                  strUFOL = arrUFOL(intUFOL)
+                  if (strUFOL <> vbnullstring) then            
+                    ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / FILES / DIRECTORIES
+                    for intPCOL = 0 to ubound(arrPROT)
+                      blnFND = false
+                      if (arrPROT(intPCOL) <> vbnullstring) then
+                        '' 'PRTOTECTED' USER ACCOUNT 'arrPROT' FOUND IN FOLDER PATH
+                        if (instr(1, lcase(strUFOL), lcase(arrPROT(intPCOL)))) then
+                          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                          ''MARK 'PROTECTED'
+                          blnFND = true
+                          exit for
+                        end if
+                      end if
+                      ''A 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
+                      if (wscript.arguments.count > 0) then
+                        '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
+                        if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+                          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                          ''MARK 'UNNEEDED / TO EXCLUDE'
+                          blnFND = true
+                          exit for
+                        end if          
+                      end if
+                    next
+                    ''NO MATCH TO 'PROTECTED' EXT / FILES / DIRECTORIES
+                    if (not (blnFND)) then
+
+                    end if
+                  next
+                end if
+              next
+        next
   end select
 end if
 ''END SCRIPT
