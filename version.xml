@@ -5,6 +5,7 @@
   <avd_removal.vbs>1</avd_removal.vbs>
 	<CClutter.vbs>4</CClutter.vbs>
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
+  <chkAU.vbs>1</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
   <CodeDrop_Fix.vbs>6</CodeDrop_Fix.vbs>
 	<CSize.vbs>1</CSize.vbs>
