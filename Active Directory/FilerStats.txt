@@ -1,0 +1,32 @@
+df -A -g
+Aggregate                total       used      avail capacity  
+aggr0                    227GB       26GB      200GB      12%  
+aggr0/.snapshot           11GB        1GB       10GB      13%  
+tqfiles2                7784GB        0GB     7783GB       0%  
+tqfiles2/.snapshot       409GB        1GB      408GB       0%  
+tqfiles3                7076GB        0GB     7076GB       0%  
+tqfiles3/.snapshot       372GB        1GB      371GB       0%  
+tqfiles                 7784GB     6203GB     1581GB      80%  
+tqfiles/.snapshot        409GB       59GB      350GB      14%  
+tqn02filer> 
+
+df -V -g
+Filesystem               total       used      avail capacity  Mounted on
+/vol/vol0/                20GB        1GB       18GB       6%  /vol/vol0/
+/vol/vol0/.snapshot        5GB        0GB        4GB       8%  /vol/vol0/.snapshot
+/vol/VFM/                  0GB        0GB        0GB      18%  /vol/VFM/
+/vol/VFM/.snapshot         0GB        0GB        0GB       8%  /vol/VFM/.snapshot
+/vol/mlgfiles01/         921GB      826GB       94GB      90%  /vol/mlgfiles01/
+/vol/mlgfiles01/.snapshot      102GB       98GB        3GB      97%  /vol/mlgfiles01/.snapshot
+/vol/mlgfiles02/         819GB      537GB      282GB      66%  /vol/mlgfiles02/
+/vol/mlgfiles02/.snapshot      204GB        8GB      195GB       4%  /vol/mlgfiles02/.snapshot
+/vol/mlgfiles03/         819GB      409GB      409GB      50%  /vol/mlgfiles03/
+/vol/mlgfiles03/.snapshot      204GB       23GB      181GB      11%  /vol/mlgfiles03/.snapshot
+/vol/mlgsoftware/        819GB      706GB      113GB      86%  /vol/mlgsoftware/
+/vol/mlgsoftware/.snapshot      204GB        2GB      202GB       1%  /vol/mlgsoftware/.snapshot
+/vol/lcefiles01/         819GB      758GB       60GB      93%  /vol/lcefiles01/
+/vol/lcefiles01/.snapshot      204GB       56GB      147GB      28%  /vol/lcefiles01/.snapshot
+/vol/mlgfiles04/         819GB      338GB      480GB      41%  /vol/mlgfiles04/
+/vol/mlgfiles04/.snapshot      204GB        0GB      204GB       0%  /vol/mlgfiles04/.snapshot
+tqn02filer> 
+

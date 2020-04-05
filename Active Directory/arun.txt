@@ -1,0 +1,34 @@
+dim objNet, objReg, strComp
+dim strPathini, strKeyini, strValini
+dim strPatharun, strKeyarun, strValarun, strPathmnt
+
+const HKLM = &H80000002
+const HKUSR = &H80000001
+
+set objNet = createobject("wscript.network")
+strComp = objNet.ComputerName
+set objReg = GetObject("winmgmts:\\" & strComp & "\root\default:StdRegProv")
+
+strPathmnt = "Software\Microsoft\Windows\CurrentVersion\Explorer"
+strPathini = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\IniFileMapping"
+strPatharun = "SOFTWARE\Microsoft\Windows\CurrentVersion\policies\Explorer"
+
+strValarun = "1"
+strKeyarun = "HonorAutoRunSetting"
+objReg.setdwordvalue HKLM, strPatharun, strKeyarun, strValarun
+
+strValarun = "255"
+strKeyarun = "NoDriveTypeAutoRun"
+objReg.setdwordvalue HKLM, strPatharun, strKeyarun, strValarun
+
+strKeyini = "Autorun.inf"
+strValini = "@SYS:DoesNotExist"
+objReg.createkey HKLM, strPathini & "\" & strKeyini
+objReg.setstringvalue HKLM, strPathini & "\" & strKeyini, , strValini
+
+''objReg.deletekey HKUSR, strPathmnt & "\MountPoints2"
+
+set objReg = nothing
+set objNet = nothing
+wscript.quit
+

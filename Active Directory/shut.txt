@@ -1,0 +1,28 @@
+dim objWSH, strIP, strCMD, strNote
+
+set objWSH  = createobject("wscript.shell")
+strCMD = "shutdown -r -m \\"
+strNote = "Information Assurance is applying MANDATORY patches to your machine. Do NOT shutdown the computer or log us out. Failure to comply will result in your account being disabled. Semper Fi"
+
+do while strIP <> "!ABORT!"
+wscript.echo "To End Script Enter '!ABORT!'"
+wscript.echo "Please Enter IP:"
+strIP = wscript.stdin.readline
+
+if strIP <> "!ABORT!" then
+objWSH.run strcmd & strIP & " -t 120 -c " & chr(34) & strNote & chr(34) & " -f"
+objWSH.run "ping " & strIP & " -t"
+objWSH.run "mstsc"
+wscript.sleep 2000
+objWSH.appactivate "Remote Desktop Connection"
+wscript.sleep 1000
+objWSH.sendkeys strIP
+end if
+loop
+
+set objWSH = nothing
+wscript.quit
+
+''V--V Script Written By Khristos V--V''
+''V--V VampyreMan Studios Inc. V--V''
+''V--V www.vampyremanstudios.com V--V''

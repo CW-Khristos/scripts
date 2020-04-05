@@ -1,0 +1,231 @@
+<html>
+<title>
+Administrative VBScripts
+</title>
+<head>
+
+<style type="text/css">
+BODY, HTML{
+  background-color:black;
+  color:#000099;
+}
+
+.nobord{
+  border: 0px;
+}
+
+.bord{
+  border: 1px solid red;
+}
+</style>
+
+<script type="text/javascript">
+function showDESC(scrpt){
+  var divBOD = document.getElementsByTagName("div").item(2);
+  var divREM = document.getElementsByTagName("div").item(3);
+  divBOD.removeChild(divREM);
+  var divDESC = document.createElement("div");
+  var divPARA = document.createElement("p");
+  if (scrpt == 'shut'){
+    var pCONT = 'A simple looped script that will send a remote reboot command via command shell to a computer. ';
+      pCONT += 'After sending the reboot, it will then open a continous ping to monitor when the remote computer ';
+      pCONT += 'is back up, and open a remote desktop window with the computer IP address for remote administration. ';
+      pCONT += 'Useful for when a user has locked the computer.';
+  }
+  if (scrpt == 'shutnet'){
+    var pCONT = 'A variation of the remote shutdown script. This script will reboot an entire network using the ';
+      pCONT += 'network IP and the slash notation of the network subnet mask. This can be useful after pushing ';
+      pCONT += 'updates to client machines and it is necessary to ensure a reboot is performed. ';
+    var b = document.createElement("b");
+    var bCONT = '***ONLY WORKS FOR CLASS C NETWORKS***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  if (scrpt == 'adparse'){
+    var pCONT = 'A slightly complex script I originally wrote for use on the Active Directory domain that ';
+      pCONT += 'I administer here at work. This can be used to learn from, or simply downloaded and with the ';
+      pCONT += 'information for your domain added where necessary can be used to simplify AD administration. ';
+      pCONT += 'This script searches thorough all Organizational Units in the domain and checks the time-stamp ';
+      pCONT += 'for user last logon. Any user that has not logged on in over 30 days will be disabled, have a ';
+      pCONT += 'description with the number of days since last logon, and moved into a dated "disabled OU" ';
+      pCONT += 'under the default "Disabled" OU in AD. The script will also create a log of user accounts ';
+      pCONT += 'being disabled and a relative path of the OU they were in before the script moved the user. ';
+      pCONT += 'Exceptions to the check are contained in an array that is compared to every user object, this ';
+      pCONT += 'allows services and administrator accounts to be ignored by the script, this is also the case ';
+      pCONT += 'for any user object with a description of "do not disable". This makes a great time saver for ';
+      pCONT += 'cleaning out AD.';
+    var b = document.createElement("b");
+    var bCONT = '***DO NOT USE THIS IF YOU DO NOT HAVE EXPERIENCE WITH ADMINISTRATION OF ACTIVE DIRECTORY***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  if (scrpt == 'dexch'){
+    var pCONT = 'This is another administrative script I wrote for use here at work. This is used to run and ';
+      pCONT += 'exchange defragmentation on the selected exchange database of an email server. It is compatible ';
+      pCONT += 'with multiple drives and exchange databases, will remind the admin to dis-mount the exchange ';
+      pCONT += 'database, if selected will create a log of the original database path, copy the database to a ';
+      pCONT += 'chosen directory and will locate eseutil and perform defragmentation on the copy allowing the ';
+      pCONT += 'original database to be re-mounted thus shortening email service outages. Once the defragmentation ';
+      pCONT += 'is completed the script instructs the admin to dis-mount the database and replace it with the copy ';
+      pCONT += 'that was defragmented and re-mount the database. If multiple databases exist on the exchange server ';
+      pCONT += 'the admin can then select to repeat this process with another database.';
+    var b = document.createElement("b");
+    var bCONT = '***DO NOT USE THIS IF YOU DO NOT HAVE EXPERIENCE WITH ADMINISTRATION OF EXCHANGE***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  if (scrpt == 'dnscan'){
+    var pCONT = 'This is a script to scan a DNS debug logfile on a DNS Server for DNS requests to known ';
+      pCONT += 'malicious sites using a textfile database of malicious software and the DNS requests that ';
+      pCONT += 'they make. This script is by no means a method of anti-virus / anti-malware, nor does its ';
+      pCONT += 'findings guarantee that malicious software is present within your network. It is just a ';
+      pCONT += 'method I came up with when I was tasked to find the source of a known malicious request ';
+      pCONT += 'present on the network I currently administer. This is only meant to give a means of '
+      pCONT += 'searching through the large, cluttered, and confusing request logs that DNS Servers create.';
+    var b = document.createElement("b");
+    var bCONT = '***DO NOT USE THIS IF YOU DO NOT HAVE ANY EXPERIENCE WITH DNS OR DOMAIN ADMINISTRATION***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  if (scrpt == 'dbmal'){
+    var pCONT = 'This is the textfile database to be used in conjuction with DNS-malscan. Simply copy the ';
+      pCONT += 'content of this text file to notepad, then save it as dbMAL. Be sure to save it / move it ';
+      pCONT += 'to the same folder as DNS-malscan. I will update this list as I can, and feel free to email ';
+      pCONT += 'me any known malicious DNS request you might have / know of. Each DNS request entry should ';
+      pCONT += 'be on its own line.';
+  }
+  if (scrpt == 'resrv'){
+    var pCONT = 'This is a script to reserve all DHCP leases in a scope. Leases need to be exported into a ';
+      pCONT += 'comma delimited text file, the script will prompt for the IP of the DHCP server, the scope ';
+      pCONT += 'IP to make the reservations in, and the file name of the comma delimited text file. The ';
+      pCONT += 'script and the exported leases need to be in the same folder for simplicity. ';
+    var b = document.createElement("b");
+    var bCONT = '***DO NOT USE THIS IF YOU DO NOT HAVE ANY EXPERIENCE WITH DHCP ADMINISTRATION***';
+      bCONT += '***SCRIPT MUST BE RUN ON THE DHCP SERVER TO WORK PROPERLY***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  if (scrpt == 'lock'){
+    var pCONT = 'This is a script to lock DHCP scopes by reserving IP Leases not in use with bogus computer ';
+      pCONT += 'names and mac addresses. This will force any clients on the network to request an IP on the ';
+      pCONT += 'to be made available to a new network device configured for DHCP.';
+    var b = document.createElement("b");
+    var bCONT = '***DO NOT USE THIS IF YOU DO NOT HAVE ANY EXPERIENCE WITH DHCP ADMINISTRATION***';
+      bCONT += '***SCRIPT MUST BE RUN ON THE DHCP SERVER TO WORK PROPERLY***';
+    var bTXT = document.createTextNode(bCONT);
+    var brk = document.createElement("br");
+    b.appendChild(bTXT);
+    divPARA.appendChild(b);
+    divPARA.appendChild(brk);
+  }
+  var pTXT = document.createTextNode(pCONT);
+  divPARA.appendChild(pTXT);
+  divDESC.appendChild(divPARA);
+  divBOD.appendChild(divDESC);
+}
+</script></head>
+<body>
+<div align="left"
+ class="nobord"
+ style="width: 500;
+ overflow: auto;">
+<font style="color: rgb(196,18,0)"><b>
+ - Administrative VBScripts -
+</font>
+These are VBScripts I have written to be used on Active Directory domains or various other Windows networks.
+<div class="nobord"
+ align="center">
+<br>
+<font style="color: rgb(196,18,0)">
+Do Not use these unless you already have experience with networking or domain administration
+</b></font></div></div>
+<br>
+<table><tr>
+<td valign="center">
+exchDEFRAG.vbs
+<a href="http://vampyremanstudios.com/Documents/exchDEFRAG.txt"
+ onmouseover="javascript:showDESC('dexch');">
+ - Click to View - 
+</a>
+<br>
+AD-Parse.vbs
+<a href="http://vampyremanstudios.com/Documents/AD-Parse.txt"
+ onmouseover="javascript:showDESC('adparse');">
+ - Click to View - 
+</a>
+<br>
+DNS-malscan.vbs
+<a href="http://vampyremanstudios.com/Documents/DNS-malscan.txt"
+ onmouseover="javascript:showDESC('dnscan');">
+ - Click to View - 
+</a>
+<br>
+DHCP-Res.vbs
+<a href="http://vampyremanstudios.com/Documents/dhcp-res.txt"
+ onmouseover="javascript:showDESC('resrv');">
+ - Click to View - 
+</a></td>
+<td style="width: 25;"></td>
+<td valign="center">
+shutdown.vbs
+<a href="http://vampyremanstudios.com/Documents/shut.txt"
+ onmouseover="javascript:showDESC('shut');">
+ - click to view
+</a>
+<br>
+shutdownnet.vbs
+<a href="http://vampyremanstudios.com/Documents/shutdownnet.txt"
+ onmouseover="javascript:showDESC('shutnet');">
+ - click to view
+</a>
+<br>
+dbMAL.txt
+<a href="http://vampyremanstudios.com/Documents/dbMAL.txt"
+ onmouseover="javascript:showDESC('dbmal');">
+ - click to view
+</a>
+<br>
+DHCP-Lock.vbs
+<a href="http://vampyremanstudios.com/Documents/dhcp-lock.txt"
+ onmouseover="javascript:showDESC('lock');">
+ - Click to View - 
+</a></td></tr></table>
+<br><br>
+<div class="bord"
+ style="width: 600;
+ overflow: auto;">
+<div id="desc">
+!!!Hover mouse over any of the above links to view a description of that script!!!
+</div></div>
+<!-- BEGIN TRACKING CODE --> 
+<script type="text/javascript"
+ language="JavaScript">
+  var FCProAccountId = 'a86c5c72-230e-4183-8546-4702ad06154f';
+  var ServerName = 'vampyremanstudios-com.sitereports.officelive.com';
+</script>
+<script type="text/javascript"
+ language="JavaScript"
+ src="http&#58;&#47;&#47;vampyremanstudios-com.sitereports.officelive.com&#47;js&#47;restats_static.js">
+</script>
+<noscript>
+<img src="http&#58;&#47;&#47;vampyremanstudios-com.sitereports.officelive.com&#47;FCPISAPI&#47;ISAPIExtn.dll&#47;i&#47;a86c5c72-230e-4183-8546-4702ad06154f&#47;0"
+ style="display:none;visibility:hidden"/>
+</noscript>
+<!-- END TRACKING CODE -->
+</body>
+</html>

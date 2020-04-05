@@ -1,0 +1,62 @@
+
+''DETERMINE IF USER ALREADY EXISTS''
+
+QueryForUser("kenmyer")
+Wscript.Echo "This user account does not exist."
+ 
+Sub QueryForUser(strUserName)
+    Set objDomain = GetObject("WinNT://FABRIKAM")
+    objDomain.Filter = Array("user")
+    For Each User In objDomain
+        If lcase(User.Name) = lcase(strUserName) Then
+            WScript.Echo User.Name & " already exists."
+            WScript.Quit
+        End If    
+    Next
+End Sub
+
+
+''RETRIEVE MACHINE NAME AND ADMIN GROUP''
+
+set obj computer = createobject("shell.localmachine")
+Set objGroup = GetObject("WinNT://" & objcomputer.machinename & "/Administrators,group")
+
+
+''CREATES USER ACCOUNT AND ADD TO ADMIN GROUP''
+
+strComputer = "MyComputer"
+Set colAccounts = GetObject("WinNT://" & strComputer & "")
+Set objUser = colAccounts.Create("user", "Admin2")
+objUser.SetPassword "test"
+objUser.SetInfo
+
+Set objUser = GetObject("WinNT://" & strComputer & "/kenmyer,user")
+objGroup.Add(objUser.ADsPath)
+
+
+''SET ACCOUNT FLAGS TO NEVER EXPIRE''
+
+Const ADS_UF_DONT_EXPIRE_PASSWD = &h10000
+strComputer = "atl-win2k-01"
+Set objUser = GetObject("WinNT:// " & strComputer & "/kenmyer ")
+objUserFlags = objUser.Get("UserFlags")
+objPasswordExpirationFlag = objUserFlags OR ADS_UF_DONT_EXPIRE_PASSWD
+objUser.Put "userFlags", objPasswordExpirationFlag 
+objUser.SetInfo
+
+
+''SET PASSWORD FLAGS TO NEVER EXPIRE''
+
+Const ADS_UF_DONT_EXPIRE_PASSWD = &h10000
+ 
+strDomainOrWorkgroup = "Fabrikam"
+strComputer = "atl-win2k-01"
+strUser = "KenMeyer"
+ 
+Set objUser = GetObject("WinNT://" & strDomainOrWorkgroup & "/" & _
+    strComputer & "/" & strUser & ",User")
+ 
+objUserFlags = objUser.Get("UserFlags")
+objPasswordExpirationFlag = objUserFlags OR ADS_UF_DONT_EXPIRE_PASSWD
+objUser.Put "userFlags", objPasswordExpirationFlag 
+objUser.SetInfo

@@ -1,0 +1,142 @@
+Set objDomain = GetObject("LDAP://dc=Documentatie,dc=local") 
+
+' Creates 3 OU's with nothing in them 
+' 
+' ------------------------------------------------------------------------ 
+
+Set objOU = objDomain.Create("organizationalUnit", "ou=Sales") 
+objOU.SetInfo 
+Set objOU = objDomain.Create("organizationalUnit", "ou=IT") 
+objOU.SetInfo 
+Set objOU = objDomain.Create("organizationalUnit", "ou=Admin") 
+objOU.SetInfo 
+
+' Creating child OU's
+'---------------------------------------------------------------------------
+Set ObjChildOU=GetObject("LDAP://OU=Sales,dc=Documentatie,dc=local") 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Computers") 
+objOU.SetInfo 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Users") 
+objOU.SetInfo 
+
+Set ObjChildOU=GetObject("LDAP://OU=IT,dc=Documentatie,dc=local") 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Computers") 
+objOU.SetInfo 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Users") 
+objOU.SetInfo 
+
+Set ObjChildOU=GetObject("LDAP://OU=Admin,dc=Documentatie,dc=local") 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Computers") 
+objOU.SetInfo 
+Set objOU = objChildOU.Create("organizationalUnit", "ou=Users") 
+objOU.SetInfo 
+
+
+
+' Creates 100 Users in the Sales OU 
+'-------------------------------------------------------------------------- 
+
+For i = 1 To 100 
+   Set objAdd = GetObject("LDAP://OU=Users,OU=Sales,dc=Documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("User", "cn=UserNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "UserNo" &amp; i 
+   objLeaf.SetInfo 
+
+Set objUser = GetObject("LDAP://cn=UserNo" &amp; i &amp; ",OU=Users,ou=Sales,dc=Documentatie,dc=local") 
+
+      objUser.AccountDisabled = FALSE 
+      objUser.SetInfo 
+Next 
+
+
+' Creates another 100 Users in the IT OU 
+'-------------------------------------------------------------------------- 
+
+For i = 101 To 200 
+   Set objAdd = GetObject("LDAP://OU=Users,OU=IT,dc=documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("User", "cn=UserNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "UserNo" &amp; i 
+   objLeaf.SetInfo 
+
+Set objUser = GetObject("LDAP://cn=UserNo" &amp; i &amp; ",OU=Users,ou=IT,dc=documentatie,dc=local") 
+
+      objUser.AccountDisabled = FALSE 
+      objUser.SetInfo 
+Next 
+
+
+' Creates yet another 100 Users in the Admin OU 
+'-------------------------------------------------------------------------- 
+
+For i = 201 To 300 
+Set objAdd = GetObject("LDAP://OU=Users,OU=Admin,dc=documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("User", "cn=UserNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "UserNo" &amp; i 
+   objLeaf.SetInfo 
+
+Set objUser = GetObject("LDAP://cn=UserNo" &amp; i &amp; ",OU=Users,ou=Admin,dc=documentatie,dc=local") 
+
+      objUser.AccountDisabled = FALSE 
+      objUser.SetInfo 
+Next
+
+
+' Creating 100 Computers in the Sales OU
+'-------------------------------------------------------------------------------------------------
+
+For i = 1 To 100 
+
+Set objadd = nothing
+set objleaf = nothing
+
+   Set objAdd = GetObject("LDAP://OU=Computers,OU=Sales,dc=Documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("Computer", "cn=ComputerNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "ComputerNO" &amp; i 
+   objLeaf.SetInfo 
+
+Set objComputer = GetObject("LDAP://cn=ComputerNO" &amp; i  &amp; ",OU=Computers,ou=Sales,dc=Documentatie,dc=local") 
+
+      objComputer.AccountDisabled = FALSE 
+      objComputer.SetInfo 
+Next 
+
+
+' Creating 100 Computers in the IT OU
+'-------------------------------------------------------------------------------------------------
+
+For i = 101 To 200 
+
+Set objadd = nothing
+set objleaf = nothing
+
+   Set objAdd = GetObject("LDAP://OU=Computers,OU=IT,dc=Documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("Computer", "cn=ComputerNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "ComputerNO" &amp; i 
+   objLeaf.SetInfo 
+
+Set objComputer = GetObject("LDAP://cn=ComputerNO" &amp; i  &amp; ",OU=Computers,ou=IT,dc=Documentatie,dc=local") 
+
+      objComputer.AccountDisabled = FALSE 
+      objComputer.SetInfo 
+Next 
+
+
+
+' Creating 100 Computers in the Admin OU
+'-------------------------------------------------------------------------------------------------
+
+For i = 201 To 300 
+
+Set objadd = nothing
+set objleaf = nothing
+
+   Set objAdd = GetObject("LDAP://OU=Computers,OU=Admin,dc=Documentatie,dc=local") 
+       Set objLeaf = objAdd.Create("Computer", "cn=ComputerNo" &amp; i) 
+       objLeaf.Put "sAMAccountName", "ComputerNO" &amp; i 
+   objLeaf.SetInfo 
+
+Set objComputer = GetObject("LDAP://cn=ComputerNO" &amp; i  &amp; ",OU=Computers,ou=Admin,dc=Documentatie,dc=local") 
+
+      objComputer.AccountDisabled = FALSE 
+      objComputer.SetInfo 
+Next

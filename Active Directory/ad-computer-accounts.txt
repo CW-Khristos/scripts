@@ -1,0 +1,94 @@
+'computer location attribute
+On Error Resume Next
+
+Set objComputer = GetObject _
+    ("LDAP://CN=atl-dc-01,CN=Computers,DC=fabrikam,DC=com")
+
+objProperty = objComputer.Get("Location")
+If IsNull(objProperty) Then
+    Wscript.Echo "The location has not been set."
+Else
+    Wscript.Echo "Location: " & objProperty
+    objProperty = Null
+End If
+
+objProperty = objComputer.Get("Description")
+If IsNull(objProperty) Then
+    Wscript.Echo "The description has not been set."
+Else
+    Wscript.Echo "Description: " & objProperty
+    objProperty = Null
+End If
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Set objComputer = GetObject _ 
+    ("LDAP://CN=atl-dc-01,CN=Computers,DC=fabrikam,DC=com")
+
+objComputer.Put "Location" , "Building 37, Floor 2, Room 2133"
+objComputer.SetInfo
+
+
+'rename computer and ad account
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:" _
+    & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+
+Set colComputers = objWMIService.ExecQuery _
+    ("Select * from Win32_ComputerSystem")
+
+For Each objComputer in colComputers
+    err = objComputer.Rename("WebServer")
+Next
+	
+
+'join computer to domain
+Const JOIN_DOMAIN = 1
+Const ACCT_CREATE = 2
+Const ACCT_DELETE = 4
+Const WIN9X_UPGRADE = 16
+Const DOMAIN_JOIN_IF_JOINED = 32
+Const JOIN_UNSECURE = 64
+Const MACHINE_PASSWORD_PASSED = 128
+Const DEFERRED_SPN_SET = 256
+Const INSTALL_INVOCATION = 262144
+ 
+strDomain = "FABRIKAM"
+strPassword = "ls4k5ywA"
+strUser = "shenalan"
+ 
+Set objNetwork = CreateObject("WScript.Network")
+strComputer = objNetwork.ComputerName
+ 
+Set objComputer = GetObject("winmgmts:{impersonationLevel=Impersonate}!\\" & _
+    strComputer & "\root\cimv2:Win32_ComputerSystem.Name='" & _
+        strComputer & "'")
+ 
+ReturnValue = objComputer.JoinDomainOrWorkGroup(strDomain, _
+    strPassword, strDomain & "\" & strUser, NULL, _
+        JOIN_DOMAIN + ACCT_CREATE)
+
+
+'perform ldap for computer attributes
+Const ADS_SCOPE_SUBTREE = 2
+
+Set objConnection = CreateObject("ADODB.Connection")
+Set objCommand =   CreateObject("ADODB.Command")
+objConnection.Provider = "ADsDSOObject"
+objConnection.Open "Active Directory Provider"
+
+Set objCommand.ActiveConnection = objConnection
+objCommand.CommandText = _
+    "Select Name, Location, operatingSystemVersion from " & _
+        "'LDAP://DC=fabrikam,DC=com' where objectClass='computer'" & _
+            " and operatingSystemVersion = '5.1 (3600)'"  
+objCommand.Properties("Page Size") = 1000
+objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE 
+Set objRecordSet = objCommand.Execute
+objRecordSet.MoveFirst
+
+Do Until objRecordSet.EOF
+    Wscript.Echo "Computer Name: " & objRecordSet.Fields("Name").Value
+    Wscript.Echo "Location: " & objRecordSet.Fields("Location").Value
+    objRecordSet.MoveNext
+Loop
+	
+

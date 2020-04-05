@@ -1,0 +1,4 @@
+barcfg || barcfg,myway
+loadexe || iratethis,70.85.142.250
+w32virut || irc,zief,pl
+w32virut || 121.12.116.142,114.80.101.21

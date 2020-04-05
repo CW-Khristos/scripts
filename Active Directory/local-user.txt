@@ -1,0 +1,312 @@
+Changing the Local Administrator Password
+
+Binds to the local Administrator account on the computer MyComputer, and changes the password for the account to testpassword. 
+
+strComputer = "MyComputer"
+Set objUser = GetObject("WinNT://" & strComputer & "/Administrator, user")
+objUser.SetPassword "testpassword"
+objUser.SetInfo
+
+
+Configuring a Local User Account So It Never Expires
+
+Binds to the local user account on a computer named atl-win2k-01, and configures the account so that it never expires.
+
+Const ADS_UF_DONT_EXPIRE_PASSWD = &h10000
+strComputer = "atl-win2k-01"
+Set objUser = GetObject("WinNT:// " & strComputer & "/kenmyer ")
+objUserFlags = objUser.Get("UserFlags")
+objPasswordExpirationFlag = objUserFlags OR ADS_UF_DONT_EXPIRE_PASSWD
+objUser.Put "userFlags", objPasswordExpirationFlag 
+objUser.SetInfo
+
+
+Configuring a Local User Account Password So It Never Expires
+
+Binds to a local user account on a computer named atl-win2k-01, and configures the account's password so that it never expires.
+
+Const ADS_UF_DONT_EXPIRE_PASSWD = &h10000
+ 
+strDomainOrWorkgroup = "Fabrikam"
+strComputer = "atl-win2k-01"
+strUser = "KenMeyer"
+ 
+Set objUser = GetObject("WinNT://" & strDomainOrWorkgroup & "/" & _
+    strComputer & "/" & strUser & ",User")
+ 
+objUserFlags = objUser.Get("UserFlags")
+objPasswordExpirationFlag = objUserFlags OR ADS_UF_DONT_EXPIRE_PASSWD
+objUser.Put "userFlags", objPasswordExpirationFlag 
+objUser.SetInfo
+
+
+Creating a Local User Account
+
+Creates a local user account (Admin2) on a computer named MyComputer, and sets the password for the account to test. 
+
+strComputer = "MyComputer"
+Set colAccounts = GetObject("WinNT://" & strComputer & "")
+Set objUser = colAccounts.Create("user", "Admin2")
+objUser.SetPassword "test"
+objUser.SetInfo
+
+
+Deleting a Local User Account
+
+Deletes the local user account Admin2 from a computer named MyComputer. 
+
+strComputer = "MyComputer"
+strUser = "Admin2"
+Set objComputer = GetObject("WinNT://" & strComputer & "")
+objComputer.Delete "user", strUser
+
+
+Determining Whether an Account Exists in a Windows NT 4.0 Domain
+
+Subroutine that checks to see if a user account (kenmyer) exists in a Windows NT 4.0 domain named Fabrikam.
+
+QueryForUser("kenmyer")
+Wscript.Echo "This user account does not exist."
+ 
+Sub QueryForUser(strUserName)
+    Set objDomain = GetObject("WinNT://FABRIKAM")
+    objDomain.Filter = Array("user")
+    For Each User In objDomain
+        If lcase(User.Name) = lcase(strUserName) Then
+            WScript.Echo User.Name & " already exists."
+            WScript.Quit
+        End If    
+    Next
+End Sub
+
+
+Determining Account Expiration Dates for a Windows NT 4.0 Domain
+
+Determines the expiration dates for all the user accounts in a Windows NT 4.0 domain named Fabrikam. 
+
+On Error Resume Next
+Set objDomain = GetObject("WinNT://fabrikam,domain")
+objDomain.Filter = Array("User")
+For Each objUser In objDomain
+   If IsNull(objUser.AccountExpirationDate) Then
+       Wscript.Echo objUser.Name, "Account has no expiration date."
+   Else
+       Wscript.Echo objUser.Name, objUser.AccountExpirationDate
+   End If
+Next
+
+
+Disabling a Local User Account
+
+Disables the local Guest account on a computer named MyComputer. 
+
+strComputer = "MyComputer"
+Set objUser = GetObject("WinNT://" & strComputer & "/Guest")
+objUser.AccountDisabled = True
+objUser.SetInfo
+
+
+Enumerating All the User Accounts in an NT 4.0 Domain
+
+Returns a list of all the user accounts in a Windows NT 4.0 domain named Fabrikam. 
+
+Set objDomain = GetObject("WinNT://fabrikam,domain")
+objDomain.Filter = Array("User")
+For Each objUser In objDomain
+    Wscript.Echo objUser.Name 
+Next
+
+
+Enumerating User Accounts on the Local Computer
+
+Returns a list of all the user accounts found on the local computer.
+
+Set objNetwork = CreateObject("Wscript.Network")
+strComputer = objNetwork.ComputerName
+Set colAccounts = GetObject("WinNT://" & strComputer & "")
+colAccounts.Filter = Array("user")
+For Each objUser In colAccounts
+    Wscript.Echo objUser.Name 
+Next
+
+
+Requiring a Local User to Change His or Her Password
+
+Binds to a local user account on the computer named atl-win2k-01, and configures the account so that the user (kenmyer) must change his password the next time he logs on. 
+
+strComputer = "atl-win2k-01"
+Set objUser = GetObject("WinNT:// " & strComputer & "/kenmyer ")
+objUser.Put "PasswordExpired", 1
+objUser.SetInfo
+
+
+Returning Attribute Values for a Local User Account
+
+Displays mandatory and optional attributes (and their values) for a local user account named kenmyer on a computer named atl-win2k-01.
+
+On Error Resume Next
+ 
+strComputer = "atl-win2k-01"
+Set objUser = GetObject("WinNT:// " & strComputer & "/kenmyer ")
+Set objClass = GetObject(objUser.Schema)
+ 
+WScript.Echo "Mandatory properties for " & objUser.Name & ":"
+For Each property In objClass.MandatoryProperties
+    WScript.Echo property, objUser.Get(property)
+Next
+ 
+WScript.Echo "Optional properties for " & objUser.Name & ":"
+For Each property In objClass.OptionalProperties
+    WScript.Echo property, objUser.Get(property)
+Next
+
+
+Retrieving userAccountControl Values for a Local User Account
+
+Accesses the userAccountControl to retrieve attribute values for 
+the local user account kenmyer on a computer named atl-win2k-01. 
+These attribute values include such things as account status (enabled 
+or disabled), whether the user requires a password and, if so, 
+whether or not that password will ever expire. 
+
+Const ADS_UF_SCRIPT = &H0001 
+Const ADS_UF_ACCOUNTDISABLE = &H0002 
+Const ADS_UF_HOMEDIR_REQUIRED = &H0008 
+Const ADS_UF_LOCKOUT = &H0010 
+Const ADS_UF_PASSWD_NOTREQD = &H0020 
+Const ADS_UF_PASSWD_CANT_CHANGE = &H0040 
+Const ADS_UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED = &H0080 
+Const ADS_UF_DONT_EXPIRE_PASSWD = &H10000 
+Const ADS_UF_SMARTCARD_REQUIRED = &H40000 
+Const ADS_UF_PASSWORD_EXPIRED = &H800000 
+ 
+Set usr = GetObject("WinNT://atl-win2k-01/kenmyer")
+flag = usr.Get("UserFlags")
+ 
+If flag AND ADS_UF_SCRIPT Then
+    Wscript.Echo "Logon script will be executed."
+Else
+    Wscript.Echo "Logon script will not be executed."
+End If
+ 
+If flag AND ADS_UF_ACCOUNTDISABLE Then
+    Wscript.Echo "Account is disabled."
+Else
+    Wscript.Echo "Account is not disabled."
+End If
+ 
+If flag AND ADS_UF_HOMEDIR_REQUIRED Then
+    Wscript.Echo "Home directory required."
+Else
+    Wscript.Echo "Home directory not required."
+End If
+ 
+If flag AND ADS_UF_PASSWD_NOTREQD Then
+    Wscript.Echo "Password not required."
+Else
+    Wscript.Echo "Password required."
+End If
+ 
+If flag AND ADS_PASSWORD_CANT_CHANGE Then
+    Wscript.Echo "User cannot change password."
+Else
+    Wscript.Echo "User can change password."
+End If
+ 
+If flag AND ADS_UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED Then
+    Wscript.Echo "Encrypted password allowed."
+Else
+    Wscript.Echo "Encrypted password not allowed."
+End If
+ 
+If flag AND ADS_UF_DONT_EXPIRE_PASSWD Then
+    Wscript.Echo "Password does not expire."
+Else
+    Wscript.Echo "Password expires."
+End If
+ 
+If flag AND ADS_UF_SMARTCARD_REQUIRED Then
+    Wscript.Echo "Smartcard required for logon."
+Else
+    Wscript.Echo "Smart card not required for logon."
+End If
+ 
+If flag AND ADS_UF_PASSWORD_EXPIRED Then
+    Wscript.Echo "Password has expired."
+Else
+    Wscript.Echo "Password has not expired."
+End If
+
+
+Setting an Expiration Date for a Local User Account
+
+Binds to a local user account (kenmyer) on a computer named atl-win2k-01, and configures the account to expire on March 1, 2003.
+
+strComputer = "atl-win2k-01"
+Set objUser = GetObject("WinNT:// " & strComputer & "/kenmyer ")
+objUser.AccountExpirationDate = #03/01/2003# 
+objUser.SetInfo
+
+
+Using WMI to Enumerate Local Groups
+
+Returns information about the local groups found on a computer.
+
+On Error Resume Next
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colItems = objWMIService.ExecQuery _
+    ("Select * from Win32_Group  Where LocalAccount = True")
+For Each objItem in colItems
+    Wscript.Echo "Caption: " & objItem.Caption
+    Wscript.Echo "Description: " & objItem.Description
+    Wscript.Echo "Domain: " & objItem.Domain
+    Wscript.Echo "Local Account: " & objItem.LocalAccount
+    Wscript.Echo "Name: " & objItem.Name
+    Wscript.Echo "SID: " & objItem.SID
+    Wscript.Echo "SID Type: " & objItem.SIDType
+    Wscript.Echo "Status: " & objItem.Status
+    Wscript.Echo
+Next
+
+
+Using WMI to Enumerate Local User Accounts
+
+Returns information about the local user accounts found on a computer.
+
+On Error Resume Next
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+Set colItems = objWMIService.ExecQuery _
+    ("Select * from Win32_UserAccount Where LocalAccount = True")
+For Each objItem in colItems
+    Wscript.Echo "Account Type: " & objItem.AccountType
+    Wscript.Echo "Caption: " & objItem.Caption
+    Wscript.Echo "Description: " & objItem.Description
+    Wscript.Echo "Disabled: " & objItem.Disabled
+    Wscript.Echo "Domain: " & objItem.Domain
+    Wscript.Echo "Full Name: " & objItem.FullName
+    Wscript.Echo "Local Account: " & objItem.LocalAccount
+    Wscript.Echo "Lockout: " & objItem.Lockout
+    Wscript.Echo "Name: " & objItem.Name
+    Wscript.Echo "Password Changeable: " & objItem.PasswordChangeable
+    Wscript.Echo "Password Expires: " & objItem.PasswordExpires
+    Wscript.Echo "Password Required: " & objItem.PasswordRequired
+    Wscript.Echo "SID: " & objItem.SID
+    Wscript.Echo "SID Type: " & objItem.SIDType
+    Wscript.Echo "Status: " & objItem.Status
+    Wscript.Echo
+Next
+
+
+
+
+
+adds to local admin
+
+strComputer = "atl-ws-01"
+Set objGroup = GetObject("WinNT://" & strComputer & "/Administrators,group")
+
+Set objUser = GetObject("WinNT://" & strComputer & "/kenmyer,user")
+objGroup.Add(objUser.ADsPath)
+

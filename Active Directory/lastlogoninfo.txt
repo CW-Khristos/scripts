@@ -1,0 +1,97 @@
+The lastLogon attribute is not replicated, even if your domain is at W2k3 
+functional level. The lastLogonTimeStamp attribute is replicated. By default 
+computer account passwords are reset every 30 days. It may take that long 
+before the lastLogonTimeStamp attribute is populated. The lastLogon 
+attribute is only populated on the DC that authenticates the account. After 
+30 days if lastLogonTimeStamp is still not populated, either the computer is 
+not attached to the domain or the DC's are not replicating.
+
+First, the lastLogonTimeStamp attribute is only updated during 
+authentication if the old value is more than 14 days (by default) in the 
+past. It's purpose is to find old unused accounts. The value is only 
+accurate within 14 days.
+
+I have an example VBScript program that retrieves the lastLogon attribute 
+for all users in the domain linked here:
+
+http://www.rlmueller.net/Last%20Logon.htm
+
+This program uses ADO to query AD for the attribute values. As demonstrated 
+in this program you can specify which specific DC is queried by including 
+the DNS name of the DC in the binding string (or in this case, the base of 
+the ADO query). Ordinarily this is not wise, as you usually don't care which 
+DC responds, but this becomes necessary if the attribute is not replicated. 
+For example, in VBScript to bind to a user object you might use a binding 
+string similar to:
+
+Set objUser = GetObject("LDAP://cn=Jim Smith,ou=West,dc=MyDomain,dc=com")
+
+To bind to the copy of that object on a specific DC called MyServer you 
+could use:
+
+Set objUser = GetObject("LDAP://MyServer.MyDomain.com/cn=Jim 
+Smith,ou=West,dc=MyDomain,dc=com")
+
+The program I linked above retrieves the names of all DC's in the domain 
+from the Configuration container, then queries each DC for the lastLogon 
+attribute of all users. A dictionary object keeps track of the largest 
+(latest) value for each user.
+
+My best maths skill is estimating, I always know roughly how much the shopping will cost,
+I can guess to within one gallon how much petrol I need to fill my tank.  When it comes
+to estimating how many 100 nanosecond slices there are in a year, I have no idea.  Perhaps
+I should have mentioned earlier, lastLogon measures 100 nanosecond time slices since
+January 1st 1601.  I believe this time base is known as (UTC) Universal Time Co-ordination.
+My point is that I cannot rely on my usual estimation skills to work out if I have made an
+arithmetic mistake.  (Are there 10000000 nanoseconds in a second, or is it 10000000?)  
+
+Just in case you think I am a maths dunce, I am able to calculate, that depending when you
+read this, there are approx 147803 days since January 1601.  You may detect I am having a
+cathartic moment, so here is another of my irritations - numbers without thousand separators.
+To my way of thinking, the number of days should display as 147,803 in English.
+(147.803 in American?)   Is my irritation with large numbers without separators an age factor,
+or is it an English phenomenon?  Do tell me what you think.
+
+1. The lastLogonTimeStamp update interval is controlled by the
+ms-DS-Logon-Time-Sync-Interval attribute on the domain head
+
+2. ms-DS-Logon-Time-Sync-Interval controls the granularity (in days)
+with which the last logon time for a user/computer, recorded in the
+lastLogonTimestamp attribute, is replicated to all DCs in a domain.  In
+other more general words, until the logon time recorded in the directory
+is stale by an amount more than this attribute value, the logon time
+will not be updated to reflect new logons. This attribute therefore
+controls the tradeoff between high replication traffic vs. higher
+accuracy of last logon time across all DCs within a domain.  For
+example, when a successful logon occurs, the system always updates
+LastLogon to reflect the current time and evaluates whether it should
+update lastLogonTimeStamp based on the ms-DS-Logon-Time-Sync-Interval.
+If the difference between the current time and the old value of
+lastLogonTimeStamp is greater than the Update/Sync interval, the
+lastLogonTimeStamp will also be updated, otherwise, no.
+
+3. The Update interval is derived from the
+ms-DS-Logon-Time-Sync-Interval which tries to further "spread" updates
+of the lastLogonTimeStamp. The algorithm can be expressed as follows;
+
+If ms-DS-Logon-Time-Sync-Interval > 5 days
+
+{
+Update Interval = ms-DS-Logon-Time-Sync-Interval - (a random
+number between 0 to 5);
+} Else {
+Update Interval = ms-DS-Logon-Time-Sync-Interval;
+}
+
+5.1. If the ms-DS-Logon-Time-Sync-Interval is not populated, then a
+default value of 14 days will be used
+------------------
+
+To llustrate, here's a current value from my happily-working domain -
+
+C:\>w32tm /ntte 128465186818395900
+148686 13:24:41.8395900 - 2/3/2008 8:24:41 AM (local time)
+
+Does this help clear it up?
+
+Dean
