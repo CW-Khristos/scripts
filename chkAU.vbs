@@ -78,22 +78,24 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
-	if (CHKAU(wscript.scriptname, strVER, _
-    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)) then
+	intRET = (CHKAU(wscript.scriptname, strVER, _
+    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG))
+  if (intRET = true) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
-  else
+  elseif (intRET = false) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
-  if (CHKAU(strSCR, strSVER, strARG)) then
+  intRET = (CHKAU(strSCR, strSVER, strARG))
+  if (intRET = true) then
     errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
-  else
+  elseif (intRET = false) then
     errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "    
