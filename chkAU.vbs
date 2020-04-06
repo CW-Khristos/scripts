@@ -79,17 +79,17 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
-	call CHKAU(wscript.scriptname, strVER, _
-    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)
-  if (blnCHKAU = true) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
-      strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
-      strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
-  elseif (blnCHKAU = false) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
-  end if
+	'call CHKAU(wscript.scriptname, strVER, _
+  '  strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)
+  'if (blnCHKAU = true) then
+  '  objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
+  '    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
+  '  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
+  '    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
+  'elseif (blnCHKAU = false) then
+  '  objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
+  '  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
+  'end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
   call CHKAU(strSCR, strSVER, strARG)
   if (blnCHKAU = true) then
