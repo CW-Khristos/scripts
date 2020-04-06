@@ -91,7 +91,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       if (objFSO.fileexists("C:\temp\filters.txt")) then
         objFSO.deletefile "C:\temp\filters.txt", true
       end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/filters.txt", "filters.txt")
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/filters.txt", "filters.txt")
       set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
@@ -123,7 +123,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       if (objFSO.fileexists("C:\temp\includes.txt")) then
         objFSO.deletefile "C:\temp\includes.txt", true
       end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/includes.txt", "includes.txt")
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/includes.txt", "includes.txt")
       set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
@@ -162,7 +162,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       if (objFSO.fileexists("C:\temp\cloud_filters.txt")) then
         objFSO.deletefile "C:\temp\cloud_filters.txt", true
       end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_filters.txt", "cloud_filters.txt")
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_filters.txt", "cloud_filters.txt")
       set objTMP = objFSO.opentextfile("C:\temp\cloud_filters.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
@@ -194,7 +194,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       if (objFSO.fileexists("C:\temp\cloud_includes.txt")) then
         objFSO.deletefile "C:\temp\cloud_includes.txt", true
       end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_includes.txt", "cloud_includes.txt")
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_includes.txt", "cloud_includes.txt")
       set objTMP = objFSO.opentextfile("C:\temp\cloud_includes.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
