@@ -15,8 +15,8 @@ on error resume next
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
 dim strARG, arrARG
-dim strREPO, strBRCH
-dim strDIR, strSCR, strSVER
+dim strSCR, strSVER
+dim strREPO, strBRCH, strDIR
 dim strIN, strOUT, strOPT, strRCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
