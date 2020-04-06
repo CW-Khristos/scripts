@@ -1,66 +1,66 @@
 <SCRIPTS>
   <AcctClean.vbs>2</AcctClean.vbs>
-	<all_av_removal.vbs>1</all_av_removal.vbs>
-	<auto_plan.vbs>11</auto_plan.vbs>
+  <all_av_removal.vbs>1</all_av_removal.vbs>
+  <auto_plan.vbs>11</auto_plan.vbs>
   <avd_removal.vbs>1</avd_removal.vbs>
-	<CClutter.vbs>4</CClutter.vbs>
+  <CClutter.vbs>4</CClutter.vbs>
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
   <chkAU.vbs>1</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
   <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
-	<CSize.vbs>1</CSize.vbs>
-	<disk_usage.vbs>2</disk_usage>
-	<drvmap.vbs>1</drvmap.vbs>
-	<fastnet.vbs>1</fastnet.vbs>
-	<fileback.vbs>1</fileback.vbs>
+  <CSize.vbs>1</CSize.vbs>
+  <disk_usage.vbs>2</disk_usage>
+  <drvmap.vbs>1</drvmap.vbs>
+  <fastnet.vbs>1</fastnet.vbs>
+  <fileback.vbs>1</fileback.vbs>
   <gtfo.vbs>1</gtfo.vbs>
-	<iasdatasync.vbs>1</iasdatasync.vbs>
-	<jdc_msp_postbackup.vbs>4</jdc_msp_postbackup.vbs>
-	<jdc_msp_prebackup.vbs>4</jdc_msp_prebackup.vbs>
-	<LSVperm.vbs>8</LSVperm.vbs>
+  <iasdatasync.vbs>1</iasdatasync.vbs>
+  <jdc_msp_postbackup.vbs>4</jdc_msp_postbackup.vbs>
+  <jdc_msp_prebackup.vbs>4</jdc_msp_prebackup.vbs>
+  <LSVperm.vbs>8</LSVperm.vbs>
   <md5.vbs>1</md5.vbs>
-	<MSP_Config.vbs>4</MSP_Config.vbs>
-	<MSP_Debug.vbs>3</MSP_Debug.vbs>
+  <MSP_Config.vbs>4</MSP_Config.vbs>
+  <MSP_Debug.vbs>3</MSP_Debug.vbs>
   <MSP_Filter.vbs>4</MSP_Filter.vbs>
   <MSP_Includes.vbs>1</MSP_Includes.vbs>
-	<msp_lsv.vbs>1</msp_lsv.vbs>
-	<msp_postbackup.vbs>4</msp_postbackup.vbs>
-	<msp_prebackup.vbs>4</msp_prebackup.vbs>
-	<MSP_Rotate.vbs>5</MSP_Rotate.vbs>
-	<MSP_SSHeal.vbs>13</MSP_SSHeal.vbs>
+  <msp_lsv.vbs>1</msp_lsv.vbs>
+  <msp_postbackup.vbs>4</msp_postbackup.vbs>
+  <msp_prebackup.vbs>4</msp_prebackup.vbs>
+  <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
+  <MSP_SSHeal.vbs>13</MSP_SSHeal.vbs>
   <MSP_SSHeal_Force.vbs>12</MSP_SSHeal_Force.vbs>
   <MSP_SSHeal_Force_ps.vbs>13</MSP_SSHeal_Force_ps.vbs>
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
-	<MSP_Update.vbs>3</MSP_Update.vbs>
-	<percent_rename.vbs>1</percent_rename.vbs>
+  <MSP_Update.vbs>3</MSP_Update.vbs>
+  <percent_rename.vbs>1</percent_rename.vbs>
   <pingtest.vbs>2</pingtest.vbs>
   <PMEService_Fix.vbs>5</PMEService_Fix.vbs>
   <PMEService_Install.vbs>1</PMEService_Install.vbs>
-	<post-backup.cmd>3</post-backup.cmd>
+  <post-backup.cmd>3</post-backup.cmd>
   <powerCFG.vbs>2</powerCFG.vbs>
-	<pre-backup.cmd>3</pre-backup.cmd>
-	<PWDchg.vbs>2</PWDchg.vbs>
-	<qsmart.vbs>2</qsmart.vbs>
-	<reagent.vbs>11</reagent.vbs>
-	<msi_reagent.vbs>11</msi_reagent.vbs>
+  <pre-backup.cmd>3</pre-backup.cmd>
+  <PWDchg.vbs>2</PWDchg.vbs>
+  <qsmart.vbs>2</qsmart.vbs>
+  <reagent.vbs>11</reagent.vbs>
+  <msi_reagent.vbs>11</msi_reagent.vbs>
   <exe_reagent.vbs>11</exe_reagent.vbs>
-	<reboot_check.vbs>1</reboot_check.vbs>
-	<reboot_force.vbs>1</reboot_force.vbs>
+  <reboot_check.vbs>1</reboot_check.vbs>
+  <reboot_force.vbs>1</reboot_force.vbs>
   <reprobe.vbs>13</reprobe.vbs>
-	<msi_reprobe.vbs>13</msi_reprobe.vbs>
+  <msi_reprobe.vbs>13</msi_reprobe.vbs>
   <exe_reprobe.vbs>13</exe_reprobe.vbs>
-	<rmm_logo.vbs>1</rmm_logo.vbs>
-	<rndds_msp_postbackup.vbs>4</rndds_msp_postbackup.vbs>
-	<rndds_msp_prebackup.vbs>4</rndds_msp_prebackup.vbs>
-	<set_msparchive.vbs>2</set_msparchive.vbs>
-	<SNMPparam.vbs>4</SNMPparam.vbs>
-	<ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
-	<ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
-	<SVCperm.vbs>13</SVCperm.vbs>
-	<sysnfo.vbs>1</sysnfo.vbs>
+  <rmm_logo.vbs>1</rmm_logo.vbs>
+  <rndds_msp_postbackup.vbs>4</rndds_msp_postbackup.vbs>
+  <rndds_msp_prebackup.vbs>4</rndds_msp_prebackup.vbs>
+  <set_msparchive.vbs>2</set_msparchive.vbs>
+  <SNMPparam.vbs>4</SNMPparam.vbs>
+  <ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
+  <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
+  <SVCperm.vbs>13</SVCperm.vbs>
+  <sysnfo.vbs>1</sysnfo.vbs>
   <TaskKill_Force.vbs>2</TaskKill_Force.vbs>
-	<VSS_Fix.vbs>1</VSS_Fix.vbs>
-	<wmi_disk.vbs>1</wmi_disk.vbs>
+  <VSS_Fix.vbs>1</VSS_Fix.vbs>
+  <wmi_disk.vbs>1</wmi_disk.vbs>
   <WMI_FIX_NORESTART.VBS>3</WMI_FIX_NORESTART.VBS>
   <WMI_FIX_RESTART.VBS>3</WMI_FIX_RESTART.VBS>
 </SCRIPTS>
