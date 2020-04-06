@@ -134,6 +134,7 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
           objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           if (cint(objSCR.text) > cint(strSVER)) then
+            blnCHKAU = true
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
@@ -148,21 +149,21 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
-              if (intRET = 0) then
-                blnCHKAU = true
-              end if
+              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
+              'if (intRET = 0) then
+              '  blnCHKAU = true
+              'end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
-              if (intRET = 0) then
-                blnCHKAU = true
-              end if
+              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
+              'if (intRET = 0) then
+              '  blnCHKAU = true
+              'end if
             end if
             if (err.number <> 0) then
-              call LOGERR(10)
-              blnCHKAU = false
+              'call LOGERR(10)
+              'blnCHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
@@ -175,6 +176,7 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
           objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           if (cint(objSCR.text) > cint(strSVER)) then
+            blnCHKAU = true
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
@@ -189,21 +191,21 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
-              if (intRET = 0) then
-                blnCHKAU = true
-              end if
+              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
+              'if (intRET = 0) then
+              '  blnCHKAU = true
+              'end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
-              if (intRET = 0) then
-                blnCHKAU = true
-              end if
+              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
+              'if (intRET = 0) then
+              '  blnCHKAU = true
+              'end if
             end if
             if (err.number <> 0) then
-              call LOGERR(10)
-              blnCHKAU = false
+              'call LOGERR(10)
+              'blnCHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
