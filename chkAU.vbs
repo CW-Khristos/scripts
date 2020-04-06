@@ -12,6 +12,7 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
+dim CHKAU
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
 dim strARG, arrARG
@@ -78,24 +79,24 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
-	intRET = (CHKAU(wscript.scriptname, strVER, _
-    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG))
-  if (intRET = true) then
+	call CHKAU(wscript.scriptname, strVER, _
+    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)
+  if (CHKAU = true) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
-  elseif (intRET = false) then
+  elseif (CHKAU = false) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
-  intRET = (CHKAU(strSCR, strSVER, strARG))
-  if (intRET = true) then
+  call CHKAU(strSCR, strSVER, strARG)
+  if (CHKAU = true) then
     errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
-  elseif (intRET = false) then
+  elseif (CHKAU = false) then
     errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "    
@@ -107,7 +108,7 @@ call CLEANUP()
 ''------------
 
 ''CHKAU FUNCTIONS
-function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2
+sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR, true
@@ -219,7 +220,7 @@ function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT U
     call LOGERR(10)
     CHKAU = false
   end if
-end function
+end sub
 
 ''SUB-ROUTINES
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
