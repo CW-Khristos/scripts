@@ -220,8 +220,8 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
   set colVER = nothing
   set objXML = nothing
   if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
-    call LOGERR(10)
-    blnCHKAU = false
+    'call LOGERR(10)
+    'blnCHKAU = false
   end if
 end sub
 
