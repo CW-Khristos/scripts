@@ -300,7 +300,7 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
   elseif (errRET <> 0) then    															''CHKAU FAILED
     objOUT.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
+    'call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
   end if
   objOUT.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
