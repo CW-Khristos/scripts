@@ -12,7 +12,7 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 'on error resume next
 ''SCRIPT VARIABLES
-dim CHKAU
+dim blnCHKAU
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
 dim strARG, arrARG
@@ -81,22 +81,22 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
 	call CHKAU(wscript.scriptname, strVER, _
     strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)
-  if (CHKAU = true) then
+  if (blnCHKAU = true) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
       strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
-  elseif (CHKAU = false) then
+  elseif (blnCHKAU = false) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
   call CHKAU(strSCR, strSVER, strARG)
-  if (CHKAU = true) then
+  if (blnCHKAU = true) then
     errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
-  elseif (CHKAU = false) then
+  elseif (blnCHKAU = false) then
     errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "    
@@ -149,24 +149,24 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
               if (intRET = 0) then
-                CHKAU = true
+                blnCHKAU = true
               end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
               if (intRET = 0) then
-                CHKAU = true
+                blnCHKAU = true
               end if
             end if
             if (err.number <> 0) then
               call LOGERR(10)
-              CHKAU = false
+              blnCHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
           elseif (cint(objSCR.text) <= cint(strSVER)) then
-            CHKAU = false
+            blnCHKAU = false
           end if
           exit for
         elseif (ucase(strSCR) = "CHKAU.VBS") then           ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
@@ -190,24 +190,24 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
               if (intRET = 0) then
-                CHKAU = true
+                blnCHKAU = true
               end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
               if (intRET = 0) then
-                CHKAU = true
+                blnCHKAU = true
               end if
             end if
             if (err.number <> 0) then
               call LOGERR(10)
-              CHKAU = false
+              blnCHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
           elseif (cint(objSCR.text) <= cint(strSVER)) then
-            CHKAU = false
+            blnCHKAU = false
           end if
           exit for
         end if
@@ -218,7 +218,7 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
   set objXML = nothing
   if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
     call LOGERR(10)
-    CHKAU = false
+    blnCHKAU = false
   end if
 end sub
 
