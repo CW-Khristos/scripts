@@ -7,7 +7,7 @@
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
   <chkAU.vbs>1</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
-  <CodeDrop_Fix.vbs>6</CodeDrop_Fix.vbs>
+  <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
 	<CSize.vbs>1</CSize.vbs>
 	<disk_usage.vbs>2</disk_usage>
 	<drvmap.vbs>1</drvmap.vbs>
