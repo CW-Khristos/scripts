@@ -110,7 +110,7 @@ function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT U
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR, true
   end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
 		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
 	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
@@ -122,11 +122,10 @@ function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT U
 	''LOAD SCRIPT VERSIONS DATABASE XML
 	if objXML.load("https://github.com/CW-Khristos/scripts/raw/" & strBRCH & "/version.xml") then
 		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
+    for each objSCR in colVER.ChildNodes
       ''LOCATE ORIGINAL RUNNING SCRIPT
       if (ucase(objSCR.nodename) = ucase(strSCR)) then
-        ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
-        if (ucase(strSCR) <> "CHKAU.VBS") then
+        if (ucase(strSCR) <> "CHKAU.VBS") then              ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
           ''CHECK LATEST VERSION
           objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
@@ -167,8 +166,7 @@ function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT U
             CHKAU = false
           end if
           exit for
-        ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
-        elseif (ucase(strSCR) = "CHKAU.VBS") then
+        elseif (ucase(strSCR) = "CHKAU.VBS") then           ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
           ''CHECK LATEST VERSION
           objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
@@ -211,10 +209,10 @@ function CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT U
           exit for
         end if
       end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
+    next
+  end if
+  set colVER = nothing
+  set objXML = nothing
   if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
     call LOGERR(10)
     CHKAU = false
