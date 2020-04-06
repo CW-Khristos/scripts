@@ -98,8 +98,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
   elseif (blnCHKAU = false) then
     errRET = 3
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : "    
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & strARG
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & strARG
   end if
 end if
 ''END SCRIPT
@@ -127,6 +127,7 @@ sub CHKAU(strSCR, strSVER, strARG)                     ''CHECK FOR SCRIPT UPDATE
 		set colVER = objXML.documentelement
     for each objSCR in colVER.ChildNodes
       ''LOCATE ORIGINAL RUNNING SCRIPT
+      objOUT.write objSCR.nodename & " | " & strSCR
       if (ucase(objSCR.nodename) = ucase(strSCR)) then
         if (ucase(strSCR) <> "CHKAU.VBS") then              ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
           ''CHECK LATEST VERSION
