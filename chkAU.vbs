@@ -75,21 +75,26 @@ strTMP = vbnullstring
 if (errRET <> 0) then                                       ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
   call CLEANUP()
 elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, CONTINUE SCRIPT
-	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU"
-	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU"
+	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
+	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
 	if (CHKAU(wscript.scriptname, strVER, _
-    strREPO & " " & strBRCH & " " & strDIR & " " & strSCR & " " & strSVER & " " & strARG)) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - EXITING"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - EXITING"
+    strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)) then
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _
+      strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & wscript.scriptname & " : " & _ 
+      strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG
   else
-  
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"  
   end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
   if (CHKAU(strSCR, strSVER, strARG)) then
-  
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
   else
-  
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"    
   end if
 end if
 ''END SCRIPT
@@ -121,13 +126,13 @@ function CHKAU(strSCR, strSVER, strARG) as boolean          ''CHECK FOR SCRIPT U
         ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
         if (ucase(strSCR) <> "CHKAU.VBS") then
           ''CHECK LATEST VERSION
-          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub : " & objSCR.text & vbnewline
+          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           if (cint(objSCR.text) > cint(strSVER)) then
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
-            call FILEDL("https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR, strSCR)
+            call FILEDL("https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & strSCR, strSCR)
             ''RUN LATEST VERSION OF ORIGINAL SCRIPT
             if (ubound(arrARG) > 0) then                    ''ARGUMENTS WERE PASSED
               strTMP = vbnullstring
@@ -163,13 +168,13 @@ function CHKAU(strSCR, strSVER, strARG) as boolean          ''CHECK FOR SCRIPT U
         ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
         elseif (ucase(strSCR) = "CHKAU.VBS") then
           ''CHECK LATEST VERSION
-          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub : " & objSCR.text & vbnewline
+          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
           if (cint(objSCR.text) > cint(strSVER)) then
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
-            call FILEDL("https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR, strSCR)
+            call FILEDL("https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & strSCR, strSCR)
             ''RUN LATEST VERSION OF ORIGINAL SCRIPT
             if (ubound(arrARG) > 0) then                    ''ARGUMENTS WERE PASSED
               strTMP = vbnullstring
