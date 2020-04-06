@@ -87,6 +87,10 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       ''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
+      ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+      if (objFSO.fileexists("C:\temp\filters.txt")) then
+        objFSO.deletefile "C:\temp\filters.txt", true
+      end if
       call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/filters.txt", "filters.txt")
       set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
       while (not objTMP.atendofstream)
@@ -115,6 +119,10 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+      ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+      if (objFSO.fileexists("C:\temp\includes.txt")) then
+        objFSO.deletefile "C:\temp\includes.txt", true
+      end if
       call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/includes.txt", "includes.txt")
       set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
       while (not objTMP.atendofstream)
@@ -150,7 +158,11 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       ''DOWNLOAD 'CLOUD_FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_filters.txt", "filters.txt")
+      ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+      if (objFSO.fileexists("C:\temp\cloud_filters.txt")) then
+        objFSO.deletefile "C:\temp\cloud_filters.txt", true
+      end if
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_filters.txt", "cloud_filters.txt")
       set objTMP = objFSO.opentextfile("C:\temp\cloud_filters.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
@@ -178,7 +190,11 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_includes.txt", "includes.txt")
+      ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+      if (objFSO.fileexists("C:\temp\cloud_includes.txt")) then
+        objFSO.deletefile "C:\temp\cloud_includes.txt", true
+      end if
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/cloud_includes.txt", "cloud_includes.txt")
       set objTMP = objFSO.opentextfile("C:\temp\cloud_includes.txt", 1)
       while (not objTMP.atendofstream)
         strTMP = strTMP & objTMP.readline
