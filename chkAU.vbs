@@ -56,7 +56,7 @@ if (wscript.arguments.count > 4) then                       ''ARGUMENTS WERE PAS
     strSCR = objARG.item(3)                                 ''SET REQUIRED PARAMETER 'STRSCR' , TARGET 'SCRIPTNAME' TO UPDATE
     strSVER = objARG.item(4)                                ''SET REQUIRED PARAMETER 'STRSVER' , REQUESTING SCRIPT 'VERSION' TO COMPARE
     if (wscript.arguments.count > 5) then                   ''SET OPTIONAL PARAMETERS
-      strARG = objARG.item(5)                               ''SET OPTIONAL PARAMETER 'STRARG' , ORIGINAL 'ARGUMENTS' FROM REQUESTING SCRIPT
+      strARG = objARG.item(5)                               ''SET OPTIONAL PARAMETER 'STRARG' , ORIGINAL 'ARGUMENTS' FROM REQUESTING SCRIPT ; SEPARATE MULTIPLE 'ARGUMENTS' VIA '|'
       ''FILL 'ARRARG' ORIGINAL 'ARGUMENTS'
       objOUT.write vbnewline & vbtab & strARG
       arrARG = split(strARG, "|")
@@ -90,9 +90,11 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
   if (CHKAU(strSCR, strSVER, strARG)) then
+    errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
   else
+    errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING"    
   end if
