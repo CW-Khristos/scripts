@@ -219,6 +219,10 @@ sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRR
         end if
       end if
     next
+  else
+    call LOGERR(10)
+    objOUT.write vbnewline & now & vbtab & " - CHKAU : XML ERROR" & vbnewline
+    objLOG.write vbnewline & now & vbtab & " - CHKAU : XML ERROR" & vbnewline
   end if
   set colVER = nothing
   set objXML = nothing
