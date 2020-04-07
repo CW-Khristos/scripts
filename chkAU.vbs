@@ -92,8 +92,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
   if (CHKAU(strSCR, strSVER, strARG)) then
     errRET = 2
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
   else
     errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
