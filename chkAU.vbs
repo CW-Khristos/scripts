@@ -135,7 +135,6 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
             strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & strSCR
-            objOUT.write vbnewline & strDL & vbnewline
             call FILEDL(strDL, strSCR)
             ''RUN LATEST VERSION OF ORIGINAL SCRIPT
             if (ubound(arrARG) > 0) then                    ''ARGUMENTS WERE PASSED
@@ -147,14 +146,14 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 1, true)
               if (intRET = 0) then
                 CHKAU = true
               end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 1, true)
               if (intRET = 0) then
                 CHKAU = true
               end if
