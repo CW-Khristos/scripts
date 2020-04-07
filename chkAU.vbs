@@ -146,14 +146,14 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 1, true)
+              intRET = objWSH.run("cmd.exe /K " & chr(34) & "cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP & chr(34), 1, true)
               if (intRET = 0) then
                 CHKAU = true
               end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 1, true)
+              intRET = objWSH.run("cmd.exe /K " & chr(34) & "cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & chr(34), 1, true)
               if (intRET = 0) then
                 CHKAU = true
               end if
