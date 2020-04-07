@@ -95,7 +95,7 @@ call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.2.11.20
 ''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.12.2402
 objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
-call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.12.2402/PMESetup.exe", "PMESetup.exe")
+call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.12.2110/PMESetup.exe", "PMESetup.exe")
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
