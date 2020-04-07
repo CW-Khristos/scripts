@@ -12,7 +12,6 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-dim blnCHKAU
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
 dim strARG, arrARG
@@ -91,12 +90,11 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   '  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   'end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
-  call CHKAU(strSCR, strSVER, strARG)
-  if (blnCHKAU = true) then
+  if (CHKAU(strSCR, strSVER, strARG)) then
     errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & strARG
-  elseif (blnCHKAU = false) then
+  else
     errRET = 3
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
     objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
@@ -108,10 +106,10 @@ call CLEANUP()
 ''------------
 
 ''CHKAU FUNCTIONS
-sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2
+function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & SCR)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & SCR, true
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR, true
   end if
   ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
@@ -123,24 +121,22 @@ sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRR
   ''FORCE SYNCHRONOUS
   objXML.async = false
   ''LOAD SCRIPT VERSIONS DATABASE XML
-  if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
+  if objXML.load("https://github.com/CW-Khristos/scripts/raw/" & strBRCH & "/version.xml") then
     set colVER = objXML.documentelement
     for each objSCR in colVER.ChildNodes
       ''LOCATE ORIGINAL RUNNING SCRIPT
-      objOUT.write objSCR.nodename & ":" & objSCR.text & " | " & SCR & vbnewline
-      if (ucase(objSCR.nodename) = ucase(SCR)) then
-        if (ucase(SCR) <> "CHKAU.VBS") then              ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
+      if (ucase(objSCR.nodename) = ucase(strSCR)) then
+        if (ucase(strSCR) <> "CHKAU.VBS") then              ''REQUESTING SCRIPT IS NOT 'CHKAU.VBS' , UPDATE CW SCRIPT , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
           ''CHECK LATEST VERSION
-          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & SVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & SVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
-          if (cint(objSCR.text) > cint(SVER)) then
-            blnCHKAU = true
+          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          if (cint(objSCR.text) > cint(strSVER)) then
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
-            strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & SCR
+            strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & strSCR
             objOUT.write vbnewline & strDL & vbnewline
-            call FILEDL(strDL, SCR)
+            call FILEDL(strDL, strSCR)
             ''RUN LATEST VERSION OF ORIGINAL SCRIPT
             if (ubound(arrARG) > 0) then                    ''ARGUMENTS WERE PASSED
               strTMP = vbnullstring
@@ -151,39 +147,38 @@ sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRR
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & SCR & chr(34) & strTMP, 0, false)
-              'if (intRET = 0) then
-              '  blnCHKAU = true
-              'end if
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
+              if (intRET = 0) then
+                CHKAU = true
+              end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & SCR & chr(34), 0, false)
-              'if (intRET = 0) then
-              '  blnCHKAU = true
-              'end if
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
+              if (intRET = 0) then
+                CHKAU = true
+              end if
             end if
             if (err.number <> 0) then
-              'call LOGERR(10)
-              'blnCHKAU = false
+              call LOGERR(10)
+              CHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
-          elseif (cint(objSCR.text) <= cint(SVER)) then
-            blnCHKAU = false
+          elseif (cint(objSCR.text) <= cint(strSVER)) then
+            CHKAU = false
           end if
-          'exit for
-        elseif (ucase(SCR) = "CHKAU.VBS") then           ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
+          exit for
+        elseif (ucase(strSCR) = "CHKAU.VBS") then           ''REQUESTING SCRIPT IS 'CHKAU.VBS', UPDATE 'CHKAU.VBS' , RE-EXECUTE WITH ORIGINAL 'ARGUMENTS'
           ''CHECK LATEST VERSION
-          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & SVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & SVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
-          if (cint(objSCR.text) > cint(SVER)) then
-            blnCHKAU = true
+          objOUT.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          objLOG.write vbnewline & now & vbtab & " - CHKAU :  " & strSVER & " : GitHub - " & strBRCH & " : " & objSCR.text & vbnewline
+          if (cint(objSCR.text) > cint(strSVER)) then
             objOUT.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
-            strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & SCR
-            call FILEDL(strDL, SCR)
+            strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & strDIR & "/" & strSCR
+            call FILEDL(strDL, strSCR)
             ''RUN LATEST VERSION OF ORIGINAL SCRIPT
             if (ubound(arrARG) > 0) then                    ''ARGUMENTS WERE PASSED
               strTMP = vbnullstring
@@ -194,28 +189,28 @@ sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRR
               next
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & SCR & chr(34) & strTMP, 0, false)
-              'if (intRET = 0) then
-              '  blnCHKAU = true
-              'end if
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34) & strTMP, 0, false)
+              if (intRET = 0) then
+                CHKAU = true
+              end if
             elseif (wscript.arguments.count = 0) then       ''NO ARGUMENTS WERE PASSED
               objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
               objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-              'intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & SCR & chr(34), 0, false)
-              'if (intRET = 0) then
-              '  blnCHKAU = true
-              'end if
+              intRET = objWSH.run("cscript.exe //nologo " & chr(34) & "c:\temp\" & strSCR & chr(34), 0, false)
+              if (intRET = 0) then
+                CHKAU = true
+              end if
             end if
             if (err.number <> 0) then
-              'call LOGERR(10)
-              'blnCHKAU = false
+              call LOGERR(10)
+              blnCHKAU = false
             end if
             ''END SCRIPT
             'call CLEANUP()
-          elseif (cint(objSCR.text) <= cint(SVER)) then
-            blnCHKAU = false
+          elseif (cint(objSCR.text) <= cint(strSVER)) then
+            CHKAU = false
           end if
-          'exit for
+          exit for
         end if
       end if
     next
@@ -227,10 +222,10 @@ sub CHKAU(SCR, SVER, SARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRR
   set colVER = nothing
   set objXML = nothing
   if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
-    'call LOGERR(10)
-    'blnCHKAU = false
+    call LOGERR(10)
+    CHKAU = false
   end if
-end sub
+end function
 
 ''SUB-ROUTINES
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
