@@ -5,7 +5,7 @@
   <avd_removal.vbs>1</avd_removal.vbs>
   <CClutter.vbs>4</CClutter.vbs>
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
-  <chkAU.vbs>1</chkAU.vbs>
+  <chkAU.vbs>2</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
   <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
   <CSize.vbs>1</CSize.vbs>
@@ -43,7 +43,7 @@
   <qsmart.vbs>2</qsmart.vbs>
   <reagent.vbs>11</reagent.vbs>
   <msi_reagent.vbs>11</msi_reagent.vbs>
-  <exe_reagent.vbs>11</exe_reagent.vbs>
+  <exe_reagent.vbs>12</exe_reagent.vbs>
   <reboot_check.vbs>1</reboot_check.vbs>
   <reboot_force.vbs>1</reboot_force.vbs>
   <reprobe.vbs>13</reprobe.vbs>
