@@ -21,7 +21,7 @@ dim strIN, strOUT, strOPT, strRCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
-''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2
+''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
 strVER = 2
 ''DEFAULT SUCCESS
 errRET = 0
@@ -77,7 +77,7 @@ if (errRET <> 0) then                                       ''NO ARGUMENTS PASSE
 elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, CONTINUE SCRIPT
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CHKAU : " & strVER
-	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2
+	''AUTOMATIC UPDATE, CHKAU.VBS, REF #2 , REF #69 , REF #68
 	'call CHKAU(wscript.scriptname, strVER, _
   '  strREPO & "|" & strBRCH & "|" & strDIR & "|" & strSCR & "|" & strSVER & "|" & strARG)
   'if (blnCHKAU = true) then
@@ -89,7 +89,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   '  objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   '  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : CHKAU : SELF-UPDATE"
   'end if
-  ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2
+  ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2 , REF #69 , FIXES #68
   if (CHKAU(strSCR, strSVER, strARG)) then
     errRET = 2
     objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
@@ -106,8 +106,8 @@ call CLEANUP()
 ''------------
 
 ''CHKAU FUNCTIONS
-function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
+function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
+  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT, CHKAU.VBS , REF #2 , REF #68 , FIXES #69
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR, true
   end if
