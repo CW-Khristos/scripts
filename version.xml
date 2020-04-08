@@ -56,7 +56,7 @@
   <SNMPparam.vbs>4</SNMPparam.vbs>
   <ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
   <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
-  <SVCperm.vbs>13</SVCperm.vbs>
+  <SVCperm.vbs>14</SVCperm.vbs>
   <sysnfo.vbs>1</sysnfo.vbs>
   <TaskKill_Force.vbs>2</TaskKill_Force.vbs>
   <VSS_Fix.vbs>1</VSS_Fix.vbs>
