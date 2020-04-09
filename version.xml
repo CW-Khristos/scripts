@@ -44,11 +44,13 @@
   <reagent.vbs>11</reagent.vbs>
   <msi_reagent.vbs>11</msi_reagent.vbs>
   <exe_reagent.vbs>12</exe_reagent.vbs>
+  <exe_reagent_key.vbs>1</exe_reagent_key.vbs>
   <reboot_check.vbs>1</reboot_check.vbs>
   <reboot_force.vbs>1</reboot_force.vbs>
   <reprobe.vbs>13</reprobe.vbs>
   <msi_reprobe.vbs>13</msi_reprobe.vbs>
   <exe_reprobe.vbs>14</exe_reprobe.vbs>
+  <exe_reprobe_key.vbs>1</exe_reprobe_key.vbs>
   <rmm_logo.vbs>1</rmm_logo.vbs>
   <rndds_msp_postbackup.vbs>4</rndds_msp_postbackup.vbs>
   <rndds_msp_prebackup.vbs>4</rndds_msp_prebackup.vbs>
