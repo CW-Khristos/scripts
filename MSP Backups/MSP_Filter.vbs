@@ -88,6 +88,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
       ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+      erase arrTMP
+      strTMP = vbnullstring
       if (objFSO.fileexists("C:\temp\filters.txt")) then
         objFSO.deletefile "C:\temp\filters.txt", true
       end if
@@ -122,6 +124,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+      erase arrTMP
+      strTMP = vbnullstring
       if (objFSO.fileexists("C:\temp\includes.txt")) then
         objFSO.deletefile "C:\temp\includes.txt", true
       end if
@@ -163,6 +167,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
       ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+      erase arrTMP
+      strTMP = vbnullstring
       if (objFSO.fileexists("C:\temp\cloud_filters.txt")) then
         objFSO.deletefile "C:\temp\cloud_filters.txt", true
       end if
@@ -197,6 +203,8 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
       ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+      erase arrTMP
+      strTMP = vbnullstring
       if (objFSO.fileexists("C:\temp\cloud_includes.txt")) then
         objFSO.deletefile "C:\temp\cloud_includes.txt", true
       end if
