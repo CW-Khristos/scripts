@@ -25,7 +25,6 @@ dim objUFOL, arrUFOL()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
-strVER = 4
 strVER = 5
 ''DEFAULT SUCCESS
 errRET = 0
