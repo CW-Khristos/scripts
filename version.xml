@@ -41,14 +41,14 @@
   <pre-backup.cmd>3</pre-backup.cmd>
   <PWDchg.vbs>2</PWDchg.vbs>
   <qsmart.vbs>2</qsmart.vbs>
-  <reagent.vbs>11</reagent.vbs>
+  <reagent.vbs>12</reagent.vbs>
   <msi_reagent.vbs>11</msi_reagent.vbs>
   <msi_reagent_key.vbs>1</msi_reagent_key.vbs>
   <exe_reagent.vbs>12</exe_reagent.vbs>
   <exe_reagent_key.vbs>1</exe_reagent_key.vbs>
   <reboot_check.vbs>1</reboot_check.vbs>
   <reboot_force.vbs>1</reboot_force.vbs>
-  <reprobe.vbs>13</reprobe.vbs>
+  <reprobe.vbs>14</reprobe.vbs>
   <msi_reprobe.vbs>13</msi_reprobe.vbs>
   <msi_reprobe_key.vbs>1</msi_reprobe_key.vbs>
   <exe_reprobe.vbs>14</exe_reprobe.vbs>
