@@ -74,7 +74,7 @@ elseif (errRET = 0) then
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & strUSR & "|" & strPWD & "|" & strSVC & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-	if (intRET = -1073741510) then
+	if ((intRET = -1073741510) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
     ''GET SIDS OF ALL USERS , 'ERRRET'=2
     intUSR = 0
     intSID = 0
