@@ -102,7 +102,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
     objLOG.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
   end if
 end if
-objOUT.write vbnewline & "test" & vbnewline
+objLOG.write vbnewline & "test" & vbnewline
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
@@ -228,7 +228,7 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
     call LOGERR(10)
     CHKAU = false
   end if
-  objOUT.write vbnewline & " : " & errRET
+  objLOG.write vbnewline & " : " & errRET
 end function
 
 ''SUB-ROUTINES
@@ -305,12 +305,14 @@ end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   on error resume next
-  objOUT.write vbnewline & errRET & vbnewline
+  objLOG.write vbnewline & errRET & vbnewline
   if (errRET = 0) then         															''CHKAU COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     err.clear
   elseif (errRET <> 0) then    															''CHKAU FAILED
     objOUT.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
   end if
