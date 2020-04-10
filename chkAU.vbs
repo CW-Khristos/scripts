@@ -22,7 +22,10 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 2
+strVER = 3
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -64,6 +67,8 @@ if (wscript.arguments.count > 4) then                       ''ARGUMENTS WERE PAS
         objOUT.write vbnewline & vbtab & ubound(arrARG) & vbtab & arrARG(intTMP)
       next
     end if
+  else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+    call LOGERR(1)
   end if
 else                                                        ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
@@ -91,13 +96,13 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   'end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2 , REF #69 , FIXES #68
   if (CHKAU(strSCR, strSVER, strARG)) then
-    errRET = 2
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    call LOGERR(3)
+    objOUT.write vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    objLOG.write vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
   else
-    errRET = 3
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
+    call LOGERR(4)
+    objOUT.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
+    objLOG.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
   end if
 end if
 ''END SCRIPT
@@ -302,11 +307,23 @@ end sub
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   if (errRET = 0) then         															''CHKAU COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     err.clear
+  elseif (errRET = 3) then    															''CHKAU SUCCESSFUL; RE-EXECUTED REQUESTING SCRIPT
+    objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "CHKAU", "SUCCESSFUL")
+  elseif (errRET = 4) then    															''CHKAU SUCCESSFUL; NO UPDATE
+    objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "CHKAU", "SUCCESSFUL")
   elseif (errRET <> 0) then    															''CHKAU FAILED
     objOUT.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    'call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
+    call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
   end if
   objOUT.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
