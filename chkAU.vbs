@@ -64,6 +64,8 @@ if (wscript.arguments.count > 4) then                       ''ARGUMENTS WERE PAS
         objOUT.write vbnewline & vbtab & ubound(arrARG) & vbtab & arrARG(intTMP)
       next
     end if
+  else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+    call LOGERR(1)
   end if
 else                                                        ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
@@ -91,13 +93,13 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
   'end if
   ''AUTOMATIC UPDATE, REQUESTING SCRIPT 'STRSCR', REF #2 , REF #69 , FIXES #68
   if (CHKAU(strSCR, strSVER, strARG)) then
-    errRET = 2
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    call LOGERR(3)
+    objOUT.write vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    objLOG.write vbnewline & now & vbtab & " - CHKAU UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
   else
-    errRET = 3
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
+    call LOGERR(4)
+    objOUT.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
+    objLOG.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
   end if
 end if
 ''END SCRIPT
