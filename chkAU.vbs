@@ -102,6 +102,7 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
     objLOG.write vbnewline & now & vbtab & " - CHKAU NO UPDATE - EXITING : " & strSCR & " " & strARG
   end if
 end if
+objOUT.write vbnewline & "test" & vbnewline
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
