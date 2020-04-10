@@ -10,7 +10,7 @@
 ''REQUIRED PARAMETER 'STRSVER' ; STRING VALUE TO HOLD PASSED 'VERSION' ; 'STRVER'
 ''OPTIONAL PARAMETER 'STRARG' ; STRING VALUE TO HOLD PASSED 'ARGUMENTS' ; SEPARATE MULTIPLE 'ARGUMENTS' VIA '|'
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
@@ -225,7 +225,7 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
     call LOGERR(10)
     CHKAU = false
   end if
-  objOUT.write vbnewline & cbool(CHKAU) & " : " & errRET
+  objOUT.write vbnewline & CHKAU & " : " & errRET
 end function
 
 ''SUB-ROUTINES
