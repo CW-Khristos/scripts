@@ -225,6 +225,7 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
     call LOGERR(10)
     CHKAU = false
   end if
+  objOUT.write vbnewline & cbool(CHKAU) & " : " & errRET
 end function
 
 ''SUB-ROUTINES
