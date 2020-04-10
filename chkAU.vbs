@@ -22,7 +22,10 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 2
+strVER = 3
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -227,7 +230,6 @@ function CHKAU(strSCR, strSVER, strSARG)                     ''CHECK FOR SCRIPT 
     call LOGERR(10)
     CHKAU = false
   end if
-  objLOG.write vbnewline & " : " & errRET
 end function
 
 ''SUB-ROUTINES
@@ -303,7 +305,6 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
-  on error resume next
   if (errRET = 0) then         															''CHKAU COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
