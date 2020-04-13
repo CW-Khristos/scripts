@@ -7,17 +7,16 @@
 ''REQUIRED PARAMETER : 'STRPWD' , STRING TO SET TARGET USER PASSWORD
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
-''SCRIPT VARIABLES
-dim strVER, errRET
-dim strREPO, strBRCH, strDIR
-dim strIN, strOUT, colUSR(), colSID()
-dim strORG, strREP, strSID, strDMN
-''VARIABLES ACCEPTING PARAMETERS
-dim strLSV, strUSR, strPWD
 ''SCRIPT OBJECTS
 dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
+''SCRIPT VARIABLES
+dim colUSR(), colSID()
+dim strIN, strOUT, strVER, errRET
+dim strORG, strREP, strSID, strDMN
+''VARIABLES ACCEPTING PARAMETERS
+dim strLSV, strUSR, strPWD
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
 strVER = 8
 ''DEFAULT SUCCESS

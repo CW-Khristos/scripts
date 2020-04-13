@@ -6,10 +6,9 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-dim errRET, strVER
-dim blnRUN, blnSUP
 dim strREPO, strBRCH, strDIR
 dim strIDL, strTMP, arrTMP, strIN
+dim errRET, strVER, blnRUN, blnSUP
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
