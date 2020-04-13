@@ -26,6 +26,9 @@ dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
 strVER = 5
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = "MSP Backups"
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
