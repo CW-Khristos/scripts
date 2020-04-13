@@ -11,16 +11,17 @@
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
-''VARIABLES ACCEPTING PARAMETERS
-dim strINCL, arrINCL
-dim strFILTER, arrFILTER
-dim strIN, strOUT, strOPT, strRCMD
+dim strREPO, strBRCH, strDIR
 ''PRE-DEFINED ARRAYS
 dim arrUSR(), arrPROT()
 ''USER AND USER FOLDER ARRAYS
 dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
 dim objUFOL, arrUFOL()
+''VARIABLES ACCEPTING PARAMETERS
+dim strINCL, arrINCL
+dim strFILTER, arrFILTER
+dim strIN, strOUT, strOPT, strRCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -67,7 +68,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
       next
     end if
     if (wscript.arguments.count > 2) then                   ''SET OPTIONAL PARAMETER 'STRINCL' , BACKUP INCLUDES STRING
-      strINCL = objARG.item(1)
+      strINCL = objARG.item(2)
       ''FILL 'ARRINCL' BACKUP INCLUDES ARRAY
       objOUT.write vbnewline & vbtab & strINCL
       arrINCL = split(strINCL, "|")
@@ -105,269 +106,284 @@ elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, 
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_FILTER"
 	''AUTOMATIC UPDATE, MSP_FILTER.VBS, REF #2
 	call CHKAU()
-  Select Case lcase(strOPT)
-    ''PERFORM 'LOCAL' FILTER CONFIGURATIONS
-    Case "local"
-      ''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
-      objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
-      ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
-      erase arrTMP
-      strTMP = vbnullstring
-      if (objFSO.fileexists("C:\temp\filters.txt")) then
-        objFSO.deletefile "C:\temp\filters.txt", true
-      end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/filters.txt", "filters.txt")
-      set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
-      while (not objTMP.atendofstream)
-        strTMP = strTMP & objTMP.readline
-      wend
-      objTMP.close
-      set objTMP = nothing
-      arrTMP = split(strTMP, "|")
-      for intTMP = 0 to ubound(arrTMP)
-        if (arrTMP(intTMP) <> vbnullstring) then
-          objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-          objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-          call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+	''AUTOMATIC UPDATE, MSP_FILTER.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  ''FOR MSP_FILTER.VBS; THIS WILL REQUIRE ADDITIONAL WORK TO PROPERLY RETAIN PASSED ARGUMENTS; 'STRFILTER' AND 'STRINCL'
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_FILTER : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_FILTER : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strOPT & "|" & strFILTER & "|" & strINCL & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  intRET = (intRET - vbObjectError)
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+    Select Case lcase(strOPT)
+      ''PERFORM 'LOCAL' FILTER CONFIGURATIONS
+      Case "local"
+        ''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
+        ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+        erase arrTMP
+        strTMP = vbnullstring
+        if (objFSO.fileexists("C:\temp\filters.txt")) then
+          objFSO.deletefile "C:\temp\filters.txt", true
         end if
-      next
-      ''CUSTOM 'FILTER' PASSED
-      if (strFILTER <> vbnullstring) then
-        for intTMP = 0 to ubound(arrFILTER)
-          if (arrFILTER(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/filters.txt", "filters.txt")
+        set objTMP = objFSO.opentextfile("C:\temp\filters.txt", 1)
+        while (not objTMP.atendofstream)
+          strTMP = strTMP & objTMP.readline
+        wend
+        objTMP.close
+        set objTMP = nothing
+        arrTMP = split(strTMP, "|")
+        for intTMP = 0 to ubound(arrTMP)
+          if (arrTMP(intTMP) <> vbnullstring) then
+            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
           end if
         next
-      end if
-      ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
-      objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-      ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
-      erase arrTMP
-      strTMP = vbnullstring
-      if (objFSO.fileexists("C:\temp\includes.txt")) then
-        objFSO.deletefile "C:\temp\includes.txt", true
-      end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/includes.txt", "includes.txt")
-      set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
-      while (not objTMP.atendofstream)
-        strTMP = strTMP & objTMP.readline
-      wend
-      objTMP.close
-      set objTMP = nothing
-      arrTMP = split(strTMP, "|")
-      for intTMP = 0 to ubound(arrTMP)
-        if (arrTMP(intTMP) <> vbnullstring) then
-          objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-          objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-          call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
+        ''CUSTOM 'FILTER' PASSED
+        if (strFILTER <> vbnullstring) then
+          for intTMP = 0 to ubound(arrFILTER)
+            if (arrFILTER(intTMP) <> vbnullstring) then
+              objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+            end if
+          next
         end if
-      next
-      ''CUSTOM 'INCLUDE' PASSED
-      if (strINCL <> vbnullstring) then
-        for intTMP = 0 to ubound(arrINCL)
-          if (arrINCL(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+        ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+        erase arrTMP
+        strTMP = vbnullstring
+        if (objFSO.fileexists("C:\temp\includes.txt")) then
+          objFSO.deletefile "C:\temp\includes.txt", true
+        end if
+        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/includes.txt", "includes.txt")
+        set objTMP = objFSO.opentextfile("C:\temp\includes.txt", 1)
+        while (not objTMP.atendofstream)
+          strTMP = strTMP & objTMP.readline
+        wend
+        objTMP.close
+        set objTMP = nothing
+        arrTMP = split(strTMP, "|")
+        for intTMP = 0 to ubound(arrTMP)
+          if (arrTMP(intTMP) <> vbnullstring) then
+            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
           end if
         next
-      end if
-    ''PERFORM 'CLOUD' FILTER CONFIGURATIONS
-    case "cloud"
-      ''RESET CURRENT BACKUP INCLUDES , REF #2
-      objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
-      call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
-      wscript.sleep 5000
-      ''DOWNLOAD 'CLOUD_FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
-      objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
-      ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
-      erase arrTMP
-      strTMP = vbnullstring
-      if (objFSO.fileexists("C:\temp\cloud_filters.txt")) then
-        objFSO.deletefile "C:\temp\cloud_filters.txt", true
-      end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_filters.txt", "cloud_filters.txt")
-      set objTMP = objFSO.opentextfile("C:\temp\cloud_filters.txt", 1)
-      while (not objTMP.atendofstream)
-        strTMP = strTMP & objTMP.readline
-      wend
-      objTMP.close
-      set objTMP = nothing
-      arrTMP = split(strTMP, "|")
-      for intTMP = 0 to ubound(arrTMP)
-        if (arrTMP(intTMP) <> vbnullstring) then
-          objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-          objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-          call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+        ''CUSTOM 'INCLUDE' PASSED
+        if (strINCL <> vbnullstring) then
+          for intTMP = 0 to ubound(arrINCL)
+            if (arrINCL(intTMP) <> vbnullstring) then
+              objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+            end if
+          next
         end if
-      next
-      ''CUSTOM 'FILTER' PASSED
-      if (strFILTER <> vbnullstring) then
-        for intTMP = 0 to ubound(arrFILTER)
-          if (arrFILTER(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+      ''PERFORM 'CLOUD' FILTER CONFIGURATIONS
+      case "cloud"
+        ''RESET CURRENT BACKUP INCLUDES , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
+        wscript.sleep 5000
+        ''DOWNLOAD 'CLOUD_FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
+        ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+        erase arrTMP
+        strTMP = vbnullstring
+        if (objFSO.fileexists("C:\temp\cloud_filters.txt")) then
+          objFSO.deletefile "C:\temp\cloud_filters.txt", true
+        end if
+        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_filters.txt", "cloud_filters.txt")
+        set objTMP = objFSO.opentextfile("C:\temp\cloud_filters.txt", 1)
+        while (not objTMP.atendofstream)
+          strTMP = strTMP & objTMP.readline
+        wend
+        objTMP.close
+        set objTMP = nothing
+        arrTMP = split(strTMP, "|")
+        for intTMP = 0 to ubound(arrTMP)
+          if (arrTMP(intTMP) <> vbnullstring) then
+            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
+            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
           end if
         next
-      end if
-      ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
-      objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-      ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
-      erase arrTMP
-      strTMP = vbnullstring
-      if (objFSO.fileexists("C:\temp\cloud_includes.txt")) then
-        objFSO.deletefile "C:\temp\cloud_includes.txt", true
-      end if
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_includes.txt", "cloud_includes.txt")
-      set objTMP = objFSO.opentextfile("C:\temp\cloud_includes.txt", 1)
-      while (not objTMP.atendofstream)
-        strTMP = strTMP & objTMP.readline
-      wend
-      objTMP.close
-      set objTMP = nothing
-      arrTMP = split(strTMP, "|")
-      for intTMP = 0 to ubound(arrTMP)
-        if (arrTMP(intTMP) <> vbnullstring) then
-          objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-          objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-          call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
+        ''CUSTOM 'FILTER' PASSED
+        if (strFILTER <> vbnullstring) then
+          for intTMP = 0 to ubound(arrFILTER)
+            if (arrFILTER(intTMP) <> vbnullstring) then
+              objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+            end if
+          next
         end if
-      next
-      ''CUSTOM 'INCLUDE' PASSED
-      if (strINCL <> vbnullstring) then
-        for intTMP = 0 to ubound(arrINCL)
-          if (arrINCL(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+        ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+        erase arrTMP
+        strTMP = vbnullstring
+        if (objFSO.fileexists("C:\temp\cloud_includes.txt")) then
+          objFSO.deletefile "C:\temp\cloud_includes.txt", true
+        end if
+        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/cloud_includes.txt", "cloud_includes.txt")
+        set objTMP = objFSO.opentextfile("C:\temp\cloud_includes.txt", 1)
+        while (not objTMP.atendofstream)
+          strTMP = strTMP & objTMP.readline
+        wend
+        objTMP.close
+        set objTMP = nothing
+        arrTMP = split(strTMP, "|")
+        for intTMP = 0 to ubound(arrTMP)
+          if (arrTMP(intTMP) <> vbnullstring) then
+            objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+            objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
           end if
         next
-      end if
-      ''PERFORM FINAL EXCLUDES
-      objOUT.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
-      ''ENUMERATE 'C:\USERS' SUB-FOLDERS
-      objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
-      set objFOL = objFSO.getfolder("C:\Users")
-      set colFOL = objFOL.subfolders
-      intFOL = 0
-      for each subFOL in colFOL
-        redim preserve arrFOL(intFOL + 1)
-        arrFOL(intFOL) = subFOL.path
-        intFOL = intFOL + 1
-      next
-      set colFOL = nothing
-      set objFOL = nothing
-      intFOL = 0
-      ''CHECK EACH 'C:\USERS\<USERNAME>' FOLDER
-      for intFOL = 0 to ubound(arrFOL)
-        intCOL = 0
-        blnFND = false
-        strFOL = arrFOL(intFOL)
-        if (strFOL <> vbnullstring) then
-        
-            ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
-            for intCOL = 0 to ubound(arrUSR)
-              blnFND = false
-              if (arrUSR(intCOL) <> vbnullstring) then
-                '' 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
-                if (instr(1, lcase(strFOL), lcase(arrUSR(intCOL)))) then
-                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
-                  ''MARK 'UNNEEDED / TO EXCLUDE'
-                  blnFND = true
-                  ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
-                  
-                  exit for
-                end if
-              end if
-              ''AN 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
-              if (wscript.arguments.count > 0) then
-                '' PASSED 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR'
-                if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
-                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                  ''MARK 'UNNEEDED / TO EXCLUDE'
-                  blnFND = true
-                  ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
-                  
-                  exit for
-                end if          
-              end if
-            next
-            ''NO MATCH TO 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
-            if (not (blnFND)) then
-              ''CHECK FOR USER FOLDER
-              if (objFSO.folderexists(strFOL)) then
-                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
-                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
-                ''EXCLUDE FROM BACKUPS
+        ''CUSTOM 'INCLUDE' PASSED
+        if (strINCL <> vbnullstring) then
+          for intTMP = 0 to ubound(arrINCL)
+            if (arrINCL(intTMP) <> vbnullstring) then
+              objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+            end if
+          next
+        end if
+        ''PERFORM FINAL EXCLUDES
+        objOUT.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
+        ''ENUMERATE 'C:\USERS' SUB-FOLDERS
+        objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
+        set objFOL = objFSO.getfolder("C:\Users")
+        set colFOL = objFOL.subfolders
+        intFOL = 0
+        for each subFOL in colFOL
+          redim preserve arrFOL(intFOL + 1)
+          arrFOL(intFOL) = subFOL.path
+          intFOL = intFOL + 1
+        next
+        set colFOL = nothing
+        set objFOL = nothing
+        intFOL = 0
+        ''CHECK EACH 'C:\USERS\<USERNAME>' FOLDER
+        for intFOL = 0 to ubound(arrFOL)
+          intCOL = 0
+          blnFND = false
+          strFOL = arrFOL(intFOL)
+          if (strFOL <> vbnullstring) then
+          
+              ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
+              for intCOL = 0 to ubound(arrUSR)
                 blnFND = false
-                
-                ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
-                set objUFOL = objFSO.getfolder(strFOL)
-                set colUFOL = objUFOL.subfolders
-                intUFOL = 0
-                for each subUFOL in colUFOL
-                  redim preserve arrUFOL(intUFOL + 1)
-                  arrUFOL(intUFOL) = subUFOL.path
-                  intUFOL = intUFOL + 1
-                next
-                set colUFOL = nothing
-                set objUFOL = nothing
-                intUFOL = 0
-                ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
-                ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
-                ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
-                ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
-                for intUFOL = 0 to ubound(arrUFOL)
-                  intUCOL = 0
-                  blnFND = false
-                  strUFOL = arrUFOL(intUFOL)
-                  if (strUFOL <> vbnullstring) then            
-                    ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / FILES / DIRECTORIES
-                    for intPCOL = 0 to ubound(arrPROT)
-                      blnFND = false
-                      if (arrPROT(intPCOL) <> vbnullstring) then
-                        '' 'PRTOTECTED' USER ACCOUNT 'arrPROT' FOUND IN FOLDER PATH
-                        if (instr(1, lcase(strUFOL), lcase(arrPROT(intPCOL)))) then
-                          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-                          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-                          ''MARK 'PROTECTED'
-                          blnFND = true
-                          exit for
-                        end if
-                      end if
-                      ''A 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
-                      if (wscript.arguments.count > 0) then
-                        '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
-                        if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
-                          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                          ''MARK 'UNNEEDED / TO EXCLUDE'
-                          blnFND = true
-                          exit for
-                        end if          
-                      end if
-                    next
-                    ''NO MATCH TO 'PROTECTED' EXT / FILES / DIRECTORIES
-                    if (not (blnFND)) then
-
-                    end if
-                  next
+                if (arrUSR(intCOL) <> vbnullstring) then
+                  '' 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
+                  if (instr(1, lcase(strFOL), lcase(arrUSR(intCOL)))) then
+                    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
+                    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
+                    ''MARK 'UNNEEDED / TO EXCLUDE'
+                    blnFND = true
+                    ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
+                    
+                    exit for
+                  end if
+                end if
+                ''AN 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
+                if (wscript.arguments.count > 0) then
+                  '' PASSED 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR'
+                  if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+                    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                    ''MARK 'UNNEEDED / TO EXCLUDE'
+                    blnFND = true
+                    ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
+                    
+                    exit for
+                  end if          
                 end if
               next
-        next
-  end select
+              ''NO MATCH TO 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
+              if (not (blnFND)) then
+                ''CHECK FOR USER FOLDER
+                if (objFSO.folderexists(strFOL)) then
+                  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+                  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+                  ''EXCLUDE FROM BACKUPS
+                  blnFND = false
+                  
+                  ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
+                  set objUFOL = objFSO.getfolder(strFOL)
+                  set colUFOL = objUFOL.subfolders
+                  intUFOL = 0
+                  for each subUFOL in colUFOL
+                    redim preserve arrUFOL(intUFOL + 1)
+                    arrUFOL(intUFOL) = subUFOL.path
+                    intUFOL = intUFOL + 1
+                  next
+                  set colUFOL = nothing
+                  set objUFOL = nothing
+                  intUFOL = 0
+                  ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
+                  ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
+                  ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
+                  ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
+                  for intUFOL = 0 to ubound(arrUFOL)
+                    intUCOL = 0
+                    blnFND = false
+                    strUFOL = arrUFOL(intUFOL)
+                    if (strUFOL <> vbnullstring) then            
+                      ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / FILES / DIRECTORIES
+                      for intPCOL = 0 to ubound(arrPROT)
+                        blnFND = false
+                        if (arrPROT(intPCOL) <> vbnullstring) then
+                          '' 'PRTOTECTED' USER ACCOUNT 'arrPROT' FOUND IN FOLDER PATH
+                          if (instr(1, lcase(strUFOL), lcase(arrPROT(intPCOL)))) then
+                            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                            ''MARK 'PROTECTED'
+                            blnFND = true
+                            exit for
+                          end if
+                        end if
+                        ''A 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
+                        if (wscript.arguments.count > 0) then
+                          '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
+                          if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+                            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+                            ''MARK 'UNNEEDED / TO EXCLUDE'
+                            blnFND = true
+                            exit for
+                          end if          
+                        end if
+                      next
+                      ''NO MATCH TO 'PROTECTED' EXT / FILES / DIRECTORIES
+                      if (not (blnFND)) then
+
+                      end if
+                    next
+                  end if
+                next
+          next
+    end select
+  end if
 end if
 ''END SCRIPT
 call CLEANUP()
