@@ -377,6 +377,7 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now

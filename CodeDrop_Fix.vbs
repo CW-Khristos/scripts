@@ -277,6 +277,7 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then         											        ''CODEDROP_FIX COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now & vbnewline
   elseif (errRET <> 0) then    											        ''CODEDROP_FIX FAILED

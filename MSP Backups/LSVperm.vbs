@@ -375,6 +375,7 @@ sub LOGERR(intSTG)                                                              
 end sub
 
 sub CLEANUP()                                                                           ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then                                                                  ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM COMPLETE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM COMPLETE : " & errRET & " : " & now

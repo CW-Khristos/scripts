@@ -552,6 +552,7 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then         											        ''MSP_SSHEAL COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
   elseif (errRET <> 0) then    											        ''MSP_SSHEAL FAILED
