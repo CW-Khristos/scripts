@@ -294,6 +294,7 @@ sub LOGERR(intSTG)                                                    ''CALL HOO
 end sub
 
 sub CLEANUP()                                 			                  ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then         											                  ''MSP_CONFIG COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & "MSP_CONFIG SUCCESSFUL : " & now
   elseif (errRET <> 0) then    											                  ''MSP_CONFIG FAILED
