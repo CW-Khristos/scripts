@@ -104,8 +104,6 @@ if (errRET <> 0) then                                       ''NO ARGUMENTS PASSE
 elseif (errRET = 0) then                                    ''ARGUMENTS PASSED, CONTINUE SCRIPT
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_FILTER"
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_FILTER"
-	''AUTOMATIC UPDATE, MSP_FILTER.VBS, REF #2
-	call CHKAU()
 	''AUTOMATIC UPDATE, MSP_FILTER.VBS, REF #2 , REF #69 , REF #68
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
