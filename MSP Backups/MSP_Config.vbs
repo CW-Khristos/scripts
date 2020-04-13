@@ -7,8 +7,10 @@
 ''OPTIONAL PARAMETER : 'BLNFORCE' , BOLLEAN TO FLAG TO FORCE MODIFY VALUE INTO 'CONFIG.INI' FILE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 ''SCRIPT VARIABLES
+dim strIN, arrIN
+dim errRET, strVER
 dim blnHDR, blnINJ, blnMOD
-dim errRET, strVER, strIN, arrIN
+dim strREPO, strBRCH, strDIR
 ''VARIABLES ACCEPTING PARAMETERS
 dim strHDR, strCHG, strVAL, blnFORCE
 ''SCRIPT OBJECTS
@@ -17,7 +19,10 @@ dim objIN, objOUT, objARG, objWSH, objFSO
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
-strVER = 4
+strVER = 5
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = "MSP Backups"
 ''SET 'BLNHDR' FLAG
 blnHDR = false
 ''SET 'BLNINJ' FLAG
@@ -84,60 +89,72 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
-''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , FIXES #25
-call CHKAU()
-''PARSE CONFIG.INI FILE
-objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-strIN = objCFG.readall
-arrIN = split(strIN, vbnewline)
-for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
-  objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
-  objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
-  if (arrIN(intIN) = strHDR) then                                     ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
-    blnHDR = true
-  end if
-  if (instr(1, arrIN(intIN), strCHG)) then                            ''STRING TO INJECT ALREADY IN CONFIG.INI
-    blnINJ = false
-    blnMOD = false
-    if (strVAL = split(arrIN(intIN), "=")(1)) then                    ''PASSED VALUE 'STRVAL' MATCHES INTERNAL STRING VALUE
-      blnINJ = false
-      blnMOD = false
-    elseif (strVAL <> split(arrIN(intIN), "=")(1)) then               ''PASSED VALUE 'STRVAL' DOES NOT MATCH INTERNAL STRING VALUE
-      if (not blnFORCE) then
-        blnINJ = false
-        blnMOD = false
-      elseif (blnFORCE) then
-        blnINJ = true
-        blnMOD = false
-        arrIN(intIN) = strCHG & "=" & strVAL
-        exit for
-      end if  
-    end if
-    exit for
-  end if
-  if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
-    blnINJ = true
-    blnHDR = false
-    arrIN(intIN) = strCHG & "=" & strVAL & vbCrlf
-  end if
-next
-objCFG.close
-set objCFG = nothing
-''REPLACE CONFIG.INI FILE
-if (blnINJ) then
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-  strIN = vbnullstring
-  set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
-  for intIN = 0 to ubound(arrIN)
-    strIN = strIN & arrIN(intIN) & vbCrlf
+''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , REF #69 , REF #68 , FIXES #25
+''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+''EXECUTE CHKAU.VBS SCRIPT, REF #69
+objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
+objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
+intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+  chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+  chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+  chr(34) & strCHG & "|" & strVAL & "|" & blnFORCE & chr(34) & chr(34), 0, true)
+''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+intRET = (intRET - vbObjectError)
+if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  ''PARSE CONFIG.INI FILE
+  objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+  objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+  strIN = objCFG.readall
+  arrIN = split(strIN, vbnewline)
+  for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
     objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
     objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+    if (arrIN(intIN) = strHDR) then                                     ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
+      blnHDR = true
+    end if
+    if (instr(1, arrIN(intIN), strCHG)) then                            ''STRING TO INJECT ALREADY IN CONFIG.INI
+      blnINJ = false
+      blnMOD = false
+      if (strVAL = split(arrIN(intIN), "=")(1)) then                    ''PASSED VALUE 'STRVAL' MATCHES INTERNAL STRING VALUE
+        blnINJ = false
+        blnMOD = false
+      elseif (strVAL <> split(arrIN(intIN), "=")(1)) then               ''PASSED VALUE 'STRVAL' DOES NOT MATCH INTERNAL STRING VALUE
+        if (not blnFORCE) then
+          blnINJ = false
+          blnMOD = false
+        elseif (blnFORCE) then
+          blnINJ = true
+          blnMOD = false
+          arrIN(intIN) = strCHG & "=" & strVAL
+          exit for
+        end if  
+      end if
+      exit for
+    end if
+    if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
+      blnINJ = true
+      blnHDR = false
+      arrIN(intIN) = strCHG & "=" & strVAL & vbCrlf
+    end if
   next
-  objCFG.write strIN
   objCFG.close
   set objCFG = nothing
+  ''REPLACE CONFIG.INI FILE
+  if (blnINJ) then
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+    strIN = vbnullstring
+    set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
+    for intIN = 0 to ubound(arrIN)
+      strIN = strIN & arrIN(intIN) & vbCrlf
+      objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+    next
+    objCFG.write strIN
+    objCFG.close
+    set objCFG = nothing
+  end if
 end if
 ''CLEANUP
 call CLEANUP()
