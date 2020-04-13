@@ -19,11 +19,7 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
-<<<<<<< HEAD
-strVER = 5
-=======
 strVER = 4
->>>>>>> parent of 6a34b21... Revert "Revert "Update MSP_Filter.vbs""
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
