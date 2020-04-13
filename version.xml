@@ -27,8 +27,8 @@
   <msp_postbackup.vbs>4</msp_postbackup.vbs>
   <msp_prebackup.vbs>4</msp_prebackup.vbs>
   <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
-  <MSP_SSHeal.vbs>13</MSP_SSHeal.vbs>
-  <MSP_SSHeal_Force.vbs>12</MSP_SSHeal_Force.vbs>
+  <MSP_SSHeal.vbs>14</MSP_SSHeal.vbs>
+  <MSP_SSHeal_Force.vbs>13</MSP_SSHeal_Force.vbs>
   <MSP_SSHeal_Force_ps.vbs>13</MSP_SSHeal_Force_ps.vbs>
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
   <MSP_Update.vbs>3</MSP_Update.vbs>

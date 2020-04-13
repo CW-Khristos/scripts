@@ -8,6 +8,7 @@
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strSEL
+dim strREPO, strBRCH, strDIR
 dim strIN, strOUT, strORG, strREP
 dim colUSR(), colSID(), arrUSR(), arrSID()
 ''VARIABLES ACCEPTING PARAMETERS
