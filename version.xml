@@ -17,7 +17,7 @@
   <iasdatasync.vbs>1</iasdatasync.vbs>
   <jdc_msp_postbackup.vbs>4</jdc_msp_postbackup.vbs>
   <jdc_msp_prebackup.vbs>4</jdc_msp_prebackup.vbs>
-  <LSVperm.vbs>8</LSVperm.vbs>
+  <LSVperm.vbs>9</LSVperm.vbs>
   <md5.vbs>1</md5.vbs>
   <MSP_Config.vbs>5</MSP_Config.vbs>
   <MSP_Debug.vbs>3</MSP_Debug.vbs>
@@ -60,7 +60,7 @@
   <SNMPparam.vbs>4</SNMPparam.vbs>
   <ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
   <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
-  <SVCperm.vbs>15</SVCperm.vbs>
+  <SVCperm.vbs>16</SVCperm.vbs>
   <sysnfo.vbs>1</sysnfo.vbs>
   <TaskKill_Force.vbs>2</TaskKill_Force.vbs>
   <VSS_Fix.vbs>1</VSS_Fix.vbs>
