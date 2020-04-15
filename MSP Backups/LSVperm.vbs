@@ -19,7 +19,7 @@ dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32
-strVER = 8
+strVER = 9
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -242,8 +242,8 @@ call CLEANUP()
 ''SUB-ROUTINES
 sub CHKAU()																					                                    ''CHECK FOR SCRIPT UPDATE, 'ERRRET'=10 , LSVPERM.VBS , REF #2
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
+  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & wscript.scriptname)) then
+    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & wscript.scriptname, true
   end if
   ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
