@@ -248,9 +248,9 @@ if (errRET = 0) then                                                        ''AR
       call LOGERR(2)
     end if
   end if
-elseif (errRET <> 0) then                                                               ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+elseif (errRET <> 0) then                                                                 ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(errRET)
-else
+end if
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
