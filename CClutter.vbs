@@ -26,7 +26,7 @@ strWFOL = objWSH.expandenvironmentstrings("%windir%")
 strTFOL = objWSH.expandenvironmentstrings("%temp%")
 strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
 strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
-str86FOL = objWSH.expandenvironmentstrings("%programfiles (x86)%")
+str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
