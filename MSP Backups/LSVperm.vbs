@@ -19,7 +19,7 @@ dim strLSV, strUSR, strPWD, strOPT
 dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , FIXES #32 , REF #71
+''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , REF #68 , REF #69 , FIXES #32 , REF #71
 strVER = 9
 strREPO = "scripts"
 strBRCH = "dev"
