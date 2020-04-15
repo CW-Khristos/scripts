@@ -7,15 +7,22 @@
 on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN
+dim strREPO, strBRCH, strDIR
 ''SCRIPT OBJECTS
-dim objIN, objOUT, objARG, objWSH, objFSO
-dim objLOG, objHOOK, objEXEC, objHTTP, objXML
-''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
+dim objIN, objOUT, objARG
+dim objWSH, objFSO, objLOG
+dim objHOOK, objEXEC, objHTTP, objXML
+''STDIN / STDOUT
+set objIN = wscript.stdin
 set objOUT = wscript.stdout
+''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-''VERSION FOR SCRIPT UPDATE , MSP_PREBACKUP.VBS , REF #2 , REF #50
-strVER = 4
+''VERSION FOR SCRIPT UPDATE , MSP_PREBACKUP.VBS , REF #2 , REF #50 , REF #68 , REF #69
+strVER = 5
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = "MSP Backups"
 ''DEFAULT FAIL
 errRET = 5
 ''PREPARE LOGFILE
@@ -36,30 +43,43 @@ if (wscript.arguments.count > 0) then                                     ''ARGU
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                                   ''SET PASSED ARG7UMENTS
-  else                                                                    ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    'errRET = 1
-    'call CLEANUP()
+  elseif (wscript.arguments.count > 1) then                               ''SET OPTIONAL ARGUMENTS
+    'call LOGERR(1)
   end if
-else                                                                      ''NO ARGUMENTS PASSED, END SCRIPT
-  'errRET = 1
-  'call CLEANUP()
+elseif (wscript.arguments.count = 0) then                                 ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
+  'call LOGERR(1)
 end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
-objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING RNDDS_MSP_PREBACKUP" & vbnewline
-''AUTOMATIC UPDATE , 'ERRRET'=10 , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
-call CHKAU()
-''INITIATE STOP SERVICES
-call STOPEAGLE()
+if ((errRET = 0) or (errRET = 5)) then
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_PREBACKUP" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_PREBACKUP" & vbnewline
+  ''AUTOMATIC UPDATE, MSP_PREBACKUP.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_PREBACKUP : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_PREBACKUP : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  intRET = (intRET - vbObjectError)
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+    ''INITIATE STOP SERVICES
+    call STOPEAGLE()
+  end if
+elseif (errRET <> 0) then                                                 ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
+  call LOGERR(errRET)
+end if
 ''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
 ''------------
 
 ''SUB-ROUTINES
-sub STOPEAGLE()                                                           ''STOP EAGLESOFT SERVICES
+sub STOPEAGLE()                                                           ''STOP EAGLESOFT SERVICES , 'ERRRET'=4
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   ''STOP PATTERSON APP SERVICE
@@ -70,7 +90,7 @@ sub STOPEAGLE()                                                           ''STOP
       objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : PattersonAppService : " & now
       errRET = 0
       err.clear
-    elseif (errRET <> 2) then                                             ''ANY OTHER ERROR RETURNED
+    elseif (errRET <> 2) then                                             ''ANY OTHER ERROR RETURNED , 'ERRRET'=4
       objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : PattersonAppService : " & now
       objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : PattersonAppService : " & now
       call LOGERR(4)
@@ -80,13 +100,12 @@ sub STOPEAGLE()                                                           ''STOP
   call STOPDB()
 end sub
 
-''STOP EAGLESOFT DATABASE
-sub STOPDB()
+sub STOPDB()                                                              ''STOP EAGLESOFT DATABASE , 'ERRRET'=5
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE UTILITY WITH 'STOP' SWITCH
   call HOOK(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -stop")
-  if (errRET <> 0) then                                                   ''ERROR RETURNED
+  if (errRET <> 0) then                                                   ''ERROR RETURNED , 'ERRRET'=5
     objOUT.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     objLOG.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     call LOGERR(5)
@@ -99,7 +118,7 @@ sub STOPDB()
   call DBCOPY()
 end sub
 
-sub DBCOPY()                                                              ''COPY EAGLESOFT DATA FOLDER
+sub DBCOPY()                                                              ''COPY EAGLESOFT DATA FOLDER , 'ERRRET'=6
   objOUT.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   objLOG.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , MSP_PREBACKUP.VBS , REF #2 , REF #49
@@ -107,63 +126,14 @@ sub DBCOPY()                                                              ''COPY
   if (errRET > 4) then                                                    ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
     objLOG.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
-  elseif (errRET < 5) then                                                ''ERROR RETURNED
+  elseif (errRET < 5) then                                                ''ERROR RETURNED , 'ERRRET'=6
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     objLOG.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     call LOGERR(6)
   end if
 end sub
 
-sub CHKAU()																					                      ''CHECK FOR SCRIPT UPDATE , MSP_PREBACKUP.VBS , REF #2 , REF #50
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-  ''SCRIPT OBJECT FOR PARSING XML
-  set objXML = createobject("Microsoft.XMLDOM")
-  ''FORCE SYNCHRONOUS
-  objXML.async = false
-  ''LOAD SCRIPT VERSIONS DATABASE XML
-  if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-    set colVER = objXML.documentelement
-    for each objSCR in colVER.ChildNodes
-      ''LOCATE CURRENTLY RUNNING SCRIPT
-      if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-        ''CHECK LATEST VERSION
-        if (cint(objSCR.text) > cint(strVER)) then
-          objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          ''DOWNLOAD LATEST VERSION OF SCRIPT
-          call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/msp_prebackup.vbs", wscript.scriptname)
-          ''RUN LATEST VERSION
-          if (wscript.arguments.count > 0) then                           ''ARGUMENTS WERE PASSED
-            for x = 0 to (wscript.arguments.count - 1)
-              strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-            next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-          elseif (wscript.arguments.count = 0) then                       ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-          end if
-          ''END SCRIPT
-          call CLEANUP()
-        end if
-      end if
-    next
-  end if
-  set colVER = nothing
-  set objXML = nothing
-end sub
-
-sub FILEDL(strURL, strFILE)                                               ''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strFILE)                                               ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -197,7 +167,7 @@ sub FILEDL(strURL, strFILE)                                               ''CALL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
   set objHTTP = nothing
-  ''ERROR RETURNED
+  ''ERROR RETURNED , 'ERRRET'=2
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
@@ -206,7 +176,7 @@ sub FILEDL(strURL, strFILE)                                               ''CALL
   end if
 end sub
 
-sub HOOK(strCMD)                                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub HOOK(strCMD)                                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -226,7 +196,7 @@ sub HOOK(strCMD)                                                          ''CALL
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     end if
   end if
-  ''CHECK FOR ERRORS
+  ''CHECK FOR ERRORS , 'ERRRET'=3
   errRET = objHOOK.exitcode
   set objHOOK = nothing
   if (err.number <> 0) then
@@ -238,15 +208,16 @@ sub HOOK(strCMD)                                                          ''CALL
 end sub
 
 sub LOGERR(intSTG)                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-    errRET = intSTG
     err.clear
   end if
 end sub
 
 sub CLEANUP()                                                             ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then                                                    ''PRE-BACKUP COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP COMPLETE : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_PRE-BACKUP COMPLETE : " & now
