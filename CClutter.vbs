@@ -20,6 +20,12 @@ strBRCH = "dev"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
+''ENVIRONMENT VARIABLES
+strWFOL = objWSH.expandenvironmentstrings("%windir%")
+strTFOL = objWSH.expandenvironmentstrings("%temp%")
+strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
+strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
+str86FOL = objWSH.expandenvironmentstrings("%programfiles (x86)%")
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -42,40 +48,40 @@ if (strIN <> "cscript.exe") Then
 end if
 ''COLLECTION OF FOLDERS TO CHECK
 ''THESE FOLDERS REQUIRE RETRIEVAL FROM ENVIRONMENTAL VARIABLES
-colFOL(0) = objWSH.expandenvironmentstrings("%windir%") & "\Temp"
-colFOL(1) = objWSH.expandenvironmentstrings("%windir%") & "\Logs\CBS"
-colFOL(2) = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution"
+colFOL(0) = strTFOL
+colFOL(1) = strWFOL & "\Logs\CBS"
+colFOL(2) = strWFOL & "\SoftwareDistribution"
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
 colFOL(3) =  "C:\temp"
-'colFOL(4) = "C:\Program Files\N-able Technologies\NablePatchCache"
-'colFOL(5) = "C:\Program Files\N-able Technologies\UpdateServerCache"
-'colFOL(6) = "C:\Program Files (x86)\N-able Technologies\NablePatchCache"
-'colFOL(7) = "C:\Program Files (x86)\N-able Technologies\UpdateServerCache"
-colFOL(4) = "C:\ProgramData\N-able Technologies\AutomationManager\Logs"
-colFOL(5) = "C:\ProgramData\N-able Technologies\AutomationManager\temp"
-colFOL(6) = "C:\ProgramData\N-able Technologies\AutomationManager\ScriptResults"
-colFOL(7) = "C:\ProgramData\GetSupportService\logs"
-colFOL(8) = "C:\ProgramData\GetSupportService_N-Central\logs"
-colFOL(9) = "C:\ProgramData\GetSupportService_N-Central\Updates"
+'colFOL(4) = strPFFOL & "\N-able Technologies\NablePatchCache"
+'colFOL(5) = strPFFOL & "\N-able Technologies\UpdateServerCache"
+'colFOL(6) = str86FOL & " (x86)\N-able Technologies\NablePatchCache"
+'colFOL(7) = str86FOL & " (x86)\N-able Technologies\UpdateServerCache"
+colFOL(4) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
+colFOL(5) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
+colFOL(6) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
+colFOL(7) = strPDFOL & "\GetSupportService\logs"
+colFOL(8) = strPDFOL & "\GetSupportService_N-Central\logs"
+colFOL(9) = strPDFOL & "\GetSupportService_N-Central\Updates"
 colFOL(10) = "C:\inetpub\logs\LogFiles\W3SVC2"
 colfol(11) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
-if (objFSO.folderexists("C:\Program Files\Microsoft\Exchange Server")) then
-  colFOL(12) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(13) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(14) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(15) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(16) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(17) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(18) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(19) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(20) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(21) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(22) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(23) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(24) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(25) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(26) = "C:\Program Files\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
+  colFOL(12) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(13) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(14) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(15) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(16) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(17) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(18) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(19) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(20) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(21) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(22) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(23) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(24) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(25) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
 ''READ PASSED COMMANDLINE ARGUMENTS
