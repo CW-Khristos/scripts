@@ -321,10 +321,10 @@ sub HOOK(strCMD)                                                                
 end sub
 
 sub LOGERR(intSTG)                                                                      ''CALL HOOK TO LOG AND SET ERRORS
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-    errRET = intSTG
     err.clear
   end if
   select case intSTG
