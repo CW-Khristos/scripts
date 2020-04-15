@@ -56,7 +56,7 @@
   <rmm_logo.vbs>1</rmm_logo.vbs>
   <rndds_msp_postbackup.vbs>4</rndds_msp_postbackup.vbs>
   <rndds_msp_prebackup.vbs>4</rndds_msp_prebackup.vbs>
-  <set_msparchive.vbs>2</set_msparchive.vbs>
+  <set_msparchive.vbs>3</set_msparchive.vbs>
   <SNMPparam.vbs>4</SNMPparam.vbs>
   <ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
   <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
