@@ -352,7 +352,6 @@ sub LOGERR(intSTG)                                            ''CALL HOOK TO MON
     case 106                                                  ''CHKAU - NO UPDATE FOR CHKAU SCRIPT , 'ERRRET'=106
       objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
-  end if
   end select
 end sub
 
