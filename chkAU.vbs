@@ -358,27 +358,27 @@ end sub
 sub CLEANUP()                                                 ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         															  ''CHKAU COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
-    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     err.clear
   elseif (errRET = 3) then    															  ''CHKAU SUCCESSFUL; RE-EXECUTED REQUESTING SCRIPT
-    objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
-    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CHKAU", "SUCCESSFUL")
   elseif (errRET = 4) then    															  ''CHKAU SUCCESSFUL; NO UPDATE
-    objOUT.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
-    objLOG.write vbnewline & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CHKAU SUCCESSFUL : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CHKAU", "SUCCESSFUL")
   elseif (errRET <> 0) then    															  ''CHKAU FAILED
-    objOUT.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
-    objLOG.write vbnewline & "CHKAU FAILURE : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CHKAU FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CHKAU FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CHKAU", "FAILURE")
   end if
-  objOUT.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - CHKAU COMPLETE" & vbnewline
+  objOUT.write vbnewline & now & " - CHKAU COMPLETE" & vbnewline
+  objLOG.write vbnewline & now & " - CHKAU COMPLETE" & vbnewline
   objLOG.close
   ''EMPTY OBJECTS
   erase arrARG
