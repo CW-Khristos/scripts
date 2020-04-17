@@ -10,7 +10,7 @@ Changes :
 Current Branch : 
 
 
-Propsed Branch :
+Proposed Branch :
 
 
 
