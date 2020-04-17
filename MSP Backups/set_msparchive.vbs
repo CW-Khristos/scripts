@@ -1,19 +1,39 @@
+''SET_MSPARCHIVE.VBS
+''DESIGNED TO AUTOMATICALLY CONFIGURE CW 'DEFAULT' MSP BACKUP ARCHIVE SCHEDULE; 1ST & 15TH, 10PM
+''ACCEPTS 6 PARAMETERS , REQUIRES 6 PARAMETERS
+''REQUIRED PARAMETER : 'STRNAM' , STRING TO SET ARCHIVE SCHEDULE 'NAME'
+''REQUIRED PARAMETER : 'STRACT' , STRING TO SET ARCHIVE SCHEDULE AS ACTIVE
+''REQUIRED PARAMETER : 'STRDAT' , STRING TO SET ARCHIVE SCHEDULE 'DATASOURCES'
+''REQUIRED PARAMETER : 'STRDAY' , STRING TO SET SCHEDULED DAYS OF MONTH FOR ARCHIVE SCHEDULE
+''REQUIRED PARAMETER : 'STRMON' , STRING TO SET SCHEDULED MONTHS FOR ARCHIVE SCHEDULE
+''REQUIRED PARAMETER : 'STRTIM' , STRING TO SET SCHEDULED TIME FOR ARCHIVE SCHEDULE
+''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''ALWAYS RIGHT-CLICK SCRIPT, CHOOSE "PROPERTIES", CLICK "UNBLOCK"
 ''SCRIPT VARIABLES
-dim strNUL, strSEL, strRUN
+dim blnRUN, blnSUP
+dim strVER, errRET
+dim strREPO, strBRCH, strDIR
 dim strIDL, strTMP, arrTMP, strIN
-dim strNAM, strACT, strDAT, strDAY, strMON, strTIM, strARC
-dim errRET, strVER, blnRUN, blnSUP
+''VARIABLES ACCEPTING PARAMETERS
+dim strNUL, strSEL
+dim strRUN, strARC
+dim strNAM, strACT, strDAT
+dim strDAY, strMON, strTIM
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
-''VERSION FOR SCRIPT UPDATE, SET_MSPARCHIVE.VBS, REF #2
-strVER = 2
+''VERSION FOR SCRIPT UPDATE, SET_MSPARCHIVE.VBS, REF #2 , REF $68 , REF #69
+strVER = 3
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = "MSP Backups"
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
+''SET EXECUTION FLAG
+strRUN = "false"
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -21,68 +41,78 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-''SET EXECUTION FLAG
-strRUN = "false"
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\set_msparchive")) then      ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\set_msparchive")) then       ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\set_msparchive", true
   set objLOG = objFSO.createtextfile("C:\temp\set_msparchive")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\set_msparchive", 8)
-else                                                  ''LOGFILE NEEDS TO BE CREATED
+else                                                        ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\set_msparchive")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\set_msparchive", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                 ''ARGUMENTS WERE PASSED
+                 ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
     objLOG.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
   next
-  ''SET ARCHIVE SCHEDULE NAME
-  strNAM = objARG.item(0)
   ''SET SERVICE / CONFIGURATION OPTIONS
-  if (wscript.arguments.count = 7) then               ''ALL ARGUMENTS PASSED
-    ''SET ARCHIVE SCHEDULE ACTIVE
-    strACT = objARG.item(1)
-    ''SET ARCHIVE DATASOURCES
-    strDAT = objARG.item(2)
-    ''SET ARCHIVE DAYS OF MONTH
-    strDAY = objARG.item(3)
-    ''SET ARCHIVE MONTHS
-    strMON = objARG.item(4)
-    ''SET ARCHIVE TIME
-    strTIM = objARG.item(5)
-    ''SET SCRIPT RUN LEVEL
-    strRUN = objARG.item(6)
+  if (wscript.arguments.count = 7) then                     ''ALL ARGUMENTS PASSED
+    strNAM = objARG.item(0)                                 ''SET ARCHIVE SCHEDULE NAME
+    strACT = objARG.item(1)                                 ''SET ARCHIVE SCHEDULE ACTIVE
+    strDAT = objARG.item(2)                                 ''SET ARCHIVE DATASOURCES
+    strDAY = objARG.item(3)                                 ''SET ARCHIVE DAYS OF MONTH
+    strMON = objARG.item(4)                                 ''SET ARCHIVE MONTHS
+    strTIM = objARG.item(5)                                 ''SET ARCHIVE TIME
+    strRUN = objARG.item(6)                                 ''SET SCRIPT RUN LEVEL
     if (strRUN = "true") then
-      strARC = "Y"
+      strARC = "Y"                                          ''SET SCRIPT RUN LEVEL
     end if
+  elseif (wscript.arguments.count <= 6) then                ''NOT ENOUGH ARGUMENTS PASSED ; END SCRIPT , 'ERRRET'=1
+    call LOGERR(1)
   end if
-else                                                  ''NO ARGUMENTS PASSED
+elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   objOUT.write vbnewline & now & vbtab & " - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
   objLOG.write vbnewline & now & vbtab & " - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
+  call LOGERR(1)
 end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
-objLOG.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
-''AUTOMATIC UPDATE, SET_MSPARCHIVE.VBS, REF #2
-call CHKAU()
-''ENTER CALL VERIFY LOOP
-call VERIFY()
+if ((errRET = 0) or (errRET = 1)) then
+  objOUT.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
+  objLOG.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
+	''AUTOMATIC UPDATE, SET_MSPARCHIVE.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SET_MSPARCHIVE : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SET_MSPARCHIVE : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strNAM & "|" & strACT & "|" & strDAT & "|" & strDAY & "|" & strMON & "|" & strTIM & "|" & strRUN & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  intRET = (intRET - vbObjectError)
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+    ''ENTER CALL VERIFY LOOP
+    call VERIFY()
+  end if
+elseif (errRET <> 0) then                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+  call LOGERR(errRET)
+end if
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
 ''------------
 
 ''SUB-ROUTINES
-sub VERIFY()                                          ''CALL HOOK TO VERIFY SCRIPT CONFIGURATIONS, RUNS IN A LOOP UNTIL EXECUTION / TERMINATION
-  if (wscript.arguments.count = 0) then               ''SCRIPT NOT PRE-CONFIGURED
+sub VERIFY()                                                ''CALL HOOK TO VERIFY SCRIPT CONFIGURATIONS, RUNS IN A LOOP UNTIL EXECUTION / TERMINATION
+  if (wscript.arguments.count = 0) then                     ''SCRIPT NOT PRE-CONFIGURED
     strSEL = vbnullstring
-    ''ENABLE MSP BACKUP ARCHIVES
+    ''ENABLE MSP BACKUP ARCHIVES, REQUIRES INPUT
     if (strARC = vbnullstring) then
       objOUT.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?"
       objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES (Y / N)?"
@@ -97,10 +127,10 @@ sub VERIFY()                                          ''CALL HOOK TO VERIFY SCRI
       objLOG.write vbnewline & vbtab & "ENABLE MSP BACKUP ARCHIVES : " & strARC
     end if
     strSEL = vbnullstring
-  elseif (wscript.arguments.count > 0) then           ''SCRIPT PRE-CONFIGURED
+  elseif (wscript.arguments.count > 0) then                 ''SCRIPT PRE-CONFIGURED
     ''PLACEHOLDER
   end if
-  ''EXECUTION CHECK
+  ''EXECUTION CHECK, REQUIRES INPUT
   if (lcase(strRUN) <> "true") then
     objOUT.write vbnewline & vbnewline & vbtab & "EXECUTE SCRIPT WITH CONFIGURED SETTINGS (Y / N)"
     objLOG.write vbnewline & vbnewline & vbtab & "EXECUTE SCRIPT WITH CONFIGURED SETTINGS (Y / N)"
@@ -115,7 +145,7 @@ sub VERIFY()                                          ''CALL HOOK TO VERIFY SCRI
       strRUN = "false"
       objOUT.write vbnewline & vbnewline & now & " - SKIPPING SCRIPT EXECUTION" & vbnewline
       objLOG.write vbnewline & vbnewline & now & " - SKIPPING SCRIPT EXECUTION" & vbnewline
-      ''RETURN CALL TO VERIFY LOOP
+      ''RETURN CALL TO VERIFY LOOP, REQUIRES INPUT
       call VERIFY()
     end if
   elseif (lcase(strRUN) = "true") then
@@ -124,7 +154,7 @@ sub VERIFY()                                          ''CALL HOOK TO VERIFY SCRI
   end if
 end sub
 
-sub EXECUTE()                                         ''CALL HOOK TO EXECUTE SCRIPT CHANGES
+sub EXECUTE()                                               ''CALL HOOK TO EXECUTE SCRIPT CHANGES
   if (strRUN = "true") then
     ''PAUSE TO ENABLE MSP BACKUP ARCHIVES
     if (lcase(strARC) = "y") then
@@ -152,7 +182,7 @@ sub EXECUTE()                                         ''CALL HOOK TO EXECUTE SCR
         if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then     			      ''BACKUPS NOT IN PROGRESS
             ''FORCE RUN OF SYSTEM STATE
             blnRUN = true
-            if (blnRUN) then														      ''ENABLE ARCHIVING
+            if (blnRUN) then														    ''ENABLE ARCHIVING
               ''ADDITIONAL DELAY TO GIVE SERVICE A BIT EXTRA Time
               wscript.sleep (60000)
               objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "CLIENTTOOL READY, ENABLING ARCHIVING"
@@ -168,22 +198,11 @@ sub EXECUTE()                                         ''CALL HOOK TO EXECUTE SCR
         end if
         wscript.sleep 12000
       next
-      if (not blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
+      if (not blnRUN) then                                  ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
         call LOGERR(1)
       elseif (blnRUN) then
-        ''REQUEST LOCAL SPEEDVAULT PATH
-        'objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : "
-        'objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : "
-        'strLSVL = objIN.readline
-        ''REQUEST RMMTECH CREDENTIALS FOR LOCAL SPEEDVAULT
-        'objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : "
-        'objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : "
-        'strLSVU = objIN.readline
-        'objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : "
-        'objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : "
-        'strLSVP = objIN.readline
         ''SET DEFAULT 'CW_DEFAULT_MSPARCHIVE" ARCHIVING SCHEDULE
         objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE '" & strNAM & "'"
         objLOG.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP ARCHIVE SCHEDULE '" & strNAM & "'"
@@ -196,64 +215,13 @@ sub EXECUTE()                                         ''CALL HOOK TO EXECUTE SCR
         objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
         objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
         objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>ARCHIVING"
-        if (wscript.arguments.count <> 7) then               ''NOT ALL ARGUMENTS PASSED
+        if (wscript.arguments.count <> 7) then              ''NOT ALL ARGUMENTS PASSED
           objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
           strNUL = objIN.readline
         end if
       end if
     end if
   end if
-end sub
-
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, SET_MSPARCHIVE.VBS, REF #2 , FIXES #4
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-        objOUT.write vbnewline & now & vbtab & " - Set_MSPArchive :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-        objLOG.write vbnewline & now & vbtab & " - Set_MSPArchive :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/set_msparchive.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
 end sub
 
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
@@ -339,10 +307,11 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then         											        ''SET_MSPARCHIVE COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "SET_MSPARCHIVE SUCCESSFUL : " & NOW
+    objOUT.write vbnewline & "SET_MSPARCHIVE SUCCESSFUL : " & now
   elseif (errRET <> 0) then    											        ''SET_MSPARCHIVE FAILED
-    objOUT.write vbnewline & "SET_MSPARCHIVE FAILURE : " & NOW & " : " & errRET
+    objOUT.write vbnewline & "SET_MSPARCHIVE FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "SET_MSPARCHIVE", "FAILURE")
   end if
