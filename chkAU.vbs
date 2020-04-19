@@ -341,8 +341,8 @@ sub LOGERR(intSTG)                                            ''CALL HOOK TO MON
       objOUT.write vbnewline & vbnewline & now & vbtab & " - RE-EXECUTE : " & strSCR & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - RE-EXECUTE : " & strSCR & " : FAILED"
     case 103                                                  ''CHKAU - NO UPDATE FOR REQUESTING SCRIPT , 'ERRRET'=103
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : NO UPDATE AVAILABLE : " & strSCR & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : NO UPDATE AVAILABLE : " & strSCR & " : FAILED"
     case 104                                                  ''CHKAU - CHKAU SCRIPT DOWNLOAD FAILED , 'ERRRET'=104
       objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
@@ -350,8 +350,8 @@ sub LOGERR(intSTG)                                            ''CALL HOOK TO MON
       objOUT.write vbnewline & vbnewline & now & vbtab & " - RE-EXECUTE : " & strSCR & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - RE-EXECUTE : " & strSCR & " : FAILED"
     case 106                                                  ''CHKAU - NO UPDATE FOR CHKAU SCRIPT , 'ERRRET'=106
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : NO UPDATE AVAILABLE : " & strSCR & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : NO UPDATE AVAILABLE : " & strSCR & " : FAILED"
   end select
 end sub
 
