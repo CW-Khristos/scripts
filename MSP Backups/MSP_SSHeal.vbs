@@ -113,6 +113,13 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
         call CHKVSS()
         ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
         call VSSSVC()
+        if ((blnRUN) and (intITR > 4)) then                   '' 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
+          objOUT.write vbnewline & now & vbtab & vbtab & " - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+          call LOGERR(5)
+        elseif (not (blnRUN)) then
+          exit for
+        end if
       next
       ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
       call CHKDEP()
@@ -151,10 +158,10 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
         end if
         wscript.sleep 12000
       next
-      if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
+      if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=6
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
-        call LOGERR(1)
+        call LOGERR(6)
       end if
   elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
     (instr(1, strIDL, "Suspended") = 0)) then					        ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
@@ -516,6 +523,26 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		err.clear
   end if
+  select case intSTG
+    case 1                                                    ''NOT ENOUGH ARGUMENTS , 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
+    case 2                                                    ''MSP_SSHEAL - CALL FILEDL() , 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    case 3                                                    ''MSP_SSHEAL - CALL HOOK() , 'ERRRET'=3
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
+    case 4                                                   ''MSP_SSHEAL - CALL CHKVSS() , 'ERRRET'=4
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
+    case 5                                                   ''MSP_SSHEAL - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+    case 6                                                  ''MSP_SSHEAL - BACKUP SERVICE NOT READY , 'ERRRET'=6
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+  end select
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
