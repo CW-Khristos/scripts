@@ -20,7 +20,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #68 , REF #69 , FIXES #4
-strVER = 14
+strVER = 15
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -55,6 +55,20 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 
+''SET ALL VSS 'FLAGS' TO 'TRUE' TO FORCE RESTART , REF #1
+'blnAHS = true
+'blnBIT = true
+'blnCSVC = true
+'blnIIS = true
+'blnNPS = true
+'blnRDP = true
+'blnSQL = true
+'blnSUP = true
+'blnTSG = true
+'blnTSK = true
+'blnVSS = true
+'blnWMI = true
+'blnWSCH = true
 ''------------
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
@@ -85,17 +99,28 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
       objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
       ''STOP BACKUP SERVICE
       call HOOK("net stop " & chr(34) & "Backup Service Controller" & chr(34))
-      ''EXPORT CURRENT VSS WRITER STATUSES
-      call CHKVSS()
-      ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-      call VSSSVC()
-      ''CHECK VSS WRITERS AFTER RESTART
-      objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-      ''EXPORT CURRENT VSS WRITER STATUSES
-      call CHKVSS()
-      ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-      call VSSSVC()
+      ''PERFORM 5 ITERATIONS OF 'VSS CHECKS'
+      for intITR = 0 to 4
+        intITR = intITR + 1
+        ''EXPORT CURRENT VSS WRITER STATUSES
+        call CHKVSS()
+        ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+        call VSSSVC()
+        ''CHECK VSS WRITERS AFTER RESTART
+        objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+        ''EXPORT CURRENT VSS WRITER STATUSES
+        call CHKVSS()
+        ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+        call VSSSVC()
+        if ((blnRUN) and (intITR > 4)) then                   '' 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
+          objOUT.write vbnewline & now & vbtab & vbtab & " - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+          call LOGERR(5)
+        elseif (not (blnRUN)) then
+          exit for
+        end if
+      next
       ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
       call CHKDEP()
       ''RESTART BACKUP SERVICE
@@ -133,10 +158,10 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
         end if
         wscript.sleep 12000
       next
-      if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
+      if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=6
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
-        call LOGERR(1)
+        call LOGERR(6)
       end if
   elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
     (instr(1, strIDL, "Suspended") = 0)) then					        ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
@@ -303,10 +328,10 @@ end sub
 
 sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
-  if ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
-    (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
+  if (not ((blnAHS) and (blnIIS) and (blnBIT) and (blnRDP) and (blnTSG) and _
+    (blnSQL) and (blnNPS)  and (blnWSCH) and (blnWMI) and (blnVSS) and (blnTSK) and (blnCSVC))) then
       ''SET 'BLNRUN' FLAG
-      if (not blnRUN) then
+      if (blnRUN) then
         blnRUN = false
       end if
   ''VSS WRITERS REQUIRE RESET, DO NOT RE-RUN MSP BACKUP SYSTEM STATE BACKUP , ADDED 'SC QUERY' CALLS TO AVOID ATTEMPTING PS CALL TO NON-EXISTENT SERVICES
@@ -403,70 +428,19 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
         ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
         intRET = objWSH.run ("sc query VSS", 0, true)
         if (intRET = 0) then
-          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service VSS -Force -PassThru" & chr(34), 0, true)
+          call HOOK("net stop VSS /y")
+          call HOOK ("net start VSS")
         end if
       end if
       wscript.sleep 1000
       ''CRYPTOGRAPHIC SERVICES - CryptSvc
-      if (blnCSVC) then
-        ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
-        intRET = objWSH.run ("sc query CryptSvc", 0, true)
-        if (intRET = 0) then
-          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service CryptSvc -Force -PassThru" & chr(34), 0, true)
-        end if
+      ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
+      intRET = objWSH.run ("sc query CryptSvc", 0, true)
+      if (intRET = 0) then
+        call HOOK("net stop CryptSvc /y")
+        call HOOK ("net start CryptSvc")
       end if
   end if
-end sub
-
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , FIXES #4
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-        objOUT.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-        objLOG.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/MSP%20Backups/MSP_SSHeal.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
 end sub
 
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
@@ -549,14 +523,36 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		err.clear
   end if
+  select case intSTG
+    case 1                                                    ''NOT ENOUGH ARGUMENTS , 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
+    case 2                                                    ''MSP_SSHEAL - CALL FILEDL() , 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
+    case 3                                                    ''MSP_SSHEAL - CALL HOOK() , 'ERRRET'=3
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
+    case 4                                                   ''MSP_SSHEAL - CALL CHKVSS() , 'ERRRET'=4
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
+    case 5                                                   ''MSP_SSHEAL - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+    case 6                                                  ''MSP_SSHEAL - BACKUP SERVICE NOT READY , 'ERRRET'=6
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+  end select
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''MSP_SSHEAL COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_SSHEAL SUCCESSFUL : " & NOW
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL SUCCESSFUL : " & now
   elseif (errRET <> 0) then    											        ''MSP_SSHEAL FAILED
-    objOUT.write vbnewline & "MSP_SSHEAL FAILURE : " & NOW & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_SSHEAL", "FAILURE")
   end if
