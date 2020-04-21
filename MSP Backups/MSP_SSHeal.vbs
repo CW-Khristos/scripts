@@ -403,7 +403,8 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
         ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
         intRET = objWSH.run ("sc query VSS", 0, true)
         if (intRET = 0) then
-          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service VSS -Force -PassThru" & chr(34), 0, true)
+          call HOOK("net stop VSS /y")
+          call HOOK ("net start VSS")
         end if
       end if
       wscript.sleep 1000
@@ -412,7 +413,8 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
         ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
         intRET = objWSH.run ("sc query CryptSvc", 0, true)
         if (intRET = 0) then
-          intRET = objWSH.run ("powershell -OutputFormat Text -Command " & chr(34) & "Restart-Service CryptSvc -Force -PassThru" & chr(34), 0, true)
+          call HOOK("net stop CryptSvc /y")
+          call HOOK ("net start CryptSvc")
         end if
       end if
   end if
