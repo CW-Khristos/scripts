@@ -5,7 +5,7 @@
   <avd_removal.vbs>1</avd_removal.vbs>
   <CClutter.vbs>5</CClutter.vbs>
   <CHG_UAC.vbs>1</CHG_UAC.vbs>
-  <chkAU.vbs>4</chkAU.vbs>
+  <chkAU.vbs>5</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
   <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
   <CSize.vbs>1</CSize.vbs>
@@ -27,9 +27,9 @@
   <msp_postbackup.vbs>5</msp_postbackup.vbs>
   <msp_prebackup.vbs>5</msp_prebackup.vbs>
   <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
-  <MSP_SSHeal.vbs>15</MSP_SSHeal.vbs>
-  <MSP_SSHeal_Force.vbs>13</MSP_SSHeal_Force.vbs>
-  <MSP_SSHeal_Force_ps.vbs>14</MSP_SSHeal_Force_ps.vbs>
+  <MSP_SSHeal.vbs>16</MSP_SSHeal.vbs>
+  <MSP_SSHeal_Force.vbs>14</MSP_SSHeal_Force.vbs>
+  <MSP_SSHeal_Force_ps.vbs>15</MSP_SSHeal_Force_ps.vbs>
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
   <MSP_Update.vbs>3</MSP_Update.vbs>
   <percent_rename.vbs>1</percent_rename.vbs>
