@@ -20,7 +20,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #68 , REF #69 , FIXES #4
-strVER = 15
+strVER = 16
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -45,6 +45,13 @@ else                                                ''LOGFILE NEEDS TO BE CREATE
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
+end if
+''CHECK 'PERSISTENT' FOLDERS
+if (not (obFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -75,7 +82,7 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
 ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
 ''EXECUTE CHKAU.VBS SCRIPT, REF #69
 objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
 objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
@@ -443,10 +450,10 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+sub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
