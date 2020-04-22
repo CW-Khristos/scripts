@@ -22,7 +22,7 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 4
+strVER = 5
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = vbnullstring
@@ -45,6 +45,13 @@ else                                                          ''LOGFILE NEEDS TO
   set objLOG = objFSO.createtextfile("C:\temp\CHKAU")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\CHKAU", 8)
+end if
+''CHECK 'PERSISTENT' FOLDERS
+if (not (obFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 4) then                         ''ARGUMENTS WERE PASSED
@@ -139,11 +146,11 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
             if (strDIR = vbnullstring) then
-              strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
+              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
             elseif (strDIR <> vbnullstring) then
-              strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
+              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
             end if
-            call FILEDL(strDL, strSCR)
+            call FILEDL(strURL, "C:\IT\Scripts", strSCR)
             if (intRET <> 0) then                             ''ERROR DOWNLOADING REQUESTING SCRIPT UPDATE, 'ERRRET'=101
               call LOGERR(101)
               CHKAU = false
@@ -192,11 +199,11 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
             if (strDIR = vbnullstring) then
-              strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
+              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
             elseif (strDIR <> vbnullstring) then
-              strDL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
+              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
             end if
-            call FILEDL(strDL, strSCR)
+            call FILEDL(strURL, "C:\IT\Scripts", strSCR)
             if (errRET <> 0) then                             ''ERROR CHKAU SCRIPT UPDATE, 'ERRRET'=104
               call LOGERR(104)
               blnCHKAU = false
@@ -252,10 +259,10 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
 end function
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strFILE)                                   ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                                   ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
