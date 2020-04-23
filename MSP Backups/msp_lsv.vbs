@@ -16,7 +16,7 @@ dim objWSH, objFSO, objLOG, objLSV
 ''DEFAULT SUCCESS
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
-strVER = 2
+strVER = 3
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -41,19 +41,26 @@ else                                                        ''LOGFILE NEEDS TO B
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\msp_lsv", 8)
 end if
-''PREPARE MONITOR FILE
-if (objFSO.fileexists("C:\temp\lsv.txt")) then              ''PREVIOUS LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\lsv.txt", true
+''CHECK 'PERSISTENT' FOLDERS
+if (not (obFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
 end if
-if (objFSO.fileexists("C:\temp\lsv.txt")) then              ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\lsv.txt", true
-  set objLSV = objFSO.createtextfile("C:\temp\lsv.txt")
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
+''PREPARE MONITOR FILE
+if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''PREVIOUS LOGFILE EXISTS
+  objFSO.deletefile "C:\IT\Scripts\lsv.txt", true
+end if
+if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''LOGFILE EXISTS
+  objFSO.deletefile "C:\IT\Scripts\lsv.txt", true
+  set objLSV = objFSO.createtextfile("C:\IT\Scripts\lsv.txt")
   objLSV.close
-  set objLSV = objFSO.opentextfile("C:\temp\lsv.txt", 8)
+  set objLSV = objFSO.opentextfile("C:\IT\Scripts\lsv.txt", 8)
 else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLSV = objFSO.createtextfile("C:\temp\lsv.txt")
+  set objLSV = objFSO.createtextfile("C:\IT\Scripts\lsv.txt")
   objLSV.close
-  set objLSV = objFSO.opentextfile("C:\temp\lsv.txt", 8)
+  set objLSV = objFSO.opentextfile("C:\IT\Scripts\lsv.txt", 8)
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -77,7 +84,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_LSV"
 	''AUTOMATIC UPDATE, MSP_LSV.VBS, REF #2 , REF #69 , REF #68 , FIXES #32 , REF #71
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
@@ -126,10 +133,10 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   if objFSO.fileexists(strSAV) then
@@ -199,24 +206,22 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   ''CUSTOM ERROR CODES
   select case intSTG
     case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
   end select
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''MSP_LSV COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_LSV SUCCESSFUL : " & now
-    objLOG.write vbnewline & "MSP_LSV SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
   elseif (errRET <> 0) then    											        ''MSP_LSV FAILED
-    objOUT.write vbnewline & "MSP_LSV FAILURE : " & now & " : " & errRET
-    objLOG.write vbnewline & "MSP_LSV FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
+    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_LSV", "FAILURE")
   end if
-  objOUT.write vbnewline & vbnewline & now & " - MSP_LSV COMPLETE" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - MSP_LSV COMPLETE" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV COMPLETE" & vbnewline
   objLOG.close
   objLSV.close
   ''EMPTY OBJECTS
