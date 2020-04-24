@@ -47,7 +47,7 @@ else                                                          ''LOGFILE NEEDS TO
   set objLOG = objFSO.opentextfile("C:\temp\CHKAU", 8)
 end if
 ''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
+if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
