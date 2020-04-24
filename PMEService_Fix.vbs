@@ -67,6 +67,19 @@ wscript.sleep 5000
 ''DOWNLOAD AND RUN 'CCLUTTERV2.VBS' WHICH INCLUDES NABLEPATCHCACHE AND NABLEUPDATECACHE DIRECTORIES
 call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CClutterV2.vbs", "CClutterV2.vbs")
 call HOOK("cscript.exe " & chr(34) & "c:\temp\CClutterV2.vbs" & chr(34) & " " & chr(34) & "true" & chr(34))
+''REMOVE POSSIBLE TRASHED 'ARCHIVES'
+if (objFSO.fileexists("%ProgramData%\SolarWinds MSP\PME\Archives")) then
+  objFSO.deletefile "%ProgramData%\SolarWinds MSP\PME\Archives", true
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.CacheService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.CacheService" & chr(34))
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService" & chr(34))
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.RPCServerService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.RPCServerService" & chr(34))
+end if
 ''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
 objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
@@ -87,6 +100,7 @@ call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main
 call HOOK("reg add " & chr(34) & "HKCU\SOFTWARE\Microsoft\Internet Explorer\Main" & chr(34) & _
   " /f /v DisableFirstRunCustomize /t REG_DWORD /d 0x00000001 /reg:64")
 ''DOWNLOAD PME SERVICE SUPPORTING FILES
+call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\PME" & chr(34))
 objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
 call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/AnniversaryUpdates_details.xml", "AnniversaryUpdates_details.xml")
@@ -98,15 +112,15 @@ objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDAT
 call FILEDL("http://sis.n-able.com/ComponentData/RMM/1/SecurityUpdates_details.xml", "SecurityUpdates_details.xml")
 objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING SECURITYUPDATES.ZIP" & vbnewline
-call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.2.11.20.zip", "SecurityUpdates.zip")
-''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.12.2402
+call FILEDL("https://sis.n-able.com/PatchManagement/SecurityUpdates-2020.4.24.4.zip", "SecurityUpdates.zip")
+''DOWNLOAD LATEST PME SERVICE UPDATE 1.1.14.2223
 objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING PME SERVICE UPDATE" & vbnewline
-call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.12.2110/PMESetup.exe", "PMESetup.exe")
+call FILEDL("https://sis.n-able.com/Components/MSP-PME/1.1.14.2223/PMESetup.exe", "PMESetup.exe")
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent /log=" & chr(34) & "C:\temp\PMESetup.log" & chr(34))
 ''RESET WINDOWS UPDATE COMPONENTS
 objOUT.write vbnewline & vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
 objLOG.write vbnewline & vbnewline & now & vbtab & " - RESETTING WINDOWS UPDATE COMPONENTS" & vbnewline
@@ -116,7 +130,7 @@ call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVers
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v PingID /f")
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientId /f")
 call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" & chr(34) & " /v SusClientIDValidation /f")
-call HOOK("cmd.exe /C rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
+'call HOOK("cmd.exe /C rd /s /q " & chr(34) & "C:\WINDOWS\SoftwareDistribution" & chr(34))
 call HOOK("net start bits")
 call HOOK("net start wuauserv")
 ''RESTART WINDOWS PROBE SERVICES
@@ -219,9 +233,15 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   if objFSO.fileexists(strSAV) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+    ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
     if (instr(1, lcase(strFILE), "updates")) then
-      call HOOK("cmd.exe /C move /y " & chr(34) & strSAV & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+      if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\PME\"))) then
+        objFSO.createfolder("%ProgramData%\SolarWinds MSP\PME\")
+      end if
+      if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\PME\Archives\"))) then
+        objFSO.createfolder("%ProgramData%\SolarWinds MSP\PME\Archives\")
+      end if
+      call HOOK("cmd.exe /C copy /y " & chr(34) & strSAV & chr(34) & " " & chr(34) & "%ProgramData%\SolarWinds MSP\PME\Archives\" & chr(34))
     end if
   end if
   set objHTTP = nothing
