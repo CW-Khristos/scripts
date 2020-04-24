@@ -20,9 +20,9 @@ dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , REF #68 , REF #69 , FIXES #32 , REF #71
-strVER = 9
+strVER = 10
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''DEFAULT SUCCESS
 errRET = 0
@@ -33,6 +33,13 @@ set objARG = wscript.arguments
 ''CREATE SCRIPTING OBJECTS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\LSVperm")) then                              ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\LSVperm", true
@@ -69,7 +76,7 @@ if (errRET = 0) then                                                        ''AR
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING LSVPERM"
 	''AUTOMATIC UPDATE, LSVPERM.VBS, REF #2 , REF #69 , REF #68 , FIXES #32 , REF #71
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
@@ -79,7 +86,9 @@ if (errRET = 0) then                                                        ''AR
     chr(34) & strLSV & "|" & strUSR & "|" & strPWD & "|" & strOPT & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
   intRET = (intRET - vbObjectError)
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
     ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
     objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
     objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -151,25 +160,6 @@ if (errRET = 0) then                                                        ''AR
           end if
         end if
       next
-      ''DISABLED VERIFY NETWORK SETTINGS; WILL BE PASSING NETWORK TYPE AS PARAMETER , REF #71
-      ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
-      'set objEXEC = objWSH.exec("net config workstation")
-      'while (not objEXEC.stdout.atendofstream)
-      '  strIN = objEXEC.stdout.readline
-      '  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-      '  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
-      '  if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
-      '    if (instr(1, lcase(strUSR), "\")) then
-      '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
-      '    elseif (instr(1, lcase(strUSR), "\") = 0) then
-      '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
-      '    end if
-      '  end if
-      '  if (err.number <> 0) then
-      '    call LOGERR(2)
-      '  end if
-      'wend
-      'set objEXEC = nothing
       ''STOP 'BACKUP SERVICE CONTROLLER' AND UPDATE ACCOUNT LOGON TO RMMTECH
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - UPDATING BACKUP SERVICE AND LSV PERMISSIONS"
@@ -223,7 +213,7 @@ if (errRET = 0) then                                                        ''AR
       ''DOWNLOAD SVCPERM.VBS SCRIPT TO GRANT USER SERVICE LOGON , 'ERRRET'=30 , REF #2 , FIXES #32 , REF #71
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/SVCperm.vbs", "SVCperm.vbs")
+      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "C:\IT\Scripts", "SVCperm.vbs")
       if (errRET <> 0) then
         call LOGERR(30)
       end if
@@ -248,7 +238,7 @@ if (errRET = 0) then                                                        ''AR
       call LOGERR(2)
     end if
   end if
-elseif (errRET <> 0) then                                                                 ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+elseif (errRET <> 0) then                                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(errRET)
 end if
 ''END SCRIPT
@@ -257,7 +247,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strFILE)                   			                                    ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -289,16 +279,16 @@ sub FILEDL(strURL, strFILE)                   			                               
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     set objHTTP = nothing
   end if
-  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then                        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+sub HOOK(strCMD)                                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   set objHOOK = objWSH.exec(strCMD)
   while (not objHOOK.stdout.atendofstream)
-    if (instr(1, strCMD, "takeown /F ") = 0) then                                       ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    if (instr(1, strCMD, "takeown /F ") = 0) then                           ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
@@ -307,7 +297,7 @@ sub HOOK(strCMD)                                                                
     end if
   wend
   wscript.sleep 10
-  if (instr(1, strCMD, "takeown /F ") = 0) then                                         ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then                             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     strIN = objHOOK.stdout.readall
     if (strIN <> vbnullstring) then
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
@@ -315,12 +305,12 @@ sub HOOK(strCMD)                                                                
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                                             ''ERROR RETURNED , 'ERRRET'=12
+  if (err.number <> 0) then                                                 ''ERROR RETURNED , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
 
-sub LOGERR(intSTG)                                                                      ''CALL HOOK TO LOG AND SET ERRORS
+sub LOGERR(intSTG)                                                          ''CALL HOOK TO LOG AND SET ERRORS
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
@@ -328,22 +318,22 @@ sub LOGERR(intSTG)                                                              
     err.clear
   end if
   select case intSTG
-    case 1                                                                              '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 1                                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
       objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
-    case 2                                                                              '' 'ERRRET'=2 - BACKUPS IN PROGRESS
+    case 2                                                                  '' 'ERRRET'=2 - BACKUPS IN PROGRESS
       objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING LSVPERM"
       objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING LSVPERM"
   end select
 end sub
 
-sub CLEANUP()                                                                           ''SCRIPT CLEANUP
+sub CLEANUP()                                                               ''SCRIPT CLEANUP
   on error resume next
-  if (errRET = 0) then                                                                  ''SCRIPT COMPLETED SUCCESSFULLY
+  if (errRET = 0) then                                                      ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM COMPLETE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM COMPLETE : " & errRET & " : " & now
     err.clear
-  elseif (errRET <> 0) then                                                             ''SCRIPT FAILED
+  elseif (errRET <> 0) then                                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED

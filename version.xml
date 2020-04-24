@@ -17,7 +17,7 @@
   <iasdatasync.vbs>1</iasdatasync.vbs>
   <jdc_msp_postbackup.vbs>4</jdc_msp_postbackup.vbs>
   <jdc_msp_prebackup.vbs>4</jdc_msp_prebackup.vbs>
-  <LSVperm.vbs>9</LSVperm.vbs>
+  <LSVperm.vbs>10</LSVperm.vbs>
   <md5.vbs>1</md5.vbs>
   <MSP_Config.vbs>5</MSP_Config.vbs>
   <MSP_Debug.vbs>4</MSP_Debug.vbs>
