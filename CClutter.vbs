@@ -17,7 +17,7 @@ dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
 ''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2 , REF #68 , REF #69 , REF #72
 strVER = 6
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
@@ -125,7 +125,7 @@ if (errRET = 0) then
   end if
   ''AUTOMATIC UPDATE, CCLUTTER.VBS, REF #2 , REF #69 , REF #68 , REF #72
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
