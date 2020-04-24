@@ -25,7 +25,10 @@ dim objUFOL, arrUFOL()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2
-strVER = 5
+strVER = 6
+strREPO = "scripts"
+strBRCH = "dev"
+strDIR = "MSP Backups"
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -35,6 +38,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\msp_filter")) then           ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\msp_filter", true
