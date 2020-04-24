@@ -84,21 +84,23 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
-	''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=2 , REF #2
-	objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
-  call FILEDL("https://github.com/CW-Khristos/scripts/ookla/speedtest.exe", "C:\IT\", "speedtest.exe")
-  if (errRET <> 0) then
-    call LOGERR(2)
-  end if
-  ''EXECUTE FAST SPEEDTEST
-  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
-  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
-  ''WINDOWS AGENT RE-CONFIGURATION COMMAND , REF #2
-  strRCMD = "C:\IT\speedtest.exe"
-	call HOOK(strRCMD)
-  if (errRET <> 0) then
-    call LOGERR(3)
+    ''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=2 , REF #2
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest.exe", "C:\IT", "speedtest.exe")
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest-cli.ini", "%APPDATA%\Ookla\Speedtest CLI", "speedtest-cli.ini")
+    if (errRET <> 0) then
+      call LOGERR(2)
+    end if
+    ''EXECUTE FAST SPEEDTEST
+    objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
+    ''WINDOWS AGENT RE-CONFIGURATION COMMAND , REF #2
+    strRCMD = "C:\IT\speedtest.exe /accepteula"
+    call HOOK(strRCMD)
+    if (errRET <> 0) then
+      call LOGERR(3)
+    end if
   end if
 elseif (errRET <> 0) then                                      ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
   call LOGERR(errRET)
