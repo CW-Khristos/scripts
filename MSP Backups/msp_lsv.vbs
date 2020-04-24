@@ -42,7 +42,7 @@ else                                                        ''LOGFILE NEEDS TO B
   set objLOG = objFSO.opentextfile("C:\temp\msp_lsv", 8)
 end if
 ''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
+if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
@@ -84,7 +84,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_LSV"
 	''AUTOMATIC UPDATE, MSP_LSV.VBS, REF #2 , REF #69 , REF #68 , FIXES #32 , REF #71
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
@@ -92,7 +92,9 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & intRET
   intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & intRET
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
     ''EXPORT MSP BACKUP SETTINGS USING CLIENTTOOL UTILITY
     'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\temp\lsv.txt" & chr(34))
