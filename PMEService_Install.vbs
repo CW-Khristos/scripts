@@ -73,6 +73,19 @@ wscript.sleep 5000
 ''DOWNLOAD AND RUN 'CCLUTTERV2.VBS' WHICH INCLUDES NABLEPATCHCACHE AND NABLEUPDATECACHE DIRECTORIES
 'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CClutterV2.vbs", "CClutterV2.vbs")
 'call HOOK("cscript.exe " & chr(34) & "c:\temp\CClutterV2.vbs" & chr(34) & " " & chr(34) & "true" & chr(34))
+''REMOVE POSSIBLE TRASHED 'ARCHIVES'
+if (objFSO.fileexists("%ProgramData%\SolarWinds MSP\PME\Archives")) then
+  objFSO.deletefile "%ProgramData%\SolarWinds MSP\PME\Archives", true
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.CacheService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.CacheService" & chr(34))
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService" & chr(34))
+end if
+if (not (objFSO.folderexists("%ProgramData%\SolarWinds MSP\SolarWinds.MSP.RPCServerService"))) then
+  call HOOK("cmd.exe /C rd /s /q " & chr(34) & "%ProgramData%\SolarWinds MSP\SolarWinds.MSP.RPCServerService" & chr(34))
+end if
 ''MAKE NECESSARY REGISTRY CHANGES TO ALLOW POWERSHELL 'INVOKE-WEBREQUEST' CMDLET USED BY PME SERVICE TO DOWNLOAD FILES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
 objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING IE FIRST-RUN TO ALLOW POWERSHELL INVOKE-WEBREQUEST"
@@ -112,37 +125,43 @@ if (objFSO.fileexists("C:\temp\PMEService.zip")) then
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\AnniversaryUpdates_details.xml")) then
-  ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+  ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES_DETAILS.XML" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\AnniversaryUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C copy /y " & chr(34) & "c:\temp\AnniversaryUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\AnniversaryUpdates.zip")) then
-  ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+  ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES.ZIP" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING ANNIVERSARYUPDATES.ZIP" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\AnniversaryUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C copy /y " & chr(34) & "c:\temp\AnniversaryUpdates.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\SecurityUpdates_details.xml")) then
-  ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+  ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES_DETAILS.XML" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\SecurityUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C copy /y " & chr(34) & "c:\temp\SecurityUpdates_details.xml" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''CHECK FOR EXTRACTED X.ROBOT
 if (objFSO.fileexists("c:\temp\SecurityUpdates-2020.2.11.20.zip")) then
-  ''MOVE PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+  ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
   objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
-  call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\SecurityUpdates-2020.2.11.20.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+  call HOOK("cmd.exe /C copy /y " & chr(34) & "c:\temp\SecurityUpdates-2020.2.11.20.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
+end if
+if (objFSO.fileexists("c:\temp\SecurityUpdates-2020.4.24.4.zip")) then
+  ''COPY PME SERVICE SUPPORTING FILES TO 'C:\PROGRAMDATA\SOLARWINDS MSP\PME\ARCHIVES'
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - MOVING SECURITYUPDATES.ZIP" & vbnewline
+  call HOOK("cmd.exe /C copy /y " & chr(34) & "c:\temp\SecurityUpdates-2020.4.24.4.zip" & chr(34) & " " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\Archives" & chr(34))
 end if
 ''RUN PME SERVICE UPDATE WITH /VERYSILENT SWITCH
 if (objFSO.fileexists("c:\temp\PMESetup.exe")) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME SERVICE UPDATE" & vbnewline
-  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent")
+  call HOOK("cmd.exe /C " & chr(34) & "c:\temp\PMESetup.exe" & chr(34) & " /verysilent /log=" & chr(34) & "C:\temp\PMESetup.log" & chr(34))
 end if
 ''RESTART WINDOWS PROBE SERVICES
 objOUT.write vbnewline & vbnewline & now & vbtab & " - RESTARTING WINDOWS PROBE SERVICES" & vbnewline
