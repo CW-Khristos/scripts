@@ -35,7 +35,7 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
+if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
@@ -134,8 +134,9 @@ if (errRET = 0) then
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & blnLOG & "|" & strFOL & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-  intRET = (intRET - vbObjectError)
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
@@ -301,7 +302,7 @@ sub FILEDL(strURL, strDL, strFILE)                                              
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     set objHTTP = nothing
   end if
-  if (err.number <> 0) then                                                       ''ERROR RETURNED , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub

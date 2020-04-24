@@ -289,7 +289,7 @@ sub FILEDL(strURL, strFILE)                   			                               
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     set objHTTP = nothing
   end if
-  if (err.number <> 0) then                                                             ''ERROR RETURNED , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
