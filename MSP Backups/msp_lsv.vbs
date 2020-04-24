@@ -16,7 +16,7 @@ dim objWSH, objFSO, objLOG, objLSV
 ''DEFAULT SUCCESS
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
-strVER = 3
+strVER = 4
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -92,10 +92,11 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-  objOUT.write vbnewline & intRET
   intRET = (intRET - vbObjectError)
-  objOUT.write vbnewline & intRET
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
     ''EXPORT MSP BACKUP SETTINGS USING CLIENTTOOL UTILITY
     'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\temp\lsv.txt" & chr(34))
     set objHOOK = objWSH.exec("C:\Program Files\Backup Manager\clienttool.exe control.setting.list")
