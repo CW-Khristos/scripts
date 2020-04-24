@@ -18,7 +18,7 @@ errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
 strVER = 4
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''STDIN / STDOUT
 set objIN = wscript.stdin
