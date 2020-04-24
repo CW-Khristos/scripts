@@ -67,6 +67,7 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
+strDL = objWSH.expandenvironmentstrings("%APPDATA%")
 if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTINUE SCRIPT
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FASTNET"
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FASTNET"
@@ -88,7 +89,7 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest.exe", "C:\IT", "speedtest.exe")
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest-cli.ini", "%APPDATA%\Ookla\Speedtest CLI", "speedtest-cli.ini")
+    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest-cli.ini", strDL & "\Ookla\Speedtest CLI", "speedtest-cli.ini")
     if (errRET <> 0) then
       call LOGERR(2)
     end if
@@ -96,7 +97,7 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
     ''WINDOWS AGENT RE-CONFIGURATION COMMAND , REF #2
-    strRCMD = "C:\IT\speedtest.exe /accepteula"
+    strRCMD = "C:\IT\speedtest.exe"
     call HOOK(strRCMD)
     if (errRET <> 0) then
       call LOGERR(3)
