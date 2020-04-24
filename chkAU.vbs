@@ -24,7 +24,7 @@ dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
 strVER = 6
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
