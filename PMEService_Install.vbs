@@ -27,6 +27,13 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 Set objAPP = createobject("shell.application")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\PMESERVICE_INSTALL")) then		        ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PMESERVICE_INSTALL", true
