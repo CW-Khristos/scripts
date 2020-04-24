@@ -18,9 +18,9 @@ dim strUSR, strOPT, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , REF #68 , REF #69 , FIXES #21 , FIXES #31
-strVER = 16
+strVER = 17
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
@@ -69,7 +69,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
 	''AUTOMATIC UPDATE, SVCPERM.VBS, REF #2 , REF #69 , REF #68 , FIXES #21
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SVCPERM : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SVCPERM : " & strVER
@@ -79,7 +79,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     chr(34) & strUSR & "|" & strOPT & "|" & strPWD & "|" & strSVC & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
   intRET = (intRET - vbObjectError)
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
     ''GET SIDS OF ALL USERS , 'ERRRET'=2
     intUSR = 0
     intSID = 0
@@ -155,25 +157,6 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       if (arrSID(intSID) <> vbnullstring) then              ''MATCHING USER SID FOUND
         strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
       elseif (arrSID(intSID) = vbnullstring) then           ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
-        ''DISABLED VERIFY NETWORK SETTINGS; WILL BE PASSING NETWORK TYPE AS PARAMETER , REF #71
-        ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
-        'set objEXEC = objWSH.exec("net config workstation")
-        'while (not objEXEC.stdout.atendofstream)
-        '  strIN = objEXEC.stdout.readline
-        '  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-        '  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
-        '  if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
-        '    if (instr(1, lcase(strUSR), "\")) then
-        '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
-        '    elseif (instr(1, lcase(strUSR), "\") = 0) then
-        '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
-        '    end if
-        '  end if
-        '  if (err.number <> 0) then
-        '    call LOGERR(2)
-        '  end if
-        'wend
-        'set objEXEC = nothing
         strREP = "SeServiceLogonRight = " & strUSR & ","
       end if
       ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
@@ -202,25 +185,6 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
     objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : " & strUSR
     if ((strPWD <> vbnullstring) and (strSVC <> vbnullstring)) then
-      ''DISABLED VERIFY NETWORK SETTINGS; WILL BE PASSING NETWORK TYPE AS PARAMETER , REF #71
-      ''VERIFY NETWORK WORKGROUP / DOMAIN SETTINGS , REF #2 , FIXES #53
-      'set objEXEC = objWSH.exec("net config workstation")
-      'while (not objEXEC.stdout.atendofstream)
-      '  strIN = objEXEC.stdout.readline
-      '  'objOUT.write vbnewline & now & vbtab & vbtab & strIN
-      '  'objLOG.write vbnewline & now & vbtab & vbtab & strIN
-      '  if ((trim(strIN) <> vbnullstring) and (instr(1, strIN, "Logon Domain"))) then
-      '    if (instr(1, lcase(strUSR), "\")) then
-      '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & split(strUSR, "\")(1)
-      '    elseif (instr(1, lcase(strUSR), "\") = 0) then
-      '      strUSR = (split(strIN, " ")(ubound(split(strIN, " ")))) & "\" & strUSR
-      '    end if
-      '  end if
-      '  if (err.number <> 0) then
-      '    call LOGERR(2)
-      '  end if
-      'wend
-      'set objEXEC = nothing
       ''UPDATE SERVICE LOGON CREDENTIALS USING 'SC CONFIG' CMD , 'ERRRET'=6
       objOUT.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
       objLOG.write vbnewline & now & vbtab & vbtab & " - UPDATING SERVICE LOGON : " & strSVC
@@ -252,7 +216,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
