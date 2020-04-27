@@ -1,4 +1,4 @@
-''SET_MSPARCHIVE.VBS
+''MSP_ARCHIVE.VBS
 ''DESIGNED TO AUTOMATICALLY CONFIGURE CW 'DEFAULT' MSP BACKUP ARCHIVE SCHEDULE; 1ST & 15TH, 10PM
 ''ACCEPTS 6 PARAMETERS , REQUIRES 6 PARAMETERS
 ''REQUIRED PARAMETER : 'STRNAM' , STRING TO SET ARCHIVE SCHEDULE 'NAME'
@@ -8,7 +8,7 @@
 ''REQUIRED PARAMETER : 'STRMON' , STRING TO SET SCHEDULED MONTHS FOR ARCHIVE SCHEDULE
 ''REQUIRED PARAMETER : 'STRTIM' , STRING TO SET SCHEDULED TIME FOR ARCHIVE SCHEDULE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''ALWAYS RIGHT-CLICK SCRIPT, CHOOSE "PROPERTIES", CLICK "UNBLOCK"
 ''SCRIPT VARIABLES
 dim blnRUN, blnSUP
@@ -25,8 +25,8 @@ dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
-''VERSION FOR SCRIPT UPDATE, SET_MSPARCHIVE.VBS, REF #2 , REF $68 , REF #69
-strVER = 3
+''VERSION FOR SCRIPT UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF $68 , REF #69
+strVER = 4
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -42,18 +42,18 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\set_msparchive")) then       ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\set_msparchive", true
-  set objLOG = objFSO.createtextfile("C:\temp\set_msparchive")
+if (objFSO.fileexists("C:\temp\MSP_ARCHIVE")) then       ''LOGFILE EXISTS
+  objFSO.deletefile "C:\temp\MSP_ARCHIVE", true
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_ARCHIVE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\set_msparchive", 8)
-else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\set_msparchive")
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_ARCHIVE", 8)
+else                                                      ''LOGFILE NEEDS TO BE CREATED
+  set objLOG = objFSO.createtextfile("C:\temp\MSP_ARCHIVE")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\set_msparchive", 8)
+  set objLOG = objFSO.opentextfile("C:\temp\MSP_ARCHIVE", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-                 ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                     ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
     objLOG.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
@@ -82,21 +82,23 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if ((errRET = 0) or (errRET = 1)) then
-  objOUT.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
-  objLOG.write vbnewline & now & " - STARTING SET_MSPARCHIVE" & vbnewline
-	''AUTOMATIC UPDATE, SET_MSPARCHIVE.VBS, REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & now & " - STARTING MSP_ARCHIVE" & vbnewline
+  objLOG.write vbnewline & now & " - STARTING MSP_ARCHIVE" & vbnewline
+	''AUTOMATIC UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF #69 , REF #68
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
-  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SET_MSPARCHIVE : " & strVER
-  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SET_MSPARCHIVE : " & strVER
-  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_ARCHIVE : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_ARCHIVE : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & strNAM & "|" & strACT & "|" & strDAT & "|" & strDAY & "|" & strMON & "|" & strTIM & "|" & strRUN & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
   intRET = (intRET - vbObjectError)
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
     ''ENTER CALL VERIFY LOOP
     call VERIFY()
   end if
@@ -137,8 +139,8 @@ sub VERIFY()                                                ''CALL HOOK TO VERIF
     strSEL = objIN.readline
     if (ucase(strSEL) = "Y") then
       strRUN = "true"
-      objOUT.write vbnewline & vbnewline & now & " - EXECUTING SET_MSPARCHIVE SCRIPT" & vbnewline
-      objLOG.write vbnewline & vbnewline & now & " - EXECUTING SET_MSPARCHIVE SCRIPT" & vbnewline
+      objOUT.write vbnewline & vbnewline & now & " - EXECUTING MSP_ARCHIVE SCRIPT" & vbnewline
+      objLOG.write vbnewline & vbnewline & now & " - EXECUTING MSP_ARCHIVE SCRIPT" & vbnewline
       ''EXIT VERIFY LOOP, RUN SCRIPT EXECUTION
       call EXECUTE()
     elseif (ucase(strSEL) = "N") then
@@ -163,6 +165,7 @@ sub EXECUTE()                                               ''CALL HOOK TO EXECU
         objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
         objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
         set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
+        'strIDL = "Idle"
         strIDL = objHOOK.stdout.readall
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
@@ -224,10 +227,10 @@ sub EXECUTE()                                               ''CALL HOOK TO EXECU
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
@@ -308,15 +311,18 @@ end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
-  if (errRET = 0) then         											        ''SET_MSPARCHIVE COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "SET_MSPARCHIVE SUCCESSFUL : " & now
-  elseif (errRET <> 0) then    											        ''SET_MSPARCHIVE FAILED
-    objOUT.write vbnewline & "SET_MSPARCHIVE FAILURE : " & now & " : " & errRET
+  if (errRET = 0) then         											        ''MSP_ARCHIVE COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE SUCCESSFUL : " & now
+    err.clear
+  elseif (errRET <> 0) then    											        ''MSP_ARCHIVE FAILED
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
-    call err.raise(vbObjectError + errRET, "SET_MSPARCHIVE", "FAILURE")
+    call err.raise(vbObjectError + errRET, "MSP_ARCHIVE", "FAILURE")
   end if
-  objOUT.write vbnewline & vbnewline & now & " - SET_MSPARCHIVE COMPLETE" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - SET_MSPARCHIVE COMPLETE" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & " - MSP_ARCHIVE COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - MSP_ARCHIVE COMPLETE" & vbnewline
   objLOG.close
   ''EMPTY OBJECTS
   set objLOG = nothing
