@@ -98,7 +98,7 @@ if ((errRET = 0) or (errRET = 1)) then
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''ENTER CALL VERIFY LOOP
     call VERIFY()
   end if
