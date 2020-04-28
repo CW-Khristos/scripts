@@ -155,7 +155,7 @@ if (errRET = 0) then
             objLOG.write strNEW
           end if
           ''CLEAR NORMAL FOLDERS
-          if (objFOL.path <> objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+          if (objFOL.path <> strWFOL & "\SoftwareDistribution") then
             strNEW = vbnewline & "CLEARING : " & objFOL.path
             objOUT.write strNEW
             if (blnLOG) then                                                      ''WRITE TO LOGFILE, IF ENABLED
@@ -163,15 +163,15 @@ if (errRET = 0) then
             end if
             call cFolder(objFOL)
           ''CLEARING WINDOWS UPDATES
-          elseif (objFOL.path = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+          elseif (objFOL.path = strWFOL & "\SoftwareDistribution") then
             ''CHECK FOR 'PENDING.XML IF CLEARING SOFTWAREDISTRIBUTION
-            if (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml")) then
+            if (objFSO.fileexists(strWFOL & "\WinSxS\pending.xml")) then
               strNEW = vbnewline & "'PENDING.XML' FOUND : SKIPPING : " & objFOL.path
               objOUT.write strNEW
               if (blnLOG) then                                                    ''WRITE TO LOGFILE, IF ENABLED
                 objLOG.write strNEW
               end if
-            elseif (not (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml"))) then
+            elseif (not (objFSO.fileexists(strWFOL & "\WinSxS\pending.xml"))) then
               strNEW = vbnewline & "'PENDING.XML' NOT FOUND : CLEARING : " & objFOL.path
               objOUT.write strNEW
               if (blnLOG) then                                                    ''WRITE TO LOGFILE, IF ENABLED
