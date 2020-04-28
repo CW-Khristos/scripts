@@ -92,20 +92,6 @@ if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
   colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
-''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                                             ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next
-  if (wscript.arguments.count > 1) then                                           ''SET REQUIRED ARGUMENTS
-    blnLOG = bool(objARG.item(0))
-    strFOL = objARG.item(1)
-  elseif (wscript.arguments.count <= 1) then                                      ''NOT ENOUGH ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
-  end if
-elseif (wscript.arguments.count > 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
-  blnLOG = false
-end if
 
 ''------------
 ''BEGIN SCRIPT
@@ -122,6 +108,20 @@ if (errRET = 0) then
       objLOG.close
       set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
     end if
+  end if
+  ''READ PASSED COMMANDLINE ARGUMENTS
+  if (wscript.arguments.count > 0) then                                             ''ARGUMENTS WERE PASSED
+    for x = 0 to (wscript.arguments.count - 1)
+      objOUT.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+      objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+    next
+    if (wscript.arguments.count > 1) then                                           ''SET REQUIRED ARGUMENTS
+      blnLOG = bool(objARG.item(0))
+      strFOL = objARG.item(1)
+    elseif (wscript.arguments.count <= 1) then                                      ''NOT ENOUGH ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
+    end if
+  elseif (wscript.arguments.count > 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
+    blnLOG = false
   end if
   ''AUTOMATIC UPDATE, CCLUTTER.VBS, REF #2 , REF #69 , REF #68 , REF #72
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
