@@ -16,7 +16,7 @@ dim objWSH, objFSO, objLOG, objLSV
 ''DEFAULT SUCCESS
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
-strVER = 4
+strVER = 5
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -84,7 +84,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_LSV"
 	''AUTOMATIC UPDATE, MSP_LSV.VBS, REF #2 , REF #69 , REF #68 , FIXES #32 , REF #71
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_LSV : " & strVER
@@ -92,6 +92,8 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
@@ -99,7 +101,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
     objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
     ''EXPORT MSP BACKUP SETTINGS USING CLIENTTOOL UTILITY
-    'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\temp\lsv.txt" & chr(34))
+    call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\IT\Scripts" & chr(34))
     set objHOOK = objWSH.exec("C:\Program Files\Backup Manager\clienttool.exe control.setting.list")
     strIN = objHOOK.stdout.readall
     arrIN = split(strIN, vbnewline)
