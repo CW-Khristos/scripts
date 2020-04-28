@@ -6,7 +6,7 @@
 ''OPTIONAL PARAMETER : 'BLNLOG' , BOOLEAN TO SET LOGGING
 ''OPTIONAL PARAMETER : 'STRFOL' , STRING TO SET TARGET FOLDER FOR CLEANUP
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR, strNEW
@@ -21,12 +21,6 @@ strBRCH = "master"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
-''ENVIRONMENT VARIABLES
-strWFOL = objWSH.expandenvironmentstrings("%windir%")
-strTFOL = objWSH.expandenvironmentstrings("%temp%")
-strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
-strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
-str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -34,6 +28,12 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''ENVIRONMENT VARIABLES
+strWFOL = objWSH.expandenvironmentstrings("%windir%")
+strTFOL = objWSH.expandenvironmentstrings("%temp%")
+strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
+strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
+str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''CHECK 'PERSISTENT' FOLDERS
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
