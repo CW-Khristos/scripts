@@ -6,7 +6,7 @@
 ''OPTIONAL PARAMETER : 'BLNLOG' , BOOLEAN TO SET LOGGING
 ''OPTIONAL PARAMETER : 'STRFOL' , STRING TO SET TARGET FOLDER FOR CLEANUP
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR, strNEW
@@ -15,18 +15,12 @@ dim colFOL(31), blnLOG, lngSIZ, strFOL
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
 ''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2 , REF #68 , REF #69 , REF #72
-strVER = 6
+strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
-''ENVIRONMENT VARIABLES
-strWFOL = objWSH.expandenvironmentstrings("%windir%")
-strTFOL = objWSH.expandenvironmentstrings("%temp%")
-strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
-strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
-str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -34,6 +28,12 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''ENVIRONMENT VARIABLES
+strWFOL = objWSH.expandenvironmentstrings("%windir%")
+strTFOL = objWSH.expandenvironmentstrings("%temp%")
+strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
+strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
+str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''CHECK 'PERSISTENT' FOLDERS
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
@@ -92,20 +92,6 @@ if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
   colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 ''C:\ProgramData\MXB\Backup Manager\logs
-''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                                             ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next
-  if (wscript.arguments.count > 1) then                                           ''SET REQUIRED ARGUMENTS
-    blnLOG = bool(objARG.item(0))
-    strFOL = objARG.item(1)
-  elseif (wscript.arguments.count <= 1) then                                      ''NOT ENOUGH ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
-  end if
-elseif (wscript.arguments.count > 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
-  blnLOG = false
-end if
 
 ''------------
 ''BEGIN SCRIPT
@@ -123,9 +109,23 @@ if (errRET = 0) then
       set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
     end if
   end if
+  ''READ PASSED COMMANDLINE ARGUMENTS
+  if (wscript.arguments.count > 0) then                                             ''ARGUMENTS WERE PASSED
+    for x = 0 to (wscript.arguments.count - 1)
+      objOUT.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+      objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+    next
+    if (wscript.arguments.count > 1) then                                           ''SET REQUIRED ARGUMENTS
+      blnLOG = bool(objARG.item(0))
+      strFOL = objARG.item(1)
+    elseif (wscript.arguments.count <= 1) then                                      ''NOT ENOUGH ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
+    end if
+  elseif (wscript.arguments.count > 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
+    blnLOG = false
+  end if
   ''AUTOMATIC UPDATE, CCLUTTER.VBS, REF #2 , REF #69 , REF #68 , REF #72
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
@@ -136,7 +136,10 @@ if (errRET = 0) then
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
@@ -152,7 +155,7 @@ if (errRET = 0) then
             objLOG.write strNEW
           end if
           ''CLEAR NORMAL FOLDERS
-          if (objFOL.path <> objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+          if (objFOL.path <> strWFOL & "\SoftwareDistribution") then
             strNEW = vbnewline & "CLEARING : " & objFOL.path
             objOUT.write strNEW
             if (blnLOG) then                                                      ''WRITE TO LOGFILE, IF ENABLED
@@ -160,15 +163,15 @@ if (errRET = 0) then
             end if
             call cFolder(objFOL)
           ''CLEARING WINDOWS UPDATES
-          elseif (objFOL.path = objWSH.expandenvironmentstrings("%windir%") & "\SoftwareDistribution") then
+          elseif (objFOL.path = strWFOL & "\SoftwareDistribution") then
             ''CHECK FOR 'PENDING.XML IF CLEARING SOFTWAREDISTRIBUTION
-            if (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml")) then
+            if (objFSO.fileexists(strWFOL & "\WinSxS\pending.xml")) then
               strNEW = vbnewline & "'PENDING.XML' FOUND : SKIPPING : " & objFOL.path
               objOUT.write strNEW
               if (blnLOG) then                                                    ''WRITE TO LOGFILE, IF ENABLED
                 objLOG.write strNEW
               end if
-            elseif (not (objFSO.fileexists(objWSH.expandenvironmentstrings("%windir%") & "\WinSxS\pending.xml"))) then
+            elseif (not (objFSO.fileexists(strWFOL & "\WinSxS\pending.xml"))) then
               strNEW = vbnewline & "'PENDING.XML' NOT FOUND : CLEARING : " & objFOL.path
               objOUT.write strNEW
               if (blnLOG) then                                                    ''WRITE TO LOGFILE, IF ENABLED
@@ -302,7 +305,7 @@ sub FILEDL(strURL, strDL, strFILE)                                              
     objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     set objHTTP = nothing
   end if
-  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then                              ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
