@@ -139,7 +139,7 @@ if (errRET = 0) then
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or or (intRET = 2147221505) or (intRET = 2147221517)) then
     objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
     ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
