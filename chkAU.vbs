@@ -22,7 +22,7 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 6
+strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -132,7 +132,7 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
   ''FORCE SYNCHRONOUS
   objXML.async = false
   ''LOAD SCRIPT VERSIONS DATABASE XML
-  if objXML.load("https://github.com/CW-Khristos/scripts/raw/" & strBRCH & "/version.xml") then
+  if objXML.load("https://raw.githubusercontent.com/CW-Khristos/scripts/" & strBRCH & "/version.xml") then
     set colVER = objXML.documentelement
     for each objSCR in colVER.ChildNodes
       ''LOCATE ORIGINAL RUNNING SCRIPT
@@ -146,9 +146,9 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
             if (strDIR = vbnullstring) then
-              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
+              strURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/" & strREPO & "/" & strBRCH & "/" & strSCR
             elseif (strDIR <> vbnullstring) then
-              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
+              strURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/" & strREPO & "/" & strBRCH & "/" & strDIR & "/" & strSCR
             end if
             call FILEDL(strURL, "C:\IT\Scripts", strSCR)
             if (intRET <> 0) then                             ''ERROR DOWNLOADING REQUESTING SCRIPT UPDATE, 'ERRRET'=101
@@ -199,9 +199,9 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
             objLOG.write vbnewline & now & vbtab & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
             ''DOWNLOAD LATEST VERSION OF ORIGINAL SCRIPT
             if (strDIR = vbnullstring) then
-              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strSCR
+              strURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/" & strREPO & "/" & strBRCH & "/" & strSCR
             elseif (strDIR <> vbnullstring) then
-              strURL = "https://github.com/CW-Khristos/" & strREPO & "/raw/" & strBRCH & "/" & strDIR & "/" & strSCR
+              strURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/" & strREPO & "/" & strBRCH & "/" & strDIR & "/" & strSCR
             end if
             call FILEDL(strURL, "C:\IT\Scripts", strSCR)
             if (errRET <> 0) then                             ''ERROR CHKAU SCRIPT UPDATE, 'ERRRET'=104
