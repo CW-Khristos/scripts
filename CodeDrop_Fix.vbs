@@ -10,8 +10,11 @@ dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
-''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
+''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #68 , REF #69
 strVER = 7
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = "CodeDrop"
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -19,6 +22,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\CODEDROP_FIX")) then		               ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\CODEDROP_FIX", true
@@ -39,177 +49,143 @@ if (strIN <> "cscript.exe") Then
   wscript.quit
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count < 1) then                                ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
-  call LOGERR(1)
-  call CLEANUP()
-elseif (wscript.arguments.count = 1) then                             ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                                 ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   strFIX = objARG.item(0)                                             ''SET STRING 'STRFIX', CODE DROP FIX SELECTION
+elseif (wscript.arguments.count = 0) then                             ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+  call LOGERR(1)
 end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING CODEDROP_FIX" & vbnewline
-objLOG.write vbnewline & now & " - STARTING CODEDROP_FIX" & vbnewline
-''AUTOMATIC UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-call CHKAU()
-''STOP WINDOWS AGENT SERVICES
-objOUT.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
-objLOG.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
-call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
-wscript.sleep 5000
-call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
-wscript.sleep 5000
-''DOWNLOAD CODEDROP 'FIX' FILES
-objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
-objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
-if (ucase(strFIX) = "SELFHEAL") then
-  ''WINDOWS AGENT CODEDROP Directory
-  strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
-  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
-  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_APR2_NCI-15758/agent.exe", "agent.exe")
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_APR2_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
-  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "agent.exe")
-  'call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "CodeDropMeta.xml")
-  wscript.sleep 5000
-  ''RENAME 'OLD' CODEDROP FILES
-  objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-  objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-  if objFSO.fileexists(strCDD & "\agent.exe") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
+if (errRET = 0) then                                                  ''NO ERRORS DURING INITIAL START
+  objOUT.write vbnewline & now & " - STARTING CODEDROP_FIX" & vbnewline
+  objLOG.write vbnewline & now & " - STARTING CODEDROP_FIX" & vbnewline
+  ''AUTOMATIC UPDATE, CODEDROP_FIX.VBS, REF #1 , REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CODEDROP_FIX : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CODEDROP_FIX : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''STOP WINDOWS AGENT SERVICES
+    objOUT.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
+    objLOG.write vbnewline & now & vbtab & " - STOPPING WINDOWS AGENT SERVICES"
+    call HOOK("net stop " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+    wscript.sleep 5000
+    call HOOK("net stop " & chr(34) & "Windows Agent Service" & chr(34))
+    wscript.sleep 5000
+    ''DOWNLOAD CODEDROP 'FIX' FILES
+    objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
+    objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'FIX' FILES"
+    if (ucase(strFIX) = "SELFHEAL") then
+      ''WINDOWS AGENT CODEDROP Directory
+      strCDD = "C:\Program Files (x86)\N-able Technologies\Windows Agent\bin"
+      objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
+      objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'SELF-HEAL' FILES"
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/selfheal/codedrop_APR2_NCI-15758/agent.exe", "C:\IT", "agent.exe")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/selfheal/codedrop_APR2_NCI-15758/CodeDropMeta.xml", "C:\IT", "CodeDropMeta.xml")
+      'call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/agent.exe", "C:\IT", "agent.exe")
+      'call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/selfheal/codedrop_MAR17_NCI-15758/CodeDropMeta.xml", "C:\IT", "CodeDropMeta.xml")
+      wscript.sleep 5000
+      ''RENAME 'OLD' CODEDROP FILES
+      objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+      objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+      if objFSO.fileexists(strCDD & "\agent.exe") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\agent.exe" & chr(34) & " " & chr(34) & strCDD & "\agent.old" & chr(34))
+      end if
+      'if objFSO.fileexists(strSAV) then
+      '  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
+      'end if
+      ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
+      objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+      objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+      ''CHECK THAT FILE EXISTS
+      if objFSO.fileexists("C:\IT\agent.exe") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & "C:\IT\agent.exe" & chr(34) & " " & chr(34) & strCDD & chr(34))
+        'objFSO.copyfile "C:\IT\agent.exe", strCDD & "\agent.exe", true
+      end if
+      ''CHECK THAT FILE EXISTS
+      if objFSO.fileexists("C:\IT\CodeDropMeta.xml") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & "C:\IT\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & chr(34))
+        'objFSO.copyfile "C:\IT\CodeDropMeta.xml", strCDD & "\CodeDropMeta.xml", true
+      end if
+    elseif (ucase(strFIX) = "COPYPASTE") then
+      strCDD = "C:\Program Files (x86)\N-Able Technologies\Reactive\bin"
+      objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
+      objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper32.dll", "C:\IT", "ConsoleAPIWrapper32.dll")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper64.dll", "C:\IT", "ConsoleAPIWrapper64.dll")
+      wscript.sleep 5000
+      ''RENAME 'OLD' CODEDROP FILES
+      objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+      objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
+      if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper32.dll") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper32.old" & chr(34))
+      end if
+      if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper64.dll") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper64.old" & chr(34))
+      end if
+      ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
+      objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+      objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
+      ''CHECK THAT FILE EXISTS
+      if objFSO.fileexists("C:\IT\ConsoleAPIWrapper32.dll") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & "C:\IT\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
+        'objFSO.copyfile "C:\IT\ConsoleAPIWrapper32.dll", strCDD & "\ConsoleAPIWrapper32.dll", true
+      end if
+      ''CHECK THAT FILE EXISTS
+      if objFSO.fileexists("C:\IT\ConsoleAPIWrapper64.dll") then
+        call HOOK("cmd.exe /C move /y " & chr(34) & "C:\IT\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
+        'objFSO.copyfile "C:\IT\ConsoleAPIWrapper64.dll", strCDD & "\ConsoleAPIWrapper64.dll", true
+      end if
+    end if
+    ''RESTART WINDOWS AGENT SERVICES
+    objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
+    objLOG.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
+    wscript.sleep 5000
+    call HOOK("net start " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+    wscript.sleep 5000
+    call HOOK("net start " & chr(34) & "Windows Agent Service" & chr(34))
+    wscript.sleep 5000
   end if
-  'if objFSO.fileexists(strSAV) then
-  '  call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & "\CodeDropMeta.old" & chr(34))
-  'end if
-  ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
-  objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-  objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-  ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists("C:\Temp\agent.exe") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\agent.exe" & chr(34) & " " & chr(34) & strCDD & chr(34))
-    'objFSO.copyfile "C:\Temp\agent.exe", strCDD & "\agent.exe", true
-  end if
-  ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists("C:\Temp\CodeDropMeta.xml") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\CodeDropMeta.xml" & chr(34) & " " & chr(34) & strCDD & chr(34))
-    'objFSO.copyfile "C:\Temp\CodeDropMeta.xml", strCDD & "\CodeDropMeta.xml", true
-  end if
-elseif (ucase(strFIX) = "COPYPASTE") then
-  strCDD = "C:\Program Files (x86)\N-Able Technologies\Reactive\bin"
-  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
-  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING CODEDROP 'COPY/PASTE' FILES"
-  call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper32.dll", "ConsoleAPIWrapper32.dll")
-  call FILEDL("https://github.com/CW-Khristos/scripts/blob/dev/CodeDrop/copypaste/ConsoleAPIWrapper32_64/ConsoleAPIWrapper64.dll", "ConsoleAPIWrapper64.dll")
-  wscript.sleep 5000
-  ''RENAME 'OLD' CODEDROP FILES
-  objOUT.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-  objLOG.write vbnewline & now & vbtab & " - RENAMING 'OLD' CODEDROP FILES"
-  if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper32.dll") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper32.old" & chr(34))
-  end if
-  if objFSO.fileexists(strCDD & "\ConsoleAPIWrapper64.dll") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & strCDD & "\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & "\ConsoleAPIWrapper64.old" & chr(34))
-  end if
-  ''MOVE CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION
-  objOUT.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-  objLOG.write vbnewline & now & vbtab & " - MOVING CODEDROP 'FIX' FILES TO APPROPRIATE LOCATION"
-  ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists("C:\Temp\ConsoleAPIWrapper32.dll") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\ConsoleAPIWrapper32.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
-    'objFSO.copyfile "C:\Temp\ConsoleAPIWrapper32.dll", strCDD & "\ConsoleAPIWrapper32.dll", true
-  end if
-  ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists("C:\Temp\ConsoleAPIWrapper64.dll") then
-    call HOOK("cmd.exe /C move /y " & chr(34) & "c:\temp\ConsoleAPIWrapper64.dll" & chr(34) & " " & chr(34) & strCDD & chr(34))
-    'objFSO.copyfile "C:\Temp\ConsoleAPIWrapper64.dll", strCDD & "\ConsoleAPIWrapper64.dll", true
-  end if
+elseif (errRET <> 0) then                                   ''ERRORS ENCOUNTERED DURING INITIAL START
+  call LOGERR(errRET)
 end if
-''RESTART WINDOWS AGENT SERVICES
-objOUT.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
-objLOG.write vbnewline & now & vbtab & " - RESTARTING WINDOWS AGENT SERVICES"
-wscript.sleep 5000
-call HOOK("net start " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
-wscript.sleep 5000
-call HOOK("net start " & chr(34) & "Windows Agent Service" & chr(34))
-wscript.sleep 5000
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
 ''------------
 
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #1
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-        objOUT.write vbnewline & now & vbtab & " - CODEDROP_FIX :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-        objLOG.write vbnewline & now & vbtab & " - CODEDROP_FIX :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/CodeDrop_Fix.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
-end sub
-
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+''SUB-ROUTINES
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -232,12 +208,12 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
+    call LOGERR(11)
     err.clear
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -263,7 +239,7 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   if ((not blnSUP) and (err.number <> 0)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(3)
+    call LOGERR(12)
   end if
 end sub
 
@@ -274,14 +250,23 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		err.clear
   end if
+  ''CUSTOM ERROR CODES
+  select case intSTG
+    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES CODE DROP FIX SELECTION : SELFHEAL / COPYPASTE"
+  end select
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''CODEDROP_FIX COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "CODEDROP_FIX SUCCESSFUL : " & now & vbnewline
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CODEDROP_FIX SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CODEDROP_FIX SUCCESSFUL : " & now
+    err.clear
   elseif (errRET <> 0) then    											        ''CODEDROP_FIX FAILED
-    objOUT.write vbnewline & "CODEDROP_FIX FAILURE : " & now & " : " & errRET & vbnewline
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CODEDROP_FIX FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CODEDROP_FIX FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CODEDROP_FIX", "FAILURE")
   end if
