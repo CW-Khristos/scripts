@@ -177,4 +177,12 @@ C:\User Files\RMMTech|
 C:\User Folders\RMMTech|
 C:\UserFiles\RMMTech|
 C:\UserFolders\RMMTech|
+%LOCALAPPDATA%\Microsoft\Windows\IECompatCache|
+%LOCALAPPDATA%\Microsoft\Windows\IECompatUaCache|
+%LOCALAPPDATA%\Microsoft\Windows\IEDownloadHistory|
+%LOCALAPPDATA%\Microsoft\Windows\INetCache|
+%LOCALAPPDATA%\Microsoft\Windows\INetCookies|
+%LOCALAPPDATA%\Microsoft\Windows\PPBCompatCache|
+%LOCALAPPDATA%\Microsoft\Windows\PPBCompatUaCache|
+%LOCALAPPDATA%\Microsoft\Windows\PriCache|
 %LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|

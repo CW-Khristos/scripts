@@ -7,8 +7,11 @@ dim errRET, strVER, strIN, intOPT
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
-''VERSION FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
-strVER = 2
+''VERSION FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , REF #68 , REF #69 , FIXES #45
+strVER = 3
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''ZIP ARCHIVE OPTIONS
@@ -21,8 +24,15 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 Set objAPP = createobject("shell.application")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\DISK_USAGE")) then               ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\DISK_USAGE")) then             ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\DISK_USAGE", true
   set objLOG = objFSO.createtextfile("C:\temp\DISK_USAGE")
   objLOG.close
@@ -56,11 +66,11 @@ if (errRET = 1) then
   call CHKAU()
   ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
   if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
     wscript.sleep 5000
     ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
     if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
     end if
     if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
       ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
@@ -80,7 +90,7 @@ if (errRET = 1) then
     ''DISABLED ZIP ARCHIVE CALLS
     'wscript.sleep 5000
     if (ucase(strFORM) = "HTM") then
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/SavePage.exe", "savepage.exe")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "savepage.exe")
       strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\" & chr(34)
       call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
     '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
@@ -95,11 +105,11 @@ elseif (errRET = 0) then
   call CHKAU()
   ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
   if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
     wscript.sleep 5000
     ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
     if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/X.Robot32.zip", "X.Robot32.zip")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
     end if
     if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
       ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
@@ -122,7 +132,7 @@ elseif (errRET = 0) then
     'wscript.sleep 5000
     ''CONVERT TO HTM FORMAT
     if (ucase(strFORM) = "HTM") then
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/XRobot/SavePage.exe", "savepage.exe")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "savepage.exe")
       strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\" & chr(34)
       call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
       ''ARCHIVE HTM REPORT DATA

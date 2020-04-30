@@ -8,8 +8,11 @@ dim strIN, strOUT, strORG, strREP
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
-''VERSION FOR SCRIPT UPDATE, WMI_FIX_NORESTART.VBS , REF #2
+''VERSION FOR SCRIPT UPDATE, WMI_FIX_NORESTART.VBS , REF #2 , REF #68 , REF #69
 strVER = 3
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -19,28 +22,35 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\WMI_FIX_NORESTART")) then              ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\WMI_FIX_NORESTART")) then        ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\WMI_FIX_NORESTART", true
   set objLOG = objFSO.createtextfile("C:\temp\WMI_FIX_NORESTART")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\WMI_FIX_NORESTART", 8)
-else                                                        ''LOGFILE NEEDS TO BE CREATED
+else                                                            ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\WMI_FIX_NORESTART")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\WMI_FIX_NORESTART", 8)
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                           ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
-  if (wscript.arguments.count > 0) then                     ''REQUIRED ARGUMENTS PASSED
-    if (wscript.arguments.count > 1) then                   ''OPTIONAL ARGUMENTS PASSED
+  if (wscript.arguments.count > 0) then                         ''REQUIRED ARGUMENTS PASSED
+    if (wscript.arguments.count > 1) then                       ''OPTIONAL ARGUMENTS PASSED
     end if
   end if
-else                                                        ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+else                                                            ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   'call LOGERR(1)
 end if
 
@@ -69,7 +79,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKDEP()                                                ''RESTART WMI DEPENDENT SERVICES, REF #19
+sub CHKDEP()                                                    ''RESTART WMI DEPENDENT SERVICES, REF #19
 ''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
   objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
   objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
@@ -86,7 +96,7 @@ sub CHKDEP()                                                ''RESTART WMI DEPEND
   call HOOK("net start " & chr(34) & "System Event Notification Service" & chr(34))
 end sub
 
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , WMI_FIX_NORESTART.VBS , REF #2 , FIXES #21 , FIXES #31
+sub CHKAU()																					            ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 , WMI_FIX_NORESTART.VBS , REF #2 , FIXES #21 , FIXES #31
   ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
   if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
     objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
@@ -115,14 +125,14 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
 					''DOWNLOAD LATEST VERSION OF SCRIPT
 					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/WMI_FIX_NORESTART.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
+					if (wscript.arguments.count > 0) then                 ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)
 							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
 						next
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
+					elseif (wscript.arguments.count = 0) then             ''NO ARGUMENTS WERE PASSED
             objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
             objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
 						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
@@ -138,12 +148,12 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
 	end if
 	set colVER = nothing
 	set objXML = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
+  if (err.number <> 0) then                                     ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=10
     call LOGERR(10)
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strFILE)                                     ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = "C:\temp\" & strFILE
@@ -175,17 +185,17 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+  if (err.number <> 0) then                                     ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+sub HOOK(strCMD)                                                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then                 ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
@@ -201,12 +211,12 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+  if (err.number <> 0) then                                     ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
 
-sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                              ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
@@ -215,18 +225,18 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 1                                                      '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
       'objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
       'objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES USER TO GRANT SERVICE LOGON"
   end select
 end sub
 
-sub CLEANUP()                                               ''SCRIPT CLEANUP
-  if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
+sub CLEANUP()                                                   ''SCRIPT CLEANUP
+  if (errRET = 0) then                                          ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - WMI_FIX_NORESTART COMPLETE : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - WMI_FIX_NORESTART COMPLETE : " & now
     err.clear
-  elseif (errRET <> 0) then                                 ''SCRIPT FAILED
+  elseif (errRET <> 0) then                                     ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - WMI_FIX_NORESTART FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - WMI_FIX_NORESTART FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE , ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED

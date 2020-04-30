@@ -9,8 +9,11 @@ dim strIN, strOUT, strRCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
-''VERSION FOR SCRIPT UPDATE , FASTNET.VBS , REF #2
-strVER = 2
+''VERSION FOR SCRIPT UPDATE , FASTNET.VBS , REF #2 , REF #68 , REF #69
+strVER = 3
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -20,7 +23,7 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-''CHECK 'PERSISTENT' FOLDERS
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -67,13 +70,13 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-strDL = objWSH.expandenvironmentstrings("%APPDATA%")
+strAPP = objWSH.expandenvironmentstrings("%APPDATA%")
 if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTINUE SCRIPT
 	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FASTNET"
 	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FASTNET"
 	''AUTOMATIC UPDATE, FASTNET.VBS, REF #2 , REF #69 , REF #68
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : FASTNET : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : FASTNET : " & strVER
@@ -81,6 +84,8 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
@@ -88,10 +93,10 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     ''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=2 , REF #2
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest.exe", "C:\IT", "speedtest.exe")
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/ookla/speedtest-cli.ini", strDL & "\Ookla\Speedtest CLI", "speedtest-cli.ini")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/ookla/speedtest.exe", "C:\IT", "speedtest.exe")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/ookla/speedtest-cli.ini", strAPP & "\Ookla\Speedtest CLI", "speedtest-cli.ini")
     if (errRET <> 0) then
-      call LOGERR(2)
+      call LOGERR(14)
     end if
     ''EXECUTE FAST SPEEDTEST
     objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
@@ -100,7 +105,7 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     strRCMD = "C:\IT\speedtest.exe"
     call HOOK(strRCMD)
     if (errRET <> 0) then
-      call LOGERR(3)
+      call LOGERR(15)
     end if
   end if
 elseif (errRET <> 0) then                                      ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1

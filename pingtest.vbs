@@ -13,8 +13,11 @@ dim blnAHS, blnBIT, blnCSVC, blnRDP
 dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
-''VERSION FOR SCRIPT UPDATE
+''VERSION FOR SCRIPT UPDATE, REF #2 , REF #68 , REF #69
 strVER = 2
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = vbnullstring
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -22,6 +25,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 strPath = "c:\temp"
 if (objFSO.FolderExists(strPath)) then
@@ -29,12 +39,12 @@ if (objFSO.FolderExists(strPath)) then
 else
   objFSO.CreateFolder(strPath)
  end if
-if (objFSO.fileexists("C:\temp\PINGTEST")) then		''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\PINGTEST")) then             ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PINGTEST", true
   set objLOG = objFSO.createtextfile("C:\temp\PINGTEST")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\PINGTEST", 8)
-else                                                ''LOGFILE NEEDS TO BE CREATED
+else                                                        ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\PINGTEST")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\PINGTEST", 8)

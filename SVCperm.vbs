@@ -18,7 +18,7 @@ dim strUSR, strOPT, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , REF #68 , REF #69 , FIXES #21 , FIXES #31
-strVER = 17
+strVER = 18
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -31,7 +31,7 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-''CHECK 'PERSISTENT' FOLDERS
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -76,7 +76,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SVCPERM"
 	''AUTOMATIC UPDATE, SVCPERM.VBS, REF #2 , REF #69 , REF #68 , FIXES #21
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SVCPERM : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SVCPERM : " & strVER
@@ -85,6 +85,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & strUSR & "|" & strOPT & "|" & strPWD & "|" & strSVC & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
@@ -226,10 +228,12 @@ call CLEANUP()
 sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = strDL ^ "\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
   ''CREATE HTTP OBJECT
@@ -304,8 +308,8 @@ end sub
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - SVCPERM SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - SVCPERM FAILURE : " & errRET & " : " & now

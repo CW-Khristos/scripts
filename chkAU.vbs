@@ -35,6 +35,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\CHKAU")) then                  ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\CHKAU", true
@@ -45,13 +52,6 @@ else                                                          ''LOGFILE NEEDS TO
   set objLOG = objFSO.createtextfile("C:\temp\CHKAU")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\CHKAU", 8)
-end if
-''CHECK 'PERSISTENT' FOLDERS
-if (not (objFSO.folderexists("C:\IT\"))) then
-  objFSO.createfolder("C:\IT\")
-end if
-if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
-  objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 4) then                         ''ARGUMENTS WERE PASSED
@@ -265,14 +265,16 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CHECK IF FILE ALREADY EXISTS
+  if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
+    objFSO.deletefile(strSAV)
+  end if
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
-  if objFSO.fileexists(strSAV) then
-    objFSO.deletefile(strSAV)
-  end if
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
