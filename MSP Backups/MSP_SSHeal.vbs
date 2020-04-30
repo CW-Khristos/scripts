@@ -4,12 +4,12 @@
 ''CHECKS STATUS OF BACKUPS, RESTARTS SERVICES IF NEEDED, CHECKS VSS WRITERS, RE-RUNS SYSTEM STATE BACKUPS
 ''MUST BE USED IN CONJUNCTION WITH MSP BACKUP SYSTEM STATE BACKUP MONITORED SERVICE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim blnRUN, blnSUP
 dim strREPO, strBRCH, strDIR
-dim strIDL, strTMP, arrTMP, strIN
+dim strIDL, strTMP, arrTMP, strIN, strSAV, strCMD
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
 dim objFSO, objLOG, objHOOK, objHTTP, objXML
@@ -22,7 +22,7 @@ errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #68 , REF #69 , FIXES #4
 strVER = 16
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
@@ -35,6 +35,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_SSHeal")) then		''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHeal", true
@@ -45,13 +52,6 @@ else                                                ''LOGFILE NEEDS TO BE CREATE
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHeal")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHeal", 8)
-end if
-''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
-  objFSO.createfolder("C:\IT\")
-end if
-if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
-  objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -76,22 +76,27 @@ end if
 'blnVSS = true
 'blnWMI = true
 'blnWSCH = true
+'blnRUN = true
 ''------------
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
 ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
 ''EXECUTE CHKAU.VBS SCRIPT, REF #69
 objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
 objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
-intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
   chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
   chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
 ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
 intRET = (intRET - vbObjectError)
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
+if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
   ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
   objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
   objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -265,7 +270,7 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnBIT : " & blnBIT
           case "System Writer"
             ''CHECK VSS WRITER STATE
-            blnCSVC = CHKSTAT(arrTMP(intTMP + 3))
+            'blnCSVC = CHKSTAT(arrTMP(intTMP + 3))
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "blnCSVC : " & blnCSVC  
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "blnCSVC : " & blnCSVC 
           case "Task Scheduler Writer"
@@ -334,9 +339,12 @@ sub CHKVSS()																				''CHECK VSS WRITER STATUSES
 end sub
 
 sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+  on error resume next
   ''VSS WRITERS STABLE, RE-RUN MSP BACKUP SYSTEM STATE BACKUP
-  if (not ((blnAHS) and (blnIIS) and (blnBIT) and (blnRDP) and (blnTSG) and _
-    (blnSQL) and (blnNPS)  and (blnWSCH) and (blnWMI) and (blnVSS) and (blnTSK) and (blnCSVC))) then
+  if (not ((blnAHS) or (blnIIS) or (blnBIT) or (blnRDP) or (blnTSG) or _
+    (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC))) then
+      objOUT.write vbnewline & now & vbtab & vbtab & " - VSSSVC UNNEEDED"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - VSSSVC UNNEEDED"
       ''SET 'BLNRUN' FLAG
       if (blnRUN) then
         blnRUN = false
@@ -346,6 +354,8 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
     (blnSQL) or (blnNPS)  or (blnWSCH) or (blnWMI) or (blnVSS) or (blnTSK) or (blnCSVC)) then
       ''SET 'BLNRUN' FLAG
       blnRUN = true
+      objOUT.write vbnewline & now & vbtab & vbtab & " - VSSSVC BEGIN"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - VSSSVC BEGIN"
       ''IIS
       ''APPLICATION HOST HELPER - AppHostSvc
       if (blnAHS) then
@@ -443,29 +453,32 @@ sub VSSSVC()                                 				''VSS WRITER SERVICES - RESTART
       ''CRYPTOGRAPHIC SERVICES - CryptSvc
       ''CHECK FOR SERVICE PRIOR TO RUNNING 'POWERSHELL RESTART-SERVICE'
       intRET = objWSH.run ("sc query CryptSvc", 0, true)
+      objOUT.write vbnewline & vbtab & "CryptSvc : " & intRET
       if (intRET = 0) then
         call HOOK("net stop CryptSvc /y")
         call HOOK ("net start CryptSvc")
       end if
+      objOUT.write vbnewline & now & vbtab & vbtab & " - VSSSVC END"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - VSSSVC END"
   end if
 end sub
 
-sub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+sub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -484,16 +497,15 @@ sub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
   set objHTTP = nothing
-  ''ERROR RETURNED
-  if (err.number <> 0) then
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
+    call LOGERR(11)
     err.clear
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -519,7 +531,7 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   if ((not blnSUP) and (err.number <> 0)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(3)
+    call LOGERR(12)
   end if
 end sub
 
@@ -534,21 +546,21 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     case 1                                                    ''NOT ENOUGH ARGUMENTS , 'ERRRET'=1
       objOUT.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
-    case 2                                                    ''MSP_SSHEAL - CALL FILEDL() , 'ERRRET'=2
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-    case 3                                                    ''MSP_SSHEAL - CALL HOOK() , 'ERRRET'=3
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL NO UPDATE - EXITING : " & strSCR & " " & strARG
     case 4                                                   ''MSP_SSHEAL - CALL CHKVSS() , 'ERRRET'=4
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - CALL CHKVSS() : " & err.number & vbtab & err.description
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - CALL CHKVSS() : " & err.number & vbtab & err.description
     case 5                                                   ''MSP_SSHEAL - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - 'VSS CHECKS' - MAX ITERATIONS REACHED"
+    case 6                                                  ''MSP_SSHEAL - BACKUP SERVICE NOT READY , 'ERRRET'=6
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - BACKUP SERVICE NOT READY"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - BACKUP SERVICE NOT READY"
+    case 11                                                   ''MSP_SSHEAL - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL - CALL FILEDL() : " & strSAV
+    case 12                                                   ''MSP_SSHEAL - CALL HOOK() , 'ERRRET'=12
       objOUT.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
-    case 6                                                  ''MSP_SSHEAL - BACKUP SERVICE NOT READY , 'ERRRET'=6
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
   end select
 end sub
 
