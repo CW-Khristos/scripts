@@ -34,7 +34,7 @@ strTFOL = objWSH.expandenvironmentstrings("%temp%")
 strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
 strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
 str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
-''CHECK 'PERSISTENT' FOLDERS
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -97,13 +97,18 @@ end if
 ''BEGIN SCRIPT
 if (errRET = 0) then
   ''CREATE LOGFILE, IF ENABLED
+  if (wscript.arguments.count > 0) then                                             ''CHECK LOGGING ARGUMENT
+    blnLOG = bool(objARG.item(0))
+  elseif (wscript.arguments.count = 0) then                                         ''LOGGING ARGUMENT NOT PASSED
+    blnLOG = false
+  end if
   if (blnLOG) then
-    if (objFSO.fileexists("C:\temp\cclutter.txt")) then                           ''LOGFILE EXISTS
+    if (objFSO.fileexists("C:\temp\cclutter.txt")) then                             ''LOGFILE EXISTS
       objFSO.deletefile "C:\temp\cclutter.txt", true
       set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
       objLOG.close
       set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
-    else                                                                          ''LOGFILE NEEDS TO BE CREATED
+    else                                                                            ''LOGFILE NEEDS TO BE CREATED
       set objLOG = objFSO.createtextfile("C:\temp\cclutter.txt")
       objLOG.close
       set objLOG = objFSO.opentextfile("C:\temp\cclutter.txt", 8)
@@ -279,14 +284,16 @@ sub FILEDL(strURL, strDL, strFILE)                                              
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CHECK IF FILE ALREADY EXISTS
+  if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
+    objFSO.deletefile(strSAV)
+  end if
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
-  if (objFSO.fileexists(strSAV)) then
-    objFSO.deletefile(strSAV)
-  end if
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
