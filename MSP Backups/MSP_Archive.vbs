@@ -26,7 +26,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF $68 , REF #69
-strVER = 4
+strVER = 5
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -41,6 +41,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_ARCHIVE")) then       ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_ARCHIVE", true
@@ -86,7 +93,7 @@ if ((errRET = 0) or (errRET = 1)) then
   objLOG.write vbnewline & now & " - STARTING MSP_ARCHIVE" & vbnewline
 	''AUTOMATIC UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF #69 , REF #68
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_ARCHIVE : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_ARCHIVE : " & strVER
@@ -95,6 +102,8 @@ if ((errRET = 0) or (errRET = 1)) then
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & strNAM & "|" & strACT & "|" & strDAT & "|" & strDAY & "|" & strMON & "|" & strTIM & "|" & strRUN & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
@@ -233,16 +242,16 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
