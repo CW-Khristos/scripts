@@ -13,8 +13,11 @@ dim strUSR, strPWD, strLVL
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO
-''VERSION FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2
-strVER = 2
+''VERSION FOR SCRIPT UPDATE, PWDCHG.VBS, REF #2 , REF #68 , REF #69
+strVER = 3
+strREPO = "scripts"
+strBRCH = "master"
+strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -24,6 +27,13 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\PWDCHG")) then              ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PWDCHG", true
