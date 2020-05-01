@@ -101,7 +101,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
     objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_LSV : " & strVER
     ''EXPORT MSP BACKUP SETTINGS USING CLIENTTOOL UTILITY
-    call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\IT\Scripts" & chr(34))
+    'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.setting.list > " & chr(34) & "C:\IT\Scripts" & chr(34))
     set objHOOK = objWSH.exec("C:\Program Files\Backup Manager\clienttool.exe control.setting.list")
     strIN = objHOOK.stdout.readall
     arrIN = split(strIN, vbnewline)
