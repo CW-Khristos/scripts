@@ -44,14 +44,14 @@
   <qsmart.vbs>2</qsmart.vbs>
   <reagent.vbs>13</reagent.vbs>
   <msi_reagent.vbs>12</msi_reagent.vbs>
-  <msi_reagent_key.vbs>2</msi_reagent_key.vbs>
+  <msi_reagent_key.vbs>3</msi_reagent_key.vbs>
   <exe_reagent.vbs>13</exe_reagent.vbs>
   <exe_reagent_key.vbs>4</exe_reagent_key.vbs>
   <reboot_check.vbs>1</reboot_check.vbs>
   <reboot_force.vbs>1</reboot_force.vbs>
   <reprobe.vbs>15</reprobe.vbs>
   <msi_reprobe.vbs>13</msi_reprobe.vbs>
-  <msi_reprobe_key.vbs>2</msi_reprobe_key.vbs>
+  <msi_reprobe_key.vbs>3</msi_reprobe_key.vbs>
   <exe_reprobe.vbs>14</exe_reprobe.vbs>
   <exe_reprobe_key.vbs>3</exe_reprobe_key.vbs>
   <rmm_logo.vbs>1</rmm_logo.vbs>
