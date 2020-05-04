@@ -27,7 +27,7 @@ dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
 strVER = 5
 strREPO = "scripts"
-strBRCH = "master"
+strBRCH = "dev"
 strDIR = "MSP Backups"
 ''DEFAULT SUCCESS
 errRET = 0
