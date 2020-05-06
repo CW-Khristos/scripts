@@ -76,7 +76,7 @@ elseif (errRET = 0) then
   call CHKAU()
   ''DOWNLOAD 'PSKILL', DOES NOT ACCEPT ADDITIONAL PARAMETERS CURRENTLY
   if (blnPSK) then
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/PSTools/pskill.exe", "pskill.exe")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/PSTools/pskill.exe", "pskill.exe")
     call HOOK("c:\temp\pskill.exe -accepteula -t " & strPROC)
   ''CALL 'TASKKILL /F /FI 'USERNAME EQ USER' /IM 'PROCESS' /T'
   elseif (not blnPSK) then
@@ -119,8 +119,7 @@ sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE , 'ERRRET'=10 
         if (cint(objSCR.text) > cint(strVER)) then
           objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
           objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          ''DOWNLOAD LATEST VERSION OF SCRIPT
-          call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/TaskKill_Force.vbs", wscript.scriptname)
+          ''DOWNLOAD LATEST VERSION OF SCRIPT          call FILEDL("https://raw.githubusercontent.com/CW-KhristosCW-Khristos/scripts/dev/TaskKill_Force.vbs", wscript.scriptname)
           ''RUN LATEST VERSION
           if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
             for x = 0 to (wscript.arguments.count - 1)
