@@ -14,7 +14,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, REF #2 , REF #68 , REF #69
-strVER = 2
+strVER = 3
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -38,7 +38,7 @@ if (objFSO.FolderExists(strPath)) then
   ''do nothing
 else
   objFSO.CreateFolder(strPath)
- end if
+end if
 if (objFSO.fileexists("C:\temp\PINGTEST")) then             ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PINGTEST", true
   set objLOG = objFSO.createtextfile("C:\temp\PINGTEST")
@@ -57,15 +57,6 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count >= 1) then                     ''SET REQUIRED VARIABLES ACCEPTING ARGUMENTS
     strIP = objARG.item(0)                                   ''SET REQUIRED PARAMETER 'STRIP' , TARGET IP ADDRESS TO PING
-    'if (wscript.arguments.count = 2) then                   ''NO OPTIONAL ARGUMENTS PASSED
-    '  strSVR = "ncentral.cwitsupport.com"                   ''SET OPTIONAL PARAMETER 'STRSVR' , 'DEFAULT' SERVER ADDRESS
-    'elseif (wscript.arguments.count = 3) then               ''OPTIONAL ARGUMENTS PASSED
-    '  if (strSVR = vbnullstring) then                       ''OPTIONAL 'STRSVR' ARGUMENT EMPTY
-    '    strSVR = "ncentral.cwitsupport.com"                 ''SET OPTIONAL PARAMETER 'STRSVR' , 'DEFAULT' SERVER ADDRESS
-    '  elseif (strSVR <> vbnullstring) then                  ''OPTIONAL 'STRSVR' ARGUMENT NOT EMPTY
-    '    strSVR = objARG.item(1)                             ''SET OPTIONAL PARAMETER 'STRSVR' , PASSED SERVER ADDRESS ; SEPARATE MULTIPLES WITH ','
-    '  end if
-    'end if
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     call LOGERR(1)
   end if
@@ -73,102 +64,71 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING PINGTEST - " & strIP & vbnewline
-objLOG.write vbnewline & now & " - STARTING PINGTEST - " & strIP & vbnewline
-''AUTOMATIC UPDATE
-call CHKAU()
-objOUT.write vbnewline & now & vbtab & " - LOOPING"
-objLOG.write vbnewline & now & vbtab & " - LOOPING"
-''INFITIE LOOP
-while (strLOOP = vbnullstring)
-  set objEXEC = objWSH.exec("%SystemRoot%\system32\ping.exe -n 5 " & strIP)
-  while (not objEXEC.stdout.atendofstream)
-    wscript.sleep 10
-    strIN = objEXEC.stdout.readall
-    if (strIN <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-    end if
-  wend
-  set objEXEC = nothing
-  wscript.sleep 100
-  if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then
-    call HOOK("tracert -d -w 400 " & strIP)
+if (errRET = 0) then                                          ''ARGUMENTS PASSED, CONTINUE SCRIPT
+  objOUT.write vbnewline & now & " - STARTING PINGTEST - " & strIP & vbnewline
+  objLOG.write vbnewline & now & " - STARTING PINGTEST - " & strIP & vbnewline
+	''AUTOMATIC UPDATE, PINGTEST.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : PINGTEST : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : PINGTEST : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strIP & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    objOUT.write vbnewline & now & vbtab & " - LOOPING"
+    objLOG.write vbnewline & now & vbtab & " - LOOPING"
+    ''INFITIE LOOP
+    while (strLOOP = vbnullstring)
+      set objEXEC = objWSH.exec("%SystemRoot%\system32\ping.exe -n 5 " & strIP)
+      while (not objEXEC.stdout.atendofstream)
+        wscript.sleep 10
+        strIN = objEXEC.stdout.readall
+        if (strIN <> vbnullstring) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        end if
+      wend
+      set objEXEC = nothing
+      wscript.sleep 100
+      if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then
+        call HOOK("tracert -d -w 400 " & strIP)
+      end if
+    wend
   end if
-wend
+elseif (errRET <> 0) then                                     ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
+  call LOGERR(errRET)
+end if
 ''END SCRIPT
 call CLEANUP()
 ''END SCRIPT
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()																					        ''CHECK FOR SCRIPT UPDATE
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-        objOUT.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-        objLOG.write vbnewline & now & vbtab & " - MSP_SSHeal :  " & strVER & " : GitHub : " & objSCR.text & vbnewline
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/pingtest.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
-end sub
-
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
+  strSAV = strDL & "\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -183,16 +143,12 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   end if
   ''CHECK THAT FILE EXISTS
   if objFSO.fileexists(strSAV) then
-    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
-  set objHTTP = nothing
-  ''ERROR RETURNED
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
-    err.clear
+	set objHTTP = nothing
+  if ((err.number <> 0) and (err.number <> 58)) then          ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+    call LOGERR(11)
   end if
 end sub
 
@@ -226,20 +182,24 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   end if
 end sub
 
-sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-    errRET = intSTG
-    err.clear
+		err.clear
   end if
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then         											        ''PINGTEST COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "PINGTEST SUCCESSFUL : " & NOW
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PINGTEST COMPLETE : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PINGTEST COMPLETE : " & now
+    err.clear
   elseif (errRET <> 0) then    											        ''PINGTEST FAILED
-    objOUT.write vbnewline & "PINGTEST FAILURE : " & NOW & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PINGTEST FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PINGTEST FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "PINGTEST", "FAILURE")
   end if
