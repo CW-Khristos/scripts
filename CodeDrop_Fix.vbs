@@ -14,7 +14,7 @@ errRET = 0
 strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
-strDIR = "CodeDrop"
+strDIR = vbnullstring
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout

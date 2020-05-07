@@ -315,7 +315,7 @@ sub STAGE3()
   ''DOWNLOAD SERVICE LOGON SCRIPT : SVCPERM , REF #16
   objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
   objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "SVCperm.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SVCperm.vbs", "SVCperm.vbs")
   if (objFSO.fileexists("c:\temp\SVCperm.vbs")) then
     ''EXECUTE SERVICE LOGON SCRIPT : SVCPERM , REF #16
     objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
@@ -364,7 +364,7 @@ sub STAGE4()
     ''DOWNLOAD SNMP SETUP : SNMPPARAM, REF #6 , FIXES #15
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SNMP SETUP : SNMPPARAM"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SNMP SETUP : SNMPPARAM"
-    call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SNMPparam.vbs", "SNMPparam.vbs")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SNMPparam.vbs", "SNMPparam.vbs")
     if (objFSO.fileexists("c:\temp\SNMPparam.vbs")) then
       ''INSTALL SNMP VIA SNMPPARAM , REF #6 , FIXES #15
       objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP SETUP : SNMPPARAM"
@@ -437,7 +437,7 @@ sub STAGE5()
         ''DOWNLOAD WINDOWS AGENT SETUP : RE-AGENT , FIXES #7
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS AGENT SETUP : RE-AGENT"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS AGENT SETUP : RE-AGENT"
-        call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/reagent.vbs", "reagent.vbs")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/reagent.vbs", "reagent.vbs")
         if (objFSO.fileexists("c:\temp\reagent.vbs")) then
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
           objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
@@ -537,7 +537,7 @@ sub STAGE6()
             ''DOWNLOAD WINDOWS PROBE SETUP : RE-PROBE , FIXES #7
             objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS PROBE SETUP : RE-PROBE"
             objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS PROBE SETUP : RE-PROBE"
-            call FILEDL("https://github.com/CW-Khristos/CW_MSI/raw/master/reprobe.vbs", "reprobe.vbs")
+            call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/reprobe.vbs", "reprobe.vbs")
             if (objFSO.fileexists("c:\temp\reprobe.vbs")) then
               ''INSTALL WINDOWS PROBE VIA RE-PROBE , FIXES #7
               objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
@@ -707,7 +707,7 @@ sub STAGE9()
         ''DOWNLOAD LSV PERMISSIONS SETUP : LSVPERM, REF #6 , FIXES #12
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
-        call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/MSP%20Backups/LSVperm.vbs", "LSVperm.vbs")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/LSVperm.vbs", "LSVperm.vbs")
         if (objFSO.fileexists("c:\temp\LSVperm.vbs")) then
           ''RESTRICT LSV PERMISSIONS VIA LSVPERM, REF #6 , FIXES #12
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
@@ -828,7 +828,7 @@ sub CHKAU()																									''CHECK FOR SCRIPT UPDATE, AUTO_PLAN.VBS, RE
 					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
 					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/Auto_Plan/auto_plan.vbs", wscript.scriptname)
+					call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/Auto_Plan/auto_plan.vbs", wscript.scriptname)
 					''RUN LATEST VERSION
 					if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
 						for x = 0 to (wscript.arguments.count - 1)

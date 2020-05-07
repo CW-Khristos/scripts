@@ -4,12 +4,12 @@
   <auto_plan.vbs>11</auto_plan.vbs>
   <avd_removal.vbs>1</avd_removal.vbs>
   <CClutter.vbs>7</CClutter.vbs>
-  <CHG_UAC.vbs>2</CHG_UAC.vbs>
+  <CHG_UAC.vbs>3</CHG_UAC.vbs>
   <chkAU.vbs>7</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
   <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
   <CSize.vbs>1</CSize.vbs>
-  <disk_usage.vbs>3</disk_usage.vbs>
+  <disk_usage.vbs>4</disk_usage.vbs>
   <drvmap.vbs>1</drvmap.vbs>
   <fastnet.vbs>3</fastnet.vbs>
   <fileback.vbs>1</fileback.vbs>
@@ -34,13 +34,13 @@
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
   <MSP_Update.vbs>3</MSP_Update.vbs>
   <percent_rename.vbs>1</percent_rename.vbs>
-  <pingtest.vbs>2</pingtest.vbs>
+  <pingtest.vbs>3</pingtest.vbs>
   <PMEService_Fix.vbs>6</PMEService_Fix.vbs>
   <PMEService_Install.vbs>3</PMEService_Install.vbs>
   <post-backup.cmd>3</post-backup.cmd>
-  <powerCFG.vbs>2</powerCFG.vbs>
+  <powerCFG.vbs>3</powerCFG.vbs>
   <pre-backup.cmd>3</pre-backup.cmd>
-  <PWDchg.vbs>3</PWDchg.vbs>
+  <PWDchg.vbs>4</PWDchg.vbs>
   <qsmart.vbs>2</qsmart.vbs>
   <reagent.vbs>13</reagent.vbs>
   <msi_reagent.vbs>12</msi_reagent.vbs>
@@ -63,9 +63,9 @@
   <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
   <SVCperm.vbs>18</SVCperm.vbs>
   <sysnfo.vbs>1</sysnfo.vbs>
-  <TaskKill_Force.vbs>3</TaskKill_Force.vbs>
+  <TaskKill_Force.vbs>4</TaskKill_Force.vbs>
   <VSS_Fix.vbs>1</VSS_Fix.vbs>
   <wmi_disk.vbs>1</wmi_disk.vbs>
-  <WMI_FIX_NORESTART.VBS>3</WMI_FIX_NORESTART.VBS>
-  <WMI_FIX_RESTART.VBS>3</WMI_FIX_RESTART.VBS>
+  <WMI_FIX_NORESTART.VBS>4</WMI_FIX_NORESTART.VBS>
+  <WMI_FIX_RESTART.VBS>4</WMI_FIX_RESTART.VBS>
 </SCRIPTS>

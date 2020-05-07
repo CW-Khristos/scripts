@@ -50,32 +50,47 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
     strPWR = objARG.item(0)                                 ''SET POWER HIBERNATION OPTION (ON / OFF)
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
-    'errRET = 1
-    'call CLEANUP()
+    call LOGERR(1)
   end if
 else                                                        ''NO ARGUMENTS PASSED, END SCRIPT
-  errRET = 1
-  call CLEANUP()
+  call LOGERR(1)
 end if
 
 ''------------
 ''BEGIN SCRIPT
-if (errRET > 0) then
-elseif (errRET = 0) then
+if (errRET = 0) then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING POWERCFG" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING POWERCFG" & vbnewline
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , POWERCFG.VBS , REF #2
-  call CHKAU()
-  if (lcase(strPWR) = "off") then
-    ''CHANGE ACTIVE POWER PLAN
-    objOUT.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
-    objLOG.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
-    call HOOK("powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c")
+	''AUTOMATIC UPDATE, POWERCFG.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : POWERCFG : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : POWERCFG : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strPWR & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    if (lcase(strPWR) = "off") then
+      ''CHANGE ACTIVE POWER PLAN
+      objOUT.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+      objLOG.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+      call HOOK("powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c")
+    end if
+    ''CHANGE POWERCFG HIBERNATION OPTION
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
+    call HOOK("powercfg -h " & strPWR)
   end if
-  ''CHANGE POWERCFG HIBERNATION OPTION
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING POWERCFG SETTING" & vbnewline
-  call HOOK("powercfg -h " & strPWR)
+elseif (errRET <> 0) then
+  call LOGERR(errRET)
 end if
 ''END SCRIPT
 call CLEANUP()
@@ -83,69 +98,22 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()													                        ''CHECK FOR SCRIPT UPDATE , POWERCFG.VBS , REF #2
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-  ''SCRIPT OBJECT FOR PARSING XML
-  set objXML = createobject("Microsoft.XMLDOM")
-  ''FORCE SYNCHRONOUS
-  objXML.async = false
-  ''LOAD SCRIPT VERSIONS DATABASE XML
-  if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-    set colVER = objXML.documentelement
-    for each objSCR in colVER.ChildNodes
-      ''LOCATE CURRENTLY RUNNING SCRIPT
-      if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-        ''CHECK LATEST VERSION
-        if (cint(objSCR.text) > cint(strVER)) then
-          objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          ''DOWNLOAD LATEST VERSION OF SCRIPT
-          call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/powerCFG.vbs", wscript.scriptname)
-          ''RUN LATEST VERSION
-          if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-            for x = 0 to (wscript.arguments.count - 1)
-              strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-            next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-          elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-          end if
-          ''END SCRIPT
-          call CLEANUP()
-        end if
-      end if
-    next
-  end if
-  set colVER = nothing
-  set objXML = nothing
-end sub
-
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  strSAV = strDL & "\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CHECK IF FILE ALREADY EXISTS
+  if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
+    objFSO.deletefile(strSAV)
+  end if
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
-  if objFSO.fileexists(strSAV) then
-    objFSO.deletefile(strSAV)
-  end if
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -160,15 +128,12 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
   end if
   ''CHECK THAT FILE EXISTS
   if objFSO.fileexists(strSAV) then
-    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    errRET = 2
-		err.clear
+  if ((err.number <> 0) and (err.number <> 58)) then          ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+    call LOGERR(11)
   end if
 end sub
 
@@ -202,16 +167,17 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   end if
 end sub
 
-sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-		errRET = intSTG
 		err.clear
   end if
 end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
+  on error resume next
   if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - POWERCFG COMPLETE : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - POWERCFG COMPLETE : " & now

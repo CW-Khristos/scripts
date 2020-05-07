@@ -85,10 +85,12 @@ if (errRET = 0) then                                                        ''AR
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & strLSV & "|" & strUSR & "|" & strPWD & "|" & strOPT & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
     objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
     objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"

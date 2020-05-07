@@ -8,7 +8,7 @@ dim errRET, strVER, strIN, intOPT
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , REF #68 , REF #69 , FIXES #45
-strVER = 3
+strVER = 4
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -49,8 +49,8 @@ if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE P
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                       ''REQUIRED ARGUMENTS PASSED
-    strPATH = objARG.item(0)
-    strFORM = objARG.item(1)
+    strPATH = objARG.item(0)                                  ''PATH TO OUTPUT X.ROBOT DISK USAGE REPORT
+    strFORM = objARG.item(1)                                  ''FORMAT OF X.ROBOT DISK USAGE REPORT; CURRENTLY SUPPORTS 'HTM' OR 'CSV'
   end if
 else                                                          ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
   call LOGERR(1)
@@ -59,93 +59,127 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-if (errRET = 1) then
+if (errRET = 1) then                                          ''NO ARGUMENTS PASSED
+  strFORM = "HTM"
+  strPATH = "C:\IT\Scripts"
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , DISK_USAGE.VBS , REF #2 , FIXES #45
-  call CHKAU()
-  ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
-  if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
-    wscript.sleep 5000
-    ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
-    if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
-      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
+	''AUTOMATIC UPDATE, DISK_USAGE.VBS, REF #2 , REF #69 , REF #68
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #68 , REF #69 , FIXES #45
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : DISK_USAGE : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : DISK_USAGE : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strPATH & "|" & strFORM & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #68 , REF #69
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
+    if (not objFSO.fileexists("c:\IT\X.Robot32\x.robot.exe")) then
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "C:\IT", "X.Robot32.zip")
+      wscript.sleep 5000
+      ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
+      if (not objFSO.fileexists("c:\IT\X.Robot32.zip")) then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "C:\IT", "X.Robot32.zip")
+      end if
+      if (objFSO.fileexists("C:\IT\X.Robot32.zip")) then
+        ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
+        set objSRC = objAPP.namespace("C:\IT\X.Robot32.zip").items()
+        set objTGT = objAPP.namespace("C:\IT")
+        objTGT.copyhere objSRC, intOPT
+      end if
     end if
-    if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
-      ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
-      set objSRC = objAPP.namespace("C:\temp\X.Robot32.zip").items()
-      set objTGT = objAPP.namespace("C:\temp")
-      objTGT.copyhere objSRC, intOPT
-    end if
-  end if
-  if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
-    if (ucase(strFORM) = "HTM") then
-      strRCMD = strRCMD & " /HTM{111111111120};c:\temp\robot.htm"
-    elseif (ucase(strFORM) = "CSV") then
-      strRCMD = strRCMD & " /CSV{113};c:\temp\robot.csv"
-    end if
-    call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
-    ''DISABLED ZIP ARCHIVE CALLS
-    'wscript.sleep 5000
-    if (ucase(strFORM) = "HTM") then
-      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "savepage.exe")
-      strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\" & chr(34)
+    if (objFSO.fileexists("c:\IT\X.Robot32\x.robot.exe")) then
+      strRCMD = "c:\IT\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
+      if (ucase(strFORM) = "HTM") then
+        strRCMD = strRCMD & " /HTM{111111111120};c:\IT\robot.htm"
+      elseif (ucase(strFORM) = "CSV") then
+        strRCMD = strRCMD & " /CSV{113};c:\IT\robot.csv"
+      end if
       call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
-    '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
-    '  wscript.sleep 1000
-    '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
+      ''DISABLED ZIP ARCHIVE CALLS
+      'wscript.sleep 5000
+      if (ucase(strFORM) = "HTM") then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "C:\IT", "savepage.exe")
+        strRCMD = "c:\IT\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/IT/robot.htm" & chr(34) & " " & chr(34) & "C:\IT\" & chr(34)
+        call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+      '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
+      '  wscript.sleep 1000
+      '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
+      end if
     end if
   end if
-elseif (errRET = 0) then
+elseif (errRET = 0) then                                      ''ARGUMENTS PASSED
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING DISK_USAGE"
-  ''AUTOMATIC UPDATE , 'ERRRET'=10 , DISK_USAGE.VBS , REF #2 , FIXES #45
-  call CHKAU()
-  ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
-  if (not objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
-    wscript.sleep 5000
-    ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
-    if (not objFSO.fileexists("c:\temp\X.Robot32.zip")) then
-      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "X.Robot32.zip")
+	''AUTOMATIC UPDATE, DISK_USAGE.VBS, REF #2 , REF #68 , REF #69 , FIXES #45
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #68 , REF #69
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : DISK_USAGE : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : DISK_USAGE : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strPATH & "|" & strFORM & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''CHECK FOR X.ROBOT.EXE IN C:\TEMP\X.ROBOT32
+    if (not objFSO.fileexists("c:\IT\X.Robot32\x.robot.exe")) then
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "C:\IT", "X.Robot32.zip")
+      wscript.sleep 5000
+      ''CHECK FOR X.ROBOT32.ZIP IN C:\TEMP, REF #46
+      if (not objFSO.fileexists("c:\IT\X.Robot32.zip")) then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/X.Robot32.zip", "C:\IT", "X.Robot32.zip")
+      end if
+      if (objFSO.fileexists("C:\IT\X.Robot32.zip")) then
+        ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
+        set objSRC = objAPP.namespace("C:\IT\X.Robot32.zip").items()
+        set objTGT = objAPP.namespace("C:\IT")
+        objTGT.copyhere objSRC, intOPT
+      end if
     end if
-    if (objFSO.fileexists("C:\temp\X.Robot32.zip")) then
-      ''EXTRACT X.ROBOT32.ZIP TO C:\TEMP\XROBOT
-      set objSRC = objAPP.namespace("C:\temp\X.Robot32.zip").items()
-      set objTGT = objAPP.namespace("C:\temp")
-      objTGT.copyhere objSRC, intOPT
-    end if
-  end if
-  ''CHECK FOR EXTRACTED X.ROBOT
-  if (objFSO.fileexists("c:\temp\X.Robot32\x.robot.exe")) then
-    strRCMD = "c:\temp\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
-    if (ucase(strFORM) = "HTM") then
-      strRCMD = strRCMD & " /HTM{111111111120};c:\temp\robot.htm"
-    elseif (ucase(strFORM) = "CSV") then
-      strRCMD = strRCMD & " /CSV{113};c:\temp\robot.csv"
-    end if
-    ''EXECUTE X.ROBOT
-    call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
-    ''DISABLED ZIP ARCHIVE CALLS
-    'wscript.sleep 5000
-    ''CONVERT TO HTM FORMAT
-    if (ucase(strFORM) = "HTM") then
-      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "savepage.exe")
-      strRCMD = "c:\temp\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/temp/robot.htm" & chr(34) & " " & chr(34) & "C:\temp\" & chr(34)
+    ''CHECK FOR EXTRACTED X.ROBOT
+    if (objFSO.fileexists("c:\IT\X.Robot32\x.robot.exe")) then
+      strRCMD = "c:\IT\x.robot32\x.robot.exe " & chr(34) & strPATH & chr(34)
+      if (ucase(strFORM) = "HTM") then
+        strRCMD = strRCMD & " /HTM{111111111120};c:\IT\robot.htm"
+      elseif (ucase(strFORM) = "CSV") then
+        strRCMD = strRCMD & " /CSV{113};c:\IT\robot.csv"
+      end if
+      ''EXECUTE X.ROBOT
       call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
-      ''ARCHIVE HTM REPORT DATA
-    '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
-    '  wscript.sleep 1000
-    '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
+      ''DISABLED ZIP ARCHIVE CALLS
+      'wscript.sleep 5000
+      ''CONVERT TO HTM FORMAT
+      if (ucase(strFORM) = "HTM") then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "C:\IT", "savepage.exe")
+        strRCMD = "c:\IT\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/IT/robot.htm" & chr(34) & " " & chr(34) & "C:\IT\" & chr(34)
+        call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
+        ''ARCHIVE HTM REPORT DATA
+      '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
+      '  wscript.sleep 1000
+      '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
+      end if
     end if
-  end if
-  if (objFSO.folderexists("C:\Windows\CSC")) then
-    set objFOL = objFSO.getfolder("C:\Windows\CSC")
-    intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
-    objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
-    objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    if (objFSO.folderexists("C:\Windows\CSC")) then
+      set objFOL = objFSO.getfolder("C:\Windows\CSC")
+      intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
+      objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+      objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    end if
   end if
 end if
 ''END SCRIPT
@@ -202,69 +236,22 @@ sub newZIP(strNZIP)                                                             
   end if
 end sub
 
-sub CHKAU()																					          ''CHECK FOR SCRIPT UPDATE, DISK_USAGE.VBS, REF #2 , FIXES #45
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-    objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  end if
-	''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-	call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-		" /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-	''SCRIPT OBJECT FOR PARSING XML
-	set objXML = createobject("Microsoft.XMLDOM")
-	''FORCE SYNCHRONOUS
-	objXML.async = false
-	''LOAD SCRIPT VERSIONS DATABASE XML
-	if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-		set colVER = objXML.documentelement
-		for each objSCR in colVER.ChildNodes
-			''LOCATE CURRENTLY RUNNING SCRIPT
-			if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-				''CHECK LATEST VERSION
-				if (cint(objSCR.text) > cint(strVER)) then
-					objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-					''DOWNLOAD LATEST VERSION OF SCRIPT
-					call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/disk_usage.vbs", wscript.scriptname)
-					''RUN LATEST VERSION
-					if (wscript.arguments.count > 0) then               ''ARGUMENTS WERE PASSED
-						for x = 0 to (wscript.arguments.count - 1)
-							strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-						next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-					elseif (wscript.arguments.count = 0) then           ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-						objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-					end if
-					''END SCRIPT
-					call CLEANUP()
-				end if
-			end if
-		next
-	end if
-	set colVER = nothing
-	set objXML = nothing
-end sub
-
-sub FILEDL(strURL, strFILE)                                   ''CALL HOOK TO DOWNLOAD FILE FROM URL
+sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  strSAV = strDL & "\" & strFILE
+  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''CHECK IF FILE ALREADY EXISTS
+  if objFSO.fileexists(strSAV) then
+    ''DELETE FILE FOR OVERWRITE
+    objFSO.deletefile(strSAV)
+  end if
   ''CREATE HTTP OBJECT
   set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
-  if objFSO.fileexists(strSAV) then
-    objFSO.deletefile(strSAV)
-  end if
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -279,15 +266,12 @@ sub FILEDL(strURL, strFILE)                                   ''CALL HOOK TO DOW
   end if
   ''CHECK THAT FILE EXISTS
   if objFSO.fileexists(strSAV) then
-    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    errRET = 2
-		err.clear
+  if ((err.number <> 0) and (err.number <> 58)) then          ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+    call LOGERR(11)
   end if
 end sub
 
@@ -321,10 +305,10 @@ sub HOOK(strCMD)                                              ''CALL HOOK TO MON
 end sub
 
 sub LOGERR(intSTG)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+  errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-		errRET = intSTG
 		err.clear
   end if
 end sub
