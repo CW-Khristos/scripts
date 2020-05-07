@@ -38,9 +38,9 @@
   <PMEService_Fix.vbs>6</PMEService_Fix.vbs>
   <PMEService_Install.vbs>3</PMEService_Install.vbs>
   <post-backup.cmd>3</post-backup.cmd>
-  <powerCFG.vbs>2</powerCFG.vbs>
+  <powerCFG.vbs>3</powerCFG.vbs>
   <pre-backup.cmd>3</pre-backup.cmd>
-  <PWDchg.vbs>3</PWDchg.vbs>
+  <PWDchg.vbs>4</PWDchg.vbs>
   <qsmart.vbs>2</qsmart.vbs>
   <reagent.vbs>13</reagent.vbs>
   <msi_reagent.vbs>12</msi_reagent.vbs>
@@ -63,9 +63,9 @@
   <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
   <SVCperm.vbs>18</SVCperm.vbs>
   <sysnfo.vbs>1</sysnfo.vbs>
-  <TaskKill_Force.vbs>3</TaskKill_Force.vbs>
+  <TaskKill_Force.vbs>4</TaskKill_Force.vbs>
   <VSS_Fix.vbs>1</VSS_Fix.vbs>
   <wmi_disk.vbs>1</wmi_disk.vbs>
-  <WMI_FIX_NORESTART.VBS>3</WMI_FIX_NORESTART.VBS>
-  <WMI_FIX_RESTART.VBS>3</WMI_FIX_RESTART.VBS>
+  <WMI_FIX_NORESTART.VBS>4</WMI_FIX_NORESTART.VBS>
+  <WMI_FIX_RESTART.VBS>4</WMI_FIX_RESTART.VBS>
 </SCRIPTS>
