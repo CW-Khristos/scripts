@@ -89,7 +89,7 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
   intRET = (intRET - vbObjectError)
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221517)) then
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=2 , REF #2
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
