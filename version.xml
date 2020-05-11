@@ -15,8 +15,8 @@
   <fileback.vbs>1</fileback.vbs>
   <gtfo.vbs>1</gtfo.vbs>
   <iasdatasync.vbs>1</iasdatasync.vbs>
-  <jdc_msp_postbackup.vbs>4</jdc_msp_postbackup.vbs>
-  <jdc_msp_prebackup.vbs>4</jdc_msp_prebackup.vbs>
+  <jdc_msp_postbackup.vbs>5</jdc_msp_postbackup.vbs>
+  <jdc_msp_prebackup.vbs>5</jdc_msp_prebackup.vbs>
   <LSVperm.vbs>10</LSVperm.vbs>
   <md5.vbs>1</md5.vbs>
   <MSP_Archive.vbs>5</MSP_Archive.vbs>
@@ -25,8 +25,8 @@
   <MSP_Filter.vbs>5</MSP_Filter.vbs>
   <MSP_Includes.vbs>1</MSP_Includes.vbs>
   <msp_lsv.vbs>5</msp_lsv.vbs>
-  <msp_postbackup.vbs>5</msp_postbackup.vbs>
-  <msp_prebackup.vbs>5</msp_prebackup.vbs>
+  <msp_postbackup.vbs>6</msp_postbackup.vbs>
+  <msp_prebackup.vbs>6</msp_prebackup.vbs>
   <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
   <MSP_SSHeal.vbs>16</MSP_SSHeal.vbs>
   <MSP_SSHeal_Force.vbs>14</MSP_SSHeal_Force.vbs>
@@ -55,12 +55,12 @@
   <exe_reprobe.vbs>14</exe_reprobe.vbs>
   <exe_reprobe_key.vbs>3</exe_reprobe_key.vbs>
   <rmm_logo.vbs>1</rmm_logo.vbs>
-  <rndds_msp_postbackup.vbs>4</rndds_msp_postbackup.vbs>
-  <rndds_msp_prebackup.vbs>4</rndds_msp_prebackup.vbs>
+  <rndds_msp_postbackup.vbs>5</rndds_msp_postbackup.vbs>
+  <rndds_msp_prebackup.vbs>5</rndds_msp_prebackup.vbs>
   <set_msparchive.vbs>3</set_msparchive.vbs>
   <SNMPparam.vbs>5</SNMPparam.vbs>
-  <ss_msp_postbackup.vbs>4</ss_msp_postbackup.vbs>
-  <ss_msp_prebackup.vbs>4</ss_msp_prebackup.vbs>
+  <ss_msp_postbackup.vbs>5</ss_msp_postbackup.vbs>
+  <ss_msp_prebackup.vbs>5</ss_msp_prebackup.vbs>
   <SVCperm.vbs>18</SVCperm.vbs>
   <sysnfo.vbs>1</sysnfo.vbs>
   <TaskKill_Force.vbs>4</TaskKill_Force.vbs>

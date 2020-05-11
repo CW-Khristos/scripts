@@ -6,25 +6,34 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-dim errRET, strVER, strIN
+dim strVER, errRET, strIN
 dim strREPO, strBRCH, strDIR
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
 dim objHOOK, objEXEC, objHTTP, objXML
-''STDIN / STDOUT
-set objIN = wscript.stdin
-set objOUT = wscript.stdout
-''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
-set objWSH = createobject("wscript.shell")
-set objFSO = createobject("scripting.filesystemobject")
 ''VERSION FOR SCRIPT UPDATE , MSP_PREBACKUP.VBS , REF #2 , REF #50 , REF #68 , REF #69
-strVER = 5
+strVER = 6
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
 ''DEFAULT FAIL
 errRET = 5
+''STDIN / STDOUT
+set objIN = wscript.stdin
+set objOUT = wscript.stdout
+set objARG = wscript.arguments
+''CREATE SCRIPTING SHELL & FILE SYSTEM OBJECTS
+set objOUT = wscript.stdout
+set objWSH = createobject("wscript.shell")
+set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_PREBACKUP")) then                      ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_PREBACKUP", true
@@ -57,7 +66,7 @@ if ((errRET = 0) or (errRET = 5)) then
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING MSP_PREBACKUP" & vbnewline
   ''AUTOMATIC UPDATE, MSP_PREBACKUP.VBS, REF #2 , REF #69 , REF #68
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_PREBACKUP : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_PREBACKUP : " & strVER
@@ -65,8 +74,12 @@ if ((errRET = 0) or (errRET = 5)) then
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = (intRET - vbObjectError)
-  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''INITIATE STOP SERVICES
     call STOPEAGLE()
   end if
@@ -133,22 +146,22 @@ sub DBCOPY()                                                              ''COPY
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                               ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
-  strSAV = "C:\temp\" & strFILE
+  strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -166,22 +179,18 @@ sub FILEDL(strURL, strFILE)                                               ''CALL
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
-  set objHTTP = nothing
-  ''ERROR RETURNED , 'ERRRET'=2
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
-    err.clear
+	set objHTTP = nothing
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
+    call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then                           ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
@@ -196,24 +205,23 @@ sub HOOK(strCMD)                                                          ''CALL
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     end if
   end if
-  ''CHECK FOR ERRORS , 'ERRRET'=3
-  errRET = objHOOK.exitcode
   set objHOOK = nothing
-  if (err.number <> 0) then
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(3)
-    err.clear
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+    call LOGERR(12)
   end if
 end sub
 
-sub LOGERR(intSTG)                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
-    err.clear
+		err.clear
   end if
+  ''CUSTOM ERROR CODES
+  select case intSTG
+    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+  end select
 end sub
 
 sub CLEANUP()                                                             ''SCRIPT CLEANUP
