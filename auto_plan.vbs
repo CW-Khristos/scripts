@@ -71,14 +71,13 @@ if (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & " - STARTING AUTO_PLANv2" & vbnewline
 	''AUTOMATIC UPDATE, AUTO_PLAN.VBS, REF #2 , REF #68 , REF #69 , FIXES #5 
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #68 , REF #69
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
   intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
-    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
-    chr(34) & strLSV & "|" & strUSR & "|" & strPWD & "|" & strOPT & chr(34) & chr(34), 0, true)
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
   ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #68 , REF #69
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
@@ -86,60 +85,61 @@ if (errRET = 0) then
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-  ''------------
-  ''BEGIN MAINLOOP - LOOPED ENTRY PERMITS SELECTING OPTIONS IN SEQUENCE
-  ''ALLOWS FOR STAGES TO BE SELECTED IN A LOOP
-  ''ENTERING 'Q' OR 'QUIT' WILL END THE LOOP
-  ''SELECTING STAGE2 WILL FORCE REBOOT AND SCRIPT WILL NEED TO BE RUN AGAIN
-  blnEND = false
-  while (blnEND = false)
-    strSEL = vbnullstring
-    objOUT.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
-    objLOG.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
-    objOUT.write vbnewline & vbtab & vbtab & " - PRE-REQUISITES : "
-    objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
-    objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
-    objOUT.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
-    objLOG.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
-    objOUT.write vbnewline & vbtab & vbtab & " - AGENT / PROBE SETUP : "
-    objOUT.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
-    objLOG.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
-    objOUT.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
-    objLOG.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
-    objOUT.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
-    objLOG.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
-    objOUT.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
-    objLOG.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
-    strSEL = objIN.readline
-    ''CHECK FOR QUIT
-    if ((lcase(strSEL) = "q") or (lcase(strSEL) = "quit")) then
-      strSEL = 10
-      blnEND = true
-    end if
-    select case strSEL
-      case 1
-        call STAGE1()
-      case 2
-        call STAGE2()
-      case 3
-        call STAGE3()
-      case 4
-        call STAGE4()
-      case 5
-        call STAGE5()
-      case 6
-        call STAGE6()
-      case 7
-        call STAGE7()
-      case 8
-        call STAGE8()
-      case 9
-        call STAGE9()
-    end select
-    strSEL = vbnullstring
-  wend
-  ''END MAINLOOP
-  ''------------
+    ''------------
+    ''BEGIN MAINLOOP - LOOPED ENTRY PERMITS SELECTING OPTIONS IN SEQUENCE
+    ''ALLOWS FOR STAGES TO BE SELECTED IN A LOOP
+    ''ENTERING 'Q' OR 'QUIT' WILL END THE LOOP
+    ''SELECTING STAGE2 WILL FORCE REBOOT AND SCRIPT WILL NEED TO BE RUN AGAIN
+    blnEND = false
+    while (blnEND = false)
+      strSEL = vbnullstring
+      objOUT.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
+      objLOG.write vbnewline & now & vbtab & " - SELECT WHICH STAGE TO RUN" & vbnewline
+      objOUT.write vbnewline & vbtab & vbtab & " - PRE-REQUISITES : "
+      objOUT.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
+      objLOG.write vbnewline & vbtab & vbtab & " - (1)STAGE1 - SET POWER PLAN & NETWORK DISCOVERY" & vbnewline & vbtab & vbtab & " - (2)STAGE2 - RENAME COMPUTER (RESTART REQ.)"
+      objOUT.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
+      objLOG.write vbnewline & vbtab & vbtab & " - (3)STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)" & vbnewline & vbtab & vbtab & " - (4)STAGE4 - INSTALL & CONFIGURE SNMP"
+      objOUT.write vbnewline & vbtab & vbtab & " - AGENT / PROBE SETUP : "
+      objOUT.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
+      objLOG.write vbnewline & vbtab & vbtab & " - (5)STAGE5 - SETUP WINDOWS AGENT" & vbnewline & vbtab & vbtab & " - (6)STAGE6 - SETUP WINDOWS PROBE"
+      objOUT.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
+      objLOG.write vbnewline & vbtab & vbtab & " - (7)STAGE7 - AV MONITORING AND SERVICES" & vbnewline & vbtab & vbtab & " - (8)STAGE8 - PATCHING MONITORING AND SERVICES"
+      objOUT.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
+      objLOG.write vbnewline & vbtab & vbtab & " - (9)STAGE9 - BACKUP MONITORING AND SERVICES"
+      objOUT.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
+      objLOG.write vbnewline & vbtab & vbtab & " - (Q)QUIT - END SCRIPT" & vbnewline & vbtab & vbtab
+      strSEL = objIN.readline
+      ''CHECK FOR QUIT
+      if ((lcase(strSEL) = "q") or (lcase(strSEL) = "quit")) then
+        strSEL = 10
+        blnEND = true
+      end if
+      select case strSEL
+        case 1                                                ''STAGE1 - SET POWER PLAN & NETWORK DISCOVERY
+          call STAGE1()
+        case 2                                                ''STAGE2 - RENAME COMPUTER (RESTART REQ.)
+          call STAGE2()
+        case 3                                                ''STAGE3 - SETUP RMMTECH (LOCAL / DOMAIN) / JOIN DOMAIN (RESTART REQ.)
+          call STAGE3()
+        case 4                                                ''STAGE4 - INSTALL & CONFIGURE SNMP
+          call STAGE4()
+        case 5                                                ''STAGE5 - SETUP WINDOWS AGENT
+          call STAGE5()
+        case 6                                                ''STAGE6 - SETUP WINDOWS PROBE
+          call STAGE6()
+        case 7                                                ''STAGE7 - AV MONITORING AND SERVICES
+          call STAGE7()
+        case 8                                                ''STAGE8 - PATCHING MONITORING AND SERVICES
+          call STAGE8()
+        case 9                                                ''STAGE9 - BACKUP MONITORING AND SERVICES
+          call STAGE9()
+      end select
+      strSEL = vbnullstring
+    wend
+    ''END MAINLOOP
+    ''------------
+  end if
 elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
@@ -249,6 +249,8 @@ sub STAGE3()
   end if
   select case strSEL
     case "LOCAL"
+      strDMN = "."
+      strTYP = "workgroup"
       objOUT.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
       objLOG.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
       ''UPDATE RMMTECH USER (LOCAL ONLY) - REQUIRES 'STRPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
@@ -279,6 +281,7 @@ sub STAGE3()
       end if    
     
     case "DOMAIN"
+      strTYP = "domain"
       objOUT.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - DOMAIN RMMTECH (PWD & SVC LOGON)"
       objOUT.write vbnewline & vbtab & vbtab & " - RUNNING THIS STAGE FROM A DEVICE OTHER THAN THE AD-DC OR A DOMAIN DEVICE WILL REQUIRE JOINING TO DOMAIN AND REBOOT"
       objLOG.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - DOMAIN RMMTECH (PWD & SVC LOGON)"
@@ -292,6 +295,9 @@ sub STAGE3()
           objLOG.write vbnewline & vbtab & vbtab & "IS DEVICE ALREADY MEMBER OF DOMAIN (Y / N)?" & vbnewline & vbtab & vbtab
           strSEL = objIN.readline
           if (ucase(strSEL) = "Y") then
+            objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN :" & vbnewline & vbtab & vbtab
+            objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN :" & vbnewline & vbtab & vbtab
+            strDMN = objIN.readline
             objOUT.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
             objLOG.write vbnewline & vbtab & vbtab & "ENTER NEW PASSWORD :" & vbnewline & vbtab & vbtab
             strPWD = objIN.readline
@@ -336,8 +342,8 @@ sub STAGE3()
               end if
             next
             ''JOIN COMPUTER TO DOMAIN
-            strJOIN = "wmic /interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & chr(34) & strDMN & chr(34) & _
-              " UserName=" & chr(34) & strDUSR & chr(34) & " Password=" & chr(34) & strDPWD & chr(34) & " AccountOU=" & chr(34) & strOU & chr(34)
+            strJOIN = "wmic /interactive:off ComputerSystem Where name=" & chr(34) & "%computername%" & chr(34) & " call JoinDomainOrWorkgroup FJoinOptions=3 Name=" & _
+              chr(34) & strDMN & chr(34) & " UserName=" & chr(34) & strDUSR & chr(34) & " Password=" & chr(34) & strDPWD & chr(34) & " AccountOU=" & chr(34) & strOU & chr(34)
             call HOOK(strJOIN)
           end if
         end if
@@ -347,15 +353,15 @@ sub STAGE3()
   ''DOWNLOAD SERVICE LOGON SCRIPT : SVCPERM , REF #16
   objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
   objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SVCperm.vbs", "SVCperm.vbs")
-  if (objFSO.fileexists("c:\temp\SVCperm.vbs")) then
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SVCperm.vbs", "C:\IT\Scripts", "SVCperm.vbs")
+  if (objFSO.fileexists("c:\IT\Scripts\SVCperm.vbs")) then
     ''EXECUTE SERVICE LOGON SCRIPT : SVCPERM , REF #16
     objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
     objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING SERVICE LOGON SCRIPT : SVCPERM"
-    call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SVCperm.vbs" & chr(34) & " " & chr(34) & "RMMTech" & chr(34))
+    call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\SVCperm.vbs" & chr(34) & " " & chr(34) & strDMN & "\RMMTech" & chr(34) & " " & chr(34) & strTYP & chr(34))
     objOUT.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"
     objLOG.write vbnewline & now & vbtab & vbtab & " - LOGON AS SERVICE GRANTED : RMMTECH"
-  elseif (not objFSO.fileexists("c:\temp\SVCperm.vbs")) then
+  elseif (not objFSO.fileexists("c:\IT\Scripts\SVCperm.vbs")) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
     call LOGERR(32)
@@ -396,14 +402,14 @@ sub STAGE4()
     ''DOWNLOAD SNMP SETUP : SNMPPARAM, REF #6 , FIXES #15
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SNMP SETUP : SNMPPARAM"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SNMP SETUP : SNMPPARAM"
-    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SNMPparam.vbs", "SNMPparam.vbs")
-    if (objFSO.fileexists("c:\temp\SNMPparam.vbs")) then
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SNMPparam.vbs", "C:\IT\Scripts", "SNMPparam.vbs")
+    if (objFSO.fileexists("c:\IT\Scripts\SNMPparam.vbs")) then
       ''INSTALL SNMP VIA SNMPPARAM , REF #6 , FIXES #15
       objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP SETUP : SNMPPARAM"
       objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP SETUP : SNMPPARAM"
-      call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\SNMPparam.vbs" & chr(34) & " " & chr(34) & "modify" & chr(34) & _
-        " " & chr(34) & strSNMP & chr(34) & " " & chr(34) & strTRP & chr(34))
-    elseif (not objFSO.fileexists("c:\temp\SNMPparam.vbs")) then
+      call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\SNMPparam.vbs" & chr(34) & _
+        " " & chr(34) & "modify" & chr(34) & " " & chr(34) & strSNMP & chr(34) & " " & chr(34) & strTRP & chr(34))
+    elseif (not objFSO.fileexists("c:\IT\Scripts\SNMPparam.vbs")) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
       objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
       call LOGERR(41)
@@ -469,13 +475,14 @@ sub STAGE5()
         ''DOWNLOAD WINDOWS AGENT SETUP : RE-AGENT , FIXES #7
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS AGENT SETUP : RE-AGENT"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS AGENT SETUP : RE-AGENT"
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/reagent.vbs", "reagent.vbs")
-        if (objFSO.fileexists("c:\temp\reagent.vbs")) then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/exe_reagent.vbs", "C:\IT\Scripts", "exe_reagent.vbs")
+        if (objFSO.fileexists("c:\IT\Scripts\exe_reagent.vbs")) then
           ''INSTALL WINDOWS AGENT VIA RE-AGENT , FIXES #7
           objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
           objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS AGENT SETUP : RE-AGENT, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reagent.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & " " & chr(34) & strSRV & chr(34))
-        elseif (not objFSO.fileexists("c:\temp\reagent.vbs")) then
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\exe_reagent.vbs" & chr(34) & _
+            " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & " " & chr(34) & strSRV & chr(34))
+        elseif (not objFSO.fileexists("c:\IT\Scripts\exe_reagent.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           call LOGERR(51)
@@ -526,9 +533,9 @@ sub STAGE6()
       objOUT.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :" & vbnewline
       objLOG.write vbnewline & vbtab & vbtab & "SELECT PROBE TYPE : (1) Workgroup_Windows / (2) Network_Windows :" & vbnewline
       strTYP = objIN.readline
-      if (strTYP = 1) then
+      if ((strTYP = 1) or (lcase(strTYP) = "workgroup")) then
         strTYP = "Workgroup_Windows"
-      elseif (strTYP = 2) then
+      elseif ((strTYP = 2) or (lcase(strTYP) = "network")) then
         strTYP = "Network_Windows"
       elseif ((strTYP <> 1) and (strTYP <> 2)) then
         call LOGERR(61)
@@ -546,12 +553,15 @@ sub STAGE6()
         objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :" & vbnewline
         objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN (DO NOT INCLUDE '\', MAY BE BLANK IF WORKGROUP) :" & vbnewline
         strDMN = objIN.readline
+        if (strTYP = "Workgroup_Windows") then
+          strDMN = "."
+        end if
         if (instr(1, strDMN, "\")) then
           strDMN = replace(strDMN, "\", vbnullstring)
         end if
         ''DOMAIN USER
-        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :" & vbnewline
-        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER :" & vbnewline
+        objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER (DO NOT INCLUDE 'DOMAIN\') :" & vbnewline
+        objLOG.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER (DO NOT INCLUDE 'DOMAIN\') :" & vbnewline
         strDUSR = objIN.readline
         ''DOMAIN USER PASSWORD
         objOUT.write vbnewline & vbtab & vbtab & "ENTER DOMAIN USER PASSWORD :" & vbnewline
@@ -569,14 +579,15 @@ sub STAGE6()
             ''DOWNLOAD WINDOWS PROBE SETUP : RE-PROBE , FIXES #7
             objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS PROBE SETUP : RE-PROBE"
             objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING WINDOWS PROBE SETUP : RE-PROBE"
-            call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/reprobe.vbs", "reprobe.vbs")
-            if (objFSO.fileexists("c:\temp\reprobe.vbs")) then
+            call FILEDL("https://raw.githubusercontent.com/CW-Khristos/CW_MSI/master/exe_reprobe.vbs", "C:\IT\Scripts", "exe_reprobe.vbs")
+            if (objFSO.fileexists("c:\IT\Scripts\exe_reprobe.vbs")) then
               ''INSTALL WINDOWS PROBE VIA RE-PROBE , FIXES #7
               objOUT.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
               objLOG.write vbnewline & now & vbtab & vbtab & " - WINDOWS PROBE SETUP : RE-PROBE, PLEASE WAIT FOR 'MSIEXEC' PROCESSES TO COMPLETE"
-              call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\reprobe.vbs" & chr(34) & " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & _
-                " " & chr(34) & strTYP & chr(34) & " " & chr(34) & strDMN & chr(34) & " " & chr(34) & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34) & " " & chr(34) & strSRV & chr(34))
-            elseif (not objFSO.fileexists("c:\temp\reprobe.vbs")) then
+              call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\exe_reprobe.vbs" & chr(34) & _
+                " " & chr(34) & strCID & chr(34) & " " & chr(34) & strCNAM & chr(34) & " " & chr(34) & strTYP & chr(34) & _
+                " " & chr(34) & strDMN & "\" & strDUSR & chr(34) & " " & chr(34) & strDPWD & chr(34) & " " & chr(34) & strSRV & chr(34))
+            elseif (not objFSO.fileexists("c:\IT\Scripts\exe_reprobe.vbs")) then
               objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
               objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
               call LOGERR(62)
@@ -687,8 +698,8 @@ sub STAGE9()
   objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOADING MSP BACKUP"
   objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
   objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED, PLEASE ENABLE MSP BACKUP VIA N-CENTRAL>DEVICE DETAILS>SETTINGS>BACKUP MANAGEMENT"
-  call FILEDL("https://cdn.cloudbackup.management/maxdownloads/mxb-windows-x86_x64.exe", "MSPBackup.exe")
-  call HOOK("c:\temp\MSPBackup.exe")
+  call FILEDL("https://cdn.cloudbackup.management/maxdownloads/mxb-windows-x86_x64.exe", "C:\IT", "MSPBackup.exe")
+  call HOOK("c:\IT\MSPBackup.exe")
   ''STEP TO VERIFY MSP BACKUP / MONITORING, REF #6 , FIXES #12
   objOUT.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - ONCE CONFIGURED, PLEASE VERIFY MSP BACKUP / MONITORING"
@@ -717,17 +728,23 @@ sub STAGE9()
     objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER LOCAL SPEEDVAULT PATH : " & vbnewline
     strLSVL = objIN.readline
     ''REQUEST RMMTECH CREDENTIALS FOR LOCAL SPEEDVAULT
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : " & vbnewline
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS : " & vbnewline
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS (INCLUDE 'DOMAIN\') : " & vbnewline
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH USERNAME FOR LSV ACCESS (INCLUDE 'DOMAIN\') : " & vbnewline
     strLSVU = objIN.readline
+    if (instr(1, strLSVU, "\")) then
+      strOPT = "domain"
+    elseif (instr(1, strLSVU, "\") = 0) then
+      strOPT = "local"
+    end if
     objOUT.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : " & vbnewline
     objLOG.write vbnewline & vbnewline & now & vbtab & " - ENTER RMMTECH PASSWORD FOR LSV ACCESS : " & vbnewline
     strLSVP = objIN.readline
     ''SET MSP BACKUP LOCAL SPEEDVAULT SETTINGS, REF #6 , FIXES #12
     objOUT.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
     objLOG.write vbnewline & vbnewline & now & vbtab & " - APPLYING MSP BACKUP LOCAL SPEEDVAULT SETTINGS"
-    call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.setting.modify -name LocalSpeedVaultEnabled -value 1 -name LocalSpeedVaultLocation -value " & _
-      chr(34) & strLSVL & chr(34) & " -name LocalSpeedVaultPassword -value " & chr(34) & strLSVP & chr(34) & " -name LocalSpeedVaultUser -value " & chr(34) & strLSVU & chr(34))
+    call HOOK("C:\Program Files\Backup Manager\ClientTool.exe control.setting.modify " & _
+      "-name LocalSpeedVaultEnabled -value 1 -name LocalSpeedVaultLocation -value " & chr(34) & strLSVL & chr(34) & _
+      " -name LocalSpeedVaultPassword -value " & chr(34) & strLSVP & chr(34) & " -name LocalSpeedVaultUser -value " & chr(34) & strLSVU & chr(34))
     if (err.number <> 0) then
       call LOGERR(91)
     end if
@@ -739,14 +756,14 @@ sub STAGE9()
         ''DOWNLOAD LSV PERMISSIONS SETUP : LSVPERM, REF #6 , FIXES #12
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING LSV PERMISSIONS SETUP : LSVPERM"
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/LSVperm.vbs", "LSVperm.vbs")
-        if (objFSO.fileexists("c:\temp\LSVperm.vbs")) then
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/LSVperm.vbs", "C:\IT\Scripts", "LSVperm.vbs")
+        if (objFSO.fileexists("c:\IT\Scripts\LSVperm.vbs")) then
           ''RESTRICT LSV PERMISSIONS VIA LSVPERM, REF #6 , FIXES #12
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
           objLOG.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
-          call HOOK("cscript.exe //nologo " & chr(34) & "c:\temp\LSVperm.vbs" & chr(34) & " " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
+          call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\LSVperm.vbs" & chr(34) & " " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
             " " & chr(34) & strLSVP)
-        elseif (not objFSO.fileexists("c:\temp\LSVperm.vbs")) then
+        elseif (not objFSO.fileexists("c:\IT\Scripts\LSVperm.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           call LOGERR(92)
@@ -824,9 +841,9 @@ sub STAGE9()
     objOUT.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER ON USE"
     objLOG.write vbnewline & now & vbtab & " - ONCE INSTALLED PLEASE EDUCATE CUSTOMER ON USE"
     ''DOWNLOAD MSP BACKUP VIRTUAL DRIVE
-    call FILEDL(strMSPVDdl, "MSPBackupVD.exe")
+    call FILEDL(strMSPVDdl, "C:\IT", "MSPBackupVD.exe")
     ''INSTALL MSP BACKUP VIRTUAL DRIVE
-    call HOOK("C:\temp\MSPBackupVD.exe")
+    call HOOK("C:\IT\MSPBackupVD.exe")
     if (err.number <> 0) then
       call LOGERR(95)
     end if
