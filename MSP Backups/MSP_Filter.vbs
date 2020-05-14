@@ -8,7 +8,7 @@
 ''OPTIONAL PARAMETER 'STRFILTER' ; STRING VALUE TO HOLD PASSED 'FILTERS' ; SEPARATE MULTIPLE 'FILTERS' VIA '|'
 ''OPTIONAL PARAMETER 'STRINCL' ; STRING VALUE TO HOLD PASSED 'INCLUSIONS' ; SEPARATE MULTIPLE 'INCLUSIONS' VIA '|'
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS
@@ -16,7 +16,7 @@ dim strINCL, arrINCL
 dim strFILTER, arrFILTER
 dim strIN, strOUT, strOPT, strRCMD
 ''PRE-DEFINED ARRAYS
-dim arrUSR(), arrPROT()
+dim arrEXCL(), arrPROT(), arrAPP()
 ''USER AND USER FOLDER ARRAYS
 dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
@@ -25,7 +25,7 @@ dim objUFOL, arrUFOL()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
-strVER = 5
+strVER = 6
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -87,20 +87,57 @@ elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUM
   call LOGERR(1)
 end if
 ''UNNEEDED / TO EXCLUDE USER ACCOUNTS
-redim arrUSR(9)
-arrUSR(0) = "rmmtech"
-arrUSR(1) = "Guest"
-arrUSR(2) = "__sbs_netsetup__"
-arrUSR(3) = "Default"
-arrUSR(4) = "Default.migrated"
-arrUSR(5) = "Default User"
-arrUSR(6) = "DefaultAccount"
-arrUSR(7) = "WDAGUtilityAccount"
-arrUSR(8) = "UpdatusUser"
-''PROTECTED EXT / FILES / DIRECTORIES
-redim arrPROT(2)
-arrPROT(0) = ".OST"
-arrPROT(1) = ".PST"
+redim arrEXCL(1)
+arrEXCL(0) = "rmmtech"
+''PROTECTED EXT / USERS / FILES / DIRECTORIES
+redim arrPROT(6)
+arrPROT(0) = ".PST"
+arrPROT(1) = "MSSQL"
+arrPROT(2) = "Public"
+arrPROT(3) = "Default"
+arrPROT(4) = "Default.migrated"
+arrPROT(5) = "Outlook\Roamcache"
+''APPDATA FILES / FOLDERS
+redim arrAPP(39)
+arrAPP(0) = "\AppData\Local\CrashDumps"
+arrAPP(1) = "\AppData\Local\D3DSCache"
+arrAPP(2) = "\AppData\Local\Google\Chrome\User Data\Crashpad"
+arrAPP(3) = "\AppData\Local\Google\Chrome\User Data\Default\Application Cache"
+arrAPP(4) = "\AppData\Local\Google\Chrome\User Data\Default\Cache"
+arrAPP(5) = "\AppData\Local\Google\Chrome\User Data\Default\Code Cache"
+arrAPP(6) = "\AppData\Local\Google\Chrome\User Data\Default\GPUCache"
+arrAPP(7) = "\AppData\Local\Google\Chrome\User Data\FontLookupTableCache"
+arrAPP(8) = "\AppData\Local\Google\Chrome\User Data\ShaderCache"
+arrAPP(9) = "\AppData\Local\Google\Chrome\User Data\PnaclTranslationCache"
+arrAPP(10) = "\AppData\Local\Google\Chrome\User Data\SwReporter"
+arrAPP(11) = "\AppData\Local\Google\CrashReports"
+arrAPP(12) = "\AppData\Local\Google\Software Reporter Tool"
+arrAPP(13) = "\AppData\Local\GWX"
+arrAPP(14) = "\AppData\Local\Microsoft\Feeds Cache"
+arrAPP(15) = "\AppData\Local\Microsoft\FontCache"
+arrAPP(16) = "\AppData\Local\Microsoft\SquirrelTemp"
+arrAPP(17) = "\AppData\Local\Microsoft\Terminal Server Client\Cache"
+arrAPP(18) = "\AppData\Local\Microsoft\Windows\ActionCenterCache"
+arrAPP(19) = "\AppData\Local\Microsoft\Windows\AppCache"
+arrAPP(20) = "\AppData\Local\Microsoft\Windows\Caches"
+arrAPP(21) = "\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete"
+arrAPP(22) = "\AppData\Local\Microsoft\Windows\IECompatCache"
+arrAPP(23) = "\AppData\Local\Microsoft\Windows\IECompatUaCache"
+arrAPP(24) = "\AppData\Local\Microsoft\Windows\INetCache"
+arrAPP(25) = "\AppData\Local\Microsoft\Windows\PPBCompatCache"
+arrAPP(26) = "\AppData\Local\Microsoft\Windows\PPBCompatUaCache"
+arrAPP(27) = "\AppData\Local\Microsoft\Windows\PRICache"
+arrAPP(28) = "\AppData\Local\Microsoft\Windows\SchCache"
+arrAPP(29) = "\AppData\Local\Microsoft\Windows\WER"
+arrAPP(30) = "\AppData\Local\Microsoft\Windows\WebCache"
+arrAPP(31) = "\AppData\Local\Mozilla"
+arrAPP(32) = "\AppData\Local\SquirrelTemp"
+arrAPP(33) = "\AppData\Local\Temp"
+arrAPP(34) = "\AppData\Local\IconCache.db"
+arrAPP(35) = "\AppData\Local\Microsoft\Outlook\*.ost"
+arrAPP(36) = "\AppData\Local\Microsoft\Outlook\*.tmp"
+arrAPP(37) = "\AppData\Local\Microsoft\Windows\Explorer\iconcache*.db"
+arrAPP(38) = "\AppData\Local\Microsoft\Windows\Explorer\thumbcache*.db"
 
 ''------------
 ''BEGIN SCRIPT
@@ -128,16 +165,20 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
     Select Case lcase(strOPT)
       ''PERFORM 'LOCAL' FILTER CONFIGURATIONS
       Case "local"
+        ''RESET CURRENT BACKUP INCLUDES , REF #2
+        objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
+        wscript.sleep 5000
         ''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
-        erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\filters.txt")) then
           objFSO.deletefile "C:\IT\Scripts\filters.txt", true
         end if
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/filters.txt", "C:\IT\Scripts", "filters.txt")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/MSP%20Backups/filters.txt", "C:\IT\Scripts", "filters.txt")
         set objTMP = objFSO.opentextfile("C:\IT\Scripts\filters.txt", 1)
         while (not objTMP.atendofstream)
           strTMP = strTMP & objTMP.readline
@@ -170,12 +211,11 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
-        erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\includes.txt", true
         end if
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/includes.txt", "C:\IT\Scripts", "includes.txt")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/MSP%20Backups/includes.txt", "C:\IT\Scripts", "includes.txt")
         set objTMP = objFSO.opentextfile("C:\IT\Scripts\includes.txt", 1)
         while (not objTMP.atendofstream)
           strTMP = strTMP & objTMP.readline
@@ -220,7 +260,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         if (objFSO.fileexists("C:\IT\Scripts\cloud_filters.txt")) then
           objFSO.deletefile "C:\IT\Scripts\cloud_filters.txt", true
         end if
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/cloud_filters.txt", "C:\IT\Scripts", "cloud_filters.txt")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/MSP%20Backups/cloud_filters.txt", "C:\IT\Scripts", "cloud_filters.txt")
         set objTMP = objFSO.opentextfile("C:\IT\Scripts\cloud_filters.txt", 1)
         while (not objTMP.atendofstream)
           strTMP = strTMP & objTMP.readline
@@ -258,7 +298,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         if (objFSO.fileexists("C:\IT\Scripts\cloud_includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\cloud_includes.txt", true
         end if
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/cloud_includes.txt", "C:\IT\Scripts", "cloud_includes.txt")
+        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/MSP%20Backups/cloud_includes.txt", "C:\IT\Scripts", "cloud_includes.txt")
         set objTMP = objFSO.opentextfile("C:\IT\Scripts\cloud_includes.txt", 1)
         while (not objTMP.atendofstream)
           strTMP = strTMP & objTMP.readline
@@ -291,6 +331,75 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
     ''PERFORM FINAL EXCLUDES
     objOUT.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
     objLOG.write vbnewline & now & vbtab & vbtab & " - PERFORMING FINAL EXCLUDES"
+    ''DEFAULT EXCLUDES
+    for intEXCL = 65 to 90
+      ''PROCEED WITH EXCLUDING DEFAULTS
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Temp" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Temp" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Temp" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34))
+      objOUT.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & _
+        "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34)
+      'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34))
+    next
     ''ENUMERATE 'C:\USERS' SUB-FOLDERS
     objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
     objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
@@ -313,97 +422,104 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       if (strFOL <> vbnullstring) then
       
         ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
-        for intCOL = 0 to ubound(arrUSR)
+        for intCOL = 0 to ubound(arrEXCL)
           blnFND = false
-          if (arrUSR(intCOL) <> vbnullstring) then
-            '' 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR' FOUND IN FOLDER PATH
-            if (instr(1, lcase(strFOL), lcase(arrUSR(intCOL)))) then
-              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
-              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & arrUSR(intCOL)
+          if (arrEXCL(intCOL) <> vbnullstring) then
+            '' 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARREXCL' FOUND IN FOLDER PATH
+            if (instr(1, lcase(strFOL), lcase(arrEXCL(intCOL)))) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE USER : " & arrEXCL(intCOL)
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE USER : " & arrEXCL(intCOL)
               ''MARK 'UNNEEDED / TO EXCLUDE'
               blnFND = true
-              ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
-              
+              ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              ''EXCLUDE USER FOLDER SUB-FOLDERS
+              ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
+              set objUFOL = objFSO.getfolder(strFOL)
+              set colUFOL = objUFOL.subfolders
+              for each subUFOL in colUFOL
+                ''PROCEED WITH EXCLUDING USER DIRECTORY SUB-FOLDERS
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34)
+                'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34))
+                ''INCLUDE 'DESKTOP.INI' FOR EACH SUB-FOLDER TO RETAIN ORIGINAL FOLDER STRUCTURE
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
+                'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34))
+              next
+              set objUFOL = nothing
+              set colUFOL = nothing
               exit for
             end if
           end if
           ''AN 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
-          if (wscript.arguments.count > 0) then
-            '' PASSED 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARRUSR'
-            if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
-              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-              ''MARK 'UNNEEDED / TO EXCLUDE'
-              blnFND = true
-              ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
-              
-              exit for
-            end if          
-          end if
+          'if (wscript.arguments.count > 0) then
+          '  '' PASSED 'UNNEEDED / TO EXCLUDE' USER ACCOUNT 'ARREXCL'
+          '  if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
+          '    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+          '    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+          '    ''MARK 'UNNEEDED / TO EXCLUDE'
+          '    blnFND = true
+          '    ''PROCEED WITH EXCLUDING ENTIRE USER DIRECTORY
+          '    objOUT.write vbnewline & now & vbtab & vbtab & _
+          '      "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strFOL & chr(34)
+          '    objLOG.write vbnewline & now & vbtab & vbtab & _
+          '      "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strFOL & chr(34)
+          '    'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strFOL & chr(34))
+          '    
+          '    exit for
+          '  end if          
+          'end if
         next
         ''NO MATCH TO 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
         if (not (blnFND)) then
-          ''CHECK FOR USER FOLDER
-          if (objFSO.folderexists(strFOL)) then
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
-            ''EXCLUDE FROM BACKUPS
+          ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+          for intPCOL = 0 to ubound(arrPROT)
             blnFND = false
-              
-            ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
-            set objUFOL = objFSO.getfolder(strFOL)
-            set colUFOL = objUFOL.subfolders
-            intUFOL = 0
-            for each subUFOL in colUFOL
-              redim preserve arrUFOL(intUFOL + 1)
-              arrUFOL(intUFOL) = subUFOL.path
-              intUFOL = intUFOL + 1
-            next
-            set colUFOL = nothing
-            set objUFOL = nothing
-            intUFOL = 0
-            ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
-            ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
-            ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
-            ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
-            for intUFOL = 0 to ubound(arrUFOL)
-              intUCOL = 0
-              blnFND = false
-              strUFOL = arrUFOL(intUFOL)
-              if (strUFOL <> vbnullstring) then            
-                ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / FILES / DIRECTORIES
-                for intPCOL = 0 to ubound(arrPROT)
-                  blnFND = false
-                  if (arrPROT(intPCOL) <> vbnullstring) then
-                    '' 'PRTOTECTED' USER ACCOUNT 'arrPROT' FOUND IN FOLDER PATH
-                    if (instr(1, lcase(strUFOL), lcase(arrPROT(intPCOL)))) then
-                      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-                      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-                      ''MARK 'PROTECTED'
-                      blnFND = true
-                      exit for
-                    end if
-                  end if
-                  ''A 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
-                  if (wscript.arguments.count > 0) then
-                    '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARRUSR'
-                    if (instr(1, lcase(strFOL), lcase(objARG.item(0)))) then
-                      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
-                      ''MARK 'UNNEEDED / TO EXCLUDE'
-                      blnFND = true
-                      exit for
-                    end if          
-                  end if
-                next
-                ''NO MATCH TO 'PROTECTED' EXT / FILES / DIRECTORIES
-                if (not (blnFND)) then
-
-                end if
+            if (arrPROT(intPCOL) <> vbnullstring) then
+              '' 'PRTOTECTED' EXT / USERS / FILES / DIRECTORIES 'ARRPROT' FOUND IN FOLDER PATH
+              if (instr(1, lcase(strSFOL), lcase(arrPROT(intPCOL)))) then
+                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+                ''MARK 'PROTECTED'
+                blnFND = true
+                exit for
               end if
-            next
+            end if
+          next
+          ''NO MATCH TO 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+          if (not (blnFND)) then
+            ''CHECK FOR USER FOLDER
+            if (objFSO.folderexists(strFOL)) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+              ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              ''ENUMERATE 'C:\USERS\<USERNAME>\APPDATA' SUB-FOLDERS
+              'set objUFOL = objFSO.getfolder(strFOL & "\AppData\Local")
+              'set colUFOL = objUFOL.subfolders
+              'for each subUFOL in colUFOL
+              for intUFOL = 0 to ubound(arrAPP)
+                'objOUT.write vbnewline & arrAPP(intUFOL)
+                call chkSFOL(strFOL & arrAPP(intUFOL))
+              next
+              'set colUFOL = nothing
+              'set objUFOL = nothing
+            end if
           end if
-        next
+        end if
       end if
     next
   end if
@@ -414,6 +530,85 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
+
+'FUNCTIONS
+function chkSFOL(strSFOL)
+  ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
+  ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
+  ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
+
+  ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
+    blnFND = false
+    if (strSFOL <> vbnullstring) then            
+      ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+      for intPCOL = 0 to ubound(arrPROT)
+        blnFND = false
+        if (arrPROT(intPCOL) <> vbnullstring) then
+          '' 'PRTOTECTED' EXT / USERS / FILES / DIRECTORIES 'ARRPROT' FOUND IN FOLDER PATH
+          if (instr(1, lcase(strSFOL), lcase(arrPROT(intPCOL)))) then
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+            ''MARK 'PROTECTED'
+            blnFND = true
+            exit for
+          end if
+        end if
+        ''A 'UNNEEDED / TO EXCLUDE' USER ACCOUNT WAS PASSED TO 'STRUSR'
+        'if (wscript.arguments.count > 0) then
+        '  '' PASSED 'PRTOTECTED' USER ACCOUNT 'ARREXCL'
+        '  if (instr(1, lcase(strSFOL), lcase(objARG.item(0)))) then
+        '    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+        '    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE : " & objARG.item(0)
+        '    ''MARK 'UNNEEDED / TO EXCLUDE'
+        '    blnFND = true
+        '    exit for
+        '  end if          
+        'end if
+      next
+      ''NO MATCH TO 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+      if (not (blnFND)) then
+        ''OUTLOOK OST / TMP  AND ICONCACHE / THUMBCACHE EXCLUSIONS
+        if (instr(1, strSFOL, "*")) then
+          strTMP = vbnullstring
+          arrTMP = split(strSFOL, "\")
+          for intTMP = 0 to (ubound(arrTMP) - 1)
+            strTMP = strTMP & arrTMP(intTMP) & "\"
+          next
+          set objSFOL = objFSO.getfolder(strTMP)
+          set colSFIL = objSFOL.files
+          for each subFIL in colSFIL
+            if ((instr(1,subFIL.name, split(arrTMP(ubound(arrTMP)), "*")(0))) and _
+              instr(1,subFIL.name, split(arrTMP(ubound(arrTMP)), "*")(1))) then
+              ''EXCLUDE FOLDER / FILE
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path  & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path & chr(34)
+              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path  & chr(34))
+            end if
+          next
+          set colSFIL = nothing
+          set objSFOL = nothing
+        elseif (instr(1, strSFOL, "*") = 0) then
+          ''EXCLUDE FOLDER / FILE
+          objOUT.write vbnewline & now & vbtab & vbtab & _
+            "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strSFOL & chr(34)
+          objLOG.write vbnewline & now & vbtab & vbtab & _
+            "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strSFOL & chr(34)
+          'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strSFOL & chr(34))
+        end if
+      end if
+    end if
+  
+  ''USE TO CHECK FURTHER SUB-FOLDERS / FILES
+  'set objSFOL = objFSO.getfolder(strSFOL)
+  'set colSFOL = objSFOL.subfolders
+  'for each subSFOL in colSFOL
+  '  call chkSFOL(subSFOL.path)
+  'next
+  'set colSFOL = nothing
+  'set objSFOL = nothing
+end function
 
 ''SUB-ROUTINES
 sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
@@ -428,7 +623,7 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
     objFSO.deletefile(strSAV)
   end if
   ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  set objHTTP = createobject("WinHttp.WinHttpRequest.5.1")
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
