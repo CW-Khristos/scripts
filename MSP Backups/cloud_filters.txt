@@ -1,8 +1,3 @@
-C:\$AV_ASW|
-C:\$GetCurrent|
-C:\$Recycle.Bin|
-C:\$Windows.~BT|
-C:\$Windows.~WS|
 C:\ADWCleaner|
 C:\AMD|
 C:\Apps|
@@ -21,51 +16,9 @@ C:\Program Files|
 C:\Program Files (x86)|
 C:\ProgramData|
 C:\Qoobox|
-C:\Recovery|
-C:\RECYCLED|
-C:\Temp|
 C:\tempini|
 C:\wu_output|
 C:\Windows|
-C:\Windows10Upgrade|
-C:\hiberfil.sys|
-C:\pagefile.sys|
-C:\swapfile.sys|
-D:\hiberfil.sys|
-D:\pagefile.sys|
-D:\swapfile.sys|
-E:\hiberfil.sys|
-E:\pagefile.sys|
-E:\swapfile.sys|
-F:\hiberfil.sys|
-F:\pagefile.sys|
-F:\swapfile.sys|
-G:\hiberfil.sys|
-G:\pagefile.sys|
-G:\swapfile.sys|
-H:\hiberfil.sys|
-H:\pagefile.sys|
-H:\swapfile.sys|
-I:\hiberfil.sys|
-I:\pagefile.sys|
-I:\swapfile.sys|
-J:\hiberfil.sys|
-J:\pagefile.sys|
-J:\swapfile.sys|
-K:\hiberfil.sys|
-K:\pagefile.sys|
-K:\swapfile.sys|
-A:\System Volume Information|
-B:\System Volume Information|
-C:\System Volume Information|
-D:\System Volume Information|
-E:\System Volume Information|
-F:\System Volume Information|
-G:\System Volume Information|
-H:\System Volume Information|
-I:\System Volume Information|
-J:\System Volume Information|
-K:\System Volume Information|
 %PROGRAMFILES(X86)%\StorageCraft|
 %PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
 %PROGRAMDATA%\MXB|
@@ -102,51 +55,6 @@ K:\System Volume Information|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
 %PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
 C:\Users\Default|
-C:\Users\Redirected\RMMTech\AppData|
-C:\Users\Redirected\RMMTech\Contacts|
-C:\Users\Redirected\RMMTech\Desktop|
-C:\Users\Redirected\RMMTech\Documents|
-C:\Users\Redirected\RMMTech\Downloads|
-C:\Users\Redirected\RMMTech\Favorites|
-C:\Users\Redirected\RMMTech\Links|
-C:\Users\Redirected\RMMTech\Music|
-C:\Users\Redirected\RMMTech\Pictures|
-C:\Users\Redirected\RMMTech\Saved Games|
-C:\Users\Redirected\RMMTech\Videos|
-C:\Users\RMMTech|
-C:\Users\RMMTech\AppData|
-C:\Users\RMMTech\Contacts|
-C:\Users\RMMTech\Desktop|
-C:\Users\RMMTech\Documents|
-C:\Users\RMMTech\Downloads|
-C:\Users\RMMTech\Favorites|
-C:\Users\RMMTech\Links|
-C:\Users\RMMTech\Music|
-C:\Users\RMMTech\Pictures|
-C:\Users\RMMTech\Saved Games|
-C:\Users\RMMTech\Videos|
-C:\Users\RMMTech.%USERDOMAIN%\AppData|
-C:\Users\RMMTech.%USERDOMAIN%\Contacts|
-C:\Users\RMMTech.%USERDOMAIN%\Desktop|
-C:\Users\RMMTech.%USERDOMAIN%\Documents|
-C:\Users\RMMTech.%USERDOMAIN%\Downloads|
-C:\Users\RMMTech.%USERDOMAIN%\Favorites|
-C:\Users\RMMTech.%USERDOMAIN%\Links|
-C:\Users\RMMTech.%USERDOMAIN%\Music|
-C:\Users\RMMTech.%USERDOMAIN%\Pictures|
-C:\Users\RMMTech.%USERDOMAIN%\Saved Games|
-C:\Users\RMMTech.%USERDOMAIN%\Videos|
-C:\Users\RMMTech.%COMPUTERNAME%\AppData|
-C:\Users\RMMTech.%COMPUTERNAME%\Contacts|
-C:\Users\RMMTech.%COMPUTERNAME%\Desktop|
-C:\Users\RMMTech.%COMPUTERNAME%\Documents|
-C:\Users\RMMTech.%COMPUTERNAME%\Downloads|
-C:\Users\RMMTech.%COMPUTERNAME%\Favorites|
-C:\Users\RMMTech.%COMPUTERNAME%\Links|
-C:\Users\RMMTech.%COMPUTERNAME%\Music|
-C:\Users\RMMTech.%COMPUTERNAME%\Pictures|
-C:\Users\RMMTech.%COMPUTERNAME%\Saved Games|
-C:\Users\RMMTech.%COMPUTERNAME%\Videos|
 %SystemRoot%\CbsTemp|
 %SystemRoot%\LiveKernelReports|
 %SystemRoot%\Logs|
@@ -175,19 +83,6 @@ C:\Users\RMMTech.%COMPUTERNAME%\Videos|
 %SystemRoot%.003|
 %SystemRoot%.004|
 %SystemRoot%.005|
-C:\Folder Redirection\RMMTech|
-C:\FolderRedirection\RMMTech|
-C:\Redirected\RMMTech|
-C:\Redirected Files\RMMTech|
-C:\Redirected Folders\RMMTech|
-C:\Redirected Users\RMMTech|
-C:\RedirectedFiles\RMMTech|
-C:\RedirectedFolders\RMMTech|
-C:\Redirection\RMMTech|
-C:\User Files\RMMTech|
-C:\User Folders\RMMTech|
-C:\UserFiles\RMMTech|
-C:\UserFolders\RMMTech|
 C:\Documents and Settings|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatCache|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatUaCache|
