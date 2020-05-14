@@ -290,7 +290,7 @@ sub FILEDL(strURL, strDL, strFILE)                                              
     objFSO.deletefile(strSAV)
   end if
   ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  set objHTTP = createobject("WinHttp.WinHttpRequest.5.1")
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
