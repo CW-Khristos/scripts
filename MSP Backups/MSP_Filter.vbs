@@ -439,7 +439,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
-              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
               ''EXCLUDE USER FOLDER SUB-FOLDERS
               ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
               set objUFOL = objFSO.getfolder(strFOL)
@@ -456,7 +456,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
-                'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34))
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34))
               next
               set objUFOL = nothing
               set colUFOL = nothing
