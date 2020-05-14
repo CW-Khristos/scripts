@@ -513,7 +513,10 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               'for each subUFOL in colUFOL
               for intUFOL = 0 to ubound(arrAPP)
                 'objOUT.write vbnewline & arrAPP(intUFOL)
-                call chkSFOL(strFOL & arrAPP(intUFOL))
+                if (arrAPP(intUFOL) <> vbnullstring) then
+                  objOUT.write vbnewline & intUFOL
+                  call chkSFOL(strFOL & arrAPP(intUFOL))
+                end if
               next
               'set colUFOL = nothing
               'set objUFOL = nothing
@@ -533,6 +536,7 @@ call CLEANUP()
 
 'FUNCTIONS
 function chkSFOL(strSFOL)
+  on error resume next
   ''!---- THE BELOW WILL NEED TO BE USED AS A CALLABLE FUNCTION WITH RETURN VALUE                     ----!''
   ''!---- THIS WILL ALLOW RECURSION THROUGH EACH SUB-FOLDER OF 'C:\USERS\<USERNAME>'                  ----!''
   ''!---- ONCE DONE; FURTHER SUB-FOLDER DIRECTORIES AND FILES WILL BE ABLE TO BE RECURSIVELY CHECKED  ----!''
