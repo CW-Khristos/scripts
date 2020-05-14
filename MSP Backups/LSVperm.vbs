@@ -259,7 +259,7 @@ sub FILEDL(strURL, strDL, strFILE)                                          ''CA
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  set objHTTP = createobject("WinHttp.WinHttpRequest.5.1")
   ''DOWNLOAD FROM URL
   objHTTP.open "GET", strURL, false
   objHTTP.send
