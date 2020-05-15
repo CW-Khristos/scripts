@@ -93,14 +93,16 @@ end if
 ''UNNEEDED / TO EXCLUDE USER ACCOUNTS
 redim arrEXCL(1)
 arrEXCL(0) = "rmmtech"
-''PROTECTED EXT / USERS / FILES / DIRECTORIES
-redim arrPROT(6)
-arrPROT(0) = ".PST"
-arrPROT(1) = "MSSQL"
-arrPROT(2) = "Public"
-arrPROT(3) = "Default"
-arrPROT(4) = "Default.migrated"
-arrPROT(5) = "Outlook\Roamcache"
+''PROTECTED USER ACCOUNTS
+redim arrPUSR(4)
+arrPUSR(0) = "MSSQL"
+arrPUSR(1) = "Public"
+arrPUSR(2) = "Default"
+arrPUSR(3) = "Default.migrated"
+''PROTECTED EXT / FILES / DIRECTORIES
+redim arrPFOL(2)
+arrPFOL(0) = ".PST"
+arrPFOL(1) = "Outlook\Roamcache"
 ''APPDATA FILES / FOLDERS
 redim arrAPP(39)
 arrAPP(0) = "\AppData\Local\CrashDumps"
@@ -483,21 +485,28 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         next
         ''NO MATCH TO 'UNNEEDED / TO EXCLUDE' USER ACCOUNTS
         if (not (blnFND)) then
-          ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
-          for intPCOL = 0 to ubound(arrPROT)
+          ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' USER ACCOUNTS
+          intPCOL = 0
+          for intPCOL = 0 to ubound(arrPUSR)
             blnFND = false
-            if (arrPROT(intPCOL) <> vbnullstring) then
-              '' 'PRTOTECTED' EXT / USERS / FILES / DIRECTORIES 'ARRPROT' FOUND IN FOLDER PATH
-              if (instr(1, lcase(strSFOL), lcase(arrPROT(intPCOL)))) then
-                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+            if (arrPUSR(intPCOL) <> vbnullstring) then
+              '' 'PRTOTECTED' USER ACCOUNTS DIRECTORIES 'ARRPUSR' FOUND IN FOLDER PATH
+              if (instr(1, lcase(strSFOL), lcase(arrPUSR(intPCOL)))) then
+                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPUSR(intPCOL)
+                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPUSR(intPCOL)
+                ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
                 ''MARK 'PROTECTED'
                 blnFND = true
                 exit for
               end if
             end if
           next
-          ''NO MATCH TO 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+          ''NO MATCH TO 'PROTECTED' USER ACCOUNTS
           if (not (blnFND)) then
             ''CHECK FOR USER FOLDER
             if (objFSO.folderexists(strFOL)) then
@@ -537,14 +546,21 @@ function chkSFOL(strSFOL)
   ''CHECK EACH 'C:\USERS\<USERNAME>' SUB-FOLDER
   blnFND = false
   if (strSFOL <> vbnullstring) then            
-    ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
-    for intPCOL = 0 to ubound(arrPROT)
+    ''ENUMERATE THROUGH AND MAKE SURE THIS ISN'T ONE OF THE 'PROTECTED' EXT / FILES / DIRECTORIES
+    intPCOL = 0
+    for intPCOL = 0 to ubound(arrPFOL)
       blnFND = false
-      if (arrPROT(intPCOL) <> vbnullstring) then
-        '' 'PRTOTECTED' EXT / USERS / FILES / DIRECTORIES 'ARRPROT' FOUND IN FOLDER PATH
-        if (instr(1, lcase(strSFOL), lcase(arrPROT(intPCOL)))) then
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPROT(intPCOL)
+      if (arrPFOL(intPCOL) <> vbnullstring) then
+        '' 'PRTOTECTED' EXT / FILES / DIRECTORIES 'ARRPFOL' FOUND IN FOLDER PATH
+        if (instr(1, lcase(strSFOL), lcase(arrPFOL(intPCOL)))) then
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPFOL(intPCOL)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPFOL(intPCOL)
+          ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
+          objOUT.write vbnewline & now & vbtab & vbtab & _
+            "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strSFOL & chr(34)
+          objLOG.write vbnewline & now & vbtab & vbtab & _
+            "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strSFOL & chr(34)
+          call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strSFOL & chr(34))
           ''MARK 'PROTECTED'
           blnFND = true
           exit for
@@ -562,7 +578,7 @@ function chkSFOL(strSFOL)
       '  end if          
       'end if
     next
-    ''NO MATCH TO 'PROTECTED' EXT / USERS / FILES / DIRECTORIES
+    ''NO MATCH TO 'PROTECTED' EXT / FILES / DIRECTORIES
     if (not (blnFND)) then
       ''OUTLOOK OST / TMP  AND ICONCACHE / THUMBCACHE EXCLUSIONS
       if (instr(1, strSFOL, "*")) then
