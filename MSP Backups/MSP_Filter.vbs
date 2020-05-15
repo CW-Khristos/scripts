@@ -17,12 +17,12 @@ dim strOPT, strUSR
 dim strINCL, arrINCL
 dim strFILTER, arrFILTER
 dim strIN, strOUT, strRCMD
-''PRE-DEFINED ARRAYS
-dim arrEXCL(), arrPROT(), arrAPP()
 ''USER AND USER FOLDER ARRAYS
 dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
 dim objUFOL, arrUFOL()
+''PRE-DEFINED ARRAYS
+dim arrEXCL(), arrPUSR(), arrPFOL(), arrAPP()
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -41,6 +41,9 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -200,6 +203,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & _
               "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
             call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+            wscript.sleep 200
           end if
         next
         ''CUSTOM 'FILTER' PASSED
@@ -211,6 +215,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+              wscript.sleep 200
             end if
           next
         end if
@@ -237,6 +242,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & _
               "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
             call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
+            wscript.sleep 200
           end if
         next
         ''CUSTOM 'INCLUDE' PASSED
@@ -248,6 +254,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+              wscript.sleep 200
             end if
           next
         end if
@@ -282,6 +289,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & _
               "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
             call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+            wscript.sleep 200
           end if
         next
         ''CUSTOM 'FILTER' PASSED
@@ -293,6 +301,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+              wscript.sleep 200
             end if
           next
         end if
@@ -320,6 +329,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & _
               "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
             call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
+            wscript.sleep 200
           end if
         next
         ''CUSTOM 'INCLUDE' PASSED
@@ -331,6 +341,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrINCL(intTMP) & chr(34))
+              wscript.sleep 200
             end if
           next
         end if
@@ -406,6 +417,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34))
+      wscript.sleep 200
     next
     ''ENUMERATE 'C:\USERS' SUB-FOLDERS
     objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING USER FOLDERS"
@@ -443,6 +455,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              wscript.sleep 200
               ''EXCLUDE USER FOLDER SUB-FOLDERS
               ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
               set objUFOL = objFSO.getfolder(strFOL)
@@ -460,6 +473,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
                 call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34))
+                wscript.sleep 200
               next
               set objUFOL = nothing
               set colUFOL = nothing
@@ -491,8 +505,9 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           for intPCOL = 0 to ubound(arrPUSR)
             blnFND = false
             if (arrPUSR(intPCOL) <> vbnullstring) then
+              'objOUT.write vbnewline & arrPUSR(intPCOL)
               '' 'PRTOTECTED' USER ACCOUNTS DIRECTORIES 'ARRPUSR' FOUND IN FOLDER PATH
-              if (instr(1, lcase(strSFOL), lcase(arrPUSR(intPCOL)))) then
+              if (instr(1, lcase(strFOL), lcase(arrPUSR(intPCOL)))) then
                 objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPUSR(intPCOL)
                 objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "PROTECTED : " & arrPUSR(intPCOL)
                 ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
@@ -501,6 +516,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
                 call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+                wscript.sleep 200
                 ''MARK 'PROTECTED'
                 blnFND = true
                 exit for
@@ -519,6 +535,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              wscript.sleep 200
               ''ENUMERATE 'C:\USERS\<USERNAME>\APPDATA' SUB-FOLDERS
               for intUFOL = 0 to ubound(arrAPP)
                 'objOUT.write vbnewline & arrAPP(intUFOL)
@@ -562,6 +579,7 @@ function chkSFOL(strSFOL)
           objLOG.write vbnewline & now & vbtab & vbtab & _
             "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strSFOL & chr(34)
           call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strSFOL & chr(34))
+          wscript.sleep 200
           ''MARK 'PROTECTED'
           blnFND = true
           exit for
@@ -591,15 +609,21 @@ function chkSFOL(strSFOL)
         set objSFOL = objFSO.getfolder(strTMP)
         set colSFIL = objSFOL.files
         for each subFIL in colSFIL
-          if ((instr(1,subFIL.name, split(arrTMP(ubound(arrTMP)), "*")(0))) and _
-            instr(1,subFIL.name, split(arrTMP(ubound(arrTMP)), "*")(1))) then
-            ''EXCLUDE FOLDER / FILE
-            objOUT.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path  & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path  & chr(34))
+          if (instr(1, lcase(subFIL.path), lcase(split(strSFOL, "*")(0)))) then
+            if (instr(1, lcase(subFIL.path), lcase(split(strSFOL, "*")(1)))) then
+              'objOUT.write vbnewline & "FILE : " & lcase(subFIL.path)
+              'objOUT.write vbnewline & "MATCH : " & lcase(split(strSFOL, "*")(0))
+              'objOUT.write vbnewline & "MATCH : " & lcase(split(strSFOL, "*")(1))
+              ''EXCLUDE FOLDER / FILE
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subFIL.path & chr(34))
+              wscript.sleep 200
+            end if
           end if
+          wscript.sleep 100
         next
         set colSFIL = nothing
         set objSFOL = nothing
@@ -610,6 +634,7 @@ function chkSFOL(strSFOL)
         objLOG.write vbnewline & now & vbtab & vbtab & _
           "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strSFOL & chr(34)
         call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strSFOL & chr(34))
+        wscript.sleep 200
       end if
     end if
   end if
