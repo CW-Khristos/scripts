@@ -523,7 +523,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               for intUFOL = 0 to ubound(arrAPP)
                 'objOUT.write vbnewline & arrAPP(intUFOL)
                 if (arrAPP(intUFOL) <> vbnullstring) then
-                  objOUT.write vbnewline & intUFOL
+                  'objOUT.write vbnewline & intUFOL
                   call chkSFOL(strFOL & arrAPP(intUFOL))
                 end if
               next
