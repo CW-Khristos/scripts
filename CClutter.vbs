@@ -35,6 +35,9 @@ strPDFOL = objWSH.expandenvironmentstrings("%programdata%")
 strPFFOL = objWSH.expandenvironmentstrings("%programfiles%")
 str86FOL = objWSH.expandenvironmentstrings("%programfiles(x86)%")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
