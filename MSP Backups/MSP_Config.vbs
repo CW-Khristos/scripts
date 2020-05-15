@@ -39,6 +39,16 @@ set objARG = wscript.arguments
 strTMP = "C:\temp\"
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''MSP BACKUP MANAGER CONFIG.INI FILE
 set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini")
 ''CHECK EXECUTION METHOD OF SCRIPT
