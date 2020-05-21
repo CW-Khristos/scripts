@@ -11,7 +11,7 @@ dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
 dim objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , JDC_MSP_POSTBACKUP.VBS , REF #2 , REF #50
-strVER = 5
+strVER = 6
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"

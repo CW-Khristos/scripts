@@ -18,7 +18,7 @@ dim strUSR, strOPT, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , REF #68 , REF #69 , FIXES #21 , FIXES #31
-strVER = 18
+strVER = 19
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring

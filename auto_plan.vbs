@@ -16,7 +16,7 @@ dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
 dim objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 12
+strVER = 13
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = vbnullstring

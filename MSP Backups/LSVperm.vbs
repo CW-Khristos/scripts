@@ -20,7 +20,7 @@ dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , REF #68 , REF #69 , FIXES #32 , REF #71
-strVER = 10
+strVER = 11
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -79,7 +79,7 @@ if (errRET = 0) then                                                        ''AR
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING LSVPERM"
 	''AUTOMATIC UPDATE, LSVPERM.VBS, REF #2 , REF #69 , REF #68 , FIXES #32 , REF #71
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-  call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
@@ -218,7 +218,7 @@ if (errRET = 0) then                                                        ''AR
       ''DOWNLOAD SVCPERM.VBS SCRIPT TO GRANT USER SERVICE LOGON , 'ERRRET'=30 , REF #2 , FIXES #32 , REF #71
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - DOWNLOADING SERVICE LOGON SCRIPT : SVCPERM"
-      call FILEDL("https://github.com/CW-Khristos/scripts/raw/master/SVCperm.vbs", "C:\IT\Scripts", "SVCperm.vbs")
+      call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/SVCperm.vbs", "C:\IT\Scripts", "SVCperm.vbs")
       if (errRET <> 0) then
         call LOGERR(30)
       end if

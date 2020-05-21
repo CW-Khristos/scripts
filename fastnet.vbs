@@ -10,7 +10,7 @@ dim strIN, strOUT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , FASTNET.VBS , REF #2 , REF #68 , REF #69
-strVER = 3
+strVER = 4
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring

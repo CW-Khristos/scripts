@@ -11,7 +11,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, CODEDROP_FIX.VBS, REF #2 , REF #68 , REF #69
-strVER = 7
+strVER = 8
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring

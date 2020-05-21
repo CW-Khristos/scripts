@@ -27,7 +27,7 @@ dim arrEXCL(), arrPUSR(), arrPFOL(), arrAPP()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
-strVER = 6
+strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"

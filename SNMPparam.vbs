@@ -14,7 +14,7 @@ dim strMOD, strTRP, strSNMP
 dim objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE, SNMPPARAM.VBS, REF #2 , REF #68 , REF #69
-strVER = 5
+strVER = 6
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
