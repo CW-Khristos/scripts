@@ -46,8 +46,11 @@ else                                                        ''LOGFILE NEEDS TO B
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE", 8)
 end if
-''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
+if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
@@ -82,7 +85,7 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
 ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
 ''EXECUTE CHKAU.VBS SCRIPT, REF #69
 objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE : " & strVER
 objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE : " & strVER
@@ -90,8 +93,12 @@ intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\te
   chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
   chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
 ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
 intRET = (intRET - vbObjectError)
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
+if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
   ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
   objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
   objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"

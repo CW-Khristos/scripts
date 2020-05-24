@@ -35,6 +35,16 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_SSHEAL_FORCE_PS")) then		        ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHEAL_FORCE_PS", true
@@ -45,13 +55,6 @@ else                                                        ''LOGFILE NEEDS TO B
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE_PS")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE_PS", 8)
-end if
-''CHECK 'PERSISTENT' FOLDERS
-if (not (obFSO.folderexists("C:\IT\"))) then
-  objFSO.createfolder("C:\IT\")
-end if
-if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
-  objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -82,7 +85,7 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
 ''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
 ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
 ''EXECUTE CHKAU.VBS SCRIPT, REF #69
 objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
 objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
@@ -90,8 +93,12 @@ intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\te
   chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
   chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
 ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
 intRET = (intRET - vbObjectError)
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1)) then
+objOUT.write vbnewline & "errRET='" & intRET & "'"
+objLOG.write vbnewline & "errRET='" & intRET & "'"
+if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
   ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
   objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
   objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
@@ -419,22 +426,22 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   end if
 end sub
 
-sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=2
+ssub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  ''CREATE HTTP OBJECT
-  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
-  ''DOWNLOAD FROM URL
-  objHTTP.open "GET", strURL, false
-  objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
+  ''CREATE HTTP OBJECT
+  set objHTTP = createobject( "WinHttp.WinHttpRequest.5.1" )
+  ''DOWNLOAD FROM URL
+  objHTTP.open "GET", strURL, false
+  objHTTP.send
   if (objHTTP.status = 200) then
     dim objStream
     set objStream = createobject("ADODB.Stream")
@@ -453,16 +460,15 @@ sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
   set objHTTP = nothing
-  ''ERROR RETURNED
-  if (err.number <> 0) then
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
+    call LOGERR(11)
     err.clear
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -488,7 +494,7 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   if ((not blnSUP) and (err.number <> 0)) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(3)
+    call LOGERR(12)
   end if
 end sub
 

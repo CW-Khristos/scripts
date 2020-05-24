@@ -11,7 +11,7 @@
 'on error resume next
 ''ALWAYS RIGHT-CLICK SCRIPT, CHOOSE "PROPERTIES", CLICK "UNBLOCK"
 ''SCRIPT VARIABLES
-dim blnRUN, blnSUP
+dim blnRUN
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR
 dim strIDL, strTMP, arrTMP, strIN
@@ -42,6 +42,9 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -274,12 +277,12 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
     objLOG.write vbnewline & now & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(2)
+    call LOGERR(11)
     err.clear
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
@@ -299,13 +302,9 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
     end if
   end if
-  ''CHECK FOR ERRORS
-  errRET = objHOOK.exitcode
   set objHOOK = nothing
-  if ((not blnSUP) and (err.number <> 0)) then
-    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description
-    call LOGERR(3)
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+    call LOGERR(12)
   end if
 end sub
 
@@ -316,6 +315,10 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
 		err.clear
   end if
+  ''CUSTOM ERROR CODES
+  select case intSTG
+    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+  end select
 end sub
 
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
