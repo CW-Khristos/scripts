@@ -73,12 +73,21 @@ C:\wu_output|
 %SystemRoot%.003|
 %SystemRoot%.004|
 %SystemRoot%.005|
+%LOCALAPPDATA%\Microsoft\FontCache|
+%LOCALAPPDATA%\Microsoft\Feeds Cache|
+%LOCALAPPDATA%\Microsoft\Windows\WER|
+%LOCALAPPDATA%\Microsoft\Windows\Caches|
+%LOCALAPPDATA%\Microsoft\Windows\AppCache|
+%LOCALAPPDATA%\Microsoft\Windows\PriCache|
+%LOCALAPPDATA%\Microsoft\Windows\WebCache|
+%LOCALAPPDATA%\Microsoft\Windows\INetCache|
+%LOCALAPPDATA%\Microsoft\Windows\INetCookies|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatCache|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatUaCache|
 %LOCALAPPDATA%\Microsoft\Windows\IEDownloadHistory|
-%LOCALAPPDATA%\Microsoft\Windows\INetCache|
-%LOCALAPPDATA%\Microsoft\Windows\INetCookies|
 %LOCALAPPDATA%\Microsoft\Windows\PPBCompatCache|
 %LOCALAPPDATA%\Microsoft\Windows\PPBCompatUaCache|
-%LOCALAPPDATA%\Microsoft\Windows\PriCache|
+%LOCALAPPDATA%\Microsoft\Windows\INetCacheContent.Word|
 %LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|
+%LOCALAPPDATA%\Microsoft\Windows\ActionCenterCache|
+%LOCALAPPDATA%\Microsoft\Windows\TemporaryInternetFiles|
