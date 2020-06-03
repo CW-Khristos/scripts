@@ -108,7 +108,7 @@ redim arrPFOL(2)
 arrPFOL(0) = ".PST"
 arrPFOL(1) = "Outlook\Roamcache"
 ''APPDATA FILES / FOLDERS
-redim arrAPP(39)
+redim arrAPP(40)
 arrAPP(0) = "\AppData\Local\CrashDumps"
 arrAPP(1) = "\AppData\Local\D3DSCache"
 arrAPP(2) = "\AppData\Local\Google\Chrome\User Data\Crashpad"
@@ -148,6 +148,7 @@ arrAPP(35) = "\AppData\Local\Microsoft\Outlook\*.ost"
 arrAPP(36) = "\AppData\Local\Microsoft\Outlook\*.tmp"
 arrAPP(37) = "\AppData\Local\Microsoft\Windows\Explorer\iconcache*.db"
 arrAPP(38) = "\AppData\Local\Microsoft\Windows\Explorer\thumbcache*.db"
+arrAPP(39) = "\AppData\Local\Microsoft\MicrosoftEdge\SharedCacheContainers"
 
 ''------------
 ''BEGIN SCRIPT
