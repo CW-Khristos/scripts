@@ -113,16 +113,16 @@ sub STOPSAGE()                                              ''STOP SAGE SERVICES
     end if
   end if
   ''STOP SAGE 50 SMARTPOSTING SERVICE
-  call HOOK("net stop " & chr(34) & "Sage 50 SmartPosting 2017" & chr(34))
+  call HOOK("net stop " & chr(34) & "Sage 50 SmartPosting 2020" & chr(34))
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
-      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & now
-      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2017 : " & now
+      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2020 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2020 : " & now
       errRET = 0
       err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR
-      objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & now
-      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2017 : " & now
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2020 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage 50 SmartPosting 2020 : " & now
       call LOGERR(5)
       ''END SCRIPT, RETURN EXIT CODE
       call CLEANUP()
