@@ -96,6 +96,7 @@ sub STARTPSQL()                                             ''START PERVASIVE SQ
   objLOG.write vbnewline & vbnewline & "STARTING PERVASIVE SQL SERVICE : " & now
   ''START PERVASIVE SQL SERVICE
   call HOOK("net start " & chr(34) & "psqlWGE" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
       objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : psqlWGE : " & now
@@ -117,6 +118,7 @@ sub STARTSAGE()                                             ''START SAGE SERVICE
   objLOG.write vbnewline & "STARTING SAGE SERVICES : " & now
   ''START SAGE 50 SMARTPOSTING SERVICE
   call HOOK("net start " & chr(34) & "Sage 50 SmartPosting 2020" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
       objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : Sage SmartPosting 2020 : " & now
@@ -131,6 +133,7 @@ sub STARTSAGE()                                             ''START SAGE SERVICE
   end if
   ''START SAGE AUTOUPDATE MANAGER SERVICE
   call HOOK("net start " & chr(34) & "Sage AutoUpdate Manager Service" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
       objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : Sage AutoUpdate Manager Service : " & now
