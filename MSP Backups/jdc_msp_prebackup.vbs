@@ -98,6 +98,7 @@ sub STOPSAGE()                                              ''STOP SAGE SERVICES
   objLOG.write vbnewline & vbnewline & "STOPPING SAGE SERVICES : " & now
   ''STOP SAGE AUTOUPDATE MANAGER SERVICE
   call HOOK("net stop " & chr(34) & "Sage AutoUpdate Manager Service" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage AutoUpdate Manager Service : " & now
@@ -114,6 +115,7 @@ sub STOPSAGE()                                              ''STOP SAGE SERVICES
   end if
   ''STOP SAGE 50 SMARTPOSTING SERVICE
   call HOOK("net stop " & chr(34) & "Sage 50 SmartPosting 2020" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : Sage 50 SmartPosting 2020 : " & now
@@ -137,6 +139,7 @@ sub STOPPSQL()                                              ''STOP PERVASIVE SQL
   objLOG.write vbnewline & "STOPPING PERVASIVE SQL SERVICE : " & now
   ''STOP PERVASIVE SQL SERVICE
   call HOOK("net stop " & chr(34) & "psqlWGE" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : psqlWGE : " & now
