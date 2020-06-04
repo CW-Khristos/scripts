@@ -92,6 +92,7 @@ sub STARTDB()                                               ''START EAGLESOFT DA
   objLOG.write vbnewline & "STARTING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE WITH 'START' SWITCH, DO NOT MONITOR, PROCESS DOES NOT EXIT
   errRET = objWSH.run(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -start", 0, false)
+  wscript.sleep 5000
   if (errRET = 0) then                                      ''DATABASE SUCCESSFULLY STARTED
     objOUT.write vbnewline & vbnewline & errRET & vbtab & "EAGLESOFT DATABASE STARTED : " & now
     objLOG.write vbnewline & vbnewline & errRET & vbtab & "EAGLESOFT DATABASE STARTED : " & now
@@ -111,6 +112,7 @@ sub STARTEAGLE()                                            ''START EAGLESOFT SE
   objLOG.write vbnewline & vbnewline & "STARTING EAGLESOFT SERVICES : " & now
   ''START PATTERSON APP SERVICE
   call HOOK("net start " & chr(34) & "PattersonAppService" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
       objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : PattersonAppService : " & now
