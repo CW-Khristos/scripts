@@ -109,7 +109,7 @@ sub STOPSAGE()                                              ''STOP SAGE SERVICES
       objLOG.write vbnewline & errRET & vbtab & "ERROR STOPPING : Sage AutoUpdate Manager Service : " & now
       call LOGERR(4)
       ''END SCRIPT, RETURN EXIT CODE
-      call CLEANUP()
+      'call CLEANUP()
     end if
   end if
   ''STOP SAGE 50 SMARTPOSTING SERVICE
