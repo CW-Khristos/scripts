@@ -94,6 +94,7 @@ sub STOPEAGLE()                                             ''STOP EAGLESOFT SER
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   ''STOP PATTERSON APP SERVICE
   call HOOK("net stop " & chr(34) & "PattersonAppService" & chr(34))
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STOPPED
       objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STOPPED : PattersonAppService : " & now
@@ -115,6 +116,7 @@ sub STOPDB()                                                ''STOP EAGLESOFT DAT
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE UTILITY WITH 'STOP' SWITCH
   call HOOK(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -stop")
+  wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     objLOG.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
