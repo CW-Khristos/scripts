@@ -176,11 +176,12 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
     Select Case lcase(strOPT)
       ''PERFORM 'LOCAL' FILTER CONFIGURATIONS
       Case "local"
+        ''DISABLED TO PREVENT OVER-WRITE OF TECHNICIAN SELECTIONS AT A LATER TIME
         ''RESET CURRENT BACKUP INCLUDES , REF #2
-        objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
-        call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
-        wscript.sleep 5000
+        'objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        'objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
+        'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
+        'wscript.sleep 5000
         ''DOWNLOAD 'FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
