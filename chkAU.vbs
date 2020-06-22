@@ -22,7 +22,7 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 7
+strVER = 8
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -58,10 +58,11 @@ else                                                          ''LOGFILE NEEDS TO
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 4) then                         ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next 
+  ''ARGUMENT OUTPUT DISABLED TO SANITIZE
+  'for x = 0 to (wscript.arguments.count - 1)
+  '  objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  '  objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  'next 
   if (wscript.arguments.count > 4) then                       ''SET VARIABLES ACCEPTING ARGUMENTS
     strREPO = objARG.item(0)                                  ''SET REQUIRED PARAMETER 'STRREPO' , TARGET 'REPO' TO UPDATE FROM ON GITHUB
     strBRCH = objARG.item(1)                                  ''SET REQUIRED PARAMETER 'STRBRCH' , TARGET 'BRANCH' TO UPDATE FROM ON GITHUB
@@ -303,6 +304,8 @@ end sub
 
 sub HOOK(strCMD)                                              ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
   set objHOOK = objWSH.exec(strCMD)
   while (not objHOOK.stdout.atendofstream)
 		strIN = objHOOK.stdout.readline

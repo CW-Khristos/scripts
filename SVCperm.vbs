@@ -18,7 +18,7 @@ dim strUSR, strOPT, strPWD, strSVC
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objSIN, objSOUT
 ''VERSION FOR SCRIPT UPDATE, SVCPERM.VBS, REF #2 , REF #68 , REF #69 , FIXES #21 , FIXES #31
-strVER = 19
+strVER = 20
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -54,10 +54,11 @@ else                                                        ''LOGFILE NEEDS TO B
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next 
+  ''ARGUMENT OUTPUT DISABLED TO SANITIZE
+  'for x = 0 to (wscript.arguments.count - 1)
+  '  objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  '  objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  'next 
   if (wscript.arguments.count > 1) then                     ''REQUIRED ARGUMENTS PASSED
     strUSR = objARG.item(0)                                 ''SET REQUIRED PARAMETER 'STRUSR' ; TARGET USER FOR SERVICE LOGON PERMISSIONS
     strOPT = objARG.item(1)                                 ''SET REQUIRED PARAMETER 'STROPT' ; TARGET LOCAL / DOMAIN LOGON , REF #71
@@ -269,8 +270,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)

@@ -16,7 +16,7 @@ dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
 dim objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 13
+strVER = 14
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = vbnullstring
@@ -55,9 +55,10 @@ else                                                  	    ''LOGFILE NEEDS TO BE
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS - REQUIRES (AT LEAST) 2 ARGUMENTS
 if (wscript.arguments.count > 0) then                 	    ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next
+  ''ARGUMENT OUTPUT DISABLED TO SANITIZE
+  'for x = 0 to (wscript.arguments.count - 1)
+  '  objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  'next
   if (wscript.arguments.count > 1) then
   else
   end if
@@ -250,7 +251,7 @@ sub STAGE3()
   select case strSEL
     case "LOCAL"
       strDMN = "."
-      strTYP = "workgroup"
+      strTYP = "local"
       objOUT.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
       objLOG.write vbnewline & vbnewline & vbtab & vbtab & " - (3)STAGE3 - LOCAL RMMTECH (PWD & SVC LOGON)"
       ''UPDATE RMMTECH USER (LOCAL ONLY) - REQUIRES 'STRPWD'; REQUIRES TECHNICIAN INPUT / PASSED PARAMETERS
@@ -762,7 +763,7 @@ sub STAGE9()
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
           objLOG.write vbnewline & now & vbtab & vbtab & " - RESTRICT LSV PERMISSIONS SETUP : LSVPERM"
           call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\LSVperm.vbs" & chr(34) & " " & chr(34) & strLSVL & chr(34) & " " & chr(34) & strLSVU & chr(34) & _
-            " " & chr(34) & strLSVP)
+            " " & chr(34) & strLSVP &chr(34) & " " & chr(34) & strOPT & chr(34))
         elseif (not objFSO.fileexists("c:\IT\Scripts\LSVperm.vbs")) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD UNSUCCESSFUL"
@@ -891,8 +892,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)

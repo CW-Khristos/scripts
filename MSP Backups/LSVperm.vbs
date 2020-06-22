@@ -20,7 +20,7 @@ dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , REF #68 , REF #69 , FIXES #32 , REF #71
-strVER = 11
+strVER = 12
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -56,10 +56,11 @@ else                                                                        ''LO
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                                       ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next
+  ''ARGUMENT OUTPUT DISABLED TO SANITIZE
+  'for x = 0 to (wscript.arguments.count - 1)
+  '  objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  '  objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+  'next
   if (wscript.arguments.count > 3) then                                     ''REQUIRED ARGUMENTS PASSED
     strLSV = objARG.item(0)                                                 ''SET REQUIRED PARAMETER 'STRLSV' ; TARGET LSV FOLDER PATH
     strUSR = objARG.item(1)                                                 ''SET REQUIRED PARAMETER 'STRUSR' ; TARGET USER FOR SERVICE LOGON PERMISSIONS
@@ -291,6 +292,8 @@ end sub
 
 sub HOOK(strCMD)                                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
   set objHOOK = objWSH.exec(strCMD)
   while (not objHOOK.stdout.atendofstream)
     if (instr(1, strCMD, "takeown /F ") = 0) then                           ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
