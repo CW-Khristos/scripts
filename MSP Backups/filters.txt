@@ -103,6 +103,8 @@ C:\wu_output|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Thumbnails|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Media Cache|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Application Cache|
+%LOCALAPPDATA%\Google\Chrome\User Data\Default\Session Worker\CacheStorage
+%LOCALAPPDATA%\Google\Chrome\User Data\Default\Session Worker\ScriptCache
 %LOCALAPPDATA%\Microsoft\FontCache|
 %LOCALAPPDATA%\Microsoft\Feeds Cache|
 %LOCALAPPDATA%\Microsoft\Windows\WER|
