@@ -27,7 +27,7 @@ dim arrEXCL(), arrPUSR(), arrPFOL(), arrAPP()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
-strVER = 7
+strVER = 8
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -61,6 +61,12 @@ else                                                          ''LOGFILE NEEDS TO
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\msp_filter", 8)
 end if
+''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
+if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
+end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
@@ -91,8 +97,8 @@ if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE P
       strUSR = objARG.item(3)
     end if
   end if
-elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
-  call LOGERR(1)
+elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=2
+  call LOGERR(2)
 end if
 ''UNNEEDED / TO EXCLUDE USER ACCOUNTS
 redim arrEXCL(1)
@@ -359,61 +365,73 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Temp" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Temp" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Recovery" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\RECYCLED" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$AV_ASW" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$GetCurrent" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Recycle.Bin" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~BT" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\$Windows.~WS" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\Windows10Upgrade" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\hiberfil.sys" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\pagefile.sys" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34)
       call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\swapfile.sys" & chr(34))
+      wscript.sleep 20
       objOUT.write vbnewline & now & vbtab & vbtab & _
         "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & chr(intEXCL) & ":\System Volume Information" & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & _
@@ -651,7 +669,7 @@ function chkSFOL(strSFOL)
 end function
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
@@ -690,7 +708,7 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
   end if
 end sub
 
-sub HOOK(strCMD)                                              ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   set objHOOK = objWSH.exec(strCMD)
   while (not objHOOK.stdout.atendofstream)
@@ -712,7 +730,7 @@ sub HOOK(strCMD)                                              ''CALL HOOK TO MON
   end if
 end sub
 
-sub LOGERR(intSTG)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
@@ -720,7 +738,18 @@ sub LOGERR(intSTG)                                            ''CALL HOOK TO MON
 		err.clear
   end if
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 0                                                  ''MSP_FILTER - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK PASSED"
+    case 1                                                  ''MSP_FILTER - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
+    case 11                                                 ''MSP_FILTER - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
+    case 12                                                 ''MSP_FILTER - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 

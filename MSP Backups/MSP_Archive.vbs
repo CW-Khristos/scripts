@@ -26,9 +26,9 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF $68 , REF #69
-strVER = 5
+strVER = 6
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
@@ -52,18 +52,24 @@ if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_ARCHIVE")) then       ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_ARCHIVE")) then          ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_ARCHIVE", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_ARCHIVE")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_ARCHIVE", 8)
-else                                                      ''LOGFILE NEEDS TO BE CREATED
+else                                                        ''LOGFILE NEEDS TO BE CREATED
   set objLOG = objFSO.createtextfile("C:\temp\MSP_ARCHIVE")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_ARCHIVE", 8)
 end if
+''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
+if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
+end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count > 0) then                     ''ARGUMENTS WERE PASSED
+if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
     objLOG.write vbnewline & now & vbtab & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & objARG.item(x)
@@ -80,18 +86,16 @@ if (wscript.arguments.count > 0) then                     ''ARGUMENTS WERE PASSE
     if (strRUN = "true") then
       strARC = "Y"                                          ''SET SCRIPT RUN LEVEL
     end if
-  elseif (wscript.arguments.count <= 6) then                ''NOT ENOUGH ARGUMENTS PASSED ; END SCRIPT , 'ERRRET'=1
-    call LOGERR(1)
+  elseif (wscript.arguments.count <= 6) then                ''NOT ENOUGH ARGUMENTS PASSED , 'ERRRET'=2
+    call LOGERR(2)
   end if
-elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
-  objOUT.write vbnewline & now & vbtab & " - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
-  objLOG.write vbnewline & now & vbtab & " - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
-  call LOGERR(1)
+elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , 'ERRRET'=3
+  call LOGERR(2)
 end if
 
 ''------------
 ''BEGIN SCRIPT
-if ((errRET = 0) or (errRET = 1)) then
+if ((errRET = 0) or (errRET = 2)) then
   objOUT.write vbnewline & now & " - STARTING MSP_ARCHIVE" & vbnewline
   objLOG.write vbnewline & now & " - STARTING MSP_ARCHIVE" & vbnewline
 	''AUTOMATIC UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF #69 , REF #68
@@ -114,7 +118,7 @@ if ((errRET = 0) or (errRET = 1)) then
     ''ENTER CALL VERIFY LOOP
     call VERIFY()
   end if
-elseif (errRET <> 0) then                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
 ''END SCRIPT
@@ -317,7 +321,23 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 0                                                  ''MSP_ARCHIVE - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CLIENTTOOL CHECK PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CLIENTTOOL CHECK PASSED"
+    case 1                                                  ''MSP_ARCHIVE - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CLIENTTOOL CHECK FAILED, ENDING MSP_ARCHIVE"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CLIENTTOOL CHECK FAILED, ENDING MSP_ARCHIVE"
+    case 2                                                  ''MSP_ARCHIVE - NO / NOT ENOUGH ARGUMENTS PASSED, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - NO / NOT ENOUGH ARGUMENTS PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - NO / NOT ENOUGH ARGUMENTS PASSED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
+    case 11                                                 ''MSP_ARCHIVE - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CALL FILEDL() : " & strSAV
+    case 12                                                 ''MSP_ARCHIVE - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_ARCHIVE - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 

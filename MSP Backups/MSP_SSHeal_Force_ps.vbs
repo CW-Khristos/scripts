@@ -20,9 +20,9 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , FIXES #4
-strVER = 15
+strVER = 16
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''DEFAULT 'BLNRUN' FLAG - RESTART BACKUPS IF WRITERS ARE STABLE
 blnRUN = false
@@ -46,7 +46,7 @@ if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\MSP_SSHEAL_FORCE_PS")) then		        ''LOGFILE EXISTS
+if (objFSO.fileexists("C:\temp\MSP_SSHEAL_FORCE_PS")) then	''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SSHEAL_FORCE_PS", true
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE_PS")
   objLOG.close
@@ -55,6 +55,12 @@ else                                                        ''LOGFILE NEEDS TO B
   set objLOG = objFSO.createtextfile("C:\temp\MSP_SSHEAL_FORCE_PS")
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_SSHEAL_FORCE_PS", 8)
+end if
+''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
+if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
 end if
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
@@ -83,93 +89,95 @@ blnWSCH = true
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL_FORCE_PS" & vbnewline
-''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
-''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
-''EXECUTE CHKAU.VBS SCRIPT, REF #69
-objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
-objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
-intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
-  chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
-  chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
-''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-intRET = (intRET - vbObjectError)
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-  ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
-  objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
-  objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
-  set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
-  strIDL = objHOOK.stdout.readall
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-  set objHOOK = nothing
-  if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or _
-    (instr(1, strIDL, "Suspended"))) then     			          ''BACKUPS NOT IN PROGRESS
-      objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
-      ''STOP BACKUP SERVICE
-      call HOOK("net stop " & chr(34) & "Backup Service Controller" & chr(34) & " /y")
-      ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-      call VSSSVC()
-      ''CHECK VSS WRITERS AFTER RESTART
-      objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
-      ''EXPORT CURRENT VSS WRITER STATUSES
-      call CHKVSS()
-      ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
-      call VSSSVC()
-      ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
-      call CHKDEP()
-      ''RESTART BACKUP SERVICE
-      call HOOK("net start " & chr(34) & "Backup Service Controller" & chr(34))
-      wscript.sleep 5000
-      ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY AFTER RESTART
-      for intLOOP = 0 to 10
-        objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
-        objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
-        set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
-        strIDL = objHOOK.stdout.readall
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
-        set objHOOK = nothing
-        if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then     			      ''BACKUPS NOT IN PROGRESS
-            ''FORCE RUN OF SYSTEM STATE
-            blnRUN = true
-            if (blnRUN) then														      ''RE-RUN SYSTEM STATE BACKUPS
-              ''ADDITIONAL DELAY TO GIVE SERVICE A BIT EXTRA Time
-              wscript.sleep (60000)
-              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
-              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
-              call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
-              blnRUN = false
-            elseif (not blnRUN) then										      ''DO NOT RE-RUN SYSTEM STATE BACKUPS
-              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
-              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
-            end if
-            exit for
-        elseif ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle") = 0) or _
-          (instr(1, strIDL, "RegSync") = 0) or (instr(1, strIDL, "Suspended"))) then					''BACKUPS IN PROGRESS, SERVICE NOT READY
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY / BACKUPS IN PROGRESS" 
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY / BACKUPS IN PROGRESS"
-            blnRUN = true
+if (errRET = 0) then
+  ''AUTOMATIC UPDATE, MSP_SSHEAL_FORCE_PS.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL_FORCE_PS : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
+    objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+    objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+    set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
+    strIDL = objHOOK.stdout.readall
+    objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+    objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+    set objHOOK = nothing
+    if ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or _
+      (instr(1, strIDL, "Suspended"))) then     			      ''BACKUPS NOT IN PROGRESS
+        objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS NOT IN PROGRESS, STOPPING BACKUP SERVICE, CHECKING VSS WRITERS"
+        ''STOP BACKUP SERVICE
+        call HOOK("net stop " & chr(34) & "Backup Service Controller" & chr(34) & " /y")
+        ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+        call VSSSVC()
+        ''CHECK VSS WRITERS AFTER RESTART
+        objOUT.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - SERVICES RESTART COMPLETE, CHECKING VSS WRITERS"
+        ''EXPORT CURRENT VSS WRITER STATUSES
+        call CHKVSS()
+        ''VSS WRITER SERVICES - RESTART TO RESET ASSOCIATED VSS WRITER
+        call VSSSVC()
+        ''CHECK FOR WMI DEPENDENT SERVICES, REF #19
+        call CHKDEP()
+        ''RESTART BACKUP SERVICE
+        call HOOK("net start " & chr(34) & "Backup Service Controller" & chr(34))
+        wscript.sleep 5000
+        ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY AFTER RESTART
+        for intLOOP = 0 to 10
+          objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+          objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
+          set objHOOK = objWSH.exec(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.status.get")
+          strIDL = objHOOK.stdout.readall
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
+          set objHOOK = nothing
+          ''BACKUPS NOT IN PROGRESS
+          if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then
+              ''FORCE RUN OF SYSTEM STATE
+              blnRUN = true
+              if (blnRUN) then														  ''RE-RUN SYSTEM STATE BACKUPS
+                ''ADDITIONAL DELAY TO GIVE SERVICE A BIT EXTRA Time
+                wscript.sleep (60000)
+                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
+                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS RESET, RUNNING SYSTEM STATE BACKUP"
+                call HOOK(chr(34) & "c:\Program Files\Backup Manager\ClientTool.exe" & chr(34) & " control.backup.start -datasource SystemState")
+                blnRUN = false
+              elseif (not blnRUN) then										  ''DO NOT RE-RUN SYSTEM STATE BACKUPS
+                objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE" 
+                objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "VSS WRITERS STABLE"
+              end if
+              exit for
+          ''BACKUPS IN PROGRESS, SERVICE NOT READY
+          elseif ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle") = 0) or _
+            (instr(1, strIDL, "RegSync") = 0) or (instr(1, strIDL, "Suspended"))) then
+              objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY / BACKUPS IN PROGRESS" 
+              objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY / BACKUPS IN PROGRESS"
+              blnRUN = true
+          end if
+          wscript.sleep 12000
+        next
+        if (blnRUN) then                                    ''SERVICE DID NOT INITIALIZE , 'ERRRET'=6
+          call LOGERR(6)
         end if
-        wscript.sleep 12000
-      next
-      if (blnRUN) then                                        ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
-        call LOGERR(1)
-      end if
-  elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
-    (instr(1, strIDL, "Suspended") = 0)) then                 ''BACKUPS IN PROGRESS, SERVICE NOTE READY , 'ERRRET'=1
-      objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE_PS"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING MSP_SSHEAL_FORCE_PS"
-      call LOGERR(1)
+    elseif ((instr(1, strIDL, "Idle") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
+      (instr(1, strIDL, "Suspended") = 0)) then             ''BACKUPS IN PROGRESS, SERVICE NOT READY , 'ERRRET'=3
+        call LOGERR(3)
+    end if
   end if
+elseif (errRET <> 0) then
+  call LOGERR(errRET)
 end if
 ''END SCRIPT
 call CLEANUP()
@@ -189,7 +197,7 @@ end function
 
 ''SUB-ROUTINES
 sub CHKDEP()                                                ''RESTART WMI DEPENDENT SERVICES, REF #19
-''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
+  ''DEPENDENT SERVICES WHICH MAY NEED RESTART AFTER RESTART OF WMI
   objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
   objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING WMI DEPENDENT SERVICES"
   call HOOK("net start " & chr(34) & "Security Center" & chr(34))
@@ -426,7 +434,7 @@ sub VSSSVC()                                 				        ''VSS WRITER SERVICES -
   end if
 end sub
 
-ssub FILEDL(strURL, strDL, strFILE)                  ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
@@ -506,24 +514,30 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 		err.clear
   end if
   select case intSTG
-    case 1                                                    ''NOT ENOUGH ARGUMENTS , 'ERRRET'=1
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - NOT ENOUGH ARGUMENTS PASSED"
-    case 2                                                    ''MSP_SSHEAL_FORCE_PS - CALL FILEDL() , 'ERRRET'=2
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS UPDATED - RE-EXECUTED : " & strSCR & " " & strARG
-    case 3                                                    ''MSP_SSHEAL_FORCE_PS - CALL HOOK() , 'ERRRET'=3
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS NO UPDATE - EXITING : " & strSCR & " " & strARG
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS NO UPDATE - EXITING : " & strSCR & " " & strARG
-    case 4                                                   ''MSP_SSHEAL_FORCE_PS - CALL CHKVSS() , 'ERRRET'=4
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : FAILED"
-    case 5                                                   ''MSP_SSHEAL_FORCE_PS - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=5
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+    case 0                                                  ''MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK PASSED"
+    case 1                                                  ''MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK FAILED, ENDING MSP_SSHEAL_FORCE_PS"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CLIENTTOOL CHECK FAILED, ENDING MSP_SSHEAL_FORCE_PS"
+    case 2                                                  ''MSP_SSHEAL_FORCE_PS - NOT ENOUGH ARGUMENTS , 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - NOT ENOUGH ARGUMENTS PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - NOT ENOUGH ARGUMENTS PASSED"
+    case 3                                                  ''MSP_SSHEAL_FORCE_PS - BACKUPS IN PROGRESS, SERVICE NOT READY , 'ERRRET'=3
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - BACKUPS IN PROGRESS, SERVICE NOT READY, ENDING MSP_SSHEAL_FORCE_PS"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - BACKUPS IN PROGRESS, SERVICE NOT READY, ENDING MSP_SSHEAL_FORCE_PS"
+    case 4                                                  ''MSP_SSHEAL_FORCE_PS - CALL CHKVSS() , 'ERRRET'=4
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL CHKVSS() : " & err.number & vbtab & err.description
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL CHKVSS() : " & err.number & vbtab & err.description
     case 6                                                  ''MSP_SSHEAL_FORCE_PS - BACKUP SERVICE NOT READY , 'ERRRET'=6
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - UPDATE DOWNLOAD : " & strSCR & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - BACKUP SERVICE NOT READY, ENDING MSP_SSHEAL_FORCE_PS"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - BACKUP SERVICE NOT READY, ENDING MSP_SSHEAL_FORCE_PS"
+    case 11                                                 ''MSP_SSHEAL_FORCE_PS - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL FILEDL() : " & strSAV
+    case 12                                                 ''MSP_SSHEAL_FORCE_PS - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE_PS - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 
@@ -532,6 +546,7 @@ sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   if (errRET = 0) then         											        ''MSP_SSHEAL_FORCE_PS COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE_PS SUCCESSFUL : " & now
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE_PS SUCCESSFUL : " & now
+    err.clear
   elseif (errRET <> 0) then    											        ''MSP_SSHEAL_FORCE_PS FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE_PS FAILURE : " & now & " : " & errRET
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE_PS FAILURE : " & now & " : " & errRET

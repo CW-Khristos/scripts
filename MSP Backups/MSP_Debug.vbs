@@ -14,9 +14,9 @@ dim strIN, arrIN, strHDR, strCHG
 dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG, objCFG
 ''VERSION FOR SCRIPT UPDATE, MSP_DEBUG.VBS, REF #2 , REF #68 , REF #69 , FIXES #24
-strVER = 4
+strVER = 5
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''SET 'errRET' CODE
 errRET = 0
@@ -68,6 +68,12 @@ else                                                                  ''LOGFILE 
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_DEBUG", 8)
 end if
+''MSP BACKUP MANAGER CONFIG.INI FILE
+if (objFSO.fileexists("C:\Program Files\Backup Manager\config.ini")) then
+  set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini")
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\config.ini")) then
+  call LOGERR(1)                                                      ''CONFIG.INI NOT PRESENT, END SCRIPT, 'ERRRET'=1
+end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                                 ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
@@ -86,87 +92,91 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
 objLOG.write vbnewline & now & " - EXECUTING MSP_DEBUG" & vbnewline
-''AUTOMATIC UPDATE, MSP_DEBUG.VBS, REF #2 , REF #69 , REF #68 , FIXES #24
-''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
-''EXECUTE CHKAU.VBS SCRIPT, REF #69
-objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_DEBUG : " & strVER
-objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_DEBUG : " & strVER
-intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
-  chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
-  chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
-''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-intRET = (intRET - vbObjectError)
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-  ''PARSE CONFIG.INI FILE , REF #17
-  objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-  objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-  strIN = objCFG.readall
-  arrIN = split(strIN, vbnewline)
-  for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
-    objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
-    objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
-    if (arrIN(intIN) = "[Logging]") then                                ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
-      blnHDR = true
-    end if
-    if (arrIN(intIN) = "LoggingLevel=Debug") then                       ''STRING TO INJECT ALREADY IN CONFIG.INI
-      blnMOD = false
-    end if
-    if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
-      blnINJ = true
-      blnHDR = false
-      arrIN(intIN) = "LoggingLevel=Debug" & vbCrlf
-    end if
-  next
-  if ((not blnHDR) and (blnMOD)) then                                   '' '[LOGGING]' HEADER NOT FOUND , REF #17
-    blnINJ = true
-    redim preserve arrIN(intIN)
-    arrIN(intIN) = "[Logging]" & vbCrlf & "LoggingLevel=Debug" & vbCrlf
-  end if
-  objCFG.close
-  set objCFG = nothing
-  ''REPLACE CONFIG.INI FILE , REF #17
-  if (blnINJ) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-    strIN = vbnullstring
-    set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
-    for intIN = 0 to ubound(arrIN)
-      strIN = strIN & arrIN(intIN) & vbCrlf
+if (errRET = 0) then
+  ''AUTOMATIC UPDATE, MSP_DEBUG.VBS, REF #2 , REF #69 , REF #68 , FIXES #24
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_DEBUG : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_DEBUG : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''PARSE CONFIG.INI FILE , REF #17
+    objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+    objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+    strIN = objCFG.readall
+    arrIN = split(strIN, vbnewline)
+    for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
       objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
       objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      if (arrIN(intIN) = "[Logging]") then                                ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
+        blnHDR = true
+      end if
+      if (arrIN(intIN) = "LoggingLevel=Debug") then                       ''STRING TO INJECT ALREADY IN CONFIG.INI
+        blnMOD = false
+      end if
+      if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
+        blnINJ = true
+        blnHDR = false
+        arrIN(intIN) = "LoggingLevel=Debug" & vbCrlf
+      end if
     next
-    objCFG.write strIN
+    if ((not blnHDR) and (blnMOD)) then                                   '' '[LOGGING]' HEADER NOT FOUND , REF #17
+      blnINJ = true
+      redim preserve arrIN(intIN)
+      arrIN(intIN) = "[Logging]" & vbCrlf & "LoggingLevel=Debug" & vbCrlf
+    end if
     objCFG.close
     set objCFG = nothing
-  end if
-  ''CREATE MSP BACKUP DEBUG FOLDERS , REF #17
-  objOUT.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
-  objLOG.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
-  ''WIN 7/8/10/2K8
-  strFOL = "C:\ProgramData\MXB\Backup Manager\logs"
-  if (objFSO.folderexists(strFOL)) then
-    strFOL = "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
-    if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
-      objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
-      objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
-      objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
+    ''REPLACE CONFIG.INI FILE , REF #17
+    if (blnINJ) then
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      strIN = vbnullstring
+      set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
+      for intIN = 0 to ubound(arrIN)
+        strIN = strIN & arrIN(intIN) & vbCrlf
+        objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+        objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      next
+      objCFG.write strIN
+      objCFG.close
+      set objCFG = nothing
+    end if
+    ''CREATE MSP BACKUP DEBUG FOLDERS , REF #17
+    objOUT.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
+    objLOG.write vbnewline & now & vbtab & " - CHECKING 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY"
+    ''WIN 7/8/10/2K8
+    strFOL = "C:\ProgramData\MXB\Backup Manager\logs"
+    if (objFSO.folderexists(strFOL)) then
+      strFOL = "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
+      if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
+        objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+        objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+        objFSO.createfolder "C:\ProgramData\MXB\Backup Manager\logs\BackupFP.Protocol"
+      end if
+    end if
+    ''WIN XP/2K3
+    strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs"
+    if (objFSO.folderexists(strFOL)) then
+      strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol"
+      if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
+        objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+        objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
+        objFSO.createfolder strFOL
+      end if
     end if
   end if
-  ''WIN XP/2K3
-  strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs"
-  if (objFSO.folderexists(strFOL)) then
-    strFOL = "C:\Documents and Settings\All Users\Application Data\MXB\Backup Manager\logs\BackupFP.Protocol"
-    if (not objFSO.folderexists(strFOL)) then                           ''NEED TO CREATE 'BACKUPFP.PROTOCOL' LOGGING DIRECTORY
-      objOUT.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
-      objLOG.write vbnewline & now & vbtab & vbtab & "CREATING LOGGING DIRECTORY : " & strFOL
-      objFSO.createfolder strFOL
-    end if
-  end if
+elseif (errRET <> 0) then
+  call LOGERR(errRET)
 end if
 ''END SCRIPT
 call CLEANUP()
@@ -248,17 +258,28 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 1                                                  '' 'ERRRET'=1 - CONFIG.INI NOT PRESENT, END SCRIPT, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CONFIG.INI NOT PRESENT, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CONFIG.INI NOT PRESENT, END SCRIPT"
+    case 2                                                  '' 'ERRRET'=2 - NOT ENOUGH ARGUMENTS
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - NO ARGUMENTS PASSED, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - NO ARGUMENTS PASSED, END SCRIPT"
+    case 11                                                 ''MSP_DEBUG - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CALL FILEDL() : " & strSAV
+    case 12                                                 ''MSP_DEBUG - CALL HOOK() , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 
-sub CLEANUP()                                                           ''SCRIPT CLEANUP
+sub CLEANUP()                                               ''SCRIPT CLEANUP
   on error resume next
-  if (errRET = 0) then                                                  ''SCRIPT COMPLETED SUCCESSFULLY
+  if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG COMPLETE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG COMPLETE : " & errRET & " : " & now
     err.clear
-  elseif (errRET <> 0) then                                             ''SCRIPT FAILED
+  elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_DEBUG FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED

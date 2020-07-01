@@ -19,7 +19,7 @@ dim objIN, objOUT, objARG, objWSH, objFSO
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
-strVER = 6
+strVER = 7
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "MSP Backups"
@@ -49,8 +49,6 @@ end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
-''MSP BACKUP MANAGER CONFIG.INI FILE
-set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini")
 ''CHECK EXECUTION METHOD OF SCRIPT
 strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
 if (strIN <> "cscript.exe") Then
@@ -69,12 +67,15 @@ else                                                                  ''LOGFILE 
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\MSP_CONFIG", 8)
 end if
+''MSP BACKUP MANAGER CONFIG.INI FILE
+if (objFSO.fileexists("C:\Program Files\Backup Manager\config.ini")) then
+  set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini")
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\config.ini")) then
+  call LOGERR(1)                                                      ''CONFIG.INI NOT PRESENT, END SCRIPT, 'ERRRET'=1
+end if
 ''READ PASSED COMMANDLINE ARGUMENTS
-if (wscript.arguments.count <= 2) then                                ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
-  call LOGERR(1)
-  call CLEANUP()
+if (wscript.arguments.count <= 2) then                                ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=2
+  call LOGERR(2)
 elseif (wscript.arguments.count > 0) then                             ''ARGUMENTS WERE PASSED
   for x = 0 to (wscript.arguments.count - 1)
     objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
@@ -87,11 +88,8 @@ elseif (wscript.arguments.count > 0) then                             ''ARGUMENT
     if (wscript.arguments.count > 3) then
       blnFORCE = objARG.item(3)                                       ''SET BOOLEAN 'BLNFORCE', FLAG TO FORCE MODIFY VALUE
     end if
-  elseif (wscript.arguments.count <= 2) then                          ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=1
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES HEADER SELECTION, STRING TO INJECT, AND VALUE TO SET"
-    call LOGERR(1)
-    call CLEANUP()  
+  elseif (wscript.arguments.count <= 2) then                          ''NO ARGUMENTS PASSED, END SCRIPT, 'ERRRET'=2
+    call LOGERR(2) 
   end if
 end if
 
@@ -99,76 +97,82 @@ end if
 ''BEGIN SCRIPT
 objOUT.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
-''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , REF #69 , REF #68 , FIXES #25
-''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
-call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
-''EXECUTE CHKAU.VBS SCRIPT, REF #69
-objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
-objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
-intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
-  chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
-  chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
-  chr(34) & strCHG & "|" & strVAL & "|" & blnFORCE & chr(34) & chr(34), 0, true)
-''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-intRET = (intRET - vbObjectError)
-objOUT.write vbnewline & "errRET='" & intRET & "'"
-objLOG.write vbnewline & "errRET='" & intRET & "'"
-if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-  ''PARSE CONFIG.INI FILE
-  objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-  objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
-  strIN = objCFG.readall
-  arrIN = split(strIN, vbnewline)
-  for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
-    objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
-    objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
-    if (arrIN(intIN) = strHDR) then                                     ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
-      blnHDR = true
-    end if
-    if (instr(1, arrIN(intIN), strCHG)) then                            ''STRING TO INJECT ALREADY IN CONFIG.INI
-      blnINJ = false
-      blnMOD = false
-      if (strVAL = split(arrIN(intIN), "=")(1)) then                    ''PASSED VALUE 'STRVAL' MATCHES INTERNAL STRING VALUE
-        blnINJ = false
-        blnMOD = false
-      elseif (strVAL <> split(arrIN(intIN), "=")(1)) then               ''PASSED VALUE 'STRVAL' DOES NOT MATCH INTERNAL STRING VALUE
-        if (not blnFORCE) then
-          blnINJ = false
-          blnMOD = false
-        elseif (blnFORCE) then
-          blnINJ = true
-          blnMOD = false
-          arrIN(intIN) = strCHG & "=" & strVAL
-          exit for
-        end if  
-      end if
-      exit for
-    end if
-    if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
-      blnINJ = true
-      blnHDR = false
-      arrIN(intIN) = strCHG & "=" & strVAL & vbCrlf
-    end if
-  next
-  objCFG.close
-  set objCFG = nothing
-  ''REPLACE CONFIG.INI FILE
-  if (blnINJ) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-    strIN = vbnullstring
-    set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
-    for intIN = 0 to ubound(arrIN)
-      strIN = strIN & arrIN(intIN) & vbCrlf
+if (errRET = 0) then
+  ''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , REF #69 , REF #68 , FIXES #25
+  ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
+  ''EXECUTE CHKAU.VBS SCRIPT, REF #69
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+    chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
+    chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
+    chr(34) & strCHG & "|" & strVAL & "|" & blnFORCE & chr(34) & chr(34), 0, true)
+  ''CHKAU RETURNED - NO UPDATE FOUND , REF #2 , REF #69 , REF #68
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  intRET = (intRET - vbObjectError)
+  objOUT.write vbnewline & "errRET='" & intRET & "'"
+  objLOG.write vbnewline & "errRET='" & intRET & "'"
+  if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''PARSE CONFIG.INI FILE
+    objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+    objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
+    strIN = objCFG.readall
+    arrIN = split(strIN, vbnewline)
+    for intIN = 0 to ubound(arrIN)                                        ''CHECK CONFIG.INI LINE BY LINE
       objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
       objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      if (arrIN(intIN) = strHDR) then                                     ''FOUND SPECIFIED 'HEADER' IN CONFIG.INI
+        blnHDR = true
+      end if
+      if (instr(1, arrIN(intIN), strCHG)) then                            ''STRING TO INJECT ALREADY IN CONFIG.INI
+        blnINJ = false
+        blnMOD = false
+        if (strVAL = split(arrIN(intIN), "=")(1)) then                    ''PASSED VALUE 'STRVAL' MATCHES INTERNAL STRING VALUE
+          blnINJ = false
+          blnMOD = false
+        elseif (strVAL <> split(arrIN(intIN), "=")(1)) then               ''PASSED VALUE 'STRVAL' DOES NOT MATCH INTERNAL STRING VALUE
+          if (not blnFORCE) then
+            blnINJ = false
+            blnMOD = false
+          elseif (blnFORCE) then
+            blnINJ = true
+            blnMOD = false
+            arrIN(intIN) = strCHG & "=" & strVAL
+            exit for
+          end if  
+        end if
+        exit for
+      end if
+      if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
+        blnINJ = true
+        blnHDR = false
+        arrIN(intIN) = strCHG & "=" & strVAL & vbCrlf
+      end if
     next
-    objCFG.write strIN
     objCFG.close
     set objCFG = nothing
+    ''REPLACE CONFIG.INI FILE
+    if (blnINJ) then
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      strIN = vbnullstring
+      set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
+      for intIN = 0 to ubound(arrIN)
+        strIN = strIN & arrIN(intIN) & vbCrlf
+        objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+        objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      next
+      objCFG.write strIN
+      objCFG.close
+      set objCFG = nothing
+    end if
+  elseif (intRET <> 0) then
+    call LOGERR(intRET)
   end if
+elseif (errRET <> 0) then
+  call LOGERR(errRET)
 end if
 ''CLEANUP
 call CLEANUP()
@@ -250,18 +254,30 @@ sub LOGERR(intSTG)                                                    ''CALL HOO
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                            '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES 'HEADER', 'INTERNAL STRING', AND 'VALUE' TO MODIFY"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES 'HEADER', 'INTERNAL STRING', AND 'VALUE' TO MODIFY"
+    case 1                                                            '' 'ERRRET'=1 - CONFIG.INI NOT PRESENT, END SCRIPT, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CONFIG.INI NOT PRESENT, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CONFIG.INI NOT PRESENT, END SCRIPT"
+    case 2                                                            '' 'ERRRET'=2 - NOT ENOUGH ARGUMENTS
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
+    case 11                                                           ''MSP_CONFIG - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CALL FILEDL() : " & strSAV
+    case 12                                                           ''MSP_CONFIG - CALL HOOK() , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 
 sub CLEANUP()                                 			                  ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											                  ''MSP_CONFIG COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & "MSP_CONFIG SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG SUCCESSFUL : " & now
+    err.clear
   elseif (errRET <> 0) then    											                  ''MSP_CONFIG FAILED
-    objOUT.write vbnewline & "MSP_CONFIG FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_CONFIG", "FAILURE")
   end if
