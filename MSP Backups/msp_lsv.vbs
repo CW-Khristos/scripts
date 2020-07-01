@@ -16,7 +16,7 @@ dim objWSH, objFSO, objLOG, objLSV
 ''DEFAULT SUCCESS
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
-strVER = 5
+strVER = 6
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -27,6 +27,13 @@ set objARG = wscript.arguments
 ''CREATE SCRIPTING OBJECTS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\msp_lsv")) then              ''PREVIOUS LOGFILE EXISTS
   objFSO.deletefile "C:\temp\msp_lsv", true
@@ -41,12 +48,11 @@ else                                                        ''LOGFILE NEEDS TO B
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\msp_lsv", 8)
 end if
-''CHECK 'PERSISTENT' FOLDERS
-if (not (objFSO.folderexists("C:\IT\"))) then
-  objFSO.createfolder("C:\IT\")
-end if
-if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
-  objFSO.createfolder("C:\IT\Scripts\")
+''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
+if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
 end if
 ''PREPARE MONITOR FILE
 if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''PREVIOUS LOGFILE EXISTS
@@ -106,7 +112,8 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     strIN = objHOOK.stdout.readall
     arrIN = split(strIN, vbnewline)
     ''WRITE SCRIPT LOGFILE
-    for intIN = 0 to ubound(arrIN)                              ''CHECK SETTINGS LINE BY LINE, EXCLUDE THE 'C:\WINDOWS\TEMP' AND 'C:\TEMP' DIRECTORIES TO AVOID FALSE MONITOR ALERTS
+    for intIN = 0 to ubound(arrIN)
+      ''CHECK SETTINGS LINE BY LINE, EXCLUDE THE 'C:\WINDOWS\TEMP' AND 'C:\TEMP' DIRECTORIES TO AVOID FALSE MONITOR ALERTS
       if ((instr(1, lcase(arrIN(intIN)), "c:\") = 0) and _
         (instr(1,lcase(arrIN(intIN)), "\temp") = 0)) then
           objOUT.write vbnewline & now & vbtab & arrIN(intIN)
@@ -115,7 +122,8 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     next
     intIN = 0
     ''WRITE MONITOR FILE
-    for intIN = 0 to ubound(arrIN)                              ''CHECK SETTINGS LINE BY LINE, EXCLUDE THE 'C:\WINDOWS\TEMP' AND 'C:\TEMP' DIRECTORIES TO AVOID FALSE MONITOR ALERTS
+    for intIN = 0 to ubound(arrIN)
+      ''CHECK SETTINGS LINE BY LINE, EXCLUDE THE 'C:\WINDOWS\TEMP' AND 'C:\TEMP' DIRECTORIES TO AVOID FALSE MONITOR ALERTS
       if ((instr(1, lcase(arrIN(intIN)), "c:\") = 0) and _
         (instr(1,lcase(arrIN(intIN)), "\temp") = 0)) then
           ''EXCLUDE ALL OUTPUT EXCEPT FOR LSV LOCATION
@@ -130,7 +138,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
     next
     set objHOOK = nothing
   end if
-elseif (errRET <> 0) then                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
 ''END SCRIPT
@@ -211,7 +219,23 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 0                                                  ''MSP_LSV - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK PASSED"
+    case 1                                                  ''MSP_LSV - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK FAILED, ENDING MSP_LSV"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK FAILED, ENDING MSP_LSV"
+    case 2                                                  ''MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
+    case 11                                                 ''MSP_LSV - CALL FILEDL() , 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL FILEDL() : " & strSAV
+    case 12                                                 ''MSP_LSV - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 
@@ -220,6 +244,7 @@ sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   if (errRET = 0) then         											        ''MSP_LSV COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
+    err.clear
   elseif (errRET <> 0) then    											        ''MSP_LSV FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
     objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET

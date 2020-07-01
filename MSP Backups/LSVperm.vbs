@@ -103,7 +103,8 @@ if (errRET = 0) then                                                        ''AR
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
     objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
     set objHOOK = nothing
-    if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then     ''BACKUPS NOT IN PROGRESS , CONTINUE SCRIPT
+    ''BACKUPS NOT IN PROGRESS , CONTINUE SCRIPT
+    if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Suspended"))) then
       ''GET SIDS OF ALL USERS , 'ERRRET'=20
       intUSR = 0
       intSID = 0

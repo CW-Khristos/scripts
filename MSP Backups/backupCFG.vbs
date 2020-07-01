@@ -36,7 +36,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
   next 
   if (wscript.arguments.count > 0) then                     ''SET USER , PASSWORD , AND OPERATION LEVEL VARIABLES
-    'strPWR = objARG.item(0)                                ''SET POWER HIBERNATION OPTION (ON / OFF)
+    'strPWR = objARG.item(0)                                ''SET OPTION (ON / OFF)
   else                                                      ''NOT ENOUGH ARGUMENTS PASSED, END SCRIPT
     'errRET = 1
     'call CLEANUP()
@@ -54,7 +54,7 @@ elseif (errRET = 0) then
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING BACKUPCFG" & vbnewline
   ''AUTOMATIC UPDATE , 'ERRRET'=10 , BACKUPCFG.VBS , REF #2
   call CHKAU()
-  ''CHANGE BACKUPCFG HIBERNATION OPTION
+  ''CHANGE BACKUPCFG OPTION
   objOUT.write vbnewline & vbnewline & now & vbtab & " - CHANGING BACKUPCFG SETTING" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - CHANGING BACKUPCFG SETTING" & vbnewline
   call HOOK("c:\program files\backup manager\clienttool.exe control.selection.modify -datasource FileSystem -include /")
