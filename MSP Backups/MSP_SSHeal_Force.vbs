@@ -20,7 +20,7 @@ dim blnSQL, blnTSK, blnVSS, blnWMI, blnWSCH
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_SSHEAL_FORCE.VBS, REF #2 , FIXES #4
-strVER = 15
+strVER = 16
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
