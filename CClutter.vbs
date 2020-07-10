@@ -100,7 +100,7 @@ end if
 if (errRET = 0) then
   ''CREATE LOGFILE, IF ENABLED
   if (wscript.arguments.count > 0) then                                             ''CHECK LOGGING ARGUMENT
-    blnLOG = bool(objARG.item(0))
+    blnLOG = objARG.item(0)
   elseif (wscript.arguments.count = 0) then                                         ''LOGGING ARGUMENT NOT PASSED
     blnLOG = false
   end if
@@ -123,10 +123,10 @@ if (errRET = 0) then
       objLOG.write vbnewline & "ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
     next
     if (wscript.arguments.count > 1) then                                           ''SET REQUIRED ARGUMENTS
-      blnLOG = bool(objARG.item(0))
+      blnLOG = objARG.item(0)
       strFOL = objARG.item(1)
     elseif (wscript.arguments.count <= 1) then                                      ''NOT ENOUGH ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
-      blnLOG = bool(objARG.item(0))
+      blnLOG = objARG.item(0)
     end if
   elseif (wscript.arguments.count = 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
     blnLOG = false
