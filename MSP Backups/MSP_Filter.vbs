@@ -745,10 +745,10 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     case 1                                                  ''MSP_FILTER - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
-    case 11                                                 ''MSP_FILTER - CALL FILEDL() , 'ERRRET'=11
+    case 11                                                 ''MSP_FILTER - CALL FILEDL() FAILED, 'ERRRET'=11
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
-    case 12                                                 ''MSP_FILTER - 'VSS CHECKS' - MAX ITERATIONS REACHED , 'ERRRET'=12
+    case 12                                                 ''MSP_FILTER - 'CALL HOOK() FAILED, 'ERRRET'=12
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
