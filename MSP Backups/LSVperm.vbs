@@ -54,6 +54,12 @@ else                                                                        ''LO
   objLOG.close
   set objLOG = objFSO.opentextfile("C:\temp\LSVperm", 8)
 end if
+''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
+if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(0)                                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
+  call LOGERR(1)                                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
+end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                                       ''ARGUMENTS WERE PASSED
   ''ARGUMENT OUTPUT DISABLED TO SANITIZE
@@ -67,10 +73,10 @@ if (wscript.arguments.count > 0) then                                       ''AR
     strPWD = objARG.item(2)                                                 ''SET REQUIRED PARAMETER 'STRPWD' ; TARGET USER CREDENTIALS
     strOPT = objARG.item(3)                                                 ''SET REQUIRED PARAMETER 'STROPT' ; TARGET TARGET NETWORK TYPE 'LOCAL / DOMAIN'
   elseif (wscript.arguments.count <= 1) then                                ''NOT ENOUGH ARGUMENTS PASSED ; END SCRIPT , 'ERRRET'=1
-    call LOGERR(1)
+    call LOGERR(2)
   end if
 elseif (wscript.arguments.count = 0) then                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
-  call LOGERR(1)
+  call LOGERR(2)
 end if
 
 ''------------
@@ -126,7 +132,7 @@ if (errRET = 0) then                                                        ''AR
           end if
         end if
         if (err.number <> 0) then
-          call LOGERR(2)
+          call LOGERR(4)
         end if
       wend
       err.clear
@@ -242,7 +248,7 @@ if (errRET = 0) then                                                        ''AR
         call LOGERR(32)
       end if
     elseif ((instr(1, strIDL, "Idle") = 0) and (instr(1, strIDL, "RegSync") = 0)) then    ''BACKUPS IN PROGRESS , 'ERRRET'=2
-      call LOGERR(2)
+      call LOGERR(3)
     end if
   end if
 elseif (errRET <> 0) then                                                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
@@ -327,12 +333,45 @@ sub LOGERR(intSTG)                                                          ''CA
     err.clear
   end if
   select case intSTG
-    case 1                                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
-    case 2                                                                  '' 'ERRRET'=2 - BACKUPS IN PROGRESS
-      objOUT.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING LSVPERM"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - BACKUPS IN PROGRESS, ENDING LSVPERM"
+    case 0                                                                  ''LSVPERM - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CLIENTTOOL CHECK PASSED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CLIENTTOOL CHECK PASSED"
+    case 1                                                                  ''LSVPERM - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CLIENTTOOL CHECK FAILED, ENDING LSVPERM"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CLIENTTOOL CHECK FAILED, ENDING LSVPERM"
+    case 2                                                                  ''LSVPERM - NOT ENOUGH ARGUMENTS, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SCRIPT REQUIRES PATH TO MSP LSV DESTINATION, LSV USER, LSV PASSWORD"
+    case 3                                                                  ''LSVPERM - BACKUPS IN PROGRESS, 'ERRRET'=3
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - BACKUPS IN PROGRESS, ENDING LSVPERM"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - BACKUPS IN PROGRESS, ENDING LSVPERM"
+    case 11                                                                 ''LSVPERM - CALL FILEDL() FAILED, 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL FILEDL() : " & strSAV
+    case 12                                                                 ''LSVPERM - 'CALL HOOK() FAILED, 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+    case 21                                                                 ''LSVPERM - ICACLS /SETOWNER FAILED, 'ERRRET'=21
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /SETOWNER RMMTECH') FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /SETOWNER RMMTECH') FAILED"
+    case 22                                                                 ''LSVPERM - ICACLS /GRANT RMMTECH FAILED, 'ERRRET'=22
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /GRANT RMMTECH') FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /GRANT RMMTECH') FAILED"
+    case 23                                                                 ''LSVPERM - ICACLS /INHERITANCE:R FAILED, 'ERRRET'=23
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /INHERITANCE:R') FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /INHERITANCE:R') FAILED"
+    case 24                                                                 ''LSVPERM - ICACLS /REMOVE:G USERS FAILED, 'ERRRET'=24
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /REMOVE:G USERS') FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - CALL HOOK('ICACLS /REMOVE:G USERS') FAILED"
+    case 30                                                                 ''LSVPERM - SVCPERM DOWNLOAD FAILED, 'ERRRET'=30
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM DOWNLOAD FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM DOWNLOAD FAILED"
+    case 31                                                                 ''LSVPERM - SVCPERM NOT FOUND, 'ERRRET'=31
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM NOT FOUND"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM NOT FOUND"
+    case 32                                                                 ''LSVPERM - SVCPERM EDXECUTION FAILED, 'ERRRET'=32
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM EDXECUTION FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - LSVPERM - SVCPERM EDXECUTION FAILED"
   end select
 end sub
 
