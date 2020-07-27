@@ -22,7 +22,8 @@ dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
 dim objUFOL, arrUFOL()
 ''PRE-DEFINED ARRAYS
-dim arrEXCL(), arrPUSR(), arrPFOL(), arrAPP()
+dim arrEXCL(), arrPUSR()
+dim arrPFOL(), arrAPP(), arrPROF()
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -114,48 +115,73 @@ redim arrPFOL(2)
 arrPFOL(0) = ".PST"
 arrPFOL(1) = "Outlook\Roamcache"
 ''APPDATA FILES / FOLDERS
-redim arrAPP(41)
+redim arrAPP(57)
 arrAPP(0) = "\AppData\Local\CrashDumps"
 arrAPP(1) = "\AppData\Local\D3DSCache"
-arrAPP(2) = "\AppData\Local\Google\Chrome\User Data\Crashpad"
-arrAPP(3) = "\AppData\Local\Google\Chrome\User Data\Default\Application Cache"
-arrAPP(4) = "\AppData\Local\Google\Chrome\User Data\Default\Cache"
-arrAPP(5) = "\AppData\Local\Google\Chrome\User Data\Default\Code Cache"
-arrAPP(6) = "\AppData\Local\Google\Chrome\User Data\Default\GPUCache"
-arrAPP(7) = "\AppData\Local\Google\Chrome\User Data\FontLookupTableCache"
-arrAPP(8) = "\AppData\Local\Google\Chrome\User Data\ShaderCache"
-arrAPP(9) = "\AppData\Local\Google\Chrome\User Data\PnaclTranslationCache"
-arrAPP(10) = "\AppData\Local\Google\Chrome\User Data\SwReporter"
-arrAPP(11) = "\AppData\Local\Google\CrashReports"
-arrAPP(12) = "\AppData\Local\Google\Software Reporter Tool"
-arrAPP(13) = "\AppData\Local\GWX"
-arrAPP(14) = "\AppData\Local\Microsoft\Feeds Cache"
-arrAPP(15) = "\AppData\Local\Microsoft\FontCache"
-arrAPP(16) = "\AppData\Local\Microsoft\SquirrelTemp"
-arrAPP(17) = "\AppData\Local\Microsoft\Terminal Server Client\Cache"
-arrAPP(18) = "\AppData\Local\Microsoft\Windows\ActionCenterCache"
-arrAPP(19) = "\AppData\Local\Microsoft\Windows\AppCache"
-arrAPP(20) = "\AppData\Local\Microsoft\Windows\Caches"
-arrAPP(21) = "\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete"
-arrAPP(22) = "\AppData\Local\Microsoft\Windows\IECompatCache"
-arrAPP(23) = "\AppData\Local\Microsoft\Windows\IECompatUaCache"
-arrAPP(24) = "\AppData\Local\Microsoft\Windows\INetCache"
-arrAPP(25) = "\AppData\Local\Microsoft\Windows\PPBCompatCache"
-arrAPP(26) = "\AppData\Local\Microsoft\Windows\PPBCompatUaCache"
-arrAPP(27) = "\AppData\Local\Microsoft\Windows\PRICache"
-arrAPP(28) = "\AppData\Local\Microsoft\Windows\SchCache"
-arrAPP(29) = "\AppData\Local\Microsoft\Windows\WER"
-arrAPP(30) = "\AppData\Local\Microsoft\Windows\WebCache"
-arrAPP(31) = "\AppData\Local\Mozilla"
-arrAPP(32) = "\AppData\Local\SquirrelTemp"
-arrAPP(33) = "\AppData\Local\Temp"
-arrAPP(34) = "\AppData\Local\IconCache.db"
-arrAPP(35) = "\AppData\Local\Microsoft\Outlook\*.ost"
-arrAPP(36) = "\AppData\Local\Microsoft\Outlook\*.tmp"
-arrAPP(37) = "\AppData\Local\Microsoft\Windows\Explorer\iconcache*.db"
-arrAPP(38) = "\AppData\Local\Microsoft\Windows\Explorer\thumbcache*.db"
-arrAPP(39) = "\AppData\Local\Microsoft\MicrosoftEdge\SharedCacheContainers"
-arrAPP(40) = "\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete"
+arrAPP(2) = "\AppData\Local\Google\Chrome\User Data\~"
+arrAPP(3) = "\AppData\Local\Google\Chrome\User Data\Crashpad"
+arrAPP(4) = "\AppData\Local\Google\Chrome\User Data\Default\Application Cache"
+arrAPP(5) = "\AppData\Local\Google\Chrome\User Data\Default\Cache"
+arrAPP(6) = "\AppData\Local\Google\Chrome\User Data\Default\Code Cache"
+arrAPP(7) = "\AppData\Local\Google\Chrome\User Data\Default\GPUCache"
+arrAPP(8) = "\AppData\Local\Google\Chrome\User Data\FontLookupTableCache"
+arrAPP(9) = "\AppData\Local\Google\Chrome\User Data\ShaderCache"
+arrAPP(10) = "\AppData\Local\Google\Chrome\User Data\PnaclTranslationCache"
+arrAPP(11) = "\AppData\Local\Google\Chrome\User Data\Default\Service Worker\CacheStorage"
+arrAPP(12) = "\AppData\Local\Google\Chrome\User Data\Default\Service Worker\ScriptCache"
+arrAPP(13) = "\AppData\Local\Google\Chrome\User Data\SwReporter"
+arrAPP(14) = "\AppData\Local\Google\CrashReports"
+arrAPP(15) = "\AppData\Local\Google\Software Reporter Tool"
+arrAPP(16) = "\AppData\Local\GWX"
+arrAPP(17) = "\AppData\Local\Microsoft\Feeds Cache"
+arrAPP(18) = "\AppData\Local\Microsoft\FontCache"
+arrAPP(19) = "\AppData\Local\Microsoft\SquirrelTemp"
+arrAPP(20) = "\AppData\Local\Microsoft\Terminal Server Client\Cache"
+arrAPP(21) = "\AppData\Local\Microsoft\Windows\ActionCenterCache"
+arrAPP(22) = "\AppData\Local\Microsoft\Windows\AppCache"
+arrAPP(23) = "\AppData\Local\Microsoft\Windows\Caches"
+arrAPP(24) = "\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete"
+arrAPP(25) = "\AppData\Local\Microsoft\Windows\IECompatCache"
+arrAPP(26) = "\AppData\Local\Microsoft\Windows\IECompatUaCache"
+arrAPP(27) = "\AppData\Local\Microsoft\Windows\INetCache"
+arrAPP(28) = "\AppData\Local\Microsoft\Windows\PPBCompatCache"
+arrAPP(29) = "\AppData\Local\Microsoft\Windows\PPBCompatUaCache"
+arrAPP(30) = "\AppData\Local\Microsoft\Windows\PRICache"
+arrAPP(31) = "\AppData\Local\Microsoft\Windows\SchCache"
+arrAPP(32) = "\AppData\Local\Microsoft\Windows\WER"
+arrAPP(33) = "\AppData\Local\Microsoft\Windows\WebCache"
+arrAPP(34) = "\AppData\Local\Mozilla"
+arrAPP(35) = "\AppData\Local\SquirrelTemp"
+arrAPP(36) = "\AppData\Local\Temp"
+arrAPP(37) = "\AppData\Local\IconCache.db"
+arrAPP(38) = "\AppData\Local\Microsoft\Outlook\*.ost"
+arrAPP(39) = "\AppData\Local\Microsoft\Outlook\*.tmp"
+arrAPP(40) = "\AppData\Local\Microsoft\Windows\Explorer\iconcache*.db"
+arrAPP(41) = "\AppData\Local\Microsoft\Windows\Explorer\thumbcache*.db"
+arrAPP(42) = "\AppData\Local\MicrosoftEdge\SharedCacheContainers"
+arrAPP(43) = "\AppData\Local\Microsoft\Windows\Explorer\IconCacheToDelete"
+arrAPP(44) = "\AppData\Local\Microsoft\Edge\User Data\~"
+arrAPP(45) = "\AppData\Local\Microsoft\Edge\User Data\Crashpad"
+arrAPP(46) = "\AppData\Local\Microsoft\Edge\User Data\Default\Application Cache"
+arrAPP(47) = "\AppData\Local\Microsoft\Edge\User Data\Default\Cache"
+arrAPP(48) = "\AppData\Local\Microsoft\Edge\User Data\Default\Code Cache"
+arrAPP(49) = "\AppData\Local\Microsoft\Edge\User Data\Default\GPUCache"
+arrAPP(50) = "\AppData\Local\Microsoft\Edge\User Data\FontLookupTableCache"
+arrAPP(51) = "\AppData\Local\Microsoft\Edge\User Data\ShaderCache"
+arrAPP(52) = "\AppData\Local\Microsoft\Edge\User Data\PnaclTranslationCache"
+arrAPP(53) = "\AppData\Local\Microsoft\Edge\User Data\SwReporter"
+arrAPP(54) = "\AppData\Local\Microsoft\Edge\CrashReports"
+arrAPP(55) = "\AppData\Local\Microsoft\Edge\User Data\Default\Service Worker\CacheStorage"
+arrAPP(56) = "\AppData\Local\Microsoft\Edge\User Data\Default\Service Worker\ScriptCache"
+''GOOGLE CHROME / MICROSOFT EDGE 'PROFILE' EXCLUSIONS
+''\AppData\Local\~\~\User Data\Profile #\"
+redim arrPROF(6)
+arrPROF(0) = "\Application Cache"
+arrPROF(1) = "\Cache"
+arrPROF(2) = "\Code Cache"
+arrPROF(3) = "\GPUCache"
+arrPROF(4) = "\Service Worker\CacheStorage"
+arrPROF(5) = "\Service Worker\ScriptCache"
 
 ''------------
 ''BEGIN SCRIPT
@@ -650,6 +676,26 @@ function chkSFOL(strSFOL)
           wscript.sleep 100
         next
         set colSFIL = nothing
+        set objSFOL = nothing
+      elseif (instr(1, strSFOL, "~")) then
+        ''GOOGLE CHROME / MICROSOFT EDGE 'PROFILE' EXCLUSIONS
+        ''USE TO CHECK FURTHER SUB-FOLDERS / FILES
+        set objSFOL = objFSO.getfolder(mid(strSFOL, 1, len(strSFOL) - 1))
+        set colSFOL = objSFOL.subfolders
+        for each subSFOL in colSFOL
+          if (instr(1, subSFOL.path, "Profile ")) then
+            for intPROF = 0 to ubound(arrPROF)
+              ''EXCLUDE FOLDER / FILE
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subSFOL.path & "\" & arrPROF(intPROF) & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subSFOL.path & "\" & arrPROF(intPROF) & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subSFOL.path & "\" & arrPROF(intPROF) & chr(34))
+              wscript.sleep 200
+            next
+          end if
+        next
+        set colSFOL = nothing
         set objSFOL = nothing
       elseif (instr(1, strSFOL, "*") = 0) then
         ''EXCLUDE FOLDER / FILE
