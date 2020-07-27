@@ -27,7 +27,7 @@ dim arrEXCL(), arrPUSR(), arrPFOL(), arrAPP()
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
-strVER = 8
+strVER = 9
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -63,9 +63,9 @@ else                                                          ''LOGFILE NEEDS TO
 end if
 ''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
 if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
-  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+  call LOGERR(0)                                              ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
 elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
-  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
+  call LOGERR(1)                                              ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE PASSED
@@ -314,33 +314,34 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             end if
           next
         end if
+        ''DISABLED UNTIL REVIEW OF CLOUD BASED INCLUDES CAN BE COMPLETED
         ''DOWNLOAD 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION FILE , 'ERRRET'=2 , REF #2
-        objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
-        objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        'objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
+        'objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
         erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\cloud_includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\cloud_includes.txt", true
         end if
-        call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/cloud_includes.txt", "C:\IT\Scripts", "cloud_includes.txt")
-        set objTMP = objFSO.opentextfile("C:\IT\Scripts\cloud_includes.txt", 1)
-        while (not objTMP.atendofstream)
-          strTMP = strTMP & objTMP.readline
-        wend
-        objTMP.close
-        set objTMP = nothing
-        arrTMP = split(strTMP, "|")
-        for intTMP = 0 to ubound(arrTMP)
-          if (arrTMP(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
-            wscript.sleep 200
-          end if
-        next
+        'call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/MSP%20Backups/cloud_includes.txt", "C:\IT\Scripts", "cloud_includes.txt")
+        'set objTMP = objFSO.opentextfile("C:\IT\Scripts\cloud_includes.txt", 1)
+        'while (not objTMP.atendofstream)
+        '  strTMP = strTMP & objTMP.readline
+        'wend
+        'objTMP.close
+        'set objTMP = nothing
+        'arrTMP = split(strTMP, "|")
+        'for intTMP = 0 to ubound(arrTMP)
+        '  if (arrTMP(intTMP) <> vbnullstring) then
+        '    objOUT.write vbnewline & now & vbtab & vbtab & _
+        '      "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+        '    objLOG.write vbnewline & now & vbtab & vbtab & _
+        '      "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34)
+        '    call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & arrTMP(intTMP) & chr(34))
+        '    wscript.sleep 200
+        '  end if
+        'next
         ''CUSTOM 'INCLUDE' PASSED
         if (strINCL <> vbnullstring) then
           for intTMP = 0 to ubound(arrINCL)
@@ -470,13 +471,14 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "UNNEEDED / TO EXCLUDE USER : " & arrEXCL(intCOL)
               ''MARK 'UNNEEDED / TO EXCLUDE'
               blnFND = true
+              ''DISABLED TO PREVENT OVER-WRITE OF TECHNICIAN SELECTIONS AT A LATER TIME
               ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
-              objOUT.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
-              objLOG.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
-              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
-              wscript.sleep 200
+              'objOUT.write vbnewline & now & vbtab & vbtab & _
+              '  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'objLOG.write vbnewline & now & vbtab & vbtab & _
+              '  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              'wscript.sleep 200
               ''EXCLUDE USER FOLDER SUB-FOLDERS
               ''ENUMERATE 'C:\USERS\<USERNAME>' SUB-FOLDERS
               set objUFOL = objFSO.getfolder(strFOL)
@@ -550,13 +552,14 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             if (objFSO.folderexists(strFOL)) then
               objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
               objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "ENUMERATING : " & strFOL
+              ''DISABLED TO PREVENT OVER-WRITE OF TECHNICIAN SELECTIONS AT A LATER TIME
               ''PROCEED WITH INCLUDING ENTIRE USER DIRECTORY
-              objOUT.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
-              objLOG.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
-              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
-              wscript.sleep 200
+              'objOUT.write vbnewline & now & vbtab & vbtab & _
+              '  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'objLOG.write vbnewline & now & vbtab & vbtab & _
+              '  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34)
+              'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & strFOL & chr(34))
+              'wscript.sleep 200
               ''ENUMERATE 'C:\USERS\<USERNAME>\APPDATA' SUB-FOLDERS
               for intUFOL = 0 to ubound(arrAPP)
                 'objOUT.write vbnewline & arrAPP(intUFOL)
