@@ -95,9 +95,9 @@ end if
 
 ''------------
 ''BEGIN SCRIPT
-objOUT.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
-objLOG.write vbnewline & now & " - STARTING MSP_CONFIG" & vbnewline
 if (errRET = 0) then
+  objOUT.write vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
+  objLOG.write vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
   ''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , REF #69 , REF #68 , FIXES #25
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
@@ -115,6 +115,8 @@ if (errRET = 0) then
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_CONFIG : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : MSP_CONFIG : " & strVER
     ''PARSE CONFIG.INI FILE
     objOUT.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
     objLOG.write vbnewline & now & vbtab & " - CURRENT CONFIG.INI"
