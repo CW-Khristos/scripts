@@ -131,6 +131,8 @@ if (errRET = 0) then
   elseif (wscript.arguments.count = 0) then                                         ''NO ARGUMENTS PASSED, DO NOT CREATE LOGFILE, NO CUSTOM DESTINATION
     blnLOG = false
   end if
+	objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
+	objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
   ''AUTOMATIC UPDATE, CCLUTTER.VBS, REF #2 , REF #69 , REF #68 , REF #72
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
@@ -148,8 +150,8 @@ if (errRET = 0) then
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING CCLUTTER"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : CCLUTTER : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : CCLUTTER : " & strVER
     ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
     call HOOK("cmd.exe /C icacls C:\Windows\Temp /grant administrators:f")
     ''ENUMERATE THROUGH FOLDER COLLECTION
