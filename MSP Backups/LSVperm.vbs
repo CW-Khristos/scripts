@@ -101,6 +101,8 @@ if (errRET = 0) then                                                        ''AR
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : LSVPERM : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : LSVPERM : " & strVER
     ''CHECK MSP BACKUP STATUS VIA MSP BACKUP CLIENTTOOL UTILITY
     objOUT.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
     objLOG.write vbnewline & now & vbtab & " - CHECKING MSP BACKUP STATUS"
