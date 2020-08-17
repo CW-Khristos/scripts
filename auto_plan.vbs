@@ -74,8 +74,8 @@ if (errRET = 0) then
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #68 , REF #69
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
-  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
-  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : LSVPERM : " & strVER
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : AUTO_PLANv2 : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : AUTO_PLANv2 : " & strVER
   intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
@@ -86,6 +86,8 @@ if (errRET = 0) then
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : AUTO_PLANv2 : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : AUTO_PLANv2 : " & strVER
     ''------------
     ''BEGIN MAINLOOP - LOOPED ENTRY PERMITS SELECTING OPTIONS IN SEQUENCE
     ''ALLOWS FOR STAGES TO BE SELECTED IN A LOOP
@@ -925,7 +927,13 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 1                                                  ''AUTO_PLANv2 - NOT ENOUGH ARGUMENTS, 'ERRRET'=1
+    case 11                                                 ''AUTO_PLANv2 - CALL FILEDL() FAILED, 'ERRRET'=11
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - AUTO_PLANv2 - CALL FILEDL() : " & strSAV
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - AUTO_PLANv2 - CALL FILEDL() : " & strSAV
+    case 12                                                 ''AUTO_PLANv2 - 'CALL HOOK() FAILED, 'ERRRET'=12
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - AUTO_PLANv2 - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - AUTO_PLANv2 - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
   end select
 end sub
 
