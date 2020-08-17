@@ -54,6 +54,21 @@ if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
 elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
   call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
 end if
+''CHECK BACKUP SERVICE CONTROLLER SERVICE IS STARTED
+set objHOOK = objWSH.exec("sc query " & chr(34) & "Backup Service Controller" & chr(34))
+while (not objHOOK.stdout.atendofstream)
+  strIN = objHOOK.stdout.readline
+  if (strIN <> vbnullstring) then
+    if (instr(1, strIN, "RUNNING")) then
+      blnSVC = true
+    elseif (instr(1, strIN, "STOPPED")) then
+      blnSVC = false
+    end if
+  end if
+wend
+if (blnSVC = false) then
+  call LOGERR(2)
+end if
 ''PREPARE MONITOR FILE
 if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''PREVIOUS LOGFILE EXISTS
   objFSO.deletefile "C:\IT\Scripts\lsv.txt", true
@@ -225,11 +240,12 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     case 1                                                  ''MSP_LSV - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK FAILED, ENDING MSP_LSV"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CLIENTTOOL CHECK FAILED, ENDING MSP_LSV"
-    case 2                                                  ''MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED, 'ERRRET'=2
+    case 2                                                  ''MSP_LSV - BACKUP SERVICE CONTROLLER NOT STARTED, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - BACKUP SERVICE CONTROLLER NOT STARTED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - BACKUP SERVICE CONTROLLER NOT STARTED"
+    case 3                                                  ''MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED, 'ERRRET'=3
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO / NOT ENOUGH ARGUMENTS PASSED"
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - NO ARGUMENTS PASSED. SCRIPT WILL REQUEST SETTINGS DURING EXECUTION"
     case 11                                                 ''MSP_LSV - CALL FILEDL() , 'ERRRET'=11
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV - CALL FILEDL() : " & strSAV
