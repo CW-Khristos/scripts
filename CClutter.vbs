@@ -9,14 +9,14 @@
 ''SCRIPT VARIABLES
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR, strNEW
-dim colFOL(31), blnLOG, lngSIZ, strFOL
+dim colFOL(30), blnLOG, lngSIZ, strFOL
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
 ''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2 , REF #68 , REF #69 , REF #72
-strVER = 8
+strVER = 9
 strREPO = "scripts"
-strBRCH = "master"
+strBRCH = "dev"
 strDIR = vbnullstring
 ''DEFAULT SUCCESS
 errRET = 0
@@ -61,39 +61,36 @@ end if
 colFOL(0) = strTFOL
 colFOL(1) = strWFOL & "\Logs\CBS"
 colFOL(2) = strWFOL & "\SoftwareDistribution"
+colFOL(3) = strPDFOL & "\Sentinel\logs"
+colFOL(4) = strPDFOL & "\MXB\Backup Manager\logs"
+colFOL(5) = strPDFOL & "\GetSupportService\logs"
+colFOL(6) = strPDFOL & "\GetSupportService_N-Central\logs"
+colFOL(7) = strPDFOL & "\GetSupportService_N-Central\Updates"
+colFOL(8) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
+colFOL(9) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
+colFOL(10) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
-colFOL(3) =  "C:\temp"
-'colFOL(4) = strPFFOL & "\N-able Technologies\NablePatchCache"
-'colFOL(5) = strPFFOL & "\N-able Technologies\UpdateServerCache"
-'colFOL(6) = str86FOL & " (x86)\N-able Technologies\NablePatchCache"
-'colFOL(7) = str86FOL & " (x86)\N-able Technologies\UpdateServerCache"
-colFOL(4) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
-colFOL(5) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
-colFOL(6) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
-colFOL(7) = strPDFOL & "\GetSupportService\logs"
-colFOL(8) = strPDFOL & "\GetSupportService_N-Central\logs"
-colFOL(9) = strPDFOL & "\GetSupportService_N-Central\Updates"
-colFOL(10) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(11) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(11) =  "C:\temp"
+colFOL(12) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(13) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
-  colFOL(12) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(13) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(14) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(15) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(16) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(17) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(18) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(19) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(20) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(21) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(22) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(23) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(24) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(25) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(14) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(15) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(16) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(17) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(18) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(19) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(20) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(21) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(22) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(23) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(24) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(25) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(27) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(28) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
-''C:\ProgramData\MXB\Backup Manager\logs
 
 ''------------
 ''BEGIN SCRIPT
@@ -154,6 +151,8 @@ if (errRET = 0) then
     objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : CCLUTTER : " & strVER
     ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\WINDOWS\TEMP
     call HOOK("cmd.exe /C icacls C:\Windows\Temp /grant administrators:f")
+    ''USE ICACLS TO 'RESET' PERMISSIONS ON C:\PROGRAMDATA\SENTINEL\LOGS
+    call HOOK("cmd.exe /C icacls C:\ProgramData\Sentinel\logs /grant administrators:f")
     ''ENUMERATE THROUGH FOLDER COLLECTION
     for x = 0 to ubound(colFOL)
       if (colFOL(x) <> vbnullstring) then                                         ''ENSURE COLFOL(X) IS NOT EMPTY
@@ -203,6 +202,19 @@ if (errRET = 0) then
         end if
       end if
     next
+    ''FINAL CLEANUP OF NCENTRAL PROGRAM LOGS
+    objOUT.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
+    objLOG.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
+    for intLOG = 1 to 9
+      call HOOK("DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\*.log." & intLOG & chr(34))
+      call HOOK("DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\*.log." & intLOG & chr(34))
+      call HOOK("DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
+      call HOOK("DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
+      call HOOK("DIR " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34))
+      call HOOK("DEL /S " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34))
+    next
+    call HOOK("DIR " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
+    call HOOK("DEL /S " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
     ''ENUMERATE THROUGH PASSED FOLDER PATH
     'if (strFOL <> vbnullstring) then
     '  if (objFSO.folderexists(strFOL)) then                                      ''ENSURE FOLDER EXISTS BEFORE CLEARING
