@@ -3,7 +3,7 @@
   <all_av_removal.vbs>1</all_av_removal.vbs>
   <auto_plan.vbs>14</auto_plan.vbs>
   <avd_removal.vbs>1</avd_removal.vbs>
-  <CClutter.vbs>8</CClutter.vbs>
+  <CClutter.vbs>9</CClutter.vbs>
   <CHG_UAC.vbs>3</CHG_UAC.vbs>
   <chkAU.vbs>8</chkAU.vbs>
   <CloudClient.vbs>3</CloudClient.vbs>
@@ -35,8 +35,9 @@
   <MSP_Update.vbs>3</MSP_Update.vbs>
   <percent_rename.vbs>1</percent_rename.vbs>
   <pingtest.vbs>3</pingtest.vbs>
-  <PMEService_Fix.vbs>7</PMEService_Fix.vbs>
-  <PMEService_Install.vbs>3</PMEService_Install.vbs>
+  <PME_Config.vbs>1</PME_Config.vbs>
+  <PMEService_Fix.vbs>8</PMEService_Fix.vbs>
+  <PMEService_Install.vbs>4</PMEService_Install.vbs>
   <post-backup.cmd>3</post-backup.cmd>
   <powerCFG.vbs>3</powerCFG.vbs>
   <pre-backup.cmd>3</pre-backup.cmd>
