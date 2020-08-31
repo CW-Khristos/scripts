@@ -62,34 +62,33 @@ colFOL(0) = strTFOL
 colFOL(1) = strWFOL & "\Logs\CBS"
 colFOL(2) = strWFOL & "\SoftwareDistribution"
 colFOL(3) = strPDFOL & "\Sentinel\logs"
-colFOL(4) = strPDFOL & "\MXB\Backup Manager\logs"
-colFOL(5) = strPDFOL & "\GetSupportService\logs"
-colFOL(6) = strPDFOL & "\GetSupportService_N-Central\logs"
-colFOL(7) = strPDFOL & "\GetSupportService_N-Central\Updates"
-colFOL(8) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
-colFOL(9) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
-colFOL(10) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
+colFOL(4) = strPDFOL & "\GetSupportService\logs"
+colFOL(5) = strPDFOL & "\GetSupportService_N-Central\logs"
+colFOL(6) = strPDFOL & "\GetSupportService_N-Central\Updates"
+colFOL(7) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
+colFOL(8) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
+colFOL(9) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
-colFOL(11) =  "C:\temp"
-colFOL(12) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(13) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(10) =  "C:\temp"
+colFOL(11) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(12) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
-  colFOL(14) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(15) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(16) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(17) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(18) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(19) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(20) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(21) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(22) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(23) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(24) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(25) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(27) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(28) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(13) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(14) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(15) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(16) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(17) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(18) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(19) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(20) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(21) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(22) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(23) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(24) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(25) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(26) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(27) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 
 ''------------
@@ -205,16 +204,52 @@ if (errRET = 0) then
     ''FINAL CLEANUP OF NCENTRAL PROGRAM LOGS
     objOUT.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
     objLOG.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
+    call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34) & chr(34))
+    call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
     for intLOG = 1 to 9
-      call HOOK("DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\*.log." & intLOG & chr(34))
-      call HOOK("DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\*.log." & intLOG & chr(34))
-      call HOOK("DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
-      call HOOK("DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
-      call HOOK("DIR " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34))
-      call HOOK("DEL /S " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34))
+      objOUT.write vbnewline & intLOG
+      ''PROGRAMDATA LOCATIONS
+      'call HOOK("DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
+      'call HOOK("DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\*.log." & intLOG & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\GetSupportService\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\GetSupportService\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\GetSupportService_N-Central\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\GetSupportService_N-Central\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\Sentinel\logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\Sentinel\logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\MXB\Backup Manager\logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\N-Able Technologies\AVDefender\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\N-Able Technologies\AVDefender\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\N-able Technologies\AutomationManager\logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\N-able Technologies\AutomationManager\logs\*.log." & intLOG & chr(34) & chr(34))
+      ''call HOOK("DIR " & chr(34) & "C:\ProgramData\SolarWinds\Logs\*.log." & intLOG & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\AutomationManager\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\AutomationManager\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\PME\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.Diagnostics\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.Diagnostics\Logs\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.CacheService\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\SolarWinds MSP\SolarWinds.MSP.RpcServerService\log\*.log." & intLOG & chr(34) & chr(34))
+      ''PROGRAM FILES LOCATIONS
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Reactive\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Reactive\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Tools\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Tools\Log\*.log." & intLOG & chr(34) & chr(34))
+
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Agent\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Agent\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Software Probe\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Software Probe\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Software Probe\syslog\Log\*.log." & intLOG & chr(34) & chr(34))
+      call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\Program Files (x86)\N-able Technologies\Windows Software Probe\syslog\Log\*.log." & intLOG & chr(34) & chr(34))
+      wscript.sleep 500
     next
-    call HOOK("DIR " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
-    call HOOK("DEL /S " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
     ''ENUMERATE THROUGH PASSED FOLDER PATH
     'if (strFOL <> vbnullstring) then
     '  if (objFSO.folderexists(strFOL)) then                                      ''ENSURE FOLDER EXISTS BEFORE CLEARING
