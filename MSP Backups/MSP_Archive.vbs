@@ -198,10 +198,11 @@ sub EXECUTE()                                               ''CALL HOOK TO EXECU
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIDL
           set objHOOK = nothing
         end if
-        if ((instr(1, strIDL, "Idle")) or (instr(1, strIDL, "RegSync"))) then     			      ''BACKUPS NOT IN PROGRESS
+        if ((instr(1, strIDL, "Idle")) or _
+          (instr(1, strIDL, "RegSync")) or (instr(1, strIDL, "Backup"))) then     			      ''ACCEPTS BACKUPS IN PROGRESS
             ''FORCE RUN OF SYSTEM STATE
             blnRUN = true
-            if (blnRUN) then														    ''ENABLE ARCHIVING
+            if (blnRUN) then														                                      ''ENABLE ARCHIVING
               ''ADDITIONAL DELAY TO GIVE SERVICE A BIT EXTRA Time
               wscript.sleep (60000)
               objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "CLIENTTOOL READY, ENABLING ARCHIVING"
@@ -210,14 +211,15 @@ sub EXECUTE()                                               ''CALL HOOK TO EXECU
             end if
             exit for
         elseif ((strIDL = vbnullstring) or (instr(1, strIDL, "Idle") = 0) or _
-          (instr(1, strIDL, "RegSync") = 0) or (instr(1, strIDL, "Suspended"))) then					''BACKUPS IN PROGRESS, SERVICE NOT READY
+          (instr(1, strIDL, "Backup") = 0) or (instr(1, strIDL, "RegSync") = 0) or _
+          (instr(1, strIDL, "Suspended"))) then					                                      ''SERVICE NOT READY
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "BACKUPS IN PROGRESS, SERVICE NOT READY" 
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "BACKUPS IN PROGRESS, SERVICE NOT READY"
             blnRUN = false
         end if
         wscript.sleep 12000
       next
-      if (not blnRUN) then                                  ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
+      if (not blnRUN) then                                                                    ''SERVICE DID NOT INITIALIZE , 'ERRRET'=1
         objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING" 
         objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "SERVICE NOT READY, TERMINATING"
         call LOGERR(1)
@@ -234,7 +236,7 @@ sub EXECUTE()                                               ''CALL HOOK TO EXECU
         objOUT.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
         objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE VERIFY MSP BACKUP ARCHIVE SCHEDULE 'CW_DEFAULT_MSPARCHIVE'"
         objLOG.write vbnewline & now & vbtab & " - VIA N-CENTRAL>CONFIGURATION>BACKUP MANAGER>MSP BACKUPS>DASHBOARD>LAUNCH BACKUP CLIENT>PREFERENCES>ARCHIVING"
-        if (wscript.arguments.count <> 7) then              ''NOT ALL ARGUMENTS PASSED
+        if (wscript.arguments.count <> 7) then                                                ''NOT ALL ARGUMENTS PASSED
           objLOG.write vbnewline & now & vbtab & " - PRESS 'ENTER' WHEN READY"
           strNUL = objIN.readline
         end if
