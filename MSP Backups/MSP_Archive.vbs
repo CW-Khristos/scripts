@@ -26,7 +26,7 @@ dim objFSO, objLOG, objHOOK, objHTTP, objXML
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_ARCHIVE.VBS, REF #2 , REF $68 , REF #69
-strVER = 6
+strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
