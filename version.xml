@@ -19,12 +19,12 @@
   <jdc_msp_prebackup.vbs>5</jdc_msp_prebackup.vbs>
   <LSVperm.vbs>12</LSVperm.vbs>
   <md5.vbs>1</md5.vbs>
-  <MSP_Archive.vbs>6</MSP_Archive.vbs>
+  <MSP_Archive.vbs>7</MSP_Archive.vbs>
   <MSP_Config.vbs>7</MSP_Config.vbs>
   <MSP_Debug.vbs>5</MSP_Debug.vbs>
   <MSP_Filter.vbs>9</MSP_Filter.vbs>
   <MSP_Includes.vbs>1</MSP_Includes.vbs>
-  <msp_lsv.vbs>6</msp_lsv.vbs>
+  <msp_lsv.vbs>7</msp_lsv.vbs>
   <msp_postbackup.vbs>6</msp_postbackup.vbs>
   <msp_prebackup.vbs>6</msp_prebackup.vbs>
   <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
