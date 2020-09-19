@@ -14,7 +14,7 @@ dim colFOL(41), blnLOG, lngSIZ, strFOL
 dim objLOG, objHOOK, objHTTP, objXML
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
 ''VERSION FOR SCRIPT UPDATE, CCLUTTER.VBS, REF #2 , REF #68 , REF #69 , REF #72
-strVER = 10
+strVER = 11
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
