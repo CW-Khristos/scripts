@@ -155,17 +155,33 @@ if (errRET = 0) then
     next
     objCFG.close
     set objCFG = nothing
+    strIN = vbnullstring
     ''REPLACE CONFIG.INI FILE
-    if (blnINJ) then
+    if (blnINJ) then                                                      ''SPECIFIED 'HEADER' FOUND, 'STRING', AND 'STRVAL'
       objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
-      strIN = vbnullstring
       set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
-      for intIN = 0 to ubound(arrIN)
+      for intIN = 0 to ubound(arrIN)                                      ''RE-BUILD CONFIG.INI LINE BY LINE
         strIN = strIN & arrIN(intIN) & vbCrlf
         objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
         objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
       next
+      objCFG.write strIN
+      objCFG.close
+      set objCFG = nothing
+    end if
+    if ((not blnHDR) and (blnFORCE)) then                                 ''SPECIFIED 'HEADER' NOT FOUND, INJECT 'HEADER', 'STRING', AND 'STRVAL'
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
+      set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
+      for intIN = 0 to ubound(arrIN)                                      ''RE-BUILD CONFIG.INI LINE BY LINE
+        strIN = strIN & arrIN(intIN) & vbCrlf
+        objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+        objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+      next
+      strIN = strIN & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
+      objOUT.write vbnewline & vbtab & vbtab & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
+      objLOG.write vbnewline & vbtab & vbtab & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
       objCFG.write strIN
       objCFG.close
       set objCFG = nothing
