@@ -19,9 +19,9 @@ dim objIN, objOUT, objARG, objWSH, objFSO
 ''SET 'ERRRET' CODE
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE , MSP_CONFIG.VBS , REF #2 , FIXES #25
-strVER = 7
+strVER = 8
 strREPO = "scripts"
-strBRCH = "dev"
+strBRCH = "master"
 strDIR = "MSP Backups"
 ''SET 'BLNHDR' FLAG
 blnHDR = false
@@ -162,9 +162,17 @@ if (errRET = 0) then
       objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
       set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
       for intIN = 0 to ubound(arrIN)                                      ''RE-BUILD CONFIG.INI LINE BY LINE
-        strIN = strIN & arrIN(intIN) & vbCrlf
-        objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
-        objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+        if (arrIN(intIN) <> vbnullstring) then
+          if ((intIN = 0) or (instr(1, arrIN(intIN), "[") = 0)) then
+            strIN = strIN & arrIN(intIN) & vbCrlf
+            objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+            objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+          elseif ((intIN > 0) and (instr(1, arrIN(intIN), "["))) then
+            strIN = strIN & vbCrlf & arrIN(intIN) & vbCrlf
+            objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+            objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+          end if
+        end if
       next
       objCFG.write strIN
       objCFG.close
@@ -175,11 +183,19 @@ if (errRET = 0) then
       objLOG.write vbnewline & vbnewline & now & vbtab & " - NEW CONFIG.INI"
       set objCFG = objFSO.opentextfile("C:\Program Files\Backup Manager\config.ini", 2)
       for intIN = 0 to ubound(arrIN)                                      ''RE-BUILD CONFIG.INI LINE BY LINE
-        strIN = strIN & arrIN(intIN) & vbCrlf
-        objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
-        objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+        if (arrIN(intIN) <> vbnullstring) then
+          if ((intIN = 0) or (instr(1, arrIN(intIN), "[") = 0)) then
+            strIN = strIN & arrIN(intIN) & vbCrlf
+            objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+            objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+          elseif ((intIN > 0) and (instr(1, arrIN(intIN), "["))) then
+            strIN = strIN & vbCrlf & arrIN(intIN) & vbCrlf
+            objOUT.write vbnewline & vbtab & vbtab & arrIN(intIN)
+            objLOG.write vbnewline & vbtab & vbtab & arrIN(intIN)
+          end if
+        end if
       next
-      strIN = strIN & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
+      strIN = strIN & vbCrlf & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
       objOUT.write vbnewline & vbtab & vbtab & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
       objLOG.write vbnewline & vbtab & vbtab & strHDR & vbCrlf & strCHG & "=" & strVAL & vbCrlf
       objCFG.write strIN
