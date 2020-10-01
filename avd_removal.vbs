@@ -6,7 +6,7 @@
 ''REQUIRED PARAMETER : 'STRUVER' , STRING TO SET TARGET UNINSTALL VERSION
 ''OPTIONAL PARAMETER : 'STRSLT' , STRING TO SET SILENT UNINSTALL BOOLEAN
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 const HKLM = &H80000002
 dim errRET, strVER, strIN, strOUT
@@ -97,6 +97,7 @@ elseif (errRET = 0) then
     elseif (strUVER = "6610") then
       strUVER = "Uninstall_Tool_6.6.10.148.exe"
       call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/AVD_Latest_Removal_Tool/Uninstall_Tool_6.6.10.148.exe", "Uninstall_Tool_6.6.10.148.exe")
+    end if
   ''SILENT UNINSTALL
   elseif (blnSLT) then
     ''DOWNLOAD UninstallToolSilent6.6.2.49 VERSION OF SCRIPT
@@ -132,6 +133,7 @@ elseif (errRET = 0) then
     if (objFSO.folderexists(colFOL(intFOL))) then
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING FOLDER: " & colFOL(intFOL)
       objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - REMOVING FOLDER: " & colFOL(intFOL)
+      call HOOK ("takeown /F " & chr(34) & colFOL(intFOL) & chr(34) & " /R /D Y")
       objFSO.deletefolder colFOL(intFOL), true
     else
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & " - NON-EXISTENT: " & colFOL(intFOL)
@@ -361,8 +363,8 @@ sub delKEY(strHIVE, strPATH)                    ''DELETE KEY SUB-ROUTINE
 	  objLOG.write "ERROR : KEY CANNOT BE DELETED : "  & strHIVE & "\" & strPATH & vbnewline
       exit sub
     else                                        ''SUCCESS DELETING KEY
-	  objOUT.write "SUCCESS" & vbnewline
-      objLOG.write "SUCCESS" & vbnewline
+    objOUT.write "SUCCESS" & vbnewline
+    objLOG.write "SUCCESS" & vbnewline
     end if
   else                                          ''SUCCESS DELETING KEY
     objOUT.write "SUCCESS" & vbnewline
