@@ -1,5 +1,0 @@
-upgrade disk_fw
-upgrade shelf_fw
-
-
-GPRG6-H3WBB-WJK6G-XX2C7-QGWQ9
