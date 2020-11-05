@@ -1,5 +1,6 @@
 ''FASTNET.VBS
-''DESIGNED TO AUTOMATE DOWNLOAD AND EXECUTION OF FAST SPEEDTEST CMD UTILITY
+''DESIGNED TO AUTOMATE DOWNLOAD AND EXECUTION OF OOKLA SPEEDTEST CLI
+''CAPTURES ISP, LATENCY, JITTER, U/L, D/L, PACKET LOSS, AND SPEEDTEST RESULT URL
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
@@ -10,7 +11,7 @@ dim strIN, strOUT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , FASTNET.VBS , REF #2 , REF #68 , REF #69
-strVER = 4
+strVER = 5
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -70,6 +71,13 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     'call LOGERR(1)
   end if
 end if
+''CHECK EXECUTION METHOD OF SCRIPT
+strIN = lcase(mid(wscript.fullname, instrrev(wscript.fullname, "\") + 1))
+if (strIN <> "cscript.exe") Then
+  objOUT.write vbnewline & "SCRIPT LAUNCHED VIA EXPLORER, EXECUTING SCRIPT VIA CSCRIPT..."
+  objWSH.run "cscript.exe //nologo " & chr(34) & Wscript.ScriptFullName & chr(34)
+  wscript.quit
+end if
 
 ''------------
 ''BEGIN SCRIPT
@@ -93,7 +101,7 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-    ''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=2 , REF #2
+    ''DOWNLOAD OOKLA SPEEDTEST CLI UTILITY , 'ERRRET'=14 , REF #2
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING FAST SPEEDTEST CMD UTILITY"
     call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/ookla/speedtest.exe", "C:\IT", "speedtest.exe")
@@ -101,10 +109,10 @@ if (errRET = 0) then                                   ''ARGUMENTS PASSED, CONTI
     if (errRET <> 0) then
       call LOGERR(14)
     end if
-    ''EXECUTE FAST SPEEDTEST
+    ''EXECUTE OOKLA SPEEDTEST CMD UTILITY - FIRST CALL ACCEPTS LICENSE, 'ERRRET'=15
     objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING OOKLA SPEEDTEST CMD UTILITY"
-    ''WINDOWS AGENT RE-CONFIGURATION COMMAND , REF #2
+    call HOOK("C:\IT\speedtest.exe " & chr(34) & "--accept-license" & chr(34))
     strRCMD = "C:\IT\speedtest.exe"
     call HOOK(strRCMD)
     if (errRET <> 0) then
@@ -120,7 +128,7 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                              ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
