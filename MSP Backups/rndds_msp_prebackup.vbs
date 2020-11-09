@@ -12,12 +12,12 @@ dim strREPO, strBRCH, strDIR
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #50
-strVER = 5
+strVER = 7
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
 ''DEFAULT FAIL
-errRET = 5
+errRET = 13
 ''STDIN / STDOUT
 set objIN = wscript.stdin
 set objOUT = wscript.stdout
@@ -83,6 +83,10 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 
   ''INITIATE STOP SERVICES
   call STOPEAGLE()
 end if
+''IF ERROR REPORTED - RESTART EAGLESOFT DB AND SERVICES
+if (errRET <> 0) then
+  call STARTDB()
+end if
 ''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
@@ -93,6 +97,8 @@ sub STOPEAGLE()                                             ''STOP EAGLESOFT SER
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT SERVICES : " & now
   ''STOP PATTERSON APP SERVICE
+  ''DEFAULT FAIL
+  errRET = 13
   call HOOK("net stop " & chr(34) & "PattersonAppService" & chr(34))
   wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
@@ -111,33 +117,80 @@ sub STOPEAGLE()                                             ''STOP EAGLESOFT SER
   call STOPDB()
 end sub
 
+sub STARTEAGLE()                                            ''START EAGLESOFT SERVICES
+  objOUT.write vbnewline & vbnewline & "STARTING EAGLESOFT SERVICES : " & now
+  objLOG.write vbnewline & vbnewline & "STARTING EAGLESOFT SERVICES : " & now
+  ''START PATTERSON APP SERVICE
+  call HOOK("net start " & chr(34) & "PattersonAppService" & chr(34))
+  wscript.sleep 5000
+  if (errRET <> 0) then                                     ''ERROR RETURNED
+    if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
+      objOUT.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : PattersonAppService : " & now
+      objLOG.write vbnewline & retSTOP & vbtab & "SERVICE ALREADY STARTED : PattersonAppService : " & now
+      errRET = 0
+      err.clear
+    elseif (errRET <> 2) then                               ''ANY OTHER ERROR
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STARTING : PattersonAppService : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STARTING : PattersonAppService : " & now
+      call LOGERR(8)
+    end if
+  end if
+end sub
+
 sub STOPDB()                                                ''STOP EAGLESOFT DATABASE
   objOUT.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   objLOG.write vbnewline & vbnewline & "STOPPING EAGLESOFT DATABASE : " & now
   ''CALL PATTERSONSERVERSTATUS.EXE UTILITY WITH 'STOP' SWITCH
+  ''DEFAULT FAIL
+  errRET = 13
   call HOOK(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -stop")
   wscript.sleep 5000
-  if (errRET <> 0) then                                     ''ERROR RETURNED
+  if (errRET = 0) then                                      ''DATABASE SUCCESSFULLY STOPPED
+    objOUT.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
+    objLOG.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
+    ''COPY EAGLESOFT DATA
+    call DBCOPY()
+  elseif (errRET <> 0) then                                 ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     objLOG.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE : ERROR STOPPING: " & now
     call LOGERR(5)
     ''END SCRIPT, RETURN EXIT CODE
-    call CLEANUP()
+    'call CLEANUP()
   end if
-  objOUT.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
-  objLOG.write vbnewline & vbtab & "EAGLESOFT DATABASE : STOPPED : " & now
-  ''COPY EAGLESOFT DATA
-  call DBCOPY()
+end sub
+
+sub STARTDB()                                               ''START EAGLESOFT DATABASE
+  objOUT.write vbnewline & vbnewline & "STARTING EAGLESOFT DATABASE : " & now
+  objLOG.write vbnewline & vbnewline & "STARTING EAGLESOFT DATABASE : " & now
+  ''CALL PATTERSONSERVERSTATUS.EXE WITH 'START' SWITCH, DO NOT MONITOR, PROCESS DOES NOT EXIT
+  errRET = objWSH.run(chr(34) & "C:\EagleSoft\Shared Files\PattersonServerStatus.exe" & chr(34) & " -start", 0, false)
+  wscript.sleep 5000
+  if (errRET = 0) then                                      ''DATABASE SUCCESSFULLY STARTED
+    objOUT.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE STARTED : " & now
+    objLOG.write vbnewline & errRET & vbtab & "EAGLESOFT DATABASE STARTED : " & now
+  elseif (errRET <> 0) then                                 ''ERROR RETURNED
+    objOUT.write vbnewline & errRET & vbtab & "ERROR STARTING EAGLESOFT DATABASE : " & now
+    objLOG.write vbnewline & errRET & vbtab & "ERROR STARTING EAGLESOFT DATABASE : " & now
+    call LOGERR(7)
+    ''END SCRIPT, RETURN EXIT CODE
+    'call CLEANUP()
+  end if
+  ''START EAGLESOFT SERVICES
+  call STARTEAGLE()
 end sub
 
 sub DBCOPY()                                                ''COPY EAGLESOFT DATA FOLDER
   objOUT.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   objLOG.write vbnewline & vbnewline & "COPYING EAGLESOFT DATA : " & now
   ''USE ROBOCOPY TO COPY C:\EAGLESOFT\DATA FOLDER, OLVERWRITE ALL FILES IN DESTINATION , RNDDS_MSP_PREBACKUP.VBS , REF #2 , REF #49
+  ''DEFAULT FAIL
+  errRET = 13
   call HOOK("robocopy " & chr(34) & "C:\EagleSoft\Data" & chr(34) & " " & chr(34) & "E:\Backup" & chr(34) & " /e /COPYALL /DCOPY:T /MIR /z /w:5 /r:3 /mt /v")
   if (errRET > 4) then                                      ''SUCCESSFULLY COPIED DATA
     objOUT.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
     objLOG.write vbnewline & "COPY EAGLESOFT DATA COMPLETE : " & now
+    errRET = 0
+    err.clear
   elseif (errRET < 5) then                                  ''ERROR RETURNED
     objOUT.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
     objLOG.write vbnewline & errRET & vbtab & "ERROR : ROBOCOPY C:\EAGLESOFT\DATA E:\BACKUP : " & now
@@ -205,7 +258,9 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+  if (err.number = 0) then                                  ''NO ERROR RETURNED, SET RETURN 'ERRRET'=0
+    call LOGERR(0)
+  elseif (err.number <> 0) then                             ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
