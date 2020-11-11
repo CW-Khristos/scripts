@@ -142,17 +142,17 @@ sub STARTSAGE()                                             ''START SAGE SERVICE
   objOUT.write vbnewline & vbnewline & "STARTING SAGE SERVICES : " & now
   objLOG.write vbnewline & vbnewline & "STARTING SAGE SERVICES : " & now
   ''START SAGE 50 SMARTPOSTING SERVICE
-  call HOOK("net start " & chr(34) & "Sage 50 SmartPosting 2020" & chr(34))
+  call HOOK("net start " & chr(34) & "Sage 50 SmartPosting 2021" & chr(34))
   wscript.sleep 5000
   if (errRET <> 0) then                                     ''ERROR RETURNED
     if (errRET = 2) then                                    ''SERVICE ALREADY STARTED
-      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STARTED : Sage SmartPosting 2020 : " & now
-      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STARTED : Sage SmartPosting 2020 : " & now
+      objOUT.write vbnewline & errRET & vbtab & "SERVICE ALREADY STARTED : Sage SmartPosting 2021 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "SERVICE ALREADY STARTED : Sage SmartPosting 2021 : " & now
       errRET = 0
       err.clear
     elseif (errRET <> 2) then                               ''ANY OTHER ERROR
-      objOUT.write vbnewline & errRET & vbtab & "ERROR STARTING : Sage 50 SmartPosting 2020 : " & now
-      objLOG.write vbnewline & errRET & vbtab & "ERROR STARTING : Sage 50 SmartPosting 2020 : " & now
+      objOUT.write vbnewline & errRET & vbtab & "ERROR STARTING : Sage 50 SmartPosting 2021 : " & now
+      objLOG.write vbnewline & errRET & vbtab & "ERROR STARTING : Sage 50 SmartPosting 2021 : " & now
       call LOGERR(9)
     end if
   end if
