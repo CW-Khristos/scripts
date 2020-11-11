@@ -83,10 +83,8 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 
   ''INITIATE STOP SERVICES
   call STOPEAGLE()
 end if
-''IF ERROR REPORTED - RESTART EAGLESOFT DB AND SERVICES
-if (errRET <> 0) then
-  call STARTDB()
-end if
+''RESTART EAGLESOFT DB AND SERVICES
+call STARTDB()
 ''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
