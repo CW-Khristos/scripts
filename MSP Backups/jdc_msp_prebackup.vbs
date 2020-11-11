@@ -87,10 +87,8 @@ if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 
   ''INITIATE STOP SERVICES
   call STOPSAGE()
 end if
-''IF ERROR REPORTED - RESTART PSQL AND SAGE SERVICES
-if (errRET <> 0) then
-  call STARTPSQL()
-end if
+''RESTART PSQL AND SAGE SERVICES
+call STARTPSQL()
 ''END SCRIPT, RETURN EXIT CODE
 call CLEANUP()
 ''END SCRIPT
