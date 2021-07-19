@@ -106,15 +106,18 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         ''MODIFY SNMP REGISTRY VALUES
         objOUT.write vbnewline & now & vbtab & "CHECKING SNMP STATUS"
         objLOG.write vbnewline & now & vbtab & "CHECKING SNMP STATUS" 
-        set objDSM = objWSH.exec("DISM /online /get-features /format:table")
+        ''set objDSM = objWSH.exec("DISM /online /get-features /format:table") ''RESULTS INVALIDATED BY COMMAND CHANGE
+        set objDSM = objWSH.exec("powershell get-windowscapability -online -name " & chr(34) & "SNMP*" & chr(34))
         while (not objDSM.stdout.atendofstream)
-          strRET = objDSM.stdout.readline
+          strRET = objDSM.stdout.readall
           if (strRET <> vbnullstring) then
-            if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then
+            ''if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
+            if (instr(1, strRET, "SNMP") and (instr(1, strRET, "Disabled") or (instr(1, strRET, "NotPresent")))) then
               objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               ''INSTALL SNMP
-              call HOOK("DISM /online /enable-feature /featurename:SNMP")   
+              ''call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND REMOVED BY MICROSOFT
+              call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               call HOOK("powershell " & chr(34) & "Install-WindowsFeature RSAT-SNMP" & chr(34))
               objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
               objLOG.write vbnewline & now & vbtab & "SNMP INSTALLED"            
