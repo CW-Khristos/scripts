@@ -1,7 +1,7 @@
 ''MSP_LSV.VBS
 ''NO REQUIRED PARAMETERS / DOES NOT ACCEPT PARAMETERS
 ''SCRIPT IS DESIGNED TO SIMPLY EXPORT MSP BACKUP SETTINGS USING CLIENTTOOL.EXE UTILITY
-''EXPORTS MSP BACKUP SETTINGS TO C:\TEMP\LSV.TXT
+''EXPORTS MSP BACKUP SETTINGS TO C:\IT\SCRIPTS\LSV.TXT
 ''MUST BE USED IN CONJUNCTION WITH MSP BACKUP SYNCHRONIZATION - LSV SYNCHRONIZATION.AMP CUSTOM SERVICE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
@@ -35,24 +35,24 @@ if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\temp\msp_lsv")) then              ''PREVIOUS LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\msp_lsv", true
+if (objFSO.fileexists("C:\IT\Scripts\msp_lsv")) then            ''PREVIOUS LOGFILE EXISTS
+  objFSO.deletefile "C:\IT\Scripts\msp_lsv", true
 end if
-if (objFSO.fileexists("C:\temp\msp_lsv")) then              ''LOGFILE EXISTS
-  objFSO.deletefile "C:\temp\msp_lsv", true
-  set objLOG = objFSO.createtextfile("C:\temp\msp_lsv")
+if (objFSO.fileexists("C:\IT\Scripts\msp_lsv")) then        	''LOGFILE EXISTS
+  objFSO.deletefile "C:\IT\Scripts\msp_lsv", true
+  set objLOG = objFSO.createtextfile("C:\IT\Scripts\msp_lsv")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\msp_lsv", 8)
-else                                                        ''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\temp\msp_lsv")
+  set objLOG = objFSO.opentextfile("C:\IT\Scripts\msp_lsv", 8)
+else                                                        	''LOGFILE NEEDS TO BE CREATED
+  set objLOG = objFSO.createtextfile("C:\IT\Scripts\msp_lsv")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\temp\msp_lsv", 8)
+  set objLOG = objFSO.opentextfile("C:\IT\Scripts\msp_lsv", 8)
 end if
 ''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
 if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
-  call LOGERR(0)                                            ''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
+  call LOGERR(0)                                            	''CLIENTTOOL.EXE PRESENT, CONTINUE SCRIPT, 'ERRRET'=0
 elseif (not objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
-  call LOGERR(1)                                            ''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
+  call LOGERR(1)                                            	''CLIENTTOOL.EXE NOT PRESENT, END SCRIPT, 'ERRRET'=1
 end if
 ''CHECK BACKUP SERVICE CONTROLLER SERVICE IS STARTED
 set objHOOK = objWSH.exec("sc query " & chr(34) & "Backup Service Controller" & chr(34))
