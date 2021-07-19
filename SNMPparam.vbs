@@ -118,7 +118,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
               ''INSTALL SNMP
               ''call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND REMOVED BY MICROSOFT
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
-              call HOOK("powershell " & chr(34) & "Install-WindowsFeature RSAT-SNMP" & chr(34))
+              ''call HOOK("powershell " & chr(34) & "Install-WindowsFeature RSAT-SNMP" & chr(34)) ''NOT NECESSARY
               objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
               objLOG.write vbnewline & now & vbtab & "SNMP INSTALLED"            
             end if
