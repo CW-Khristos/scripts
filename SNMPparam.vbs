@@ -109,6 +109,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         ''set objDSM = objWSH.exec("DISM /online /get-features /format:table") ''RESULTS INVALIDATED BY COMMAND CHANGE
         set objDSM = objWSH.exec("powershell get-windowscapability -online -name " & chr(34) & "SNMP*" & chr(34))
         while (not objDSM.stdout.atendofstream)
+          ''strRET = objDSM.stdout.readline  ''NEW FORMAT DOESN'T ALLOW LINE-BY-LINE PARSING
           strRET = objDSM.stdout.readall
           if (strRET <> vbnullstring) then
             ''if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
