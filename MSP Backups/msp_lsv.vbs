@@ -16,7 +16,7 @@ dim objWSH, objFSO, objLOG, objLSV
 ''DEFAULT SUCCESS
 errRET = 0
 ''VERSION FOR SCRIPT UPDATE, MSP_LSV.VBS, REF #2 , REF #68 , REF #69
-strVER = 7
+strVER = 8
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = "MSP Backups"
@@ -28,6 +28,9 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -146,7 +149,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
             ''REMOVE LOCALSPEEDVAULTLOCATION 'LABEL', OUTPUT ONLY THE ACTUAL LSV DIRECTORY
             strTMP = split(lcase(arrIN(intIN)), "localspeedvaultlocation ")(1)
             objOUT.write vbnewline & now & vbtab & arrIN(intIN) & " - WRITTEN TO LSV.TXT"
-            objLSV.write strTMP
+            objLSV.write ucase(strTMP)
             exit for
           end if
       end if
@@ -258,12 +261,12 @@ end sub
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''MSP_LSV COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then    											        ''MSP_LSV FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
-    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV FAILURE : " & now & " : " & errRET
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_LSV", "FAILURE")
   end if
