@@ -28,6 +28,9 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -35,18 +38,18 @@ if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("C:\IT\Scripts\msp_lsv")) then            ''PREVIOUS LOGFILE EXISTS
-  objFSO.deletefile "C:\IT\Scripts\msp_lsv", true
+if (objFSO.fileexists("c:\temp\msp_lsv")) then            		''PREVIOUS LOGFILE EXISTS
+  objFSO.deletefile "c:\temp\msp_lsv", true
 end if
-if (objFSO.fileexists("C:\IT\Scripts\msp_lsv")) then        	''LOGFILE EXISTS
-  objFSO.deletefile "C:\IT\Scripts\msp_lsv", true
-  set objLOG = objFSO.createtextfile("C:\IT\Scripts\msp_lsv")
+if (objFSO.fileexists("c:\temp\msp_lsv")) then        			''LOGFILE EXISTS
+  objFSO.deletefile "c:\temp\msp_lsv", true
+  set objLOG = objFSO.createtextfile("c:\temp\msp_lsv")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\IT\Scripts\msp_lsv", 8)
+  set objLOG = objFSO.opentextfile("c:\temp\msp_lsv", 8)
 else                                                        	''LOGFILE NEEDS TO BE CREATED
-  set objLOG = objFSO.createtextfile("C:\IT\Scripts\msp_lsv")
+  set objLOG = objFSO.createtextfile("c:\temp\msp_lsv")
   objLOG.close
-  set objLOG = objFSO.opentextfile("C:\IT\Scripts\msp_lsv", 8)
+  set objLOG = objFSO.opentextfile("c:\temp\msp_lsv", 8)
 end if
 ''CHECK FOR MSP BACKUP MANAGER CLIENTTOOL , REF #76
 if (objFSO.fileexists("C:\Program Files\Backup Manager\clienttool.exe")) then
@@ -146,7 +149,7 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
             ''REMOVE LOCALSPEEDVAULTLOCATION 'LABEL', OUTPUT ONLY THE ACTUAL LSV DIRECTORY
             strTMP = split(lcase(arrIN(intIN)), "localspeedvaultlocation ")(1)
             objOUT.write vbnewline & now & vbtab & arrIN(intIN) & " - WRITTEN TO LSV.TXT"
-            objLSV.write strTMP
+            objLSV.write ucase(strTMP)
             exit for
           end if
       end if
@@ -258,12 +261,12 @@ end sub
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''MSP_LSV COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then    											        ''MSP_LSV FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
-    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_LSV FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV FAILURE : " & now & " : " & errRET
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_LSV FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_LSV", "FAILURE")
   end if
