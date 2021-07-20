@@ -22,6 +22,16 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
+if (not (objFSO.folderexists("C:\IT\"))) then
+  objFSO.createfolder("C:\IT\")
+end if
+if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
+  objFSO.createfolder("C:\IT\Scripts\")
+end if
 ''PREPARE LOGFILE
 if (objFSO.fileexists("C:\temp\MSP_SYNC")) then             ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\MSP_SYNC", true
