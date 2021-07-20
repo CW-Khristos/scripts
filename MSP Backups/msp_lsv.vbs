@@ -38,10 +38,7 @@ if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
 end if
 ''PREPARE LOGFILE
-if (objFSO.fileexists("c:\temp\msp_lsv")) then            		''PREVIOUS LOGFILE EXISTS
-  objFSO.deletefile "c:\temp\msp_lsv", true
-end if
-if (objFSO.fileexists("c:\temp\msp_lsv")) then        			''LOGFILE EXISTS
+if (objFSO.fileexists("c:\temp\msp_lsv")) then                ''PREVIOUS LOGFILE EXISTS
   objFSO.deletefile "c:\temp\msp_lsv", true
   set objLOG = objFSO.createtextfile("c:\temp\msp_lsv")
   objLOG.close
@@ -74,9 +71,6 @@ if (blnSVC = false) then
 end if
 ''PREPARE MONITOR FILE
 if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''PREVIOUS LOGFILE EXISTS
-  objFSO.deletefile "C:\IT\Scripts\lsv.txt", true
-end if
-if (objFSO.fileexists("C:\IT\Scripts\lsv.txt")) then        ''LOGFILE EXISTS
   objFSO.deletefile "C:\IT\Scripts\lsv.txt", true
   set objLSV = objFSO.createtextfile("C:\IT\Scripts\lsv.txt")
   objLSV.close
