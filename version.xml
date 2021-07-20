@@ -24,7 +24,7 @@
   <MSP_Debug.vbs>5</MSP_Debug.vbs>
   <MSP_Filter.vbs>9</MSP_Filter.vbs>
   <MSP_Includes.vbs>1</MSP_Includes.vbs>
-  <msp_lsv.vbs>7</msp_lsv.vbs>
+  <msp_lsv.vbs>8</msp_lsv.vbs>
   <msp_postbackup.vbs>6</msp_postbackup.vbs>
   <msp_prebackup.vbs>6</msp_prebackup.vbs>
   <MSP_Rotate.vbs>5</MSP_Rotate.vbs>
@@ -58,7 +58,7 @@
   <rmm_logo.vbs>1</rmm_logo.vbs>
   <rndds_msp_postbackup.vbs>5</rndds_msp_postbackup.vbs>
   <rndds_msp_prebackup.vbs>7</rndds_msp_prebackup.vbs>
-  <SNMPparam.vbs>5</SNMPparam.vbs>
+  <SNMPparam.vbs>7</SNMPparam.vbs>
   <ss_msp_postbackup.vbs>5</ss_msp_postbackup.vbs>
   <ss_msp_prebackup.vbs>7</ss_msp_prebackup.vbs>
   <SVCperm.vbs>20</SVCperm.vbs>
