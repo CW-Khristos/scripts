@@ -189,7 +189,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
     call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
     call HOOK("secedit /configure /db secedit.sdb")
-    call HOOK("gpupdate /force")
+    call HOOK("echo N | gpupdate /force")
     if (errRET <> 0) then
       call LOGERR(5)
     end if
