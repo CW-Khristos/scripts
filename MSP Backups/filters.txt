@@ -1,3 +1,4 @@
+*\*.lock|
 C:\ADWCleaner|
 C:\AMD|
 C:\cclutter.txt|
