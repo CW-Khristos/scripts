@@ -62,7 +62,7 @@ if (strRUN = "true") then
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SHUTDOWN"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING SHUTDOWN"
   if (strCMT = vbnullstring) then
-    strCMT = "This is a message from The ComputerWarriors, your system has been scheduled for a required reboot to maintain stability." & vbnewline & _
+    strCMT = "This is a message from your Administrators, your system has been scheduled for a required reboot to maintain stability." & vbnewline & _
       "Please save all work and close all programs prior to the scheduled reboot time."
   end if
   call HOOK("shutdown -" & strMOD & " -t " & strDLY & " -c " & chr(34) & strCMT & chr(34))
