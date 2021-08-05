@@ -78,6 +78,13 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
       objWSH.run strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
     end if
+    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     call HOOK("cmd.exe /C rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
     if (err.number <> 0) then
       call LOGERR(1)
@@ -90,14 +97,22 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       'call HOOK(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
       objWSH.run strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
     end if
+    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     call HOOK("cmd.exe /c rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
     if (err.number <> 0) then
       call LOGERR(2)
     end if
   end if
+  ''PROGRAMDATA DIRECTORY
   if (objFSO.folderexists(chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))) then
-    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34)
-    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34)
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
     call HOOK("cmd.exe /C rmdir /s /q " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))
     if (err.number <> 0) then
       call LOGERR(3)
