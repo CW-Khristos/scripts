@@ -72,17 +72,20 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FIX_CONTROL"
   ''32BIT INSTALL
   if (objFSO.folderexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central")) then
+    ''RUN UNINSTALL
     objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 32BIT TAKE CONTROL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 32BIT TAKE CONTROL"
     if (objFSO.fileexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
       'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
       objWSH.run strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
     end if
+    ''KILL SERVICE PROCESSES
     objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
     objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM BASupSrvc.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
+    ''REMOVE DIRECTORY
     objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     call HOOK("cmd.exe /C rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
@@ -91,17 +94,20 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     end if
   ''64BIT INSTALL
   elseif (objFSO.folderexists(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central")) then
+    ''RUN UNINSTALL
     objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 64BIT TAKE CONTROL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 64BIT TAKE CONTROL"
     if (objFSO.fileexists(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
       'call HOOK(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
       objWSH.run strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
     end if
+    ''KILL SERVICE PROCESSES
     objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
     objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
-    call HOOK("taskkill /F /IM " & strPROC & " /T")
+    call HOOK("taskkill /F /IM BASupSrvc.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
+    ''REMOVE DIRECTORY
     objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
     call HOOK("cmd.exe /c rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
