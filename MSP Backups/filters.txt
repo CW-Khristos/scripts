@@ -11,8 +11,9 @@ C:\Qoobox|
 C:\tempini|
 C:\temp|
 C:\wu_output|
-%PROGRAMFILES(X86)%\StorageCraft|
 %PROGRAMFILES(X86)%\Temp|
+%PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMFILES%\Supermicro\SuperDoctor5\cache|
 %PROGRAMFILES(X86)%\N-Able Technologies\Reactive\Temp|
 %PROGRAMFILES(X86)%\N-Able Technologies\PatchManagement|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\cache|
