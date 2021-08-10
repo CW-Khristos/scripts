@@ -76,7 +76,6 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : FIX_CONTROL : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : FIX_CONTROL : " & strVER
-  "cscript.exe" //B //nologo "C:\Program Files\N-able Technologies\Windows Agent\Temp\Script\Task--2137133615\MSP_Filter.vbs" "local"
   'intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
   '  chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
   '  chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
