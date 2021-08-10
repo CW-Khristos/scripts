@@ -127,6 +127,8 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
   'if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR)) then
   '  objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\Temp\Script\" & strSCR, true
   'end if
+  ''NEW LOCATION FOR CACHED SCRIPTS
+  ''"cscript.exe" //B //nologo "C:\Program Files\N-able Technologies\Windows Agent\Temp\Script\Task--2137133615\MSP_Filter.vbs" "local"
   ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
     " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
