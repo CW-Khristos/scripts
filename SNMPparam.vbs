@@ -154,7 +154,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         objOUT.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"
         objLOG.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"    
         call HOOK("reg query " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /s")
+        wscript.sleep 5000
         call HOOK("sc stop " & chr(34) & "SNMP" & chr(34))
+        wscript.sleep 5000
         call HOOK("sc start " & chr(34) & "SNMP" & chr(34))
     end select
     if (err.number <> 0) then

@@ -160,18 +160,15 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     end if
     ''ENUMERATE THROUGH EACH USER COLLECTED MATCHING 'STRUSR' TARGET USER , REF#2 , FIXES #31
     ''THIS ALLOWS FOR TARGETING BOTH LOCAL AND DOMAIN USER VARIANTS
+    'for intSID = 0 to ubound(arrSID)
+    '  objOUT.write vbnewline & vbtab & vbtab & arrSID(intSID)
+    'next
+    strIN = vbnullstring
     for intSID = 0 to ubound(arrSID)
-      objOUT.write vbnewline & vbtab & vbtab & arrSID(intSID)
-    next
-    for intSID = 0 to ubound(arrSID)
-      strORG = "SeServiceLogonRight = "
+      'objOUT.write vbnewline & vbtab & arrSID(intSID)
       objOUT.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
       objLOG.write vbnewline & now & vbtab & vbtab & " - GRANT LOGON AS SERVICE : " & strUSR & " : " & arrSID(intSID)
-      if (arrSID(intSID) <> vbnullstring) then              ''MATCHING USER SID FOUND
-        strREP = "SeServiceLogonRight = " & "*" & arrSID(intSID) & ","
-      elseif (arrSID(intSID) = vbnullstring) then           ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
-        strREP = "SeServiceLogonRight = " & strUSR & ","
-      end if
+      strORG = "SeServiceLogonRight = "
       ''READ CURRENT EXPORTED SECURITY DATABASE CONFIGS
       set objSIN = objFSO.opentextfile("c:\temp\config.inf", 1, 1, -1)
       strIN = objSIN.readall
@@ -179,7 +176,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       set objSIN = nothing
       ''WRITE SECURITY DATABASE CONFIGS WITH 'SetServiceLogonRight' FOR TARGET USER , 'ERRRET'=4
       set objSOUT = objFSO.opentextfile("c:\temp\config.inf", 2, 1, -1)
-      objSOUT.write (replace(strIN,strORG,strREP))
+      if (arrSID(intSID) <> vbnullstring) then              ''MATCHING USER SID FOUND
+        trim(objSOUT.write (replace(strIN, strORG, "SeServiceLogonRight = *" & arrSID(intSID) & ",")))
+      elseif (arrSID(intSID) = vbnullstring) then           ''NO MATCHING USER SID FOUND , USE 'PLAINTEXT' USER NAME
+        trim(objSOUT.write (replace(strIN, strORG, "SeServiceLogonRight = " & strUSR & ",")))
+      end if
       objSOUT.close
       set objSOUT = nothing
       if (err.number <> 0) then
@@ -189,7 +190,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     ''APPLY NEW SECURITY DATABASE CONFIGS , 'ERRRET'=5
     call HOOK("secedit /import /db secedit.sdb /cfg c:\temp\config.inf")
     call HOOK("secedit /configure /db secedit.sdb")
-    call HOOK("echo N | gpupdate /force")
+    'call HOOK("echo N | gpupdate /force")
     if (errRET <> 0) then
       call LOGERR(5)
     end if
@@ -270,8 +271,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" '& strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" ' & strCMD
+  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" ' & strCMD
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
