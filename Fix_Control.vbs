@@ -100,9 +100,21 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
+      wscript.sleep 10000
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
-      call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
+      ''CALL HOOK(RMDIR) GETTING STUCK DUE TO PROCESSES IN DIRECTORY
+      'call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
+      intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+      if (intRET <> 0) then
+        for (intLOOP = 0 to 10)
+          wscript.sleep 5000
+          intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+          if (intRET = 0) then
+            exit for
+          end if
+        next
+      end if
       if (err.number <> 0) then
         call LOGERR(1)
       end if
@@ -122,9 +134,21 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
+      wscript.sleep 10000
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
-      call HOOK("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
+      ''CALL HOOK(RMDIR) GETTING STUCK DUE TO PROCESSES IN DIRECTORY
+      'call HOOK("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
+      intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+      if (intRET <> 0) then
+        for (intLOOP = 0 to 10)
+          wscript.sleep 5000
+          intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+          if (intRET = 0) then
+            exit for
+          end if
+        next
+      end if
       if (err.number <> 0) then
         call LOGERR(2)
       end if
