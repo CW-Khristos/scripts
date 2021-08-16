@@ -22,7 +22,7 @@ dim strIN, strOUT, strOPT, strRCMD
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , CHKAU.VBS , REF #2 , REF #69 , FIXES #68
-strVER = 8
+strVER = 9
 strREPO = "scripts"
 strBRCH = "master"
 strDIR = vbnullstring
@@ -129,11 +129,6 @@ function CHKAU(strSCR, strSVER, strSARG)                      ''CHECK FOR SCRIPT
   'end if
   ''NEW LOCATION FOR CACHED SCRIPTS
   ''"cscript.exe" //B //nologo "C:\Program Files\N-able Technologies\Windows Agent\Temp\Script\Task--2137133615\MSP_Filter.vbs" "local"
-  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
   ''SCRIPT OBJECT FOR PARSING XML
   set objXML = createobject("Microsoft.XMLDOM")
   ''FORCE SYNCHRONOUS
@@ -272,6 +267,11 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
