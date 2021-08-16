@@ -150,7 +150,7 @@ if (errRET = 0) then
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : CCLUTTER : " & strVER
-  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\temp\chkAU.vbs" & chr(34) & " " & _
+  intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
     chr(34) & blnLOG & "|" & strFOL & chr(34) & chr(34), 0, true)
@@ -379,12 +379,21 @@ sub LOGERR(intSTG)                                                              
 end sub
 
 sub CLEANUP()                                                                     ''SCRIPT CLEANUP
+  if (errRET = 0) then         															                      ''CCLUTTER COMPLETED SUCCESSFULLY
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CCLUTTER SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CCLUTTER SUCCESSFUL : " & errRET & " : " & now
+    err.clear
+  elseif (errRET <> 0) then    															                      ''CCLUTTER FAILED
+    objOUT.write vbnewline & vbnewline & now & vbtab & "CCLUTTER FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "CCLUTTER FAILURE : " & errRET & " : " & now
+    ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
+    call err.raise(vbObjectError + errRET, "CCLUTTER", "FAILURE")
+  end if
   strNEW = vbnewline & "CCLUTTER COMPLETE : CLEARED " & round((lngSIZ / 1024),2) & " MB"
   objOUT.write strNEW
   if (blnLOG) then                                                                ''LOGFILE CLEANUP, IF ENABLED
     objLOG.write strNEW
     objLOG.close
-    set objLOG = nothing
     ''UNCOMMENT LINES BELOW TO CAUSE LOGFILE TO OPEN AUTOMATICALLY
     'objWSH.run "C:\cclutter.txt", 1
     'wscript.sleep 1000
@@ -392,10 +401,11 @@ sub CLEANUP()                                                                   
     'objFSO.deletefile "C:\cclutter.txt", true
   end if
   ''SCRIPT / OBJECT CLEANUP
+  set objLOG = nothing
   set objFOL = nothing
   set objFSO = nothing
   set objOUT = nothing
   set objWSH = nothing
   ''END SCRIPT, RETURN DEFAULT NO ERROR
-  wscript.quit 0
+  wscript.quit err.number
 end sub
