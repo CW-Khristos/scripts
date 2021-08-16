@@ -16,7 +16,7 @@ dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
 dim objHOOK, objEXEC, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE, AUTO_PLAN.VBS, REF #2 , REF #6 , FIXES #5 , FIXES #7
-strVER = 14
+strVER = 15
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = vbnullstring
@@ -859,6 +859,11 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
