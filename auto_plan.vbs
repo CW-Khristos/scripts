@@ -119,6 +119,8 @@ if (errRET = 0) then
         blnEND = true
       end if
       select case strSEL
+        case 0                                                ''STAGE0 - BASE SOFTWARE DEPLOYMENT
+          call STAGE0()
         case 1                                                ''STAGE1 - SET POWER PLAN & NETWORK DISCOVERY
           call STAGE1()
         case 2                                                ''STAGE2 - RENAME COMPUTER (RESTART REQ.)
@@ -152,6 +154,18 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
+sub STAGE0()
+  ''STAGE 0
+  ''DOWNLOAD BASE SOFTWARE DEPLOYMENT SCRIPT
+  objOUT.write vbnewline & now & vbtab & " - DOWNLOADING BASE DEPLOYMENT SCRIPT" & vbnewline
+  objLOG.write vbnewline & now & vbtab & " - DOWNLOADING BASE DEPLOYMENT SCRIPT" & vbnewline
+  call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/Base_Deployment.vbs", "C:\IT\Scripts", "Base_Deployment.vbs")
+  ''EXECUTE BASE DEPLOYMENT SCRIPT
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING BASE DEPLOYMENT SCRIPT"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING BASE DEPLOYMENT SCRIPT"
+  call HOOK("cscript.exe //nologo " & chr(34) & "c:\IT\Scripts\Base_Deployment.vbs" & chr(34))
+end sub
+
 sub STAGE1()
   ''------------REF #6
   ''STAGE1
