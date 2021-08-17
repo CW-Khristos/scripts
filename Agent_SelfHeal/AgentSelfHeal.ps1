@@ -1,4 +1,6 @@
 ﻿# WINDOWS AGENT SELF-HEALING
+# By Jonathan G. Weston <jonathan@thecomputerwarriors.com> and David Potter <david@thecomputerwarriors.com>
+# $null check thanks to CJ Bledsoe
 If (${env:ProgramFiles(x86)}) {
   $ProgramFilesPath = ${env:ProgramFiles(x86)}
 } Else {
