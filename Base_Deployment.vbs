@@ -97,7 +97,7 @@ if (errRET = 0) then                                                ''NO ERRORS 
     ''CLASSIC SHELL SETUP - BLOCKED BY SOPHOS
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING CLASSIC SHELL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING CLASSIC SHELL"
-    call FILEDL("http://download2267.mediafire.com/jc5gh4wi1kwg/d5llbbm8wu92jg8/ClassicShellSetup_4_3_1.exe", "C:\IT", "ClassicShellSetup.exe")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/" & strBRCH & "/ClassicShell/ClassicShellSetup.exe", "C:\IT", "ClassicShellSetup.exe")
     objOUT.write vbnewline & now & vbtab & vbtab & " - INSTALLING CLASSIC SHELL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - INSTALLING CLASSIC SHELL"
     call HOOK("C:\IT\ClassicShellSetup.exe")
