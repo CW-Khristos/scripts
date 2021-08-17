@@ -44,11 +44,25 @@ C:\wu_output|
 %PROGRAMDATA%\Sentinel|
 %PROGRAMDATA%\SolarWinds|
 %PROGRAMDATA%\SolarWinds MSP|
-%PROGRAMDATA%\N-Able Technologies|
+%PROGRAMDATA%\MspPlatform\Perun\temp|
+%PROGRAMDATA%\MspPlatform\PME\log|
+%PROGRAMDATA%\MspPlatform\PME\temp|
+%PROGRAMDATA%\MspPlatform\PME\archives|
+%PROGRAMDATA%\MspPlatform\PME\CachedMetadata|
+%PROGRAMDATA%\MspPlatform\PME\ThirdPartyPatch|
+%PROGRAMDATA%\MspPlatform\PME.Agent.PmeService\log|
+%PROGRAMDATA%\MspPlatform\RequestHandlerAgent\log|
+%PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\log|
+%PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\cache|
+%PROGRAMDATA%\MspPlatform\SolarWinds.MSP.CacheService\log|
+%PROGRAMDATA%\MspPlatform\SolarWinds.MSP.RpcServerService\log|
+%PROGRAMDATA%\N-Able Technologies\AutomationManager|
 %PROGRAMDATA%\GetSupportService|
 %PROGRAMDATA%\GetSupportService_N-Central|
 %PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
 %PROGRAMDATA%\Sophos\Sophos Anti-Virus\Temp|
+%PROGRAMDATA%\Packages|
+%PROGRAMDATA%\Package Cache|
 %PROGRAMDATA%\SoftwareDistribution|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
 %PROGRAMDATA%\Microsoft\Windows\Caches|
