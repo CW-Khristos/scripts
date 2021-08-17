@@ -28,6 +28,10 @@ C:\wu_output|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\Quarantine|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\ThreatScanner|
+%PROGRAMDATA%\Temp|
+%PROGRAMDATA%\Roaming|
+%PROGRAMDATA%\bdlogging|
+%PROGRAMDATA%\restored_quar|
 %PROGRAMDATA%\MXB|
 %PROGRAMDATA%\MXB.old|
 %PROGRAMDATA%\MXB.old2|
@@ -44,10 +48,7 @@ C:\wu_output|
 %PROGRAMDATA%\GetSupportService|
 %PROGRAMDATA%\GetSupportService_N-Central|
 %PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
-%PROGRAMDATA%\bdlogging|
-%PROGRAMDATA%\restored_quar|
-%PROGRAMDATA%\Temp|
-%PROGRAMDATA%\Roaming|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\Temp|
 %PROGRAMDATA%\SoftwareDistribution|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
 %PROGRAMDATA%\Microsoft\Windows\Caches|
