@@ -118,10 +118,10 @@ if (errRET = 0) then                                                ''NO ERRORS 
     ''ADOBE READER SETUP - NO ARGUMENTS / NO SILENT
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING ADOBE READER"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING ADOBE READER"
-    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/" & strBRCH & "Adobe/readerdc_en_xa_crd_install.exe", "C:\IT", "AdobeReaderSetup.exe")
+    call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/" & strBRCH & "/Adobe/readerdc_en_xa_crd_install.exe", "C:\IT", "readerdc_en_xa_crd_install.exe")
     objOUT.write vbnewline & now & vbtab & vbtab & " - INSTALLING ADOBE READER"
     objLOG.write vbnewline & now & vbtab & vbtab & " - INSTALLING ADOBE READER"
-    call HOOK("C:\IT\AdobeReaderSetup.exe")
+    call HOOK("C:\IT\readerdc_en_xa_crd_install.exe")
   end if
 elseif (errRET <> 0) then                                           ''ERRORS ENCOUNTERED DURING INITIAL START
   call LOGERR(errRET)
