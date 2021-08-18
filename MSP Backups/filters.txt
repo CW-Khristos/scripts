@@ -11,8 +11,11 @@ C:\Qoobox|
 C:\tempini|
 C:\temp|
 C:\wu_output|
-%PROGRAMFILES(X86)%\Temp|
-%PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\Logs|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\Signatures|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\Quarantine|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\ThreatScanner|
 %PROGRAMFILES%\Supermicro\SuperDoctor5\cache|
 %PROGRAMFILES(X86)%\N-Able Technologies\Reactive\Temp|
 %PROGRAMFILES(X86)%\N-Able Technologies\PatchManagement|
@@ -23,11 +26,9 @@ C:\wu_output|
 %PROGRAMFILES(X86)%\N-Able Technologies\Tools\AVDefenderPolicies|
 %PROGRAMFILES(X86)%\N-able Technologies\UpdateServerCache|
 %PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\Logs|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\Signatures|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\Quarantine|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\ThreatScanner|
+%PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMFILES(X86)%\Temp|
+%PROGRAMDATA%\bdlogging|
 %PROGRAMDATA%\MXB|
 %PROGRAMDATA%\MXB.old|
 %PROGRAMDATA%\MXB.old2|
@@ -37,18 +38,9 @@ C:\wu_output|
 %PROGRAMDATA%\MXB_old2|
 %PROGRAMDATA%\MXB_old3|
 %PROGRAMDATA%\MXB_older|
-%PROGRAMDATA%\Sentinel|
-%PROGRAMDATA%\SolarWinds|
-%PROGRAMDATA%\SolarWinds MSP|
-%PROGRAMDATA%\N-Able Technologies|
+%PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
 %PROGRAMDATA%\GetSupportService|
 %PROGRAMDATA%\GetSupportService_N-Central|
-%PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
-%PROGRAMDATA%\bdlogging|
-%PROGRAMDATA%\restored_quar|
-%PROGRAMDATA%\Temp|
-%PROGRAMDATA%\Roaming|
-%PROGRAMDATA%\SoftwareDistribution|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
 %PROGRAMDATA%\Microsoft\Windows\Caches|
 %PROGRAMDATA%\Microsoft\Windows\AppRepository|
@@ -65,6 +57,29 @@ C:\wu_output|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Scans|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
 %PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
+%PROGRAMDATA%\MspPlatform\Perun\temp|
+%PROGRAMDATA%\MspPlatform\PME\log|
+%PROGRAMDATA%\MspPlatform\PME\temp|
+%PROGRAMDATA%\MspPlatform\PME\archives|
+%PROGRAMDATA%\MspPlatform\PME\CachedMetadata|
+%PROGRAMDATA%\MspPlatform\PME\ThirdPartyPatch|
+%PROGRAMDATA%\MspPlatform\PME.Agent.PmeService\log|
+%PROGRAMDATA%\MspPlatform\RequestHandlerAgent\log|
+%PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\log|
+%PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\cache|
+%PROGRAMDATA%\MspPlatform\SolarWinds.MSP.CacheService\log|
+%PROGRAMDATA%\MspPlatform\SolarWinds.MSP.RpcServerService\log|
+%PROGRAMDATA%\N-Able Technologies\AutomationManager|
+%PROGRAMDATA%\Packages|
+%PROGRAMDATA%\Package Cache|
+%PROGRAMDATA%\restored_quar|
+%PROGRAMDATA%\Roaming|
+%PROGRAMDATA%\Sentinel|
+%PROGRAMDATA%\SoftwareDistribution|
+%PROGRAMDATA%\SolarWinds|
+%PROGRAMDATA%\SolarWinds MSP|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\Temp|
+%PROGRAMDATA%\Temp|
 %SystemRoot%.old|
 %SystemRoot%.000|
 %SystemRoot%.001|
@@ -92,9 +107,26 @@ C:\wu_output|
 %SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\CloudAPCache|
 %SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\PRICache|
 %SystemRoot%\Temp|
+%SystemRoot%\Users\All Users\GetSupportService|
+%SystemRoot%\Users\All Users\GetSupportService_N-Central|
+%SystemRoot%\Users\All Users\Microsoft\WER|
+%SystemRoot%\Users\All Users\MspPlatform\Perun\temp|
+%SystemRoot%\Users\All Users\MspPlatform\PME\log|
+%SystemRoot%\Users\All Users\MspPlatform\PME\temp|
+%SystemRoot%\Users\All Users\MspPlatform\PME\archives|
+%SystemRoot%\Users\All Users\MspPlatform\PME\CachedMetadata|
+%SystemRoot%\Users\All Users\MspPlatform\PME\ThirdPartyPatch|
+%SystemRoot%\Users\All Users\MspPlatform\PME.Agent.PmeService\log|
+%SystemRoot%\Users\All Users\MspPlatform\RequestHandlerAgent\log|
+%SystemRoot%\Users\All Users\MspPlatform\FileCacheServiceAgent\log|
+%SystemRoot%\Users\All Users\MspPlatform\FileCacheServiceAgent\cache|
+%SystemRoot%\Users\All Users\MspPlatform\SolarWinds.MSP.CacheService\log|
+%SystemRoot%\Users\All Users\MspPlatform\SolarWinds.MSP.RpcServerService\log|
+%SystemRoot%\Users\All Users\N-Able Technologies\AutomationManager|
+%SystemRoot%\Users\All Users\SolarWinds|
+%SystemRoot%\Users\All Users\SolarWinds MSP|
 %SystemRoot%\winsxs\temp|
 %SystemRoot%\WinSxS\ManifestCache|
-%LOCALAPPDATA%\temp|
 %LOCALAPPDATA%\Google\Chrome\User Data\Temp|
 %LOCALAPPDATA%\Google\Chrome\User Data\Crashpad|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache|
@@ -124,3 +156,4 @@ C:\wu_output|
 %LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|
 %LOCALAPPDATA%\Microsoft\Windows\ActionCenterCache|
 %LOCALAPPDATA%\Microsoft\Windows\TemporaryInternetFiles|
+%LOCALAPPDATA%\temp|
