@@ -22,15 +22,15 @@ dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
 dim objUFOL, arrUFOL()
 ''PRE-DEFINED ARRAYS
-dim arrEXCL(), arrPUSR()
-dim arrPFOL(), arrAPP(), arrPROF()
+dim arrAPP(), arrPROF(), arrPATH()
+dim arrEXCL(), arrPUSR(), arrPFOL()
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
 ''VERSION FOR SCRIPT UPDATE , MSP_FILTER.VBS , REF #2 , REF #68 , REF #69
-strVER = 9
+strVER = 10
 strREPO = "scripts"
-strBRCH = "master"
+strBRCH = "dev"
 strDIR = "MSP Backups"
 ''DEFAULT SUCCESS
 errRET = 0
@@ -221,6 +221,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
+        erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\filters.txt")) then
           objFSO.deletefile "C:\IT\Scripts\filters.txt", true
@@ -235,23 +236,67 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         arrTMP = split(strTMP, "|")
         for intTMP = 0 to ubound(arrTMP)
           if (arrTMP(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+            strPATH = arrTMP(intTMP)
+            ''EXPAND ENVIRONMENT STRINGS
+            if (instr(1, arrTMP(intTMP), "%")) then
+              if (instr(1, arrTMP(intTMP), "\") = 0) then
+                arrTMP(intTMP) = arrTMP(intTMP) & "\"
+              end if
+              arrPATH = split(arrTMP(intTMP), "\")
+              strPATH = objWSH.expandenvironmentstrings(arrPATH(0))
+              for intPATH = 1 to ubound(arrPATH)
+                strPATH = strPATH & arrPATH(intPATH)
+              next
+            end if
+            if (instr(1, arrTMP(intTMP), "*")) then
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34))
+            elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34))
+            end if
             wscript.sleep 200
           end if
         next
         ''CUSTOM 'FILTER' PASSED
         if (strFILTER <> vbnullstring) then
+          if (instr(1, strFILTER, "|") = 0) then
+            strFILTER = strFILTER & "|"  
+          end if
+          arrFILTER = split(strFILTER, "|")
           for intTMP = 0 to ubound(arrFILTER)
             if (arrFILTER(intTMP) <> vbnullstring) then
-              objOUT.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-              objLOG.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+              strPATH = arrFILTER(intTMP)
+              ''EXPAND ENVIRONMENT STRINGS
+              if (instr(1, arrFILTER(intTMP), "%")) then
+                if (instr(1, arrFILTER(intTMP), "\") = 0) then
+                  arrFILTER(intTMP) = arrFILTER(intTMP) & "\"
+                end if
+                arrPATH = split(arrFILTER(intTMP), "\")
+                strPATH = objWSH.expandenvironmentstrings(arrPATH(0))
+                for intPATH = 1 to ubound(arrPATH)
+                  strPATH = strPATH & arrPATH(intPATH)
+                next
+              end if
+              if (instr(1, arrFILTER(intTMP), "*")) then
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34))
+              elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34))
+              end if
               wscript.sleep 200
             end if
           next
@@ -260,6 +305,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
+        erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\includes.txt", true
@@ -301,7 +347,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
         objLOG.write vbnewline & now & vbtab & vbtab & " - RESETTING CURRENT MSP BACKUP INCLUDES"
         call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include C:\")
-        wscript.sleep 5000
+        wscript.sleep 60000
         ''DOWNLOAD 'CLOUD_FILTERS.TXT' BACKUP FILTERS DEFINITION FILE , 'ERRRET'=2 , REF #2
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
@@ -321,23 +367,67 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         arrTMP = split(strTMP, "|")
         for intTMP = 0 to ubound(arrTMP)
           if (arrTMP(intTMP) <> vbnullstring) then
-            objOUT.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-            objLOG.write vbnewline & now & vbtab & vbtab & _
-              "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34)
-            call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrTMP(intTMP) & chr(34))
+            strPATH = arrTMP(intTMP)
+            ''EXPAND ENVIRONMENT STRINGS
+            if (instr(1, arrTMP(intTMP), "%")) then
+              if (instr(1, arrTMP(intTMP), "\") = 0) then
+                arrTMP(intTMP) = arrTMP(intTMP) & "\"
+              end if
+              arrPATH = split(arrTMP(intTMP), "\")
+              strPATH = objWSH.expandenvironmentstrings(arrPATH(0))
+              for intPATH = 1 to ubound(arrPATH)
+                strPATH = strPATH & arrPATH(intPATH)
+              next
+            end if
+            if (instr(1, arrTMP(intTMP), "*")) then
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34))
+            elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+              objOUT.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+              objLOG.write vbnewline & now & vbtab & vbtab & _
+                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34))
+            end if
             wscript.sleep 200
           end if
         next
         ''CUSTOM 'FILTER' PASSED
         if (strFILTER <> vbnullstring) then
+          if (instr(1, strFILTER, "|") = 0) then
+            strFILTER = strFILTER & "|"  
+          end if
+          arrFILTER = split(strFILTER, "|")
           for intTMP = 0 to ubound(arrFILTER)
             if (arrFILTER(intTMP) <> vbnullstring) then
-              objOUT.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-              objLOG.write vbnewline & now & vbtab & vbtab & _
-                "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34)
-              call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & arrFILTER(intTMP) & chr(34))
+              strPATH = arrFILTER(intTMP)
+              ''EXPAND ENVIRONMENT STRINGS
+              if (instr(1, arrFILTER(intTMP), "%")) then
+                if (instr(1, arrFILTER(intTMP), "\") = 0) then
+                  arrFILTER(intTMP) = arrFILTER(intTMP) & "\"
+                end if
+                arrPATH = split(arrFILTER(intTMP), "\")
+                strPATH = objWSH.expandenvironmentstrings(arrPATH(0))
+                for intPATH = 1 to ubound(arrPATH)
+                  strPATH = strPATH & arrPATH(intPATH)
+                next
+              end if
+              if (instr(1, arrTMP(intTMP), "*")) then
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34)
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify " & chr(34) & strPATH & chr(34))
+              elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+                objOUT.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+                objLOG.write vbnewline & now & vbtab & vbtab & _
+                  "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34))
+              end if
               wscript.sleep 200
             end if
           next
