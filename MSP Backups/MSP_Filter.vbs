@@ -103,7 +103,7 @@ elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUM
 end if
 ''UNNEEDED / TO EXCLUDE USER ACCOUNTS
 redim arrEXCL(1)
-arrEXCL(0) = "rmmtech"
+arrEXCL(0) = "nable"
 ''PROTECTED USER ACCOUNTS
 redim arrPUSR(4)
 arrPUSR(0) = "MSSQL"
