@@ -243,7 +243,7 @@ if (errRET = 0) then
     '  end if
     'end if
   end if
-elseif (errRET = 0) then
+elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
 ''END SCRIPT
@@ -385,16 +385,16 @@ end sub
 
 sub CLEANUP()                                                                     ''SCRIPT CLEANUP
   if (errRET = 0) then         															                      ''CCLUTTER COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & "CCLUTTER SUCCESSFUL : " & errRET & " : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & "CCLUTTER SUCCESSFUL : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CCLUTTER SUCCESSFUL : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CCLUTTER SUCCESSFUL : " & errRET & " : " & now
     err.clear
   elseif (errRET <> 0) then    															                      ''CCLUTTER FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & "CCLUTTER FAILURE : " & errRET & " : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & "CCLUTTER FAILURE : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - CCLUTTER FAILURE : " & errRET & " : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - CCLUTTER FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "CCLUTTER", "FAILURE")
   end if
-  strNEW = vbnewline & "CCLUTTER COMPLETE : CLEARED " & round((lngSIZ / 1024),2) & " MB"
+  strNEW = vbnewline & " - CCLUTTER COMPLETE : CLEARED " & round((lngSIZ / 1024),2) & " MB"
   objOUT.write strNEW
   if (blnLOG) then                                                                ''LOGFILE CLEANUP, IF ENABLED
     objLOG.write strNEW
