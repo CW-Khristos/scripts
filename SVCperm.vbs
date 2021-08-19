@@ -271,6 +271,7 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
+  ''ARGUMENT OUTPUT DISABLED TO SANITIZE
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" ' & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : HOOK" ' & strCMD
   set objHOOK = objWSH.exec(strCMD)
