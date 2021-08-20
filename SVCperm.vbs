@@ -323,6 +323,9 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
     ''RAISE CUSTOMIZED ERROR CODE , ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "SVCPERM", "fail")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - SVCPERM COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - SVCPERM COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objEXEC = nothing
   set objLOG = nothing
