@@ -167,8 +167,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : " & strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : " & strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
@@ -209,8 +209,8 @@ end sub
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - FASTNET COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - FASTNET COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - FASTNET SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - FASTNET SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - FASTNET FAILURE : " & errRET & " : " & now
@@ -218,6 +218,9 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
     ''RAISE CUSTOMIZED ERROR CODE , ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "FASTNET", "fail")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - FASTNET COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - FASTNET COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objEXEC = nothing
   set objLOG = nothing
