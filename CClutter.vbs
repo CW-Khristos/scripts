@@ -4,7 +4,7 @@
 ''ACCEPTS 2 PARAMETERS , REQUIRES 1 PARAMETER
 ''OPTIONAL PARAMETER : 'BLNLOG' , BOOLEAN TO SET LOGGING
 ''OPTIONAL PARAMETER : 'STRFOL' , STRING TO SET TARGET FOLDER FOR CLEANUP
-''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
+''WRITTEN BY : CJ BLEDSOE / CBLEDSOE<@>IPMCOMPUTERS.COM
 'on error resume next
 ''SCRIPT VARIABLES
 dim strVER, errRET
@@ -347,6 +347,8 @@ end sub
 
 sub HOOK(strCMD)                                                                  ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
   while (not objHOOK.stdout.atendofstream)
     if (instr(1, strCMD, "takeown /F ") = 0) then                                 ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
