@@ -1,5 +1,9 @@
 ''PINGTEST.VBS
+''AUTOMATICALLY RUNS PING TO TARGET IP IN AN INFINITE LOOP
+''AUTOMATICALLY RUNS NSLOOKUP TO TARGET IP AND IPCONFIG /FLUSHDNS
 ''WRITTEN BY : CJ BLEDSOE / CBLEDSOE<@>IPMCOMPUTERS.COM
+''ACCEPTS 1 PARAMETERS , REQUIRES 1 PARAMETERS
+''REQUIRED PARAMETER 'STRIP' ; STRING VALUE TO HOLD PASSED IP ADDRESS ; TARGET IP TO PERFORM NSLOOKUP
 on error resume next
 ''SCRIPT VARIABLES
 dim strIDL, strTMP, arrTMP, strIN, strIP
@@ -162,8 +166,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=3
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
@@ -202,8 +206,8 @@ end sub
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''PINGTEST COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - PINGTEST COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - PINGTEST COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - PINGTEST SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - PINGTEST SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then    											        ''PINGTEST FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - PINGTEST FAILURE : " & errRET & " : " & now
