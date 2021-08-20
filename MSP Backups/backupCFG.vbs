@@ -230,8 +230,8 @@ end sub
 
 sub CLEANUP()                                               ''SCRIPT CLEANUP
   if (errRET = 0) then                                      ''SCRIPT COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - BACKUPCFG COMPLETE : " & now
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - BACKUPCFG COMPLETE : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - BACKUPCFG SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & " - BACKUPCFG SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then                                 ''SCRIPT FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - BACKUPCFG FAILURE : " & errRET & " : " & now
@@ -239,6 +239,9 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "BACKUPCFG", "FAIL")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - BACKUPCFG COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - BACKUPCFG COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objLOG = nothing
   set objFSO = nothing
