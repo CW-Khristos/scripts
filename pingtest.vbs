@@ -1,5 +1,5 @@
 ''PINGTEST.VBS
-''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
+''WRITTEN BY : CJ BLEDSOE / CBLEDSOE<@>IPMCOMPUTERS.COM
 on error resume next
 ''SCRIPT VARIABLES
 dim strIDL, strTMP, arrTMP, strIN, strIP
@@ -26,18 +26,14 @@ set objARG = wscript.arguments
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
 if (not (objFSO.folderexists("C:\IT\Scripts\"))) then
   objFSO.createfolder("C:\IT\Scripts\")
-end if
-''PREPARE LOGFILE
-strPath = "c:\temp"
-if (objFSO.FolderExists(strPath)) then
-  ''do nothing
-else
-  objFSO.CreateFolder(strPath)
 end if
 if (objFSO.fileexists("C:\temp\PINGTEST")) then             ''LOGFILE EXISTS
   objFSO.deletefile "C:\temp\PINGTEST", true
@@ -57,9 +53,11 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
   next 
   if (wscript.arguments.count >= 1) then                     ''SET REQUIRED VARIABLES ACCEPTING ARGUMENTS
     strIP = objARG.item(0)                                   ''SET REQUIRED PARAMETER 'STRIP' , TARGET IP ADDRESS TO PING
-  else                                                      ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+  else                                                       ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     call LOGERR(1)
   end if
+else                                                         ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+    call LOGERR(1)
 end if
 
 ''------------
@@ -88,20 +86,25 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
     objLOG.write vbnewline & now & vbtab & " - LOOPING"
     ''INFITIE LOOP
     while (strLOOP = vbnullstring)
+      objOUT.write vbnewline & now & vbtab & vbtab & " - PINGTEST : " & strIP
+      objLOG.write vbnewline & now & vbtab & vbtab & " - PINGTEST : " & strIP
       set objEXEC = objWSH.exec("%SystemRoot%\system32\ping.exe -n 5 " & strIP)
       while (not objEXEC.stdout.atendofstream)
         wscript.sleep 10
-        strIN = objEXEC.stdout.readall
+        strIN = objEXEC.stdout.readline
         if (strIN <> vbnullstring) then
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN
         end if
       wend
+      'strIN = objEXEC.stdout.readall
       set objEXEC = nothing
-      wscript.sleep 100
-      if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then
-        call HOOK("tracert -d -w 400 " & strIP)
+      if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then'
+        call HOOK("nslookup " & strIP)
+        call HOOK("tracert -d -w 200 -h 10 " & strIP)
+        call HOOK("ipconfig /flushdns")
       end if
+      wscript.sleep 100
     wend
   end if
 elseif (errRET <> 0) then                                     ''NO ARGUMENTS PASSED, END SCRIPT , 'ERRRET'=1
@@ -119,6 +122,11 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
+  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
+    " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
   ''CHECK IF FILE ALREADY EXISTS
   if objFSO.fileexists(strSAV) then
     ''DELETE FILE FOR OVERWRITE
