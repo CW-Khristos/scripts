@@ -1,3 +1,10 @@
+*.tmp|
+*.idlk|
+*.lock|
+*\PatchCache|
+*\storage\cabs\gen*\*|
+*\.Trashes|
+*\.TemporaryItems|
 C:\ADWCleaner|
 C:\AMD|
 C:\cclutter.txt|
