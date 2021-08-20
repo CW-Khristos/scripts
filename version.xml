@@ -1,5 +1,6 @@
 <SCRIPTS>
   <AcctClean.vbs>2</AcctClean.vbs>
+  <Agent_Removal.vbs>1</Agent_Removal.vbs>
   <all_av_removal.vbs>1</all_av_removal.vbs>
   <auto_plan.vbs>15</auto_plan.vbs>
   <avd_removal.vbs>1</avd_removal.vbs>
@@ -11,6 +12,7 @@
   <CodeDrop_Fix.vbs>7</CodeDrop_Fix.vbs>
   <CSize.vbs>1</CSize.vbs>
   <disk_usage.vbs>4</disk_usage.vbs>
+  <dnstest.vbs>1</dnstest.vbs>
   <drvmap.vbs>1</drvmap.vbs>
   <fastnet.vbs>5</fastnet.vbs>
   <fileback.vbs>1</fileback.vbs>
@@ -38,6 +40,7 @@
   <percent_rename.vbs>1</percent_rename.vbs>
   <pingtest.vbs>3</pingtest.vbs>
   <PME_Config.vbs>1</PME_Config.vbs>
+  <PME_Removal.vbs>1</PME_Removal.vbs>
   <PMEService_Fix.vbs>8</PMEService_Fix.vbs>
   <PMEService_Install.vbs>4</PMEService_Install.vbs>
   <post-backup.cmd>3</post-backup.cmd>
