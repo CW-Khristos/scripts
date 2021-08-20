@@ -91,7 +91,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 32BIT TAKE CONTROL"
       if (objFSO.fileexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
         'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
-        objWSH.run strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
+        objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
       end if
       ''KILL SERVICE PROCESSES
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
@@ -107,7 +107,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       'call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
       intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
       if (intRET <> 0) then
-        for (intLOOP = 0 to 10)
+        for intLOOP = 0 to 10
           wscript.sleep 5000
           intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
           if (intRET = 0) then
@@ -125,11 +125,12 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 64BIT TAKE CONTROL"
       if (objFSO.fileexists(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
         'call HOOK(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
-        objWSH.run strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S", 0, true
+        objWSH.run chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
       end if
       ''KILL SERVICE PROCESSES
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
       objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
       call HOOK("taskkill /F /IM BASupSrvc.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
@@ -138,10 +139,10 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       ''CALL HOOK(RMDIR) GETTING STUCK DUE TO PROCESSES IN DIRECTORY
-      'call HOOK("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
+      'call HOOK("rmdir /s /q " & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central")
       intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
       if (intRET <> 0) then
-        for (intLOOP = 0 to 10)
+        for intLOOP = 0 to 10
           wscript.sleep 5000
           intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
           if (intRET = 0) then
@@ -157,6 +158,14 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     if (objFSO.folderexists(chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
+      call HOOK("rmdir /s /q " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))
+      if (err.number <> 0) then
+        call LOGERR(3)
+      end if
+    end if
+    if (objFSO.folderexists(chr(34) & strPD & "\GetSupportService" & chr(34))) then
+      objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService") & chr(34)
+      objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService") & chr(34)
       call HOOK("rmdir /s /q " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))
       if (err.number <> 0) then
         call LOGERR(3)
@@ -268,6 +277,9 @@ sub CLEANUP()                                               ''SCRIPT CLEANUP
     ''RAISE CUSTOMIZED ERROR CODE , ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "FIX_CONTROL", "fail")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - FIX_CONTROL COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - FIX_CONTROL COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objEXEC = nothing
   set objLOG = nothing
