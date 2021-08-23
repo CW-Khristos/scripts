@@ -192,8 +192,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       end if
     end if
     ''REMOVE TAKE CONTROL SERVICES
-    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
-    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL SERVICES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL SERVICES"
     call HOOK("sc delete " & chr(34) & "BASupportExpressSrvcUpdater_N_Central" & chr(34))
     call HOOK("sc delete " & chr(34) & "BASupportExpressStandaloneService_N_Central" & chr(34))
   end if
