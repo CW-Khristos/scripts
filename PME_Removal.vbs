@@ -135,6 +135,12 @@ if (errRET = 0) then
       objFSO.deletefolder chr(34) & strPD & "\FileCacheServiceAgent" & chr(34), true
     end if
   end if
+  ''CLEAR PROGRAM FILES / PROGRAM FILES (X86) FOLDER
+  if (objFSO.fileexists(strPF & "\MspPlatform")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\MSPPLATFORM DRIECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\MSPPLATFORM DRIECTORY"
+    objFSO.deletefolder chr(34) & strPF & "\MspPlatform" & chr(34), true
+  end if
   ''CLEAR PROGRAMDATA\MSPPLATFORM FOLDER
   if (objFSO.folderexists(strPD & "\MspPlatform")) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\MSPPLATFORM DRIECTORY"
@@ -186,6 +192,12 @@ if (errRET = 0) then
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING FILE CACHE SERVICE AGENT DRIECTORY"
       objFSO.deletefolder chr(34) & strPD & "\SolarWinds.MSP.CacheService" & chr(34), true
     end if
+  end if
+  ''CLEAR PROGRAM FILES / PROGRAM FILES (X86) FOLDER
+  if (objFSO.fileexists(strPF & "\SolarWinds MSP")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\SOLARWINDS MSP DRIECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\SOLARWINDS MSP DRIECTORY"
+    objFSO.deletefolder chr(34) & strPF & "\SolarWinds MSP" & chr(34), true
   end if
   ''CLEAR PROGRAMDATA\SOLARWINDS MSP FOLDER
   if (objFSO.folderexists(strPD & "\SolarWinds MSP")) then
