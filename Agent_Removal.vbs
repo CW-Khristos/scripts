@@ -80,6 +80,11 @@ if (errRET = 0) then
   objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING REGISTRY KEYS"
   call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\N-able Technologies\NcentralAsset" & chr(34) & " /f")
   call HOOK("reg delete " & chr(34) & "HKLM\SOFTWARE\N-able Technologies" & chr(34) & " /f")
+  ''REMOVE SERVICES
+  objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING AGENT SERVICES"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING AGENT SERVICES"
+  call HOOK("sc delete " & chr(34) & "Windows Agent Service" & chr(34))
+  call HOOK("sc delete " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
 elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
