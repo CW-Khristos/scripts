@@ -90,6 +90,18 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   'objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = 4
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''STOP TAKE CONTROL SERVICES
+    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
+    call HOOK("sc stop " & chr(34) & "BASupportExpressSrvcUpdater_N_Central" & chr(34))
+    call HOOK("sc stop " & chr(34) & "BASupportExpressStandaloneService_N_Central" & chr(34))
+    ''KILL SERVICE PROCESSES
+    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
+    call HOOK("taskkill /F /IM BASupSrvc.exe /T")
+    call HOOK("taskkill /F /IM BASupSysInf.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
+    call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
     ''GetSupportService
     if (objFSO.folderexists(strPF & "\BeAnywhere Support Express\GetSupportService")) then
       ''RUN UNINSTALL
@@ -99,13 +111,6 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService\uninstall.exe" & " /S")
         objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService\uninstall.exe" & chr(34) & " /S", 0, true
       end if
-      ''KILL SERVICE PROCESSES
-      objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-      call HOOK("taskkill /F /IM BASupSrvc.exe /T")
-      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
-      call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
-      call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
       wscript.sleep 10000
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
@@ -134,13 +139,6 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         'call HOOK(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
         objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
       end if
-      ''KILL SERVICE PROCESSES
-      objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-      call HOOK("taskkill /F /IM BASupSrvc.exe /T")
-      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
-      call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
-      call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
       wscript.sleep 10000
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
@@ -193,6 +191,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         call LOGERR(5)
       end if
     end if
+    ''REMOVE TAKE CONTROL SERVICES
+    objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL SERVICES"
+    call HOOK("sc delete " & chr(34) & "BASupportExpressSrvcUpdater_N_Central" & chr(34))
+    call HOOK("sc delete " & chr(34) & "BASupportExpressStandaloneService_N_Central" & chr(34))
   end if
 elseif (errRET <> 0) then                                   ''ERRORS ENCOUNTERED DURING INITIAL START
   call LOGERR(errRET)
