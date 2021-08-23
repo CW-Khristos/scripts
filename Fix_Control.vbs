@@ -103,6 +103,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
       objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
       call HOOK("taskkill /F /IM BASupSrvc.exe /T")
+      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
@@ -136,8 +137,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       ''KILL SERVICE PROCESSES
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
       objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
-      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
       call HOOK("taskkill /F /IM BASupSrvc.exe /T")
+      call HOOK("taskkill /F /IM BASupSysInf.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcCnfg.exe /T")
       call HOOK("taskkill /F /IM BASupSrvcUpdater.exe /T")
       ''REMOVE DIRECTORY
