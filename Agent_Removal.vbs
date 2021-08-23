@@ -85,6 +85,12 @@ if (errRET = 0) then
   objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING AGENT SERVICES"
   call HOOK("sc delete " & chr(34) & "Windows Agent Service" & chr(34))
   call HOOK("sc delete " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
+  ''CLEAR PROGRAM FILES / PROGRAM FILES (X86) FOLDER
+  if (objFSO.fileexists(strPF & "\N-Able Technologies")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\N-ABLE TECHNOLOGIES DRIECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\N-ABLE TECHNOLOGIES DRIECTORY"
+    objFSO.deletefolder chr(34) & strPF & "\N-Able Technologies" & chr(34), true
+  end if
 elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
