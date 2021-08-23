@@ -21,6 +21,10 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+''ENVIRONMENT VARIABLES
+strPD = objWSH.expandenvironmentstrings("%PROGRAMDATA%")
+strPF = objWSH.expandenvironmentstrings("%PROGRAMFILES%")
+strPF86 = objWSH.expandenvironmentstrings("%PROGRAMFILES(X86)%")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("c:\temp"))) then
   objFSO.createfolder("c:\temp")
@@ -59,6 +63,12 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if (errRET = 0) then
+  ''DETERMINE OS ARCHITECTURE
+  if (GetOSbits = 64) then
+    strPF = strPF86
+  elseif (GetOSbits = 32) then
+    strPF = strPF
+  end if
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING AGENT_REMOVAL"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING AGENT_REMOVAL"
   ''STOP SERVICES
@@ -98,6 +108,15 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
+
+''FUNCTIONS
+function GetOSbits()
+   if (objWSH.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%") = "AMD64") then
+      GetOSbits = 64
+   else
+      GetOSbits = 32
+   end if
+end function
 
 ''SUB-ROUTINES
 sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
