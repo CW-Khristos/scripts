@@ -76,6 +76,7 @@ if (errRET = 0) then
   objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING PME SERVICES"
   call HOOK("sc stop " & chr(34) & "EcosystemAgent" & chr(34))
   call HOOK("sc stop " & chr(34) & "EcosystemAgentMaintenance" & chr(34))
+  call HOOK("sc stop " & chr(34) & "PME.Agent.PmeService" & chr(34))
   call HOOK("sc stop " & chr(34) & "SolarWinds.MSP.CacheService" & chr(34))
   call HOOK("sc stop " & chr(34) & "SolarWinds.MSP.RpcServerService" & chr(34))
   call HOOK("sc stop " & chr(34) & "Windows Agent Service" & chr(34))
@@ -101,10 +102,10 @@ if (errRET = 0) then
     end if
   end if
   ''ECOSYSTEM AGENT
-  if (objFSO.fileexists(strPF & "\MspPlatform\PME\unins000.exe")) then
+  if (objFSO.fileexists(strPF & "\MspPlatform\Ecosystem Agent\unins000.exe")) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING ECOSYSTEM AGENT"
     objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING ECOSYSTEM AGENT"
-    objWSH.run chr(34) & strPF & "\MspPlatform\PME\unins000.exe" & chr(34) & " /s /qn /silent /verysilent /norestart", 0, true
+    objWSH.run chr(34) & strPF & "\MspPlatform\Ecosystem Agent\unins000.exe" & chr(34) & " /s /qn /silent /verysilent /norestart", 0, true
     objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING ECOSYSTEM AGENT DRIECTORIES"
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING ECOSYSTEM AGENT DRIECTORIES"
     if (objFSO.folderexists(strPD & "\MspPlatform\Ecosystem Agent")) then
