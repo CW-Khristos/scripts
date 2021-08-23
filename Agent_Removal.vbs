@@ -101,6 +101,12 @@ if (errRET = 0) then
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAM FILES\N-ABLE TECHNOLOGIES DRIECTORY"
     objFSO.deletefolder chr(34) & strPF & "\N-Able Technologies" & chr(34), true
   end if
+  ''CLEAR PROGRAMDATA FOLDER
+  if (objFSO.fileexists(strPD & "\N-Able Technologies")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
+    objFSO.deletefolder chr(34) & strPD & "\N-Able Technologies" & chr(34), true
+  end if
 elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
