@@ -63,14 +63,14 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if (errRET = 0) then
-  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME_REMOVAL"
-  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME_REMOVAL"
   ''DETERMINE OS ARCHITECTURE
   if (GetOSbits = 64) then
     strPF = strPF86
   elseif (GetOSbits = 32) then
     strPF = strPF
   end if
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME_REMOVAL"
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING PME_REMOVAL"
   ''STOP SERVICES
   objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING PME SERVICES"
   objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING PME SERVICES"
@@ -193,6 +193,16 @@ if (errRET = 0) then
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\SOLARWINDS MSP DRIECTORY"
     objFSO.deletefolder chr(34) & strPD & "\SolarWinds MSP" & chr(34), true
   end if
+  ''REMOVE SERVICES
+  objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PME SERVICES"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PME SERVICES"
+  call HOOK("sc delete " & chr(34) & "EcosystemAgent" & chr(34))
+  call HOOK("sc delete " & chr(34) & "EcosystemAgentMaintenance" & chr(34))
+  call HOOK("sc delete " & chr(34) & "PME.Agent.PmeService" & chr(34))
+  call HOOK("sc delete " & chr(34) & "SolarWinds.MSP.CacheService" & chr(34))
+  call HOOK("sc delete " & chr(34) & "SolarWinds.MSP.RpcServerService" & chr(34))
+  call HOOK("sc delete " & chr(34) & "Windows Agent Service" & chr(34))
+  call HOOK("sc delete " & chr(34) & "Windows Agent Maintenance Service" & chr(34))
 elseif (errRET <> 0) then
   call LOGERR(errRET)
 end if
