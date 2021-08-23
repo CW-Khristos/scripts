@@ -23,6 +23,9 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
+strPD = objWSH.expandenvironmentstrings("%PROGRAMDATA%")
+strPF = objWSH.expandenvironmentstrings("%PROGRAMFILES%")
+strPF86 = objWSH.expandenvironmentstrings("%PROGRAMFILES(X86)%")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("c:\temp"))) then
   objFSO.createfolder("c:\temp")
@@ -62,9 +65,12 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if (errRET = 0) then                                        ''NO ERRORS DURING INITIAL START
-  strPD = objWSH.expandenvironmentstrings("%PROGRAMDATA%")
-  strPF = objWSH.expandenvironmentstrings("%PROGRAMFILES%")
-  strPF86 = objWSH.expandenvironmentstrings("%PROGRAMFILES(X86)%")
+  ''DETERMINE OS ARCHITECTURE
+  if (GetOSbits = 64) then
+    strPF = strPF86
+  elseif (GetOSbits = 32) then
+    strPF = strPF
+  end if
   objOUT.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FIX_CONTROL"
   objLOG.write vbnewline & vbnewline & now & vbtab & " - EXECUTING FIX_CONTROL"
 	''AUTOMATIC UPDATE, FIX_CONTROL.VBS, REF #2 , REF #69 , REF #68
@@ -84,14 +90,14 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   'objLOG.write vbnewline & "errRET='" & intRET & "'"
   intRET = 4
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
-    ''32BIT INSTALL
-    if (objFSO.folderexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central")) then
+    ''GetSupportService
+    if (objFSO.folderexists(strPF & "\BeAnywhere Support Express\GetSupportService")) then
       ''RUN UNINSTALL
-      objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 32BIT TAKE CONTROL"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 32BIT TAKE CONTROL"
-      if (objFSO.fileexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
-        'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
-        objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
+      objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING TAKE CONTROL"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING TAKE CONTROL"
+      if (objFSO.fileexists(strPF & "\BeAnywhere Support Express\GetSupportService\uninstall.exe")) then
+        'call HOOK(strPF & "\BeAnywhere Support Express\GetSupportService\uninstall.exe" & " /S")
+        objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService\uninstall.exe" & chr(34) & " /S", 0, true
       end if
       ''KILL SERVICE PROCESSES
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
@@ -104,12 +110,12 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING TAKE CONTROL DIRECTORY"
       ''CALL HOOK(RMDIR) GETTING STUCK DUE TO PROCESSES IN DIRECTORY
-      'call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34))
-      intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+      'call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService" & chr(34))
+      intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService" & chr(34), 0, false)
       if (intRET <> 0) then
         for intLOOP = 0 to 10
           wscript.sleep 5000
-          intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central" & chr(34), 0, false)
+          intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService" & chr(34), 0, false)
           if (intRET = 0) then
             exit for
           end if
@@ -118,14 +124,14 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       if (err.number <> 0) then
         call LOGERR(1)
       end if
-    ''64BIT INSTALL
-    elseif (objFSO.folderexists(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central")) then
+    ''GetSupportService_N-Central
+    elseif (objFSO.folderexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central")) then
       ''RUN UNINSTALL
-      objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 64BIT TAKE CONTROL"
-      objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING 64BIT TAKE CONTROL"
-      if (objFSO.fileexists(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
+      objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING TAKE CONTROL"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING TAKE CONTROL"
+      if (objFSO.fileexists(strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe")) then
         'call HOOK(strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & " /S")
-        objWSH.run chr(34) & strPF86 & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
+        objWSH.run chr(34) & strPF & "\BeAnywhere Support Express\GetSupportService_N-Central\uninstall.exe" & chr(34) & " /S", 0, true
       end if
       ''KILL SERVICE PROCESSES
       objOUT.write vbnewline & now & vbtab & vbtab & " - STOPPING TAKE CONTROL PROCESSES"
@@ -154,13 +160,28 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         call LOGERR(2)
       end if
     end if
+    ''CALL HOOK(RMDIR) GETTING STUCK DUE TO PROCESSES IN DIRECTORY
+    'call HOOK("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express" & chr(34))
+    intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express" & chr(34), 0, false)
+    if (intRET <> 0) then
+      for intLOOP = 0 to 10
+        wscript.sleep 5000
+        intRET = objWSH.run ("rmdir /s /q " & chr(34) & strPF & "\BeAnywhere Support Express" & chr(34), 0, false)
+        if (intRET = 0) then
+          exit for
+        end if
+      next
+    end if
+    if (err.number <> 0) then
+      call LOGERR(3)
+    end if
     ''PROGRAMDATA DIRECTORY
     if (objFSO.folderexists(chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService_N-Central") & chr(34)
       call HOOK("rmdir /s /q " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))
       if (err.number <> 0) then
-        call LOGERR(3)
+        call LOGERR(4)
       end if
     end if
     if (objFSO.folderexists(chr(34) & strPD & "\GetSupportService" & chr(34))) then
@@ -168,7 +189,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService") & chr(34)
       call HOOK("rmdir /s /q " & chr(34) & strPD & "\GetSupportService_N-Central" & chr(34))
       if (err.number <> 0) then
-        call LOGERR(3)
+        call LOGERR(5)
       end if
     end if
   end if
@@ -179,6 +200,15 @@ end if
 call CLEANUP()
 ''END SCRIPT
 ''------------
+
+''FUNCTIONS
+function GetOSbits()
+   if (objWSH.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%") = "AMD64") then
+      GetOSbits = 64
+   else
+      GetOSbits = 32
+   end if
+end function
 
 ''SUB-ROUTINES
 sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
