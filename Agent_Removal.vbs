@@ -81,6 +81,7 @@ if (errRET = 0) then
   objLOG.write vbnewline & now & vbtab & vbtab & " - STOPPING WINDOWS AGENT PROCESSES"
   call HOOK("taskkill /F /IM agent.exe /T")
   call HOOK("taskkill /F /IM AgentMaint.exe /T")
+  call HOOK("taskkill /F /IM Agent_Tray_DotNET /T")
   ''UNINSTALL WINDOWS AGENT 2021.1.2.391
   objOUT.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING WINDOWS AGENT"
   objLOG.write vbnewline & now & vbtab & vbtab & " - UNINSTALLING WINDOWS AGENT"
@@ -106,6 +107,11 @@ if (errRET = 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
     objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
     objFSO.deletefolder chr(34) & strPD & "\N-Able Technologies" & chr(34), true
+  end if
+  if (objFSO.fileexists(strPD & "\N-Able  Technologies")) then
+    objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PROGRAMDATA\N-ABLE TECHNOLOGIES DRIECTORY"
+    objFSO.deletefolder chr(34) & strPD & "\N-Able  Technologies" & chr(34), true
   end if
 elseif (errRET <> 0) then
   call LOGERR(errRET)
