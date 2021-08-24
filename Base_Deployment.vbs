@@ -80,6 +80,14 @@ if (errRET = 0) then                                                ''NO ERRORS 
   objOUT.write vbnewline & "errRET='" & intRET & "'"
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
+    ''CHANGE ACTIVE POWER PLAN
+    objOUT.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+    objLOG.write vbnewline & now & vbtab & " - SETTING ACTIVE POWER PLAN : HIGH PERFORMANCE" & vbnewline
+    call HOOK("powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c")
+    ''DISABLE HIBERNATION
+    objOUT.write vbnewline & now & vbtab & " - DISABLING HIBERNATION" & vbnewline
+    objLOG.write vbnewline & now & vbtab & " - DISABLING HIBERNATION" & vbnewline
+    call HOOK("powercfg –h off")
     ''SAMSUNG MAGICIAN SETUP - CANNOT BE INSTALLED IN SILENT MODE
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SAMSUNG MAGICIAN"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SAMSUNG MAGICIAN"
