@@ -100,7 +100,7 @@ if (errRET = 0) then
       wscript.sleep 6000
     next
     call HOOK("taskkill /F /IM unins000.exe")
-    if (objFSO.folderexists(chr(34) & strPD & "\MspPlatform\PME\archives")) then
+    if (objFSO.folderexists(strPD & "\MspPlatform\PME\archives")) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PME\ARCHIVES DRIECTORY"
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PME\ARCHIVES DRIECTORY"
       objFSO.deletefolder chr(34) & strPD & "\MspPlatform\PME\archives" & chr(34), true
