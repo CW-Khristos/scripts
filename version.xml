@@ -3,6 +3,7 @@
   <Agent_Removal.vbs>1</Agent_Removal.vbs>
   <all_av_removal.vbs>1</all_av_removal.vbs>
   <auto_plan.vbs>15</auto_plan.vbs>
+  <AV_WMICLEANUP.vbs>1</AV_WMICLEANUP.vbs>
   <avd_removal.vbs>1</avd_removal.vbs>
   <Base_Deployment.vbs>1</Base_Deployment.vbs>
   <CClutter.vbs>10</CClutter.vbs>
