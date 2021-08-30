@@ -101,7 +101,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN
         end if
       wend
-      'strIN = objEXEC.stdout.readall
+      strIN = objEXEC.stdout.readall
       set objEXEC = nothing
       if ((instr(1, strIN, "Destination host unreachable")) or (instr(1, strIN, "Request timed out")) or (instr(1, strIN, "could not find host"))) then'
         call HOOK("nslookup " & strIP)
