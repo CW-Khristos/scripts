@@ -20,6 +20,7 @@
   <Fix_Control.vbs>1</Fix_Control.vbs>
   <gtfo.vbs>1</gtfo.vbs>
   <iasdatasync.vbs>1</iasdatasync.vbs>
+  <Install_PowerShell.vbs>1</Install_PowerShell.vbs>
   <jdc_msp_postbackup.vbs>5</jdc_msp_postbackup.vbs>
   <jdc_msp_prebackup.vbs>7</jdc_msp_prebackup.vbs>
   <LSVperm.vbs>12</LSVperm.vbs>
