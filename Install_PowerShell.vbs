@@ -226,9 +226,9 @@ end function
 
 function CheckNET()
   on error resume next
-  installed = objWSH.regread "HKLM\Software\Microsoft\NET Framework Setup\NDP\v4\Full\Install"
+  installed = objWSH.regread("HKLM\Software\Microsoft\NET Framework Setup\NDP\v4\Full\Install")
   if (err.number = 0) then
-    release = objWSH.regread "HKLM\Software\Microsoft\NET Framework Setup\NDP\v4\Full\Release"
+    release = objWSH.regread("HKLM\Software\Microsoft\NET Framework Setup\NDP\v4\Full\Release")
     if (err.number = 0) then
       if ((installed = 1) and (release >= 3783889)) then
         CheckNET = true
