@@ -183,10 +183,12 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         end if
     end select
     if (blnCOM) then                                        ''OS COMPATIBLE
-      ''DOWNLOAD WMF INSTALLER
-      call FILEDL(wmfURL, "C:\IT", ubound(split(wmfURL, "/")))
-      ''RUN WMF INSTALLER
-      call HOOK("wusa.exe C:\IT\" & ubound(split(wmfURL, "/")) & " /quiet /norestart /log:c:\temp\wmfinstall.log")
+      if (wmfURL <> vbnullstring) then
+        ''DOWNLOAD WMF INSTALLER
+        call FILEDL(wmfURL, "C:\IT", ubound(split(wmfURL, "/")))
+        ''RUN WMF INSTALLER
+        call HOOK("wusa.exe C:\IT\" & ubound(split(wmfURL, "/")) & " /quiet /norestart /log:c:\temp\wmfinstall.log")
+      end if
       ''DOWNLOAD POWERSHELL INSTALLER
       call FILEDL(psURL, "C:\IT", ubound(split(psURL, "/")))
       ''RUN POWERSHELL INSTALLER
