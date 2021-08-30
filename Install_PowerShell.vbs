@@ -87,6 +87,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''QUERY WMI
+    objOUT.write vbnewline & now & vbtab & vbtab & " - QUERYING SYSTEM INFO :"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - QUERYING SYSTEM INFO :"
     set objWMIService = objWMI.connectserver(objNET.ComputerName, "root\cimv2")
     set colItems = objWMIService.execquery("Select * from Win32_OperatingSystem",,48)
     for each objItem in colItems
@@ -101,18 +103,20 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       versionArray = split(objItem.version, ".", -1, 1)
       version = versionArray(0) & "." & versionArray(1)
     next
-    ''CLEANUP
+    ''WMI CLEANUP
     set objWMIService = nothing
     set colItems = nothing
-    intArch = strcomp(arch, "64-bit", 1)
     'On some OS OSArchitecture is not available so check the registry
+    intArch = strcomp(arch, "64-bit", 1)
     if (intArch = -1) then
       intArch = strcomp(RegOSbits, "True", 1)
     end if
-    ''DISPLAY RESULTS
+    ''DISPLAY WMI RESULTS
     objOUT.write strMSG
     objLOG.write strMSG
     ''CHECK DOTNET DEPENDENCY
+    objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING .NET-4.5.2 DEPENDENCY :"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING .NET-4.5.2 DEPENDENCY :"
     if (not CheckNET) then                                  ''DOTNET NOT INSTALLED
       ''DOWNLOAD DOTNET INSTALLER
       call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/dotNetFx45_Full_setup.exe", "C:\IT", "dotNetFx45_Full_setup.exe")
@@ -137,9 +141,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         if (intArch = 0) then                               ''64BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x64.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/Win8.1AndW2K12R2-KB3191564-x64.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows8.1-KB3118401-x64.msu"
         elseif (intArch <> 0) then                          ''32BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/Win8.1-KB3191564-x86.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows8.1-KB3118401-x86.msu"
         end if
       ''WINDOWS 8 / SERVER 2012
       case "6.2"
@@ -148,9 +154,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         if (intArch = 0) then                               ''64BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x64.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/W2K12-KB3191565-x64.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows8-RT-KB3118401-x64.msu"
         elseif (intArch <> 0) then                          ''32BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/Win8.1-KB3191564-x86.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows8-RT-KB3118401-x86.msu"
         end if
       ''WINDOWS 7 / SERVER 2008R2
       case "6.1"
@@ -159,9 +167,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         if (intArch = 0) then                               ''64BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x64.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/Win7AndW2K8R2-KB3191566-x64.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.1-KB3118401-x64.msu"
         elseif (intArch <> 0) then                          ''32BIT
          psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
          wmfURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WMF/Win7-KB3191566-x86.msu"
+         ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.1-KB3118401-x86.msu"
         end if
       ''WINDOWS VISTA / SERVER 2008
       case "6.0"
@@ -170,15 +180,19 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           objOUT.write vbewline & now & vbtab & vbtab & "OS:Vista"
           if (intArch = 0) then                             ''64BIT
            psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x64.msi"
+           ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.0-KB3118401-x64.msu"
           elseif (intArch <> 0) then                        ''32BIT
            psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
+           ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.0-KB3118401-x86.msu"
           end if
         elseif (strcomp(productType, "1", 1) <> 0) then     ''SERVER 2008
           objOUT.write vbewline & now & vbtab & vbtab & "OS:Server 2008"
           if (intArch = 0) then                             ''64BIT
            psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x64.msi"
+           ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.0-KB3118401-x64.msu"
           elseif (intArch <> 0) then                        ''32BIT
            psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
+           ucrURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/WindowsUCRT/Windows6.0-KB3118401-x86.msu"
           end if
         end if
       ''OS NOT COMPATIBLE
@@ -187,13 +201,27 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
         call LOGGERR(2)
     end select
     if (blnCOM) then                                        ''OS COMPATIBLE
+      ''CHECK UNIVERSAL C RUNTIME DEPENDENCY
+      if (ucrURL <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING UNIVERSAL C RUNTIME DEPENDENCY :"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING UNIVERSAL C RUNTIME DEPENDENCY :"
+        ''DOWNLOAD OS UCRT INSTALLER
+        call FILEDL(ucrURL, "C:\IT", split(ucrURL, "/")(ubound(split(ucrURL, "/"))))
+        ''RUN OS UCRT INSTALLER
+        call HOOK("wusa.exe C:\IT\" & split(ucrURL, "/")(ubound(split(ucrURL, "/"))) & " /quiet /norestart /log:c:\temp\ucrinstall.log")      
+      end if
+      ''CHECK WMF5.1 DEPENDENCY
       if (wmfURL <> vbnullstring) then
-        ''DOWNLOAD WMF INSTALLER
+        objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING WMF-5.1 DEPENDENCY :"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING WMF-5.1 DEPENDENCY :"
+        ''DOWNLOAD WMF5.1 INSTALLER
         call FILEDL(wmfURL, "C:\IT", split(wmfURL, "/")(ubound(split(wmfURL, "/"))))
         ''RUN WMF INSTALLER
         call HOOK("wusa.exe C:\IT\" & split(wmfURL, "/")(ubound(split(wmfURL, "/"))) & " /quiet /norestart /log:c:\temp\wmfinstall.log")
       end if
       ''DOWNLOAD POWERSHELL INSTALLER
+      objOUT.write vbnewline & now & vbtab & vbtab & " - INSTALLING POWERSHELL-7.1 :"
+      objLOG.write vbnewline & now & vbtab & vbtab & " - INSTALLING POWERSHELL-7.1 :"
       call FILEDL(psURL, "C:\IT", split(psURL, "/")(ubound(split(psURL, "/"))))
       ''RUN POWERSHELL INSTALLER
       call HOOK("msiexec /i C:\IT\" & split(psURL, "/")(ubound(split(psURL, "/"))) & " /quiet /qn /norestart /l*v c:\temp\psinstall.log")
