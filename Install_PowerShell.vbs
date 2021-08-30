@@ -90,11 +90,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     set objWMIService = objWMI.connectserver(objNET.ComputerName, "root\cimv2")
     set colItems = objWMIService.execquery("Select * from Win32_OperatingSystem",,48)
     for each objItem in colItems
-      strMsg = "Computer Name   : " & objItem.CSName & vbCrLf & _
-               "Windows Version : " & objItem.Version & vbCrLf & _
-               "ServicePack     : " & objItem.CSDVersion & vbCrLf & _
-               "Product Type    : " & objItem.ProductType & vbCrLf & _
-               "OSArchitecture  : " & objItem.OSArchitecture & vbCrLf 
+      strMsg = vbnewline & now & vbtab & vbtab & "Computer Name   : " & objItem.CSName & vbCrLf & _
+               now & vbtab & vbtab & "Windows Version : " & objItem.Version & vbCrLf & _
+               now & vbtab & vbtab & "ServicePack     : " & objItem.CSDVersion & vbCrLf & _
+               now & vbtab & vbtab & "Product Type    : " & objItem.ProductType & vbCrLf & _
+               now & vbtab & vbtab & "OSArchitecture  : " & objItem.OSArchitecture & vbCrLf 
       arch = objItem.osarchitecture
       productType = objItem.producttype
       ''Get the first two digits from the version string
@@ -110,8 +110,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       intArch = strcomp(RegOSbits, "True", 1)
     end if
     ''DISPLAY RESULTS
-    objOUT.write vbewline & now & vbtab & vbtab & strMSG
-    objLOG.write vbewline & now & vbtab & vbtab & strMSG
+    objOUT.write strMSG
+    objLOG.write strMSG
     ''CHECK DOTNET DEPENDENCY
     if (not CheckNET) then                                  ''DOTNET NOT INSTALLED
       ''DOWNLOAD DOTNET INSTALLER
@@ -122,7 +122,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     ''SELECT INSTALLER BASED ON OS
     select case version
       ''WINDOWS 10 / SERVER 2019 / SERVER 2016
-      case "10"
+      case "10.0"
         blnCOM = true
         objOUT.write vbewline & now & vbtab & vbtab & "OS:Windows 10 / Server 2019 / Server 2016"
         if (intArch = 0) then                               ''64BIT
@@ -181,18 +181,22 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
            psURL = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/PowerShell/PowerShell-7.1.4-win-x86.msi"
           end if
         end if
+      ''OS NOT COMPATIBLE
+      case else
+        blnCOM = false
+        call LOGGERR(2)
     end select
     if (blnCOM) then                                        ''OS COMPATIBLE
       if (wmfURL <> vbnullstring) then
         ''DOWNLOAD WMF INSTALLER
-        call FILEDL(wmfURL, "C:\IT", ubound(split(wmfURL, "/")))
+        call FILEDL(wmfURL, "C:\IT", split(wmfURL, "/")(ubound(split(wmfURL, "/"))))
         ''RUN WMF INSTALLER
-        call HOOK("wusa.exe C:\IT\" & ubound(split(wmfURL, "/")) & " /quiet /norestart /log:c:\temp\wmfinstall.log")
+        call HOOK("wusa.exe C:\IT\" & split(wmfURL, "/")(ubound(split(wmfURL, "/"))) & " /quiet /norestart /log:c:\temp\wmfinstall.log")
       end if
       ''DOWNLOAD POWERSHELL INSTALLER
-      call FILEDL(psURL, "C:\IT", ubound(split(psURL, "/")))
+      call FILEDL(psURL, "C:\IT", split(psURL, "/")(ubound(split(psURL, "/"))))
       ''RUN POWERSHELL INSTALLER
-      call HOOK("C:\IT\" & ubound(split(psURL, "/")) & " /quiet /q /n /norestart /l*v c:\temp\psinstall.log")
+      call HOOK("msiexec /i C:\IT\" & split(psURL, "/")(ubound(split(psURL, "/"))) & " /quiet /qn /norestart /l*v c:\temp\psinstall.log")
     elseif (not blnCOM) then                                ''OS NOT COMPATIBLE
       call LOGERR(2)
     end if
@@ -230,9 +234,9 @@ function CheckNET()
   if (err.number = 0) then
     release = objWSH.regread("HKLM\Software\Microsoft\NET Framework Setup\NDP\v4\Full\Release")
     if (err.number = 0) then
-      if ((installed = 1) and (release >= 3783889)) then
+      if ((installed = "1") and (release >= "3783889")) then
         CheckNET = true
-      elseif ((installed <> 1) or (release < 378389)) then
+      elseif ((installed <> "1") or (release < "378389")) then
         CheckNET = false
       end if
     elseif (err.number <> 0) then
