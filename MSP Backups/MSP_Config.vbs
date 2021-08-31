@@ -221,7 +221,7 @@ sub FILEDL(strURL, strDL, strFILE)                                    ''CALL HOO
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -243,7 +243,7 @@ sub FILEDL(strURL, strDL, strFILE)                                    ''CALL HOO
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
