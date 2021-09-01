@@ -5,11 +5,12 @@
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
 on error resume next
 ''SCRIPT VARIABLES
-dim strVER, errRET
+dim strVER, errRET, strIN
 dim blnHDR, blnINJ, blnMOD
 dim strREPO, strBRCH, strDIR
 ''VARIABLES ACCEPTING PARAMETERS
-dim strIN, arrIN, strHDR, strCHG
+dim strSAV, strCMD
+dim arrIN, strHDR, strCHG
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG, objCFG
@@ -191,7 +192,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -213,7 +214,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
