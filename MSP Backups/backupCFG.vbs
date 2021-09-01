@@ -94,56 +94,6 @@ call CLEANUP()
 ''------------
 
 ''SUB-ROUTINES
-sub CHKAU()													                        ''CHECK FOR SCRIPT UPDATE , BACKUPCFG.VBS , REF #2
-  ''NO LONGER REQUIRED WITH NCENTRAL 2021; SCRIPTS ARE PLACED IN INDIVIDUAL 'TASK' DIRECTORIES
-  ''REMOVE WINDOWS AGENT CACHED VERSION OF SCRIPT
-  'if (objFSO.fileexists("C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname)) then
-  '  objFSO.deletefile "C:\Program Files (x86)\N-Able Technologies\Windows Agent\cache\" & wscript.scriptname, true
-  'end if
-  ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
-  call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
-  " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
-  ''SCRIPT OBJECT FOR PARSING XML
-  set objXML = createobject("Microsoft.XMLDOM")
-  ''FORCE SYNCHRONOUS
-  objXML.async = false
-  ''LOAD SCRIPT VERSIONS DATABASE XML
-  if objXML.load("https://github.com/CW-Khristos/scripts/raw/dev/version.xml") then
-    set colVER = objXML.documentelement
-    for each objSCR in colVER.ChildNodes
-      ''LOCATE CURRENTLY RUNNING SCRIPT
-      if (lcase(objSCR.nodename) = lcase(wscript.scriptname)) then
-        ''CHECK LATEST VERSION
-        if (cint(objSCR.text) > cint(strVER)) then
-          objOUT.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          objLOG.write vbnewline & now & " - UPDATING " & objSCR.nodename & " : " & objSCR.text & vbnewline
-          ''DOWNLOAD LATEST VERSION OF SCRIPT
-          call FILEDL("https://github.com/CW-Khristos/scripts/raw/dev/backupCFG.vbs", wscript.scriptname)
-          ''RUN LATEST VERSION
-          if (wscript.arguments.count > 0) then             ''ARGUMENTS WERE PASSED
-            for x = 0 to (wscript.arguments.count - 1)
-              strTMP = strTMP & " " & chr(34) & objARG.item(x) & chr(34)
-            next
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34) & strTMP, 0, false
-          elseif (wscript.arguments.count = 0) then         ''NO ARGUMENTS WERE PASSED
-            objOUT.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objLOG.write vbnewline & now & vbtab & " - RE-EXECUTING  " & objSCR.nodename & " : " & objSCR.text & vbnewline
-            objWSH.run "cscript.exe //nologo " & chr(34) & "c:\temp\" & wscript.scriptname & chr(34), 0, false
-          end if
-          ''END SCRIPT
-          call CLEANUP()
-        end if
-      end if
-    next
-  end if
-  set colVER = nothing
-  set objXML = nothing
-end sub
-
 sub FILEDL(strURL, strFILE)                                 ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
