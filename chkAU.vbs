@@ -73,10 +73,12 @@ if (wscript.arguments.count > 4) then                         ''ARGUMENTS WERE P
       strARG = objARG.item(5)                                 ''SET OPTIONAL PARAMETER 'STRARG' , ORIGINAL 'ARGUMENTS' FROM REQUESTING SCRIPT ; SEPARATE MULTIPLE 'ARGUMENTS' VIA '|'
       ''FILL 'ARRARG' ORIGINAL 'ARGUMENTS'
       objOUT.write vbnewline & vbtab & strARG
-      arrARG = split(strARG, "|")
-      for intTMP = 0 to ubound(arrARG)
-        objOUT.write vbnewline & vbtab & ubound(arrARG) & vbtab & arrARG(intTMP)
-      next
+      if (instr(1, strARG, "|")) then
+        arrARG = split(strARG, "|")
+        for intTMP = 0 to ubound(arrARG)
+          objOUT.write vbnewline & vbtab & ubound(arrARG) & vbtab & arrARG(intTMP)
+        next
+      end if
     end if
   end if
 elseif (wscript.arguments.count <= 4) then                    ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
