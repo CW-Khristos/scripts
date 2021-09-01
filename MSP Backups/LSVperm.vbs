@@ -11,12 +11,12 @@ on error resume next
 ''SCRIPT VARIABLES
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR
-dim strIN, strOUT, colUSR(), colSID()
 dim strORG, strREP, strSID, strDMN
+dim strIN, strOUT, colUSR(), colSID()
 ''VARIABLES ACCEPTING PARAMETERS
+dim strSAV, strCMD
 dim strLSV, strUSR, strPWD, strOPT
 ''SCRIPT OBJECTS
-dim objSIN, objSOUT
 dim objLOG, objEXEC, objHOOK
 dim objIN, objOUT, objARG, objWSH, objFSO
 ''VERSION FOR SCRIPT UPDATE , LSVPERM.VBS , REF #2 , REF #68 , REF #69 , FIXES #32 , REF #71
@@ -389,6 +389,9 @@ sub CLEANUP()                                                               ''SC
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINED RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "LSVPERM", "FAILURE")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - LSVPERM COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - LSVPERM COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objEXEC = nothing
   set objLOG = nothing
