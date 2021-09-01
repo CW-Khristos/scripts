@@ -12,7 +12,7 @@ dim strREPO, strBRCH, strDIR
 dim strIDL, strTMP, arrTMP, strIN
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH
-dim objFSO, objLOG, objHOOK, objHTTP, objXML
+dim objFSO, objLOG, objHOOK, objHTTP
 ''VSS WRITER FLAGS
 dim blnIIS, blnNPS, blnTSG
 dim blnAHS, blnBIT, blnCSVC, blnRDP
@@ -455,7 +455,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   objHTTP.open "GET", strURL, false
   objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -472,7 +472,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
@@ -554,12 +554,12 @@ end sub
 sub CLEANUP()                                 			        ''SCRIPT CLEANUP
   on error resume next
   if (errRET = 0) then         											        ''MSP_SSHEAL_FORCE COMPLETED SUCCESSFULLY
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE SUCCESSFUL : " & now
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE SUCCESSFUL : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then    											        ''MSP_SSHEAL_FORCE FAILED
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE FAILURE : " & now & " : " & errRET
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_SSHEAL_FORCE FAILURE : " & now & " : " & errRET
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE FAILURE : " & errRET & " : " & now
+    objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_SSHEAL_FORCE FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_SSHEAL_FORCE", "FAILURE")
   end if
