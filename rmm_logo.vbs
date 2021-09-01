@@ -282,7 +282,7 @@ sub FILEDL(strURL, strPATH, strFILE)                        ''CALL HOOK TO DOWNL
   objHTTP.open "GET", strURL, false
   objHTTP.send
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -299,7 +299,7 @@ sub FILEDL(strURL, strPATH, strFILE)                        ''CALL HOOK TO DOWNL
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
