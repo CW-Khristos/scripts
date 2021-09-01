@@ -9,7 +9,7 @@ dim strREPO, strBRCH, strDIR
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG
 dim objWSH, objFSO, objLOG
-dim objHOOK, objEXEC, objHTTP, objXML
+dim objHOOK, objEXEC, objHTTP
 ''VERSION FOR SCRIPT UPDATE , MSP_POSTBACKUP.VBS , REF #2 , REF #50 , REF #68 , REF #69
 strVER = 6
 strREPO = "scripts"
@@ -26,6 +26,9 @@ set objOUT = wscript.stdout
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
+if (not (objFSO.folderexists("c:\temp"))) then
+  objFSO.createfolder("c:\temp")
+end if
 if (not (objFSO.folderexists("C:\IT\"))) then
   objFSO.createfolder("C:\IT\")
 end if
@@ -143,14 +146,14 @@ sub STARTEAGLE()                                                          ''STAR
   end if
 end sub
 
-sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                                        ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
   objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -172,22 +175,22 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then                      ''ERROR RETURNED DURING DOWNLOAD , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+sub HOOK(strCMD)                                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then                           ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
@@ -203,12 +206,12 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+  if (err.number <> 0) then                                               ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
 
-sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                                        ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
@@ -217,7 +220,7 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
   end if
   ''CUSTOM ERROR CODES
   select case intSTG
-    case 1                                                  '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
+    case 1                                                                '' 'ERRRET'=1 - NOT ENOUGH ARGUMENTS
   end select
 end sub
 
@@ -233,6 +236,9 @@ sub CLEANUP()                                                             ''SCRI
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_POST-BACKUP", "FAIL")
   end if
+  objOUT.write vbnewline & vbnewline & now & " - MSP_POST-BACKUP COMPLETE" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - MSP_POST-BACKUP COMPLETE" & vbnewline
+  objLOG.close
   ''EMPTY OBJECTS
   set objEXEC = nothing
   set objLOG = nothing
