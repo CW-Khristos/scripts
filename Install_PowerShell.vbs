@@ -3,8 +3,8 @@
 ''WRITTEN BY : CJ BLEDSOE / CBLEDSOE<@>IPMCOMPUTERS.COM
 on error resume next
 ''SCRIPT VARIABLES
+dim errRET, strVER, strIN
 dim strREPO, strBRCH, strDIR
-dim errRET, strVER, strSEL, strIN
 ''VARIABLES ACCEPTING PARAMETERS
 dim psURL, wmfURL, blnCOM
 ''SCRIPT OBJECTS
