@@ -53,7 +53,7 @@ objOUT.write vbnewline & vbnewline & now & " - MAPPING PASSED DRIVE : " & objARG
 objLOG.write vbnewline & vbnewline & now & " - MAPPING PASSED DRIVE : " & objARG.item(0) & " - " & objARG.item(1) & vbnewline
 call HOOK("net use " & chr(34) & strDRV & chr(34) & " " & chr(34) & strUNC & chr(34) & " " & chr(34) & strPWD & chr(34) & " /user:" & strUSR & " /PERSISTENT:YES")
 ''SCRIPT CLEANUP
-call CLEANUP
+call CLEANUP()
 
 ''SUB-ROUTINES
 sub HOOK(strCMD)                                ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
