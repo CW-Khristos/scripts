@@ -187,7 +187,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
     " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:64")
   ''CHECK IF FILE ALREADY EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
     objFSO.deletefile(strSAV)
   end if
@@ -209,7 +209,7 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
     set objStream = nothing
   end if
   ''CHECK THAT FILE EXISTS
-  if objFSO.fileexists(strSAV) then
+  if (objFSO.fileexists(strSAV)) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
