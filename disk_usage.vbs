@@ -240,8 +240,8 @@ sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOW
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
   if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
