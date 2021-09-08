@@ -138,7 +138,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
               objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               ''INSTALL SNMP
-              ''call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
+              call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
               objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
