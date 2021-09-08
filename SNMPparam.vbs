@@ -105,19 +105,40 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       case "modify"
         ''MODIFY SNMP REGISTRY VALUES
         objOUT.write vbnewline & now & vbtab & "CHECKING SNMP STATUS"
-        objLOG.write vbnewline & now & vbtab & "CHECKING SNMP STATUS" 
+        objLOG.write vbnewline & now & vbtab & "CHECKING SNMP STATUS"
+        ''OLD FORMAT
+        set objDSM = objWSH.exec("DISM /online /get-features /format:table") ''RESULTS INVALIDATED BY COMMAND CHANGE
+        ''set objDSM = objWSH.exec("powershell get-windowscapability -online -name " & chr(34) & "SNMP*" & chr(34))
+        while (not objDSM.stdout.atendofstream)
+          strRET = objDSM.stdout.readline  ''OLD FORMAT LINE-BY-LINE PARSING
+          if (strRET <> vbnullstring) then
+            if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
+            ''if (instr(1, strRET, "SNMP") and (instr(1, strRET, "Disabled") or (instr(1, strRET, "NotPresent")))) then
+              objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
+              objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
+              ''INSTALL SNMP
+              call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
+              call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
+              ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
+              objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
+              objLOG.write vbnewline & now & vbtab & "SNMP INSTALLED"            
+            end if
+            strRET = vbnullstring
+          end if
+        wend
+        set objDSM = nothing
+        ''NEW FORMAT
         ''set objDSM = objWSH.exec("DISM /online /get-features /format:table") ''RESULTS INVALIDATED BY COMMAND CHANGE
         set objDSM = objWSH.exec("powershell get-windowscapability -online -name " & chr(34) & "SNMP*" & chr(34))
         while (not objDSM.stdout.atendofstream)
-          ''strRET = objDSM.stdout.readline  ''NEW FORMAT DOESN'T ALLOW LINE-BY-LINE PARSING
-          strRET = objDSM.stdout.readall
+          strRET = objDSM.stdout.readall  ''NEW FORMAT DOES NOT ALLOW LINE-BY-LINE PARSING
           if (strRET <> vbnullstring) then
             ''if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
             if (instr(1, strRET, "SNMP") and (instr(1, strRET, "Disabled") or (instr(1, strRET, "NotPresent")))) then
               objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
               ''INSTALL SNMP
-              ''call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND REMOVED BY MICROSOFT
+              ''call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
               objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
@@ -179,8 +200,8 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
     " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
