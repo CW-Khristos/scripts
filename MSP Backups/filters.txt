@@ -23,17 +23,20 @@ C:\wu_output|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\Quarantine|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\ThreatScanner|
-%PROGRAMFILES%\Supermicro\SuperDoctor5\cache|
+%PROGRAMFILES(X86)%\N-Able Technologies\Reactive\log|
 %PROGRAMFILES(X86)%\N-Able Technologies\Reactive\Temp|
 %PROGRAMFILES(X86)%\N-Able Technologies\PatchManagement|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\cache|
+%PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\log|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\Temp|
 %PROGRAMFILES(X86)%\N-Able Technologies\Tools\AVDefenderTools|
 %PROGRAMFILES(X86)%\N-Able Technologies\Tools\AVDefenderEvents|
 %PROGRAMFILES(X86)%\N-Able Technologies\Tools\AVDefenderPolicies|
+%PROGRAMFILES(X86)%\N-Able Technologies\Tools\log|
 %PROGRAMFILES(X86)%\N-able Technologies\UpdateServerCache|
 %PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
 %PROGRAMFILES(X86)%\StorageCraft|
+%PROGRAMFILES%\Supermicro\SuperDoctor5\cache|
 %PROGRAMFILES(X86)%\Temp|
 %PROGRAMDATA%\bdlogging|
 %PROGRAMDATA%\MXB|
@@ -74,6 +77,7 @@ C:\wu_output|
 %PROGRAMDATA%\MspPlatform\RequestHandlerAgent\log|
 %PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\log|
 %PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\cache|
+%PROGRAMDATA%\MspPlatform\RequestHandlerAgent\log|
 %PROGRAMDATA%\MspPlatform\SolarWinds.MSP.CacheService\log|
 %PROGRAMDATA%\MspPlatform\SolarWinds.MSP.RpcServerService\log|
 %PROGRAMDATA%\N-Able Technologies\AutomationManager|
@@ -137,6 +141,7 @@ C:\wu_output|
 %LOCALAPPDATA%\Google\Chrome\User Data\Temp|
 %LOCALAPPDATA%\Google\Chrome\User Data\Crashpad|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache|
+%LOCALAPPDATA%\Google\Chrome\User Data\Default\Code Cache|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\IndexedDB|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\GPUCache|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Extensions|
