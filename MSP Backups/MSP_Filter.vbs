@@ -249,13 +249,13 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                 strPATH = strPATH & arrPATH(intPATH)
               next
             end if
-            if (instr(1, arrTMP(intTMP), "*")) then
+            if (instr(1, arrTMP(intTMP), "*")) then                 ''APPLY BACKUP FILTERS
               objOUT.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34))
-            elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+            elseif (instr(1, arrTMP(intTMP), "*") = 0) then         ''APPLY BACKUP EXCLUSIONS
               objOUT.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
               objLOG.write vbnewline & now & vbtab & vbtab & _
@@ -285,13 +285,13 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                   strPATH = strPATH & arrPATH(intPATH)
                 next
               end if
-              if (instr(1, arrFILTER(intTMP), "*")) then
+              if (instr(1, arrFILTER(intTMP), "*")) then            ''APPLY BACKUP FILTERS
                 objOUT.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
                 call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34))
-              elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+              elseif (instr(1, arrTMP(intTMP), "*") = 0) then       ''APPLY BACKUP EXCLUSIONS
                 objOUT.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
@@ -380,13 +380,13 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                 strPATH = strPATH & arrPATH(intPATH)
               next
             end if
-            if (instr(1, arrTMP(intTMP), "*")) then
+            if (instr(1, arrTMP(intTMP), "*")) then                 ''APPLY BACKUP FILTERS
               objOUT.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
               objLOG.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
               call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34))
-            elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+            elseif (instr(1, arrTMP(intTMP), "*") = 0) then         ''APPLY BACKUP EXCLUSIONS
               objOUT.write vbnewline & now & vbtab & vbtab & _
                 "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
               objLOG.write vbnewline & now & vbtab & vbtab & _
@@ -416,13 +416,13 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                   strPATH = strPATH & arrPATH(intPATH)
                 next
               end if
-              if (instr(1, arrTMP(intTMP), "*")) then
+              if (instr(1, arrTMP(intTMP), "*")) then               ''APPLY BACKUP FILTERS
                 objOUT.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34)
                 call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.filter.modify -add " & chr(34) & strPATH & chr(34))
-              elseif (instr(1, arrTMP(intTMP), "*") = 0) then
+              elseif (instr(1, arrTMP(intTMP), "*") = 0) then       ''APPLY BACKUP EXCLUSIONS
                 objOUT.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & strPATH & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
