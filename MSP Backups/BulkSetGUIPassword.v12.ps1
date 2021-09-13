@@ -1,8 +1,10 @@
 <# ----- About: ----
     # Bulk Set SW Backup GUI Password 
-    # Revision v11 - 2021-07-07
+    # Revision v12 - 2021-09-13
     # Author: Eric Harless, Head Backup Nerd - N-able 
     # Twitter @Backup_Nerd  Email:eric.harless@n-able.com
+    # Modifications: Christopher Bledsoe, Tier II Tech - IPM Computers
+    # Email: cbledsoe@ipmcomputers.com
     # Reddit https://www.reddit.com/r/Nable/
 # -----------------------------------------------------------#>  ## About
 
@@ -20,11 +22,11 @@
 # -----------------------------------------------------------#>  ## Compatibility
 
 <# ----- Behavior: ----
-    # Check/ Get/ Store secure credentials 
+    # Check / Get / Store secure credentials 
     # Authenticate to https://backup.management console
-    # Check partner level/ Enumerate partners/ GUI select partner
-    # Enumerate devices/ GUI select devices
-    # Prompt/ Set/ Wipe GUI password via Remote commands
+    # Check partner level / Enumerate partners/ GUI select partner
+    # Enumerate devices / GUI select devices
+    # Prompt / Set / Wipe GUI password via Remote commands
     #
     # Use the -AllPartners switch parameter to skip GUI partner selection
     # Use the -AllDevices switch parameter to skip GUI device selection
@@ -73,10 +75,10 @@
   $urlJSON = 'https://api.backup.management/jsonapi'
 
   $mxbPath = ${env:ProgramData} + "\MXB\Backup Manager"
-  # DEFAULT TO ALL PARTNERS / ALL DEVICES
+  # ALL PARTNERS / ALL DEVICES BOOLEANS
   $AllDevices = [bool]$i_AllDevices
   $AllPartners = [bool]$i_AllPartners
-  # GENERATE RANDOMIZED PASSWORD UP TO LEN($PWDLENGTH)
+  # GENERATE RANDOMIZED PASSWORD UP TO LEN($I_GUILENGTH)
   if (($i_GUIlength -eq 0) -or ($i_GUIlength -lt 8)) {
     $i_GUIlength = 8
   }
