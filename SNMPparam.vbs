@@ -68,8 +68,8 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if (errRET = 0) then                                        ''NO ERRORS DURING INITIAL START
-  objOUT.write vbnewline & vbnewline & now & " - STARTING SNMPPARAM" & vbnewline
-  objLOG.write vbnewline & vbnewline & now & " - STARTING SNMPPARAM" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & vbtab & " - STARTING SNMPPARAM" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & vbtab & " - STARTING SNMPPARAM" & vbnewline
 	''AUTOMATIC UPDATE, SNMPARAM.VBS, REF #2 , REF #69 , REF #68 , FIXES #9
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
@@ -92,20 +92,20 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
       ''QUERY
       case vbnullstring
         ''QUERY SNMP REGISTRY VALUES
-        objOUT.write vbnewline & now & vbtab & "QUERYING SNMP CONFIGURATIONS"
-        objLOG.write vbnewline & now & vbtab & "QUERYING SNMP CONFIGURATIONS"
+        objOUT.write vbnewline & now & vbtab & vbtab & " - QUERYING SNMP CONFIGURATIONS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - QUERYING SNMP CONFIGURATIONS"
         call HOOK("reg query " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /s")
       ''CLEAR
       case "clear"
           ''CLEAR PREVIOUS SNMP CONFIGURATIONS
-        objOUT.write vbnewline & now & vbtab & "REMOVING PREVIOUS SNMP CONFIGURATIONS"
-        objLOG.write vbnewline & now & vbtab & "REMOVING PREVIOUS SNMP CONFIGURATIONS"    
+        objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING PREVIOUS SNMP CONFIGURATIONS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING PREVIOUS SNMP CONFIGURATIONS"    
         call HOOK("reg delete " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /va /f")
       ''MODIFY
       case "modify"
         ''MODIFY SNMP REGISTRY VALUES
-        objOUT.write vbnewline & now & vbtab & "CHECKING SNMP STATUS"
-        objLOG.write vbnewline & now & vbtab & "CHECKING SNMP STATUS"
+        objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING SNMP STATUS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING SNMP STATUS"
         ''OLD FORMAT
         set objDSM = objWSH.exec("DISM /online /get-features /format:table") ''RESULTS INVALIDATED BY COMMAND CHANGE
         ''set objDSM = objWSH.exec("powershell get-windowscapability -online -name " & chr(34) & "SNMP*" & chr(34))
@@ -114,14 +114,14 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           if (strRET <> vbnullstring) then
             if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
             ''if (instr(1, strRET, "SNMP") and (instr(1, strRET, "Disabled") or (instr(1, strRET, "NotPresent")))) then
-              objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
-              objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
+              objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP NOT INSTALLED, INSTALLING"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP NOT INSTALLED, INSTALLING"
               ''INSTALL SNMP
               call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
-              objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
-              objLOG.write vbnewline & now & vbtab & "SNMP INSTALLED"            
+              objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"            
             end if
             strRET = vbnullstring
           end if
@@ -135,22 +135,22 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           if (strRET <> vbnullstring) then
             ''if (instr(1,strRET,"SNMP") and instr(1,strRET,"Disabled")) then ''RESULTS INVALIDATED BY COMMAND CHANGE
             if (instr(1, strRET, "SNMP") and (instr(1, strRET, "Disabled") or (instr(1, strRET, "NotPresent")))) then
-              objOUT.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
-              objLOG.write vbnewline & now & vbtab & "SNMP NOT INSTALLED, INSTALLING"
+              objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP NOT INSTALLED, INSTALLING"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP NOT INSTALLED, INSTALLING"
               ''INSTALL SNMP
               call HOOK("DISM /online /enable-feature /featurename:SNMP")   ''COMMAND DOESN'T WORK ON EVERY OS - KNOWN TO WORK ON SERVER 2019 STD
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
-              objOUT.write vbnewline & now & vbtab & "SNMP INSTALLED"
-              objLOG.write vbnewline & now & vbtab & "SNMP INSTALLED"            
+              objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"            
             end if
             strRET = vbnullstring
           end if
         wend
         set objDSM = nothing
         ''ADD SNMP REGISTRY VALUES
-        objOUT.write vbnewline & now & vbtab & "ADDING SNMP CONFIGURATIONS"
-        objLOG.write vbnewline & now & vbtab & "ADDING SNMP CONFIGURATIONS"
+        objOUT.write vbnewline & now & vbtab & vbtab & " - ADDING SNMP CONFIGURATIONS"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - ADDING SNMP CONFIGURATIONS"
         call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /v EnableAuthenticationTraps /t REG_DWORD /d 0 /f")
         call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration" & chr(34) & " /f")
         call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /f")
@@ -170,10 +170,10 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\PermittedManagers" & chr(34) & " /v 2 /t REG_SZ /d " & strTRP & " /f")
           call HOOK("reg add " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters\TrapConfiguration\" & strSNMP & chr(34) & " /v 1 /t REG_SZ /d " & strTRP & " /f")
         end if
-        objOUT.write vbnewline & now & vbtab & "SNMP CONFIGURATIONS COMPLETED"
-        objLOG.write vbnewline & now & vbtab & "SNMP CONFIGURATIONS COMPLETED"
-        objOUT.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"
-        objLOG.write vbnewline & now & vbtab & "PLEASE REVIEW SNMP CONFIGURATIONS :"    
+        objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP CONFIGURATIONS COMPLETED"
+        objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP CONFIGURATIONS COMPLETED"
+        objOUT.write vbnewline & vbnewline & now & vbtab & " - PLEASE REVIEW SNMP CONFIGURATIONS :"
+        objLOG.write vbnewline & vbnewline & now & vbtab & " - PLEASE REVIEW SNMP CONFIGURATIONS :"    
         call HOOK("reg query " & chr(34) & "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\SNMP\Parameters" & chr(34) & " /s")
         wscript.sleep 5000
         call HOOK("sc stop " & chr(34) & "SNMP" & chr(34))
@@ -200,8 +200,8 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
-  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & vbnewline & now & vbtab & vbtab & " - HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''ADD WINHTTP SECURE CHANNEL TLS REGISTRY KEYS
   call HOOK("reg add " & chr(34) & "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" & chr(34) & _
     " /f /v DefaultSecureProtocols /t REG_DWORD /d 0x00000A00 /reg:32")
@@ -242,8 +242,8 @@ end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
-  objOUT.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
-  objLOG.write vbnewline & now & vbtab & vbtab & "EXECUTING : " & strCMD
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
