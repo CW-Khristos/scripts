@@ -816,8 +816,8 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
-  objOUT.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
-  objLOG.write vbnewline & now & vbtab & vbtab & "HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objOUT.write vbnewline & now & vbtab & vbtab & " - HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
+  objLOG.write vbnewline & now & vbtab & vbtab & " - HTTPDOWNLOAD-------------DOWNLOAD : " & strURL & " : SAVE AS :  " & strSAV
   ''CHECK IF FILE ALREADY EXISTS
   if (objFSO.fileexists(strSAV)) then
     ''DELETE FILE FOR OVERWRITE
@@ -842,33 +842,37 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
   end if
   ''CHECK THAT FILE EXISTS
   if (objFSO.fileexists(strSAV)) then
-    objOUT.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
-    objLOG.write vbnewline & vbnewline & now & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
+    objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if ((err.number <> 0) and (err.number <> 58)) then          ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
 sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
+  objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
+  objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
-  while (not objHOOK.stdout.atendofstream)
-		strIN = objHOOK.stdout.readline
-		if (strIN <> vbnullstring) then
-			objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-			objLOG.write vbnewline & now & vbtab & vbtab & strIN 
-		end if
-	wend
-	wscript.sleep 10
-  strIN = objHOOK.stdout.readall
-  if (strIN <> vbnullstring) then
-    objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-    objLOG.write vbnewline & now & vbtab & vbtab & strIN 
+  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+    while (not objHOOK.stdout.atendofstream)
+      strIN = objHOOK.stdout.readline
+      if (strIN <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      end if
+    wend
+    wscript.sleep 10
+    strIN = objHOOK.stdout.readall
+    if (strIN <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                   ''ERROR RETURNED , 'ERRRET'=12
+  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
