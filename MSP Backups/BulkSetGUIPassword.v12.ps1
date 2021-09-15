@@ -54,6 +54,16 @@
 #    )
 
 #region ----- Environment, Variables, Names and Paths ----
+  $Script:strLineSeparator = "  ---------"
+  $urlJSON = 'https://api.backup.management/jsonapi'
+  $mxbPath = ${env:ProgramData} + "\MXB\Backup Manager"
+  $CurrentDate = Get-Date -format "yyy-MM-dd_hh-mm-ss"
+  # ALL PARTNERS / ALL DEVICES BOOLEANS
+  $AllDevices = [bool]$i_AllDevices = $False
+  $AllPartners = [bool]$i_AllPartners = $True
+  $i_BackupCMD = "-SetGUIPassword"
+  $SetGUIPassword = $True
+
   #Clear-Host
   $ErrorActionPreference = 'Continue'
   Write-Host "  Bulk Set GUI Password `n"
@@ -70,14 +80,7 @@
   #Push-Location $dir
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
   [System.Net.ServicePointManager]::MaxServicePointIdleTime = 5000000
-  $Script:strLineSeparator = "  ---------"
-  $CurrentDate = Get-Date -format "yyy-MM-dd_hh-mm-ss"
-  $urlJSON = 'https://api.backup.management/jsonapi'
 
-  $mxbPath = ${env:ProgramData} + "\MXB\Backup Manager"
-  # ALL PARTNERS / ALL DEVICES BOOLEANS
-  $AllDevices = [bool]$i_AllDevices
-  $AllPartners = [bool]$i_AllPartners
   # GENERATE RANDOMIZED PASSWORD UP TO LEN($I_GUILENGTH)
   if (($i_GUIlength -eq 0) -or ($i_GUIlength -lt 8)) {
     $i_GUIlength = 8
@@ -111,13 +114,15 @@
 #region ----- Authentication ----
   Function Set-APICredentials {
     Write-Host $Script:strLineSeparator 
-    Write-Host "  Setting Backup API Credentials" 
+    Write-Host "  Setting Backup API Credentials"
+    ## CHECK FOR EXISTING API FILE
     if (Test-Path $APIcredpath) {
-      Write-Host $Script:strLineSeparator 
+      Write-Host $Script:strLineSeparator
       Write-Host "  Backup API Credential Path Present"
     } else {
       New-Item -ItemType Directory -Path $APIcredpath
-    } 
+    }
+    ## SET PARTNER NAME
     Write-Host "  Enter Exact, Case Sensitive Partner Name for N-able Backup.Management API i.e. 'Acme, Inc (bob@acme.net)'"
     if ($i_PartnerName -eq $null) {
       DO{$Script:PartnerName = Read-Host "  Enter Login Partner Name"}
@@ -125,15 +130,16 @@
     } elseif ($i_PartnerName -ne $null) {
       $PartnerName = $i_PartnerName
     }
+    ## SET BACKUP CREDENTIALS
     $BackupCred = New-Object -TypeName PSObject
     $BackupCred | Add-Member -MemberType NoteProperty -Name PartnerName -Value "$PartnerName"
-    if (($i_BackupUser -eq $null) -or ($i_BackupPWD -eq $null)) {
+    if (($i_BackupUser -eq $null) -or ($i_BackupPWD -eq $null)) {               ## NO CREDENTIALS PASSED
       $BackupCred = Get-Credential -UserName "" -Message 'Enter Login Email and Password for N-able Backup.Management API'
-    } elseif (($i_BackupUser -ne $null) -and ($i_BackupPWD -ne $null)) {
+    } elseif (($i_BackupUser -ne $null) -and ($i_BackupPWD -ne $null)) {        ## CREDENTIALS PASSED
       $BackupCred | Add-Member -MemberType NoteProperty -Name UserName -Value "$i_BackupUser"
       $BackupCred | Add-Member -MemberType NoteProperty -Name Password -Value "$i_BackupPWD"
     }
-
+    ## WRITE API FILE
     $PartnerName | out-file $APIcredfile
     $BackupCred.UserName | Out-file -append $APIcredfile
     $BackupCred.Password | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString | Out-file -append $APIcredfile
@@ -146,19 +152,19 @@
     $Script:APIcredfile = join-path -Path $True_Path -ChildPath "$env:computername API_Credentials.Secure.txt"
     $Script:APIcredpath = Split-path -path $APIcredfile
 
-    if (($ClearCredentials) -and (Test-Path $APIcredfile)) { 
+    if (($ClearCredentials) -and (Test-Path $APIcredfile)) {                    ## CLEAR API CREDENTIALS
       Remove-Item -Path $Script:APIcredfile
       $ClearCredentials = $Null
       Write-Host $Script:strLineSeparator 
       Write-Host "  Backup API Credential File Cleared"
       Send-APICredentialsCookie  ## Retry Authentication
-    } else { 
+    } else {                                                                    ## RETRIEVE API CREDENTIALS
       Write-Host $Script:strLineSeparator 
       Write-Host "  Getting Backup API Credentials" 
   
-      if (Test-Path $APIcredfile) {
-        Write-Host    $Script:strLineSeparator        
-        "  Backup API Credential File Present"
+      if (Test-Path $APIcredfile) {                                             ## API FILE EXISTS
+        Write-Host $Script:strLineSeparator        
+        Write-Host "  Backup API Credential File Present"
         $APIcredentials = get-content $APIcredfile
         
         $Script:cred0 = [string]$APIcredentials[0] 
@@ -166,12 +172,12 @@
         $Script:cred2 = $APIcredentials[2] | Convertto-SecureString 
         $Script:cred2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Script:cred2))
 
-        Write-Host    $Script:strLineSeparator 
+        Write-Host $Script:strLineSeparator 
         Write-Host "  Stored Backup API Partner  = $Script:cred0"
         Write-Host "  Stored Backup API User     = $Script:cred1"
         Write-Host "  Stored Backup API Password = Encrypted"
-      } else {
-        Write-Host    $Script:strLineSeparator 
+      } else {                                                                  ## API FILE DOES NOT EXIST
+        Write-Host $Script:strLineSeparator 
         Write-Host "  Backup API Credential File Not Present"
         Set-APICredentials  ## Create API Credential File if Not Found
       }
@@ -247,8 +253,8 @@
       #$Script:cookies = $websession.Cookies.GetCookies($url)
       $Script:websession = $websession
       $Script:Partner = $webrequest | convertfrom-json
-    $RestrictedPartnerLevel = @("Root","Sub-root","Distributor")
 
+    $RestrictedPartnerLevel = @("Root","Sub-root","Distributor")
     <#---# POWERSHELL 2.0 #---#>
     if ($RestrictedPartnerLevel -notcontains $Partner.result.result.Level) {
     #---#>
@@ -310,10 +316,10 @@
       Write-Host    "  EnumeratePartnersSession Message:  $EnumeratePartnersSessionErrorMsg"
       Write-Host    $Script:strLineSeparator
       Write-Host    "  Exiting Script"
-    # (Exit Script if there is a problem)
-          #Break Script
+      # (Exit Script if there is a problem)
+      #Break Script
     } else {
-    # (No error)
+      # (No error)
       $Script:EnumeratePartnersSessionResults = $EnumeratePartnersSession.result.result | 
       select-object Name,@{l='Id';e={($_.Id).tostring()}},Level,ExternalCode,ParentId,LocationId,* -ExcludeProperty Company -ErrorAction Ignore
       $Script:EnumeratePartnersSessionResults | ForEach-Object {
@@ -330,7 +336,7 @@
         }
       }
       $Script:SelectedPartners = $EnumeratePartnersSessionResults | Select-object * | 
-      Where-object {$_.name -notlike "001???????????????- Recycle Bin"} | Where-object {$_.Externalcode -notlike '`[??????????`]* - ????????-????-????-????-????????????'}
+        Where-object {$_.name -notlike "001???????????????- Recycle Bin"} | Where-object {$_.Externalcode -notlike '`[??????????`]* - ????????-????-????-????-????????????'}
       $Script:SelectedPartner = $Script:SelectedPartners += @( [pscustomobject]@{Name=$PartnerName;Id=[string]$PartnerId;Level='<ParentPartner>'} ) 
       
       if ($AllPartners) {
@@ -340,7 +346,8 @@
         Write-Host    "  All Partners Selected"
       } else {
         $script:Selection = $Script:SelectedPartners |  
-          Select-object id,Name,Level,CreationTime,State,TrialRegistrationTime,TrialExpirationTime,Uid | sort-object Level,name | out-gridview -Title "Current Partner | $partnername" -OutputMode Single
+          Select-object id,Name,Level,CreationTime,State,TrialRegistrationTime,TrialExpirationTime,Uid | sort-object Level,name | 
+            out-gridview -Title "Current Partner | $partnername" -OutputMode Single
         if($null -eq $Selection) {
           # Cancel was pressed
           # Run cancel script
@@ -385,8 +392,8 @@
     }
 
     $Script:DeviceResponse = Invoke-RestMethod @params
-    $Script:DeviceDetail = @()
 
+    $Script:DeviceDetail = @()
     ForEach ( $DeviceResult in $DeviceResponse.result.result ) {
       $Script:DeviceDetail += New-Object -TypeName PSObject -Property @{
         AccountID      = [Int]$DeviceResult.AccountId;
@@ -416,28 +423,6 @@
     }
   } ## Send-GetDevices API Call
 
-  Function UpdateCustomColumn($DeviceId,$ColumnId,$Message) {
-
-      $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-      $headers.Add("Content-Type", "application/json")
-      $headers.Add("Cookie", "__cfduid=d110201d75658c43f9730368d03320d0f1601993342")
-      
-      $body = "{
-      `n    `"jsonrpc`":`"2.0`",
-      `n    `"id`":`"jsonrpc`",
-      `n    `"visa`":`"$Visa`",
-      `n    `"method`":`"UpdateAccountCustomColumnValues`",
-      `n    `"params`":{
-      `n      `"accountId`": $DeviceId,
-      `n      `"values`": [[$ColumnId,`"$Message`"]]
-      `n      }
-      `n    }
-      `n"
-      
-      $updateCC = Invoke-RestMethod $urlJSON -Method 'POST' -Headers $headers -Body $body
-
-  } ## UpdateCustomColumn API Call
-
   Function Send-RemoteCommand { 
     if ($SecurePassword.length -ge 1) {
       $UnsecureGUIPassword = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword))
@@ -451,13 +436,12 @@
       $UnsecureGUIPassword = ""
       Write-Host -NoNewline "Wiping GUI Password"
     }
-        
-    #$url = "https://backup.management/jsonrpcv1"
+
     $url = $urlJSON
     $method = 'POST'
     $Script:data = @{}
     $data.jsonrpc = '2.0'
-    $data.id = 'jsonrpc'
+    $data.id = '2'
     $data.method = 'SendRemoteCommands'
     $data.params = @{}
     $data.params.command = "set gui password"
@@ -477,6 +461,88 @@
 
     $Script:sendResult = Invoke-RestMethod @params 
   } ## Send-RemoteCommand API Call
+
+  Function UpdateCustomColumnA($DeviceId,$ColumnId,$Message) {
+    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+    $headers.Add("Authorization","Bearer $Script:visa")
+    $headers.Add("Content-Type","application/json")
+    $headers.Add("Cookie","__cfduid=d110201d75658c43f9730368d03320d0f1601993342")
+  
+    $body = "{
+      `n    `"jsonrpc`":`"2.0`",
+      `n    `"visa`":`"$Script:visa`",
+      `n    `"method`":`"UpdateAccountCustomColumnValues`",
+      `n    `"params`":{
+      `n      `"accountId`": $DeviceId,
+      `n      `"values`": [$ColumnId,`"$Message`"]
+      `n      }
+      `n    }
+      `n"
+      
+    #$Script:updateCC = Invoke-RestMethod 'https://cloudbackup.management/jsonapi' -Method 'POST' -Headers $headers -Body $body
+    $Script:updateCC = Invoke-RestMethod $urlJSON -Method 'POST' -Headers $headers -Body $body
+    Write-Host $Script:strLineSeparator
+    Write-Host "  UpdateA : $($Script:updateCC)"
+  } ## UpdateCustomColumnA API Call
+
+  Function UpdateCustomColumnB($DeviceId,$ColumnId,$Message) {
+    $url = $urlJSON
+    $method = 'POST'
+    $data = @{}
+    $data.jsonrpc = '2.0'
+    $data.visa = $Script:visa
+    $data.method = 'UpdateAccountCustomColumnValues'
+    $data.params = @{}
+    $data.params.accountId = [System.Int32[]]$DeviceId
+    $data.params.values = @($ColumnID,$Message)
+    $jsondata = (ConvertTo-Json $data -depth 2)
+
+    $params = @{
+      Uri         = $url
+      Method      = $method
+      Headers     = @{ "Authorization" = "Bearer $Script:visa" }
+      Body        = ([System.Text.Encoding]::UTF8.GetBytes($jsondata))
+      ContentType = 'application/json; charset=utf-8'
+    }
+    
+    $Script:updateCC = Invoke-RestMethod @params
+    Write-Host $Script:strLineSeparator
+    Write-Host "  UpdateB : $($Script:updateCC)"
+  } ## UpdateCustomColumnB API Call
+
+  Function UpdateCustomColumnC($DeviceId,$ColumnId,$Message) {
+    $objModifyAccount = (New-Object PSObject | 
+    Add-Member -PassThru NoteProperty jsonrpc ‘2.0’ | 
+    Add-Member -PassThru NoteProperty visa $Script:visa |
+    Add-Member -PassThru NoteProperty method ‘UpdateAccountCustomColumnValues’ |
+    Add-Member -PassThru NoteProperty params @{
+        accountId = [System.Int32]$DeviceId
+        values = @($ColumnId,$Message)
+    }) | ConvertTo-Json -Depth 2
+    # (Call the JSON Web Request Function to get the ModifyAccount Object)
+    $ModifyAccountSession = CallJSON $urlJSON $objModifyAccount
+    # (Added Delay in case command takes a bit to respond)
+    Start-Sleep -Milliseconds 100
+    # (Get Result Status of ModifyAccountSession)
+    $ModifyAccountSessionErrorCode = $ModifyAccountSession.error.code
+    $ModifyAccountSessionErrorMsg = $ModifyAccountSession.error.message
+    # (Check for Errors with ModifyAccountSession - Check if ErrorCode has a value)
+    if ($ModifyAccountSessionErrorCode) {
+        Write-Host $Script:strLineSeparator
+        Write-Host "  ModifyAccountSession Error Code:  $ModifyAccountSessionErrorCode"
+        Write-Host "  ModifyAccountSession Message:  $ModifyAccountSessionErrorMsg"
+        Write-Host $Script:strLineSeparator
+        Write-Host "  DEVICE | $($DeviceId) | $($selecteddevice.DeviceName) | ASSIGN GUI PW ERROR | $ModifyAccountSessionErrorMsg"
+        # (Exit Script if there is a problem)
+        #Break Script
+    } elseif (-not $ModifyAccountSessionErrorCode) {
+        # (No error)
+        Write-Host $Script:strLineSeparator
+        Write-Host "  SUCCESS UPDATING GUI PW COLUMN"
+    }
+    Write-Host $Script:strLineSeparator
+    Write-Host "  UpdateC : $ModifyAccountSessionErrorMsg"
+  } ## UpdateCustomColumnC API Call
 #endregion ----- Backup.Management JSON Calls ----
 #endregion ----- Functions ----
 
@@ -507,33 +573,42 @@ if ($AllDevices) {
   if ($BackupID -ne $null) {
     $script:SelectedDevices = $DeviceDetail | 
       Select-Object PartnerId,PartnerName,Reference,AccountID,DeviceName,ComputerName,DeviceAlias,GUIPassword,Creation,TimeStamp,LastSuccess,ProductId,Product,ProfileId,Profile,DataSources,SelectedGB,UsedGB,Location,OS,Notes,TempInfo | 
-      Where-object {$_.DeviceName -eq $BackupID}
-    Write-Host    $Script:strLineSeparator
-    Write-Host    "  $($SelectedDevices.AccountId.count) Devices Selected"
+        Where-object {$_.DeviceName -eq $BackupID}
+    Write-Host $Script:strLineSeparator
+    Write-Host "  $($SelectedDevices.AccountId.count) Devices Selected"
   }
 }    
 
 if($null -eq $SelectedDevices) {
   # Cancel was pressed
   # Run cancel script
-  Write-Host    $Script:strLineSeparator
-  Write-Host    "  No Devices Selected"
+  Write-Host $Script:strLineSeparator
+  Write-Host "  No Devices Selected"
   Break
 } else {
   # OK was pressed, $Selection contains what was chosen
   # Run OK script
   $script:SelectedDevices | 
-    Select-Object PartnerId,PartnerName,Reference,@{Name="AccountID"; Expression={[int]$_.AccountId}},DeviceName,ComputerName,DeviceAlias,GUIPassword,Creation,TimeStamp | Sort-object AccountId | Format-Table
+    Select-Object PartnerId,PartnerName,Reference,@{Name="AccountID"; Expression={[int]$_.AccountId}},DeviceName,ComputerName,DeviceAlias,GUIPassword,Creation,TimeStamp | 
+        Sort-object AccountId | Format-Table
 
   if ($i_BackupCMD -eq "-SetGUIPassword") {
     #$SecurePassword = Read-Host "  Enter Backup Manager GUI Password to be applied to $($SelectedDevices.AccountId.count) Devices" -AsSecureString
-    Write-Host    $Script:strLineSeparator
-    Write-Host    "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patience. "
+    Write-Host $Script:strLineSeparator
+    Write-Host "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patience. "
   }
 
   foreach ($selecteddevice in $SelectedDevices) {
-    Send-RemoteCommand
-    #$result.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
+    # SEND REMOTE COMMAND
+    Write-Host $Script:strLineSeparator
+    Write-Host "  Updating GUI PW for $device"
+    #Send-RemoteCommand
+    # UPDATE CUSOTM COLUMN 'GUI PW'
+    $device = $selecteddevice.DeviceName
+    Write-Host $Script:strLineSeparator
+    Write-Host "  Updating GUI PW Column for $device"
+    UpdateCustomColumnB $selecteddevice.AccountID "AA2048" $password
+    #$sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
     Write-Host " $($sendResult.result.result.id) $($sendResult.result.result.result.code)"
   }
   $o_sPassword = $password
