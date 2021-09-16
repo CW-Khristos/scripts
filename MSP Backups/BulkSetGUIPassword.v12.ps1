@@ -596,12 +596,12 @@ if($null -eq $SelectedDevices) {
   }
 
   foreach ($selecteddevice in $SelectedDevices) {
+    $device = $selecteddevice.DeviceName
     # SEND REMOTE COMMAND
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW for $device"
     Send-RemoteCommand
     # UPDATE CUSOTM COLUMN 'GUI PW'
-    $device = $selecteddevice.DeviceName
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW Column for $device"
     UpdateCustomColumnA $selecteddevice.AccountID 2048 $password
