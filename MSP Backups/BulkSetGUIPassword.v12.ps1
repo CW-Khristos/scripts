@@ -595,7 +595,7 @@ if($null -eq $SelectedDevices) {
   if ($i_BackupCMD -eq "-SetGUIPassword") {
     #$SecurePassword = Read-Host "  Enter Backup Manager GUI Password to be applied to $($SelectedDevices.AccountId.count) Devices" -AsSecureString
     Write-Host $Script:strLineSeparator
-    Write-Host "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patience. "
+    Write-Host "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patient. "
   }
 
   foreach ($selecteddevice in $SelectedDevices) {
@@ -607,7 +607,7 @@ if($null -eq $SelectedDevices) {
     $device = $selecteddevice.DeviceName
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW Column for $device"
-    UpdateCustomColumnB $selecteddevice.AccountID "AA2048" $password
+    UpdateCustomColumnB $selecteddevice.AccountID "2048" $password
     #$sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
     Write-Host " $($sendResult.result.result.id) $($sendResult.result.result.result.code)"
   }
