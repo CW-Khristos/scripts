@@ -439,7 +439,7 @@
     $method = 'POST'
     $Script:data = @{}
     $data.jsonrpc = '2.0'
-    $data.id = '2'
+    $data.id = 'jsonrpc'
     $data.method = 'SendRemoteCommands'
     $data.params = @{}
     $data.params.command = "set gui password"
@@ -457,7 +457,9 @@
       ContentType = 'application/json; charset=utf-8'
     }  
 
-    $Script:sendResult = Invoke-RestMethod @params 
+    $Script:sendResult = Invoke-RestMethod @params
+    $Script:sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
+    Write-Host " $($Script:sendResult.result.result.id) $($Script:sendResult.result.result.result.code)"
   } ## Send-RemoteCommand API Call
 
   Function UpdateCustomColumnA($DeviceId,$ColumnId,$Message) {
@@ -597,16 +599,15 @@ if($null -eq $SelectedDevices) {
 
   foreach ($selecteddevice in $SelectedDevices) {
     $device = $selecteddevice.DeviceName
-    # SEND REMOTE COMMAND
-    Write-Host $Script:strLineSeparator
-    Write-Host "  Updating GUI PW for $device"
-    Send-RemoteCommand
     # UPDATE CUSOTM COLUMN 'GUI PW'
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW Column for $device"
     UpdateCustomColumnA $selecteddevice.AccountID 2048 $password
-    #$sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
-    Write-Host " $($sendResult.result.result.id) $($sendResult.result.result.result.code)"
+    Start-Sleep -Milliseconds 5000
+    # SEND REMOTE COMMAND
+    Write-Host $Script:strLineSeparator
+    Write-Host "  Updating GUI PW for $device"
+    Send-RemoteCommand
   }
   $o_sPassword = $password
 }
