@@ -466,20 +466,19 @@
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("Authorization","Bearer $Script:visa")
     $headers.Add("Content-Type","application/json")
-    $headers.Add("Cookie","__cfduid=d110201d75658c43f9730368d03320d0f1601993342")
   
     $body = "{
       `n    `"jsonrpc`":`"2.0`",
+      `n    `"id`":`"jsonrpc`",
       `n    `"visa`":`"$Script:visa`",
       `n    `"method`":`"UpdateAccountCustomColumnValues`",
       `n    `"params`":{
       `n      `"accountId`": $DeviceId,
-      `n      `"values`": [$ColumnId,`"$Message`"]
+      `n      `"values`": [[$ColumnId,`"$Message`"]]
       `n      }
       `n    }
       `n"
-      
-    #$Script:updateCC = Invoke-RestMethod 'https://cloudbackup.management/jsonapi' -Method 'POST' -Headers $headers -Body $body
+
     $Script:updateCC = Invoke-RestMethod $urlJSON -Method 'POST' -Headers $headers -Body $body
     Write-Host $Script:strLineSeparator
     Write-Host "  UpdateA : $($Script:updateCC)"
@@ -500,7 +499,7 @@
     $params = @{
       Uri         = $url
       Method      = $method
-      Headers     = @{ "Authorization" = "Bearer $Script:visa" }
+      Headers     = @{"Authorization" = "Bearer $Script:visa"}
       Body        = ([System.Text.Encoding]::UTF8.GetBytes($jsondata))
       ContentType = 'application/json; charset=utf-8'
     }
@@ -595,19 +594,19 @@ if($null -eq $SelectedDevices) {
   if ($i_BackupCMD -eq "-SetGUIPassword") {
     #$SecurePassword = Read-Host "  Enter Backup Manager GUI Password to be applied to $($SelectedDevices.AccountId.count) Devices" -AsSecureString
     Write-Host $Script:strLineSeparator
-    Write-Host "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patient. "
+    Write-Host "  Applying GUI Password to $($SelectedDevices.AccountId.count) Devices, please be patient."
   }
 
   foreach ($selecteddevice in $SelectedDevices) {
     # SEND REMOTE COMMAND
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW for $device"
-    #Send-RemoteCommand
+    Send-RemoteCommand
     # UPDATE CUSOTM COLUMN 'GUI PW'
     $device = $selecteddevice.DeviceName
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW Column for $device"
-    UpdateCustomColumnB $selecteddevice.AccountID "2048" $password
+    UpdateCustomColumnA $selecteddevice.AccountID 2048 $password
     #$sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
     Write-Host " $($sendResult.result.result.id) $($sendResult.result.result.result.code)"
   }
