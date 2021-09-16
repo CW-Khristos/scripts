@@ -515,8 +515,8 @@
     Add-Member -PassThru NoteProperty visa $Script:visa |
     Add-Member -PassThru NoteProperty method ‘UpdateAccountCustomColumnValues’ |
     Add-Member -PassThru NoteProperty params @{
-        accountId = [System.Int32]$DeviceId
-        values = @($ColumnId,$Message)
+      accountId = [System.Int32]$DeviceId
+      values = @($ColumnId,$Message)
     }) | ConvertTo-Json -Depth 2
     # (Call the JSON Web Request Function to get the ModifyAccount Object)
     $ModifyAccountSession = CallJSON $urlJSON $objModifyAccount
@@ -527,17 +527,17 @@
     $ModifyAccountSessionErrorMsg = $ModifyAccountSession.error.message
     # (Check for Errors with ModifyAccountSession - Check if ErrorCode has a value)
     if ($ModifyAccountSessionErrorCode) {
-        Write-Host $Script:strLineSeparator
-        Write-Host "  ModifyAccountSession Error Code:  $ModifyAccountSessionErrorCode"
-        Write-Host "  ModifyAccountSession Message:  $ModifyAccountSessionErrorMsg"
-        Write-Host $Script:strLineSeparator
-        Write-Host "  DEVICE | $($DeviceId) | $($selecteddevice.DeviceName) | ASSIGN GUI PW ERROR | $ModifyAccountSessionErrorMsg"
-        # (Exit Script if there is a problem)
-        #Break Script
+      Write-Host $Script:strLineSeparator
+      Write-Host "  ModifyAccountSession Error Code:  $ModifyAccountSessionErrorCode"
+      Write-Host "  ModifyAccountSession Message:  $ModifyAccountSessionErrorMsg"
+      Write-Host $Script:strLineSeparator
+      Write-Host "  DEVICE | $($DeviceId) | $($selecteddevice.DeviceName) | ASSIGN GUI PW ERROR | $ModifyAccountSessionErrorMsg"
+      # (Exit Script if there is a problem)
+      #Break Script
     } elseif (-not $ModifyAccountSessionErrorCode) {
-        # (No error)
-        Write-Host $Script:strLineSeparator
-        Write-Host "  SUCCESS UPDATING GUI PW COLUMN"
+      # (No error)
+      Write-Host $Script:strLineSeparator
+      Write-Host "  SUCCESS UPDATING GUI PW COLUMN"
     }
     Write-Host $Script:strLineSeparator
     Write-Host "  UpdateC : $ModifyAccountSessionErrorMsg"
