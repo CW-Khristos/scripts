@@ -59,10 +59,8 @@
   $mxbPath = ${env:ProgramData} + "\MXB\Backup Manager"
   $CurrentDate = Get-Date -format "yyy-MM-dd_hh-mm-ss"
   # ALL PARTNERS / ALL DEVICES BOOLEANS
-  $AllDevices = [bool]$i_AllDevices = $False
-  $AllPartners = [bool]$i_AllPartners = $True
-  $i_BackupCMD = "-SetGUIPassword"
-  $SetGUIPassword = $True
+  $AllDevices = [bool]$i_AllDevices
+  $AllPartners = [bool]$i_AllPartners
 
   #Clear-Host
   $ErrorActionPreference = 'Continue'
