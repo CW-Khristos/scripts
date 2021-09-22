@@ -603,11 +603,12 @@ if($null -eq $SelectedDevices) {
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW Column for $device"
     UpdateCustomColumnA $selecteddevice.AccountID 2048 $password
-    Start-Sleep -Milliseconds 5000
+    Start-Sleep -Milliseconds 500
     # SEND REMOTE COMMAND
     Write-Host $Script:strLineSeparator
     Write-Host "  Updating GUI PW for $device"
     Send-RemoteCommand
+    Start-Sleep -Milliseconds 500
   }
   $o_sPassword = $password
 }
