@@ -58,7 +58,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     strMOD = objARG.item(0)
     strSNMP = objARG.item(1)
     strTRP = objARG.item(2)
-  elseif (wscript.arguments.count <= 2) then                ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+  elseif (wscript.arguments.count < 1) then                ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     call LOGERR(1)
   end if
 elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
