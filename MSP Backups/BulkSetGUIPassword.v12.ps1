@@ -430,7 +430,7 @@
     } else {
       $PasswordParam = "password $($UnsecureGUIPassword)`nrestore_only disallow"
     }
-    if ($WipeGUIPassword) {
+    if ($i_BackupCMD -eq "-WipeGUIPassword") {
       $UnsecureGUIPassword = ""
       Write-Host -NoNewline "Wiping GUI Password"
     }
