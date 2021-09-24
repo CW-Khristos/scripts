@@ -256,6 +256,20 @@ function mapSMART($varID,$varVAL) {
 #BEGIN SCRIPT
 $smartEXE = "C:\IT\smartctl.exe"
 $source = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
+#CHECK 'PERSISTENT' FOLDERS
+if (-not test-path -path "C:\temp") {
+  new-item -path "C:\temp" -itemtype directory
+}
+if (-not test-path -path "C:\IT") {
+  new-item -path "C:\IT" -itemtype directory
+}
+if (-not test-path -path "C:\IT\Scripts") {
+  new-item -path "C:\IT\Scripts" -itemtype directory
+}
+#DOWNLOAD SMARTCTL.EXE IF NEEDED
+if (-not test-path -path "C:\IT\smartctl.exe" -pathtype leaf) {
+  start-bitstransfer -source $source -destination $smartEXE
+}
 #POPULATE DRIVES
 write-host -ForegroundColor red " - ENUMERATING CONNECTED DRIVES"
 $Script:arrDRV = @()
