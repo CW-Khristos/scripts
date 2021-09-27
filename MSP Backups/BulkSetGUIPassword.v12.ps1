@@ -458,7 +458,7 @@
     }  
 
     $Script:sendResult = Invoke-RestMethod @params
-    $Script:sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
+    #$Script:sendResult.result.result | Select-Object Id,@{Name="Status"; Expression={$_.Result.code}},@{Name="Message"; Expression={$_.Result.Message}} | Format-Table
     Write-Host " $($Script:sendResult.result.result.id) $($Script:sendResult.result.result.result.code)"
   } ## Send-RemoteCommand API Call
 
