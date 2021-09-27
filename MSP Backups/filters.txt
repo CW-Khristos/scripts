@@ -89,7 +89,39 @@ C:\wu_output|
 %PROGRAMDATA%\SoftwareDistribution|
 %PROGRAMDATA%\SolarWinds|
 %PROGRAMDATA%\SolarWinds MSP|
+%PROGRAMDATA%\Sophos\AutoUpdate\Cache|
+%PROGRAMDATA%\Sophos\AutoUpdate\Logs|
+%PROGRAMDATA%\Sophos\Certificates\AutoUpdate\Cache|
+%PROGRAMDATA%\Sophos\Clean\Logs|
+%PROGRAMDATA%\Sophos\CloudInstaller\Logs|
+%PROGRAMDATA%\Sophos\Endpoint Defense\Logs|
+%PROGRAMDATA%\Sophos\Endpoint Firewall\Logs|
+%PROGRAMDATA%\Sophos\Health\Logs|
+%PROGRAMDATA%\Sophos\Heartbeat\Logs|
+%PROGRAMDATA%\Sophos\Live Query\Logs|
+%PROGRAMDATA%\Sophos\Live Query\Queries|
+%PROGRAMDATA%\Sophos\Live Terminal\Logs|
+%PROGRAMDATA%\Sophos\Live Terminal\Telemetry|
+%PROGRAMDATA%\Sophos\Managed Threat Response\Logs|
+%PROGRAMDATA%\Sophos\Management Communications System\Endpoint\Cache|
+%PROGRAMDATA%\Sophos\Management Communications System\Endpoint\Logs|
+%PROGRAMDATA%\Sophos\Safestore\Logs|
+%PROGRAMDATA%\Sophos\Sophos AMSI Protection\Logs|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\Cache|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\INFECTED|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\logs|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\samples|
+%PROGRAMDATA%\Sophos\Sophos Anti-Virus\Telemetry|
 %PROGRAMDATA%\Sophos\Sophos Anti-Virus\Temp|
+%PROGRAMDATA%\Sophos\Sophos Data Control\logs|
+%PROGRAMDATA%\Sophos\Sophos Device Control\logs|
+%PROGRAMDATA%\Sophos\Sophos Diagnostic Utility\Log|
+%PROGRAMDATA%\Sophos\Sophos File Scanner\Logs|
+%PROGRAMDATA%\Sophos\Sophos File Scanner\SaviTemp|
+%PROGRAMDATA%\Sophos\Sophos Network Threat Protection\Logs|
+%PROGRAMDATA%\Sophos\Sophos Tamper Protection\Logs|
+%PROGRAMDATA%\Sophos\Sophos UI\logs|
+%PROGRAMDATA%\Sophos\Sophos Web Intelligence\Logs|
 %PROGRAMDATA%\Temp|
 %SystemRoot%.old|
 %SystemRoot%.000|
