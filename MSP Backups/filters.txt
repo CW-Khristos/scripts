@@ -176,6 +176,7 @@ C:\wu_output|
 %SystemRoot%\winsxs\InstallTemp|
 %SystemRoot%\WinSxS\ManifestCache|
 %SystemRoot%\winsxs\temp|
+%LOCALAPPDATA%\cache|
 %LOCALAPPDATA%\Google\Chrome\User Data\Crashpad|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Application Cache|
 %LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache|
@@ -190,6 +191,13 @@ C:\wu_output|
 %LOCALAPPDATA%\Google\Chrome\User Data\Temp|
 %LOCALAPPDATA%\Microsoft\Feeds Cache|
 %LOCALAPPDATA%\Microsoft\FontCache|
+%LOCALAPPDATA%\Microsoft\GraphicsCache|
+%LOCALAPPDATA%\Microsoft\Internet Explorer\CacheStorage|
+%LOCALAPPDATA%\Microsoft\Internet Explorer\IECompatData|
+%LOCALAPPDATA%\Microsoft\OneDrive\logs|
+%LOCALAPPDATA%\Microsoft\OneDrive\setup|
+%LOCALAPPDATA%\Microsoft\OneDrive\StandaloneUpdater|
+%LOCALAPPDATA%\Microsoft\OneDrive\Update|
 %LOCALAPPDATA%\Microsoft\Windows\ActionCenterCache|
 %LOCALAPPDATA%\Microsoft\Windows\AppCache|
 %LOCALAPPDATA%\Microsoft\Windows\Caches|
@@ -206,4 +214,7 @@ C:\wu_output|
 %LOCALAPPDATA%\Microsoft\Windows\TemporaryInternetFiles|
 %LOCALAPPDATA%\Microsoft\Windows\WER|
 %LOCALAPPDATA%\Microsoft\Windows\WebCache|
+%LOCALAPPDATA%\OneDrive\cache|
+%LOCALAPPDATA%\Packages|
+%LOCALAPPDATA%\SquirrelTemp|
 %LOCALAPPDATA%\temp|
