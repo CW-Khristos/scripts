@@ -39,6 +39,7 @@
   <MSP_SSHeal_Force_ps.vbs>16</MSP_SSHeal_Force_ps.vbs>
   <MSP_Sync.vbs>1</MSP_Sync.vbs>
   <MSP_Update.vbs>3</MSP_Update.vbs>
+  <PBXupload.vbs>1</PBXupload.vbs>
   <percent_rename.vbs>1</percent_rename.vbs>
   <pingtest.vbs>3</pingtest.vbs>
   <PME_Config.vbs>1</PME_Config.vbs>
@@ -50,6 +51,7 @@
   <pre-backup.cmd>3</pre-backup.cmd>
   <PWDchg.vbs>4</PWDchg.vbs>
   <qsmart.vbs>2</qsmart.vbs>
+  <qSMART.ps1>1</qSMART.ps1>
   <reagent.vbs>14</reagent.vbs>
   <msi_reagent.vbs>13</msi_reagent.vbs>
   <msi_reagent_key.vbs>4</msi_reagent_key.vbs>
