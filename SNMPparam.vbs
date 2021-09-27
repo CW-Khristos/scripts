@@ -11,8 +11,8 @@ dim errRET, strVER
 ''VARIABLES ACCEPTING PARAMETERS - CONFIGURES SNMP TRAP AND COMMUNITY STRING
 dim strMOD, strTRP, strSNMP
 ''SCRIPT OBJECTS
-dim objLOG, objHOOK
-dim objIN, objOUT, objARG, objWSH, objFSO
+dim objFSO, objLOG, objHOOK
+dim objIN, objOUT, objARG, objWSH
 ''VERSION FOR SCRIPT UPDATE, SNMPPARAM.VBS, REF #2 , REF #68 , REF #69
 strVER = 8
 strREPO = "scripts"
