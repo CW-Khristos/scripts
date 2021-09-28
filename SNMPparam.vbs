@@ -58,7 +58,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     strMOD = objARG.item(0)
     strSNMP = objARG.item(1)
     strTRP = objARG.item(2)
-  elseif (wscript.arguments.count < 1) then                ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
+  elseif (wscript.arguments.count < 1) then                 ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
     call LOGERR(1)
   end if
 elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
@@ -71,11 +71,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objOUT.write vbnewline & vbnewline & now & vbtab & " - STARTING SNMPPARAM" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - STARTING SNMPPARAM" & vbnewline
 	''AUTOMATIC UPDATE, SNMPARAM.VBS, REF #2 , REF #69 , REF #68 , FIXES #9
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SNMPARAM : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SNMPARAM : " & strVER
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
-  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SNMPARAM : " & strVER
-  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : SNMPARAM : " & strVER
   intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & " " & _
