@@ -16,6 +16,8 @@ dim objFSO, objLOG, objHOOK
 dim objIN, objOUT, objARG, objWSH
 ''PBX LIST
 redim arrPEM(0)
+strPBX = "C:\Users\CBledsoe\IPM-Github\pbxlist.txt"
+strSCP = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com"
 ''VERSION FOR SCRIPT UPDATE, PBXUPLOAD.VBS, REF #2 , REF #68 , REF #69
 strVER = 1
 strREPO = "scripts"
@@ -30,7 +32,6 @@ set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
-strPBX = "C:\Users\CBledsoe\IPM-Github\pbxlist.txt"
 ''CHECK 'PERSISTENT' FOLDERS , REF #2 , REF #73
 if (not (objFSO.folderexists("c:\temp"))) then
   objFSO.createfolder("c:\temp")
@@ -95,7 +96,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
   objLOG.write vbnewline & "errRET='" & intRET & "'"
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     ''COLLECT CERTIFICATE FILES
-    set objSRC = objFSO.getfolder("C:\3cx")
+    set objSRC = objFSO.getfolder("C:\IT\3cx")
     set colFILE = objSRC.files
     for each objFILE in colFILE
       arrPEM(intPEM) = objFILE.path
@@ -116,7 +117,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           for intPEM = 0 to ubound(arrPEM)
             if (arrPEM(intPEM) <> vbnullstring) then
               if (instr(1, arrPEM(intPEM), "_")) then
-                strPEM = "C:\3cx\upload\" & arrTMP(1) & "-key.pem"
+                strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-key.pem"
                 strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
                 objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
@@ -125,12 +126,12 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 wscript.sleep 1000
                 objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                strRCMD = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 'objOUT.write vbnewline & vbnewline & strRCMD
                 call HOOK(strRCMD)
               elseif (instr(1, arrPEM(intPEM), "_") = 0) then
-                strPEM = "C:\3cx\upload\" & arrTMP(1) & "-crt.pem"
+                strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                 strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
                 objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
@@ -139,7 +140,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 wscript.sleep 1000
                 objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                strRCMD = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 'objOUT.write vbnewline & vbnewline & strRCMD
                 call HOOK(strRCMD)
@@ -149,7 +150,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           ''service '3CX PhoneSystem Nginx Server' restart
           objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING PBX NGINX SERVICE"
           objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING PBX NGINX SERVICE"
-          strRCMD = "C:\Putty\putty.exe -ssh " & strUSR & "@" & strIP & " -pw " & strPWD & " 22"
+          strRCMD = "C:\IT\Putty\putty.exe -ssh " & strUSR & "@" & strIP & " -pw " & strPWD & " 22"
           objWSH.run strRCMD, 1, false
           wscript.sleep 2000
           objWSH.sendkeys "{RIGHT}{ENTER}"
@@ -173,7 +174,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           arrTMP = split(strTMP, "|")
           strIP = arrTMP(0)
           if (objARG.item(2) = strIP) then
-            set objSRC = objFSO.getfolder("C:\3cx")
+            set objSRC = objFSO.getfolder("C:\IT\3cx")
             set colFILE = objSRC.files
             for each objFILE in colFILE
               arrPEM(intPEM) = objFILE.path
@@ -185,7 +186,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
             for intPEM = 0 to ubound(arrPEM)
               if (arrPEM(intPEM) <> vbnullstring) then
                 if (instr(1, arrPEM(intPEM), "_")) then
-                  strPEM = "C:\3cx\upload\" & arrTMP(1) & "-key.pem"
+                  strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-key.pem"
                   strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
                   objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
@@ -194,12 +195,12 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   wscript.sleep 1000
                   objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                  strRCMD = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   'objOUT.write vbnewline & vbnewline & strRCMD
                   call HOOK(strRCMD)
                 elseif (instr(1, arrPEM(intPEM), "_") = 0) then
-                  strPEM = "C:\3cx\upload\" & arrTMP(1) & "-crt.pem"
+                  strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                   strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
                   objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
@@ -208,7 +209,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   wscript.sleep 1000
                   objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                  strRCMD = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   'objOUT.write vbnewline & vbnewline & strRCMD
                   call HOOK(strRCMD)
@@ -218,7 +219,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
             ''service '3CX PhoneSystem Nginx Server' restart
             objOUT.write vbnewline & now & vbtab & vbtab & " - RESTARTING PBX NGINX SERVICE"
             objLOG.write vbnewline & now & vbtab & vbtab & " - RESTARTING PBX NGINX SERVICE"
-            strRCMD = "C:\Putty\putty.exe -ssh " & strUSR & "@" & strIP & " -pw " & strPWD & " 22"
+            strRCMD = "C:\IT\Putty\putty.exe -ssh " & strUSR & "@" & strIP & " -pw " & strPWD & " 22"
             objWSH.run strRCMD, 1, false
             wscript.sleep 2000
             objWSH.sendkeys "{RIGHT}{ENTER}"

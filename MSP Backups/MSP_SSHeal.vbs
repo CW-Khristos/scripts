@@ -92,11 +92,11 @@ objOUT.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 objLOG.write vbnewline & now & " - STARTING MSP_SSHEAL" & vbnewline
 if (errRET = 0) then
   ''AUTOMATIC UPDATE, MSP_SSHEAL.VBS, REF #2 , REF #69 , REF #68 , FIXES #4
+  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
+  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
   call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/chkAU.vbs", "C:\IT\Scripts", "chkAU.vbs")
   ''EXECUTE CHKAU.VBS SCRIPT, REF #69
-  objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
-  objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_SSHEAL : " & strVER
   intRET = objWSH.run ("cmd.exe /C " & chr(34) & "cscript.exe " & chr(34) & "C:\IT\Scripts\chkAU.vbs" & chr(34) & " " & _
     chr(34) & strREPO & chr(34) & " " & chr(34) & strBRCH & chr(34) & " " & chr(34) & strDIR & chr(34) & " " & _
     chr(34) & wscript.scriptname & chr(34) & " " & chr(34) & strVER & chr(34) & chr(34), 0, true)
