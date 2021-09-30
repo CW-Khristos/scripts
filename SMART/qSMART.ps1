@@ -149,6 +149,7 @@ function mapSMART($varID,$varVAL) {
         #SMART ID 5 - CRITICAL -
         "REALLOCATE NAND BLK CNT"
           {$Script:arrDRV[$Script:i].ssd5 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id5 = $varVAL}
         #SMART ID 170 - CRITICAL -
         #See attribute 232
         "AVAILABLE SPACE"
@@ -257,17 +258,17 @@ function mapSMART($varID,$varVAL) {
 $smartEXE = "C:\IT\smartctl.exe"
 $source = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
 #CHECK 'PERSISTENT' FOLDERS
-if (-not test-path -path "C:\temp") {
+if (-not (test-path -path "C:\temp")) {
   new-item -path "C:\temp" -itemtype directory
 }
-if (-not test-path -path "C:\IT") {
+if (-not (test-path -path "C:\IT")) {
   new-item -path "C:\IT" -itemtype directory
 }
-if (-not test-path -path "C:\IT\Scripts") {
+if (-not (test-path -path "C:\IT\Scripts")) {
   new-item -path "C:\IT\Scripts" -itemtype directory
 }
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
-if (-not test-path -path "C:\IT\smartctl.exe" -pathtype leaf) {
+if (-not (test-path -path "C:\IT\smartctl.exe" -pathtype leaf)) {
   start-bitstransfer -source $source -destination $smartEXE
 }
 #POPULATE DRIVES
@@ -300,7 +301,6 @@ foreach ($line in $lines) {
       id198 = $null
       id201 = $null
       #SSD ATTRIBUTES
-      ssd5 = $null
       id170 = $null
       id171 = $null
       id172 = $null
