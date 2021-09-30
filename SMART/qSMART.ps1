@@ -430,7 +430,7 @@ foreach ($strDRV in $arrDRV) {
     $o_nvmemdi = $Script:arrDRV[$Script:i].nvmemdi
     $o_nvmeerr = $Script:arrDRV[$Script:i].nvmeerr
     $o_nvmewctemp = $Script:arrDRV[$Script:i].nvmewctemp
-    $o_nvmecctemp = $Script:arrDRV[$Script:i]. nvmecctemp
+    $o_nvmecctemp = $Script:arrDRV[$Script:i].nvmecctemp
   }
 }
 #END SCRIPT
