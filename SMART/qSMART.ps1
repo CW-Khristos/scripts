@@ -148,8 +148,8 @@ function mapSMART($varID,$varVAL) {
         #---
         #SMART ID 5 - CRITICAL -
         "REALLOCATE NAND BLK CNT"
-          {$Script:arrDRV[$Script:i].ssd5 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id5 = $varVAL}
+          #{$Script:arrDRV[$Script:i].ssd5 = $varVAL}
+          {$Script:arrDRV[$Script:i].id5 = $varVAL}
         #SMART ID 170 - CRITICAL -
         #See attribute 232
         "AVAILABLE SPACE"
@@ -210,7 +210,8 @@ function mapSMART($varID,$varVAL) {
           {}
         #SMART ID 202 - CRITICAL -
         "PERCENT LIFETIME REMAIN"
-          {}
+          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+          {$Script:arrDRV[$Script:i].id231 = $varVAL}
         #SMART ID 230 - CRITICAL -
         #Amplitude of "thrashing" (repetitive head moving motions between operations)
         #In SSDs, indicates whether usage trajectory is outpacing the expected life curve
