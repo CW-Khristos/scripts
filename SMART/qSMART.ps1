@@ -227,7 +227,7 @@ function mapSMART($varID,$varVAL) {
         #SMART ID 232 - CRITICAL -
         #Number of physical erase cycles completed on the SSD as a percentage of the maximum physical erase cycles the drive is designed to endure
         #Intel SSDs report the available reserved space as a percentage of the initial reserved space
-        "ENDURANCE REMAINING"
+        {($_ -eq "ENDURANCE REMAINING") -or ($_ -eq "AVAILABLE RESERVD SPACE")}
           {$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 233 Intel SSDs report a normalized value from 100, a new drive, to a minimum of 1
         #It decreases while the NAND erase cycles increase from 0 to the maximum-rated cycles
