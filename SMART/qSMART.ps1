@@ -278,9 +278,10 @@ function mapSMART($varID,$varVAL) {
 
 #------------
 #BEGIN SCRIPT
-$dbEXE = "C:\IT\update-smart-drivedb.exe"
 $smartEXE = "C:\IT\smartctl.exe"
-$source = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
+$dbEXE = "C:\IT\update-smart-drivedb.exe"
+$srcSMART = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
+$srcDB = "https://github.com/CW-Khristos/scripts/raw/master/SMART/update-smart-drivedb.exe"
 #CHECK 'PERSISTENT' FOLDERS
 if (-not (test-path -path "C:\temp")) {
   new-item -path "C:\temp" -itemtype directory
@@ -293,16 +294,16 @@ if (-not (test-path -path "C:\IT\Scripts")) {
 }
 #DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
 if (-not (test-path -path "C:\IT\update-smart-drivedb.exe" -pathtype leaf)) {
-  start-bitstransfer -source $source -destination $dbEXE
+  start-bitstransfer -source $srcDB -destination $dbEXE
 }
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
 if (-not (test-path -path "C:\IT\smartctl.exe" -pathtype leaf)) {
-  start-bitstransfer -source $source -destination $smartEXE
+  start-bitstransfer -source $srcSMART -destination $smartEXE
 }
 #UPDATE SMARTCTL DRIVEDB.H
 write-host -ForegroundColor red " - UPDATING SMARTCTL DRIVE DATABASE"
 $output = Get-ProcessOutput -FileName $dbEXE -Args "/S"
-write-host -ForegroundColor green $output
+#write-host -ForegroundColor green $output
 #POPULATE DRIVES
 write-host -ForegroundColor red " - ENUMERATING CONNECTED DRIVES"
 $Script:arrDRV = @()
