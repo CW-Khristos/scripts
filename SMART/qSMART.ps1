@@ -152,37 +152,50 @@ function mapSMART($varID,$varVAL) {
           {$Script:arrDRV[$Script:i].id5 = $varVAL}
         #SMART ID 170 - CRITICAL -
         #See attribute 232
-        "AVAILABLE SPACE"
+        {($_ -eq "AVAILABLE SPACE") -or ($_ -eq "UNUSED RSVD BLK CT CHIP")}
           {$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id231 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 171 - CRITICAL -
         #(Kingston) The total number of flash program operation failures since the drive was deployed
         #Identical to attribute 181
-        "PROGRAM FAIL"
+        {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
           {$Script:arrDRV[$Script:i].id171 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id175 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id181 = $varVAL}
         #SMART ID 172 - CRITICAL -
         #(Kingston) Counts the number of flash erase failures
         #This attribute returns the total number of Flash erase operation failures since the drive was deployed
         #This attribute is identical to attribute 182
-        "ERASE FAIL"
+        {($_ -eq "ERASE FAIL") -or ($_ -eq "ERASE FAIL COUNT CHIP")}
           {$Script:arrDRV[$Script:i].id172 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id175 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 173 - CRITICAL -
         #Counts the maximum worst erase count on any block
-        {($_ -eq "WEAR LEVELING") -or ($_ -eq "AVE BLOCK-ERASE COUNT")}
+        {($_ -eq "WEAR LEVELING") -or ($_ -eq "WEAR LEVELING COUNT") -or ($_ -eq "AVE BLOCK-ERASE COUNT")}
           {$Script:arrDRV[$Script:i].id173 = $varVAL}
-        #SMART ID 175
-        "PROGRAM FAIL COUNT CHIP"
-          {}
+          #{$Script:arrDRV[$Script:i].id177 = $varVAL}
+        #SMART ID 175 - CRITICAL -
+        {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
+          #{$Script:arrDRV[$Script:i].id171 = $varVAL}
+          {$Script:arrDRV[$Script:i].id175 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id181 = $varVAL}
         #SMART ID 176 - CRITICAL -
         #SMART parameter indicates a number of flash erase command failures
-        "ERASE FAIL"
+        {($_ -eq "ERASE FAIL") -or ($_ -eq "ERASE FAIL COUNT CHIP")}
+          #{$Script:arrDRV[$Script:i].id172 = $varVAL}
           {$Script:arrDRV[$Script:i].id176 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 177 - CRITICAL -
         #Delta between most-worn and least-worn Flash blocks
         #It describes how good/bad the wear-leveling of the SSD works on a more technical way
         {($_ -eq "WEAR LEVELING COUNT") -or ($_ -eq "WEAR RANGE DELTA")}
+          #{$Script:arrDRV[$Script:i].id173 = $varVAL}
           {$Script:arrDRV[$Script:i].id177 = $varVAL}
         #SMART ID 178 "Pre-Fail" attribute used at least in Samsung devices
-        "USED RESERVED BLOCK COUNT"
+        {($_ -eq "USED RESERVED BLOCK COUNT") -or ($_ -eq "USED RSVD BLK CNT CHIP")}
           {}
         #SMART ID 179 "Pre-Fail" attribute used at least in Samsung devices
         {($_ -eq "USED RESERVED") -or ($_ -eq "USED RSVD BLK CNT TOT")}
@@ -193,14 +206,19 @@ function mapSMART($varID,$varVAL) {
         #SMART ID 181 - CRITICAL -
         #Total number of Flash program operation failures since the drive was deployed
         {($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL CNT TOTAL")}
+          #{$Script:arrDRV[$Script:i].id171 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id175 = $varVAL}
           {$Script:arrDRV[$Script:i].id181 = $varVAL}
         #SMART ID 182 - CRITICAL -
         #"Pre-Fail" Attribute used at least in Samsung devices
         {($_ -eq "ERASE FAIL COUNT") -or ($_ -eq "ERASE FAIL COUNT TOTAL")}
+          #{$Script:arrDRV[$Script:i].id172 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id176 = $varVAL}
           {$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 183 the total number of data blocks with detected, uncorrectable errors encountered during normal operation
         #Although degradation of this parameter can be an indicator of drive aging and/or potential electromechanical problems, it does not directly indicate imminent drive failure
-        "RUNTIME BAD BLOCK" {}
+        "RUNTIME BAD BLOCK"
+          {}
         #SMART ID 195 The raw value has different structure for different vendors and is often not meaningful as a decimal number
         #For some drives, this number may increase during normal operation without necessarily signifying errors.
         {($_ -eq "ECC ERROR RATE") -or ($_ -eq "HARDWARE ECC RECOVERED")}
@@ -208,26 +226,28 @@ function mapSMART($varID,$varVAL) {
         #SMART ID 199 The count of errors in data transfer via the interface cable as determined by ICRC (Interface Cyclic Redundancy Check)
         "CRC ERROR COUNT"
           {}
-        #SMART ID 202 - CRITICAL -
-        "PERCENT LIFETIME REMAIN"
-          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
-          {$Script:arrDRV[$Script:i].id231 = $varVAL}
         #SMART ID 230 - CRITICAL -
         #Amplitude of "thrashing" (repetitive head moving motions between operations)
         #In SSDs, indicates whether usage trajectory is outpacing the expected life curve
         {($_ -eq "GMR HEAD AMPLITUDE") -or ($_ -eq "DRIVE LIFE PROTECTION")}
           {$Script:arrDRV[$Script:i].id230 = $varVAL}
-        #SMART ID 231 - CRITICAL -
+        #SMART ID 202 & 231 - CRITICAL -
         #Indicates the approximate SSD life left, in terms of program/erase cycles or available reserved blocks
         #A normalized value of 100 represents a new drive, with a threshold value at 10 indicating a need for replacement
         #A value of 0 may mean that the drive is operating in read-only mode to allow data recovery
         #Previously (pre-2010) occasionally used for Drive Temperature (more typically reported at 0xC2)
-        "SSD LIFE LEFT"
+        {($_ -eq "SSD LIFE LEFT") -or ($_ -eq "PERCENT LIFETIME REMAIN")}
+          #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
           {$Script:arrDRV[$Script:i].id231 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 232 - CRITICAL -
         #Number of physical erase cycles completed on the SSD as a percentage of the maximum physical erase cycles the drive is designed to endure
         #Intel SSDs report the available reserved space as a percentage of the initial reserved space
         {($_ -eq "ENDURANCE REMAINING") -or ($_ -eq "AVAILABLE RESERVD SPACE")}
+          #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id231 = $varVAL}
           {$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 233 Intel SSDs report a normalized value from 100, a new drive, to a minimum of 1
         #It decreases while the NAND erase cycles increase from 0 to the maximum-rated cycles
@@ -246,6 +266,8 @@ function mapSMART($varID,$varVAL) {
         "TOTAL LBAS WRITTEN"
           {}
         #UNKNOWNS
+        {($_ -like "*UNKNOWN*")}
+          {}
         default
           {}
       }
@@ -256,6 +278,7 @@ function mapSMART($varID,$varVAL) {
 
 #------------
 #BEGIN SCRIPT
+$dbEXE = "C:\IT\update-smart-drivedb.exe"
 $smartEXE = "C:\IT\smartctl.exe"
 $source = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
 #CHECK 'PERSISTENT' FOLDERS
@@ -268,10 +291,18 @@ if (-not (test-path -path "C:\IT")) {
 if (-not (test-path -path "C:\IT\Scripts")) {
   new-item -path "C:\IT\Scripts" -itemtype directory
 }
+#DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
+if (-not (test-path -path "C:\IT\update-smart-drivedb.exe" -pathtype leaf)) {
+  start-bitstransfer -source $source -destination $dbEXE
+}
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
 if (-not (test-path -path "C:\IT\smartctl.exe" -pathtype leaf)) {
   start-bitstransfer -source $source -destination $smartEXE
 }
+#UPDATE SMARTCTL DRIVEDB.H
+write-host -ForegroundColor red " - UPDATING SMARTCTL DRIVE DATABASE"
+$output = Get-ProcessOutput -FileName $dbEXE -Args "/S"
+write-host -ForegroundColor green $output
 #POPULATE DRIVES
 write-host -ForegroundColor red " - ENUMERATING CONNECTED DRIVES"
 $Script:arrDRV = @()
@@ -306,6 +337,7 @@ foreach ($line in $lines) {
       id171 = $null
       id172 = $null
       id173 = $null
+      id175 = $null
       id176 = $null
       id177 = $null
       id181 = $null
@@ -326,6 +358,7 @@ foreach ($line in $lines) {
 }
 #SET DRIVE INDEX
 $Script:i = -1
+#$i_drive = "/dev/sda"
 #ENUMERATE EACH DRIVE
 foreach ($strDRV in $arrDRV) {
   $Script:i = ($Script:i + 1)
@@ -383,9 +416,10 @@ foreach ($strDRV in $arrDRV) {
                 } elseif ($line -notlike "*(*)*") {                                                   #"()" NOT IN RAW VALUE
                   #SPLIT 'LINE' OUTPUT INTO EACH RESPECTIVE SECTION
                   $chunks = $line.split(" ", [StringSplitOptions]::RemoveEmptyEntries)
-                  if ($line -like "*Wear_Leveling*") {
-                    #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
-                    mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
+                  if (($line -like "*Wear_Leveling*") -or ($line -like "*Unused_Rsvd_Blk_Ct_Chip*") -or ($line -like "*Percent_Lifetime_Remain*") `
+                    -or ($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*")) {
+                      #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
+                      mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
                   } else {
                     #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 1)].trim()
                     mapSMART $chunks[1].trim() $chunks[($chunks.length - 1)].trim()
