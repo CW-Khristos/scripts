@@ -292,13 +292,13 @@ if (-not (test-path -path "C:\IT")) {
 if (-not (test-path -path "C:\IT\Scripts")) {
   new-item -path "C:\IT\Scripts" -itemtype directory
 }
-#DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
-if (-not (test-path -path "C:\IT\update-smart-drivedb.exe" -pathtype leaf)) {
-  start-bitstransfer -source $srcDB -destination $dbEXE
-}
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
 if (-not (test-path -path "C:\IT\smartctl.exe" -pathtype leaf)) {
   start-bitstransfer -source $srcSMART -destination $smartEXE
+}
+#DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
+if (-not (test-path -path "C:\IT\update-smart-drivedb.exe" -pathtype leaf)) {
+  start-bitstransfer -source $srcDB -destination $dbEXE
 }
 #UPDATE SMARTCTL DRIVEDB.H
 write-host -ForegroundColor red " - UPDATING SMARTCTL DRIVE DATABASE"
