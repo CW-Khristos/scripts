@@ -299,6 +299,7 @@ if (-not (test-path -path "C:\IT")) {
 if (-not (test-path -path "C:\IT\Scripts")) {
   new-item -path "C:\IT\Scripts" -itemtype directory
 }
+write-host -ForegroundColor red " - UPDATING SMARTCTL"
 #CLEANUP OLD VERSIONS OF 'SMARTCTL.EXE'
 get-childitem -path "C:\IT"  | where-object {$_.name -match "smartctl"} | % {
   if ($_.name.split(".").length -le 2){
