@@ -202,7 +202,7 @@ function mapSMART($varID,$varVAL) {
         {($_ -eq "USED RESERVED") -or ($_ -eq "USED RSVD BLK CNT TOT")}
           {}
         #SMART ID 180 "Pre-Fail" attribute used at least in HP devices
-        {($_ -eq "UNUSED RESERVED BLOCK COUNT TOTAL") -or ($_ -eq "UNUSED RESERVE NAND BLK")}
+        {($_ -eq "UNUSED RESERVED BLOCK COUNT TOTAL") -or ($_ -eq "UNUSED RSVD BLK CNT TOT") -or ($_ -eq "UNUSED RESERVE NAND BLK")}
           #{$Script:arrDRV[$Script:i].id170 = $varVAL}
           {$Script:arrDRV[$Script:i].id180 = $varVAL}
           #{$Script:arrDRV[$Script:i].id202 = $varVAL}
@@ -441,8 +441,10 @@ foreach ($strDRV in $arrDRV) {
                   #SPLIT 'LINE' OUTPUT INTO EACH RESPECTIVE SECTION
                   $chunks = $line.split(" ", [StringSplitOptions]::RemoveEmptyEntries)
                   #RETURN 'NORMALIZED' VALUES
-                  if (($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or ($line -like "*Wear_Leveling*") -or `
-                    ($line -like "*Percent_Lifetime_Remain*") -or ($line -like "*Used_Rsvd_Blk*") -or ($line -like "*Used_Reserved*")) {
+                  if (($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or `
+                    ($line -like "*Wear_Leveling*") -or ($line -like "*Percent_Lifetime_Remain*") -or `
+                    ($line -like "*Used_Rsvd_Blk*") -or ($line -like "*Used_Reserved*") -or `
+                    ($line -like "*Unused_Rsvd_Blk*") -or ($line -like "*Unused_Reserved*")) {
                       #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
                       mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
                   #RETURN 'RAW' VALUES
