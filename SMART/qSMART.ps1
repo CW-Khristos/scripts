@@ -285,9 +285,9 @@ function mapSMART($varID,$varVAL) {
 
 #------------
 #BEGIN SCRIPT
-$smartEXE = "C:\IT\smartctl.exe"
+$smartEXE = "C:\IT\smartctl.73.exe"
 $dbEXE = "C:\IT\update-smart-drivedb.exe"
-$srcSMART = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.exe"
+$srcSMART = "https://github.com/CW-Khristos/scripts/raw/master/SMART/smartctl.73.exe"
 $srcDB = "https://github.com/CW-Khristos/scripts/raw/master/SMART/update-smart-drivedb.exe"
 #CHECK 'PERSISTENT' FOLDERS
 if (-not (test-path -path "C:\temp")) {
@@ -299,12 +299,26 @@ if (-not (test-path -path "C:\IT")) {
 if (-not (test-path -path "C:\IT\Scripts")) {
   new-item -path "C:\IT\Scripts" -itemtype directory
 }
+#CLEANUP OLD VERSIONS OF 'SMARTCTL.EXE'
+get-childitem -path "C:\IT"  | where-object {$_.name -match "smartctl"} | % {
+  if ($_.name.split(".").length -le 2){
+    write-host "     DELETE : " $_.name
+    remove-item $_.fullname
+  } elseif ($_.name.split(".").length -ge 3){
+    if ($_.name.split(".")[1] -lt $smartEXE.split(".")[1]){
+      write-host "     DELETE : " $_.name
+      remove-item $_.fullname
+    } else {
+      write-host "     KEEP : " $_.name
+    }
+  }
+}
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
-if (-not (test-path -path "C:\IT\smartctl.exe" -pathtype leaf)) {
+if (-not (test-path -path $smartEXE -pathtype leaf)) {
   start-bitstransfer -source $srcSMART -destination $smartEXE
 }
 #DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
-if (-not (test-path -path "C:\IT\update-smart-drivedb.exe" -pathtype leaf)) {
+if (-not (test-path -path $dbEXE -pathtype leaf)) {
   start-bitstransfer -source $srcDB -destination $dbEXE
 }
 #UPDATE SMARTCTL DRIVEDB.H
