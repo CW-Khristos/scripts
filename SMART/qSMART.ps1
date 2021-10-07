@@ -154,6 +154,7 @@ function mapSMART($varID,$varVAL) {
         #See attribute 232
         {($_ -eq "AVAILABLE SPACE") -or ($_ -eq "UNUSED RSVD BLK CT CHIP")}
           {$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id180 = $varVAL}
           #{$Script:arrDRV[$Script:i].id202 = $varVAL}
           #{$Script:arrDRV[$Script:i].id231 = $varVAL}
           #{$Script:arrDRV[$Script:i].id232 = $varVAL}
@@ -170,7 +171,7 @@ function mapSMART($varID,$varVAL) {
         #This attribute is identical to attribute 182
         {($_ -eq "ERASE FAIL") -or ($_ -eq "ERASE FAIL COUNT CHIP")}
           {$Script:arrDRV[$Script:i].id172 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id175 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id176 = $varVAL}
           #{$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 173 - CRITICAL -
         #Counts the maximum worst erase count on any block
@@ -202,7 +203,11 @@ function mapSMART($varID,$varVAL) {
           {}
         #SMART ID 180 "Pre-Fail" attribute used at least in HP devices
         {($_ -eq "UNUSED RESERVED BLOCK COUNT TOTAL") -or ($_ -eq "UNUSED RESERVE NAND BLK")}
-          {}
+          #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+          {$Script:arrDRV[$Script:i].id180 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id231 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 181 - CRITICAL -
         #Total number of Flash program operation failures since the drive was deployed
         {($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL CNT TOTAL")}
@@ -231,13 +236,14 @@ function mapSMART($varID,$varVAL) {
         #In SSDs, indicates whether usage trajectory is outpacing the expected life curve
         {($_ -eq "GMR HEAD AMPLITUDE") -or ($_ -eq "DRIVE LIFE PROTECTION")}
           {$Script:arrDRV[$Script:i].id230 = $varVAL}
-        #SMART ID 202 & 231 - CRITICAL -
+        #SMART ID 202-PERCENT LIFE REMAIN & 231-SSD LIFE LEFT - CRITICAL -
         #Indicates the approximate SSD life left, in terms of program/erase cycles or available reserved blocks
         #A normalized value of 100 represents a new drive, with a threshold value at 10 indicating a need for replacement
         #A value of 0 may mean that the drive is operating in read-only mode to allow data recovery
         #Previously (pre-2010) occasionally used for Drive Temperature (more typically reported at 0xC2)
         {($_ -eq "SSD LIFE LEFT") -or ($_ -eq "PERCENT LIFETIME REMAIN")}
           #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id180 = $varVAL}
           #{$Script:arrDRV[$Script:i].id202 = $varVAL}
           {$Script:arrDRV[$Script:i].id231 = $varVAL}
           #{$Script:arrDRV[$Script:i].id232 = $varVAL}
@@ -246,6 +252,7 @@ function mapSMART($varID,$varVAL) {
         #Intel SSDs report the available reserved space as a percentage of the initial reserved space
         {($_ -eq "ENDURANCE REMAINING") -or ($_ -eq "AVAILABLE RESERVD SPACE")}
           #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+          #{$Script:arrDRV[$Script:i].id180 = $varVAL}
           #{$Script:arrDRV[$Script:i].id202 = $varVAL}
           #{$Script:arrDRV[$Script:i].id231 = $varVAL}
           {$Script:arrDRV[$Script:i].id232 = $varVAL}
@@ -341,6 +348,7 @@ foreach ($line in $lines) {
       id175 = $null
       id176 = $null
       id177 = $null
+      id180 = $null
       id181 = $null
       id182 = $null
       id230 = $null
@@ -417,10 +425,12 @@ foreach ($strDRV in $arrDRV) {
                 } elseif ($line -notlike "*(*)*") {                                                   #"()" NOT IN RAW VALUE
                   #SPLIT 'LINE' OUTPUT INTO EACH RESPECTIVE SECTION
                   $chunks = $line.split(" ", [StringSplitOptions]::RemoveEmptyEntries)
-                  if (($line -like "*Wear_Leveling*") -or ($line -like "*Unused_Rsvd_Blk_Ct_Chip*") -or ($line -like "*Percent_Lifetime_Remain*") `
-                    -or ($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*")) {
+                  #RETURN 'NORMALIZED' VALUES
+                  if (($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or ($line -like "*Wear_Leveling*") -or `
+                    ($line -like "*Percent_Lifetime_Remain*") -or ($line -like "*Used_Rsvd_Blk*") -or ($line -like "*Used_Reserved*")) {
                       #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
                       mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
+                  #RETURN 'RAW' VALUES
                   } else {
                     #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 1)].trim()
                     mapSMART $chunks[1].trim() $chunks[($chunks.length - 1)].trim()
