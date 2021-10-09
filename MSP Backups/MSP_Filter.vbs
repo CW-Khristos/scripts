@@ -101,6 +101,7 @@ if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE P
   end if
 elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=2
   call LOGERR(2)
+  call CLEANUP()
 end if
 ''UNNEEDED / TO EXCLUDE USER ACCOUNTS
 redim arrEXCL(1)
@@ -896,6 +897,9 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
     case 1                                                  ''MSP_FILTER - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
+    case 2                                                  ''MSP_FILTER - NOT ENOUGH ARGUMENTS, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
     case 11                                                 ''MSP_FILTER - CALL FILEDL() FAILED, 'ERRRET'=11
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
