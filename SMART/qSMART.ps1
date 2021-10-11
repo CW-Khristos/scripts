@@ -161,7 +161,7 @@ function mapSMART($varID,$varVAL) {
         #SMART ID 171 - CRITICAL -
         #(Kingston) The total number of flash program operation failures since the drive was deployed
         #Identical to attribute 181
-        {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
+        {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
           {$Script:arrDRV[$Script:i].id171 = $varVAL}
           #{$Script:arrDRV[$Script:i].id175 = $varVAL}
           #{$Script:arrDRV[$Script:i].id181 = $varVAL}
@@ -169,7 +169,7 @@ function mapSMART($varID,$varVAL) {
         #(Kingston) Counts the number of flash erase failures
         #This attribute returns the total number of Flash erase operation failures since the drive was deployed
         #This attribute is identical to attribute 182
-        {($_ -eq "ERASE FAIL") -or ($_ -eq "ERASE FAIL COUNT CHIP")}
+        {($_ -eq "ERASE FAIL") -or ($_ -eq "ERASE FAIL COUNT") -or ($_ -eq "ERASE FAIL COUNT CHIP")}
           {$Script:arrDRV[$Script:i].id172 = $varVAL}
           #{$Script:arrDRV[$Script:i].id176 = $varVAL}
           #{$Script:arrDRV[$Script:i].id182 = $varVAL}
