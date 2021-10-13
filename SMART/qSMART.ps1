@@ -316,11 +316,23 @@ get-childitem -path "C:\IT"  | where-object {$_.name -match "smartctl"} | % {
 }
 #DOWNLOAD SMARTCTL.EXE IF NEEDED
 if (-not (test-path -path $smartEXE -pathtype leaf)) {
-  start-bitstransfer -source $srcSMART -destination $smartEXE
+  try {
+    start-bitstransfer -erroraction stop -source $srcSMART -destination $smartEXE
+  } catch {
+    $web = new-object system.net.webclient
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $web.downloadfile($srcSMART, $smartEXE)
+  }
 }
 #DOWNLOAD UPDATE-SMART-DRIVEDB.EXE IF NEEDED
 if (-not (test-path -path $dbEXE -pathtype leaf)) {
-  start-bitstransfer -source $srcDB -destination $dbEXE
+  try {
+    start-bitstransfer -erroraction stop -source $srcDB -destination $dbEXE
+  } catch {
+    $web = new-object system.net.webclient
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $web.downloadfile($srcDB, $dbEXE)
+  }
 }
 #UPDATE SMARTCTL DRIVEDB.H
 write-host -ForegroundColor red " - UPDATING SMARTCTL DRIVE DATABASE"
