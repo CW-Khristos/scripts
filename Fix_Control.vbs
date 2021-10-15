@@ -186,7 +186,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
     if (objFSO.folderexists(strPD & "\GetSupportService")) then
       objOUT.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService") & chr(34)
       objLOG.write vbnewline & now & vbtab & vbtab & " - REMOVING " & chr(34) & ucase(strPD & "\GetSupportService") & chr(34)
-      call HOOK("rmdir /s /q " & strPD & "\GetSupportService")
+      call HOOK("rmdir /s /q " & strPD & "\GetSupportService_N-Central")
       if (err.number <> 0) then
         call LOGERR(5)
       end if
