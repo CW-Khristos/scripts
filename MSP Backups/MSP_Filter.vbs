@@ -17,7 +17,7 @@ dim strREPO, strBRCH, strDIR
 dim strOPT, strUSR
 dim strINCL, arrINCL
 dim strFILTER, arrFILTER
-dim strIN, strOUT, strRCMD
+dim strIN, strOUT, strRCMD, strSAV
 ''USER AND USER FOLDER ARRAYS
 dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
