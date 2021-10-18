@@ -175,7 +175,7 @@ function mapSMART($varID,$varVAL) {
           #{$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 173 - CRITICAL -
         #Counts the maximum worst erase count on any block
-        {($_ -eq "WEAR LEVELING") -or ($_ -eq "WEAR LEVELING COUNT") -or ($_ -eq "AVE BLOCK-ERASE COUNT")}
+        {($_ -eq "WEAR LEVELING") -or ($_ -eq "WEAR LEVELING COUNT")} #-or ($_ -eq "AVE BLOCK-ERASE COUNT")}
           {$Script:arrDRV[$Script:i].id173 = $varVAL}
           #{$Script:arrDRV[$Script:i].id177 = $varVAL}
         #SMART ID 175 - CRITICAL -
