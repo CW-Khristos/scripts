@@ -435,7 +435,7 @@
       Write-Host -NoNewline "Wiping GUI Password"
     }
 
-    $url = $urlJSON
+    $url = "https://backup.management/jsonrpcv1"
     $method = 'POST'
     $Script:data = @{}
     $data.jsonrpc = '2.0'
@@ -601,7 +601,7 @@ if($null -eq $SelectedDevices) {
     $device = $selecteddevice.DeviceName
     # UPDATE CUSOTM COLUMN 'GUI PW'
     Write-Host $Script:strLineSeparator
-    Write-Host "  Updating GUI PW Column for $device"
+    Write-Host "  Updating GUI PW Column for $device - " $selecteddevice.AccountID 2048 $password
     UpdateCustomColumnA $selecteddevice.AccountID 2048 $password
     Start-Sleep -Milliseconds 500
     # SEND REMOTE COMMAND
