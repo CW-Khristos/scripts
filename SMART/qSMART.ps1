@@ -132,7 +132,7 @@ function mapSMART($varID,$varVAL) {
         #If an unstable sector is subsequently read successfully, the sector is remapped and this value is decreased
         #Read errors on a sector will not remap the sector immediately (since the correct value cannot be read and so the value to remap is not known, and also it might become readable later)
         #Instead, the drive firmware remembers that the sector needs to be remapped, and will remap it the next time it's written
-        "CURRENT PENDING SECTOR"
+        {($_ -eq "CURRENT PENDING SECTOR") -or ($_ -eq "CURRENT PENDING ECC CNT")}
           {$Script:arrDRV[$Script:i].id197 = $varVAL}
         #SMART ID 198 - CRITICAL -
         #The total count of uncorrectable errors when reading/writing a sector
@@ -152,19 +152,21 @@ function mapSMART($varID,$varVAL) {
           {$Script:arrDRV[$Script:i].id5 = $varVAL}
         #SMART ID 170 - CRITICAL -
         #See attribute 232
-        {($_ -eq "AVAILABLE SPACE") -or ($_ -eq "UNUSED RSVD BLK CT CHIP")}
-          {$Script:arrDRV[$Script:i].id170 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id180 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id231 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
+        {($_ -eq "AVAILABLE SPACE") -or `
+          ($_ -eq "UNUSED RSVD BLK CT CHIP") -or ($_ -eq "GROWN BAD BLOCKS")}
+            {$Script:arrDRV[$Script:i].id170 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id180 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id231 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 171 - CRITICAL -
         #(Kingston) The total number of flash program operation failures since the drive was deployed
         #Identical to attribute 181
-        {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
-          {$Script:arrDRV[$Script:i].id171 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id175 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id181 = $varVAL}
+        {($_ -eq "PROGRAM FAIL") -or `
+          ($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
+            {$Script:arrDRV[$Script:i].id171 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id175 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id181 = $varVAL}
         #SMART ID 172 - CRITICAL -
         #(Kingston) Counts the number of flash erase failures
         #This attribute returns the total number of Flash erase operation failures since the drive was deployed
@@ -175,9 +177,10 @@ function mapSMART($varID,$varVAL) {
           #{$Script:arrDRV[$Script:i].id182 = $varVAL}
         #SMART ID 173 - CRITICAL -
         #Counts the maximum worst erase count on any block
-        {($_ -eq "WEAR LEVELING") -or ($_ -eq "WEAR LEVELING COUNT")} #-or ($_ -eq "AVE BLOCK-ERASE COUNT")}
-          {$Script:arrDRV[$Script:i].id173 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id177 = $varVAL}
+        {($_ -eq "WEAR LEVELING") -or ($_ -eq "WEAR LEVELING COUNT") -or `
+          ($_ -eq "AVE BLOCK-ERASE COUNT") -or ($_ -eq "AVERAGE PE CYCLES TLC")}
+            {$Script:arrDRV[$Script:i].id173 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id177 = $varVAL}
         #SMART ID 175 - CRITICAL -
         {($_ -eq "PROGRAM FAIL") -or ($_ -eq "PROGRAM FAIL COUNT CHIP")}
           #{$Script:arrDRV[$Script:i].id171 = $varVAL}
@@ -202,12 +205,13 @@ function mapSMART($varID,$varVAL) {
         {($_ -eq "USED RESERVED") -or ($_ -eq "USED RSVD BLK CNT TOT")}
           {}
         #SMART ID 180 "Pre-Fail" attribute used at least in HP devices
-        {($_ -eq "UNUSED RESERVED BLOCK COUNT TOTAL") -or ($_ -eq "UNUSED RSVD BLK CNT TOT") -or ($_ -eq "UNUSED RESERVE NAND BLK")}
-          #{$Script:arrDRV[$Script:i].id170 = $varVAL}
-          {$Script:arrDRV[$Script:i].id180 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id231 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
+        {($_ -eq "UNUSED RESERVED BLOCK COUNT TOTAL") -or `
+          ($_ -eq "UNUSED RSVD BLK CNT TOT") -or ($_ -eq "UNUSED RESERVE NAND BLK")}
+            #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+            {$Script:arrDRV[$Script:i].id180 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id231 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 181 - CRITICAL -
         #Total number of Flash program operation failures since the drive was deployed
         {($_ -eq "PROGRAM FAIL COUNT") -or ($_ -eq "PROGRAM FAIL CNT TOTAL")}
@@ -241,12 +245,13 @@ function mapSMART($varID,$varVAL) {
         #A normalized value of 100 represents a new drive, with a threshold value at 10 indicating a need for replacement
         #A value of 0 may mean that the drive is operating in read-only mode to allow data recovery
         #Previously (pre-2010) occasionally used for Drive Temperature (more typically reported at 0xC2)
-        {($_ -eq "SSD LIFE LEFT") -or ($_ -eq "PERCENT LIFETIME REMAIN")}
-          #{$Script:arrDRV[$Script:i].id170 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id180 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id202 = $varVAL}
-          {$Script:arrDRV[$Script:i].id231 = $varVAL}
-          #{$Script:arrDRV[$Script:i].id232 = $varVAL}
+        {($_ -eq "SSD LIFE LEFT") -or ($_ -eq "PERCENT LIFETIME REMAIN") -or `
+          ($_ -eq "MEDIA WEAROUT") -or ($_ -eq "MEDIA WEAROUT INDICATOR")}
+            #{$Script:arrDRV[$Script:i].id170 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id180 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id202 = $varVAL}
+            {$Script:arrDRV[$Script:i].id231 = $varVAL}
+            #{$Script:arrDRV[$Script:i].id232 = $varVAL}
         #SMART ID 232 - CRITICAL -
         #Number of physical erase cycles completed on the SSD as a percentage of the maximum physical erase cycles the drive is designed to endure
         #Intel SSDs report the available reserved space as a percentage of the initial reserved space
@@ -453,11 +458,13 @@ foreach ($strDRV in $arrDRV) {
                   #SPLIT 'LINE' OUTPUT INTO EACH RESPECTIVE SECTION
                   $chunks = $line.split(" ", [StringSplitOptions]::RemoveEmptyEntries)
                   #RETURN 'NORMALIZED' VALUES
-                  if (($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or `
+                  if (($line -like "*Grown_Bad_Blocks*") -or `
+                    ($line -like "*Ave_Block-Erase_Count*") -or ($line -like "*Average_PE_Cycles_TLC*") -or `
+                    ($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or `
                     ($line -like "*Wear_Leveling*") -or ($line -like "*Percent_Lifetime_Remain*") -or `
                     ($line -like "*Used_Rsvd_Blk*") -or ($line -like "*Used_Reserved*") -or `
                     ($line -like "*Unused_Rsvd_Blk*") -or ($line -like "*Unused_Reserved*") -or `
-                    ($line -like "*Available_Reservd_Space*") -or ($line -like "*Media_Wearout_Indicator*")) {
+                    ($line -like "*Available_Reservd_Space*") -or ($line -like "*Media_Wearout*")) {
                       #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
                       mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
                   #RETURN 'RAW' VALUES
@@ -472,6 +479,9 @@ foreach ($strDRV in $arrDRV) {
       }
     }
     #OUTPUT
+    foreach ($prop in $Script:arrDRV[$Script:i].psobject.properties) {
+      if ($prop.value -eq $null) {$prop.value = -1}
+    }
     write-host -ForegroundColor red $Script:arrDRV[$Script:i]
     #BASIC HEALTH
     $o_fail = $Script:arrDRV[$Script:i].fail
