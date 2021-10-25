@@ -66,10 +66,14 @@ C:\wu_output|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\Snapshots Cache|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\UndoLog Configuration Cache|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\Virtual Machines Cache|
-%PROGRAMDATA%\Microsoft\Windows\WER|
+%PROGRAMDATA%\Microsoft\Windows Defender\Definition Updates|
+%PROGRAMDATA%\Microsoft\Windows Defender\Quarantine|
+%PROGRAMDATA%\Microsoft\Windows Defender\Scans|
+%PROGRAMDATA%\Microsoft\Windows Defender\Support|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Quarantine|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Scans|
 %PROGRAMDATA%\Microsoft\Windows\Windows Defender\Support|
+%PROGRAMDATA%\Microsoft\Windows\WER|
 %PROGRAMDATA%\Microsoft\XboxLive\NSALCache|
 %PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\log|
 %PROGRAMDATA%\MspPlatform\FileCacheServiceAgent\cache|
