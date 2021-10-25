@@ -456,7 +456,8 @@ foreach ($strDRV in $arrDRV) {
                   if (($line -like "*Program_Fail*") -or ($line -like "*Erase_Fail*") -or `
                     ($line -like "*Wear_Leveling*") -or ($line -like "*Percent_Lifetime_Remain*") -or `
                     ($line -like "*Used_Rsvd_Blk*") -or ($line -like "*Used_Reserved*") -or `
-                    ($line -like "*Unused_Rsvd_Blk*") -or ($line -like "*Unused_Reserved*")) {
+                    ($line -like "*Unused_Rsvd_Blk*") -or ($line -like "*Unused_Reserved*") -or `
+                    ($line -like "*Available_Reservd_Space*") -or ($line -like "*Media_Wearout_Indicator*")) {
                       #write-host -ForegroundColor green $chunks[1].trim() "     " $chunks[($chunks.length - 7)].trim()
                       mapSMART $chunks[1].trim() $chunks[($chunks.length - 7)].trim()
                   #RETURN 'RAW' VALUES
