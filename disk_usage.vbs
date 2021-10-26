@@ -166,7 +166,7 @@ elseif (errRET = 0) then                                      ''ARGUMENTS PASSED
       ''CONVERT TO HTM FORMAT
       if (ucase(strFORM) = "HTM") then
         call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/master/XRobot/SavePage.exe", "C:\IT", "savepage.exe")
-        strRCMD = "c:\IT\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "file://c:/IT/robot.htm" & chr(34) & " " & chr(34) & "C:\IT\" & chr(34)
+        strRCMD = "c:\IT\savepage.exe " & chr(34) & "XRobot - Report" & chr(34) & " " & chr(34) & "C:/IT/robot.htm" & chr(34) & " " & chr(34) & "C:\IT\" & chr(34)
         call HOOK("CMD /C " & chr(34) & strRCMD & chr(34))
         ''ARCHIVE HTM REPORT DATA
       '  call makZIP("c:\temp\data", "c:\temp\robot.zip")
@@ -174,12 +174,12 @@ elseif (errRET = 0) then                                      ''ARGUMENTS PASSED
       '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
       end if
     end if
-    if (objFSO.folderexists("C:\Windows\CSC")) then
-      set objFOL = objFSO.getfolder("C:\Windows\CSC")
-      intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
-      objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
-      objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
-    end if
+    'if (objFSO.folderexists("C:\Windows\CSC")) then
+    '  set objFOL = objFSO.getfolder("C:\Windows\CSC")
+    '  intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
+    '  objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    '  objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    'end if
   end if
 end if
 ''END SCRIPT
