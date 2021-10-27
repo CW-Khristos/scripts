@@ -904,8 +904,8 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
     case 12                                                 ''MSP_FILTER - 'CALL HOOK() FAILED, 'ERRRET'=12
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
   end select
 end sub
 
