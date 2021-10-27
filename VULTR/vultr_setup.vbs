@@ -304,8 +304,8 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
       objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL FILEDL() : " & strSAV
     case 12                                                 ''VULTR_SETUP - 'CALL HOOK() FAILED, 'ERRRET'=12
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL HOOK('STRCMD') : " & strCMD & " : FAILED"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
   end select
 end sub
 
