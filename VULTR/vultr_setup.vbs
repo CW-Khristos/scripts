@@ -28,6 +28,7 @@ strAPI = "QLD7MNZAYSXP2LTYVZMUCKPRC7NRDBSDQ7PQ"
 strISO = "498b7c35-d407-4106-9c83-1dfc555fc447"
 strFW = "1acf6e7e-268f-4108-b5f8-9fd00607f492"
 strPNET = "ba609e8d-6564-4106-960b-c1f37d81751c"
+strDMN = ".ipmrms.com"
 strPLN = "vc2-1c-1gb"
 strREG = "ewr"
 strOS = "159"
@@ -161,33 +162,32 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET HOSTNAME :" & vbnewline
             strHOST = objIN.readline
           wend
-          while strDMN = vbnullstring
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN :" & vbnewline
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN :" & vbnewline
-            strDMN = objIN.readline
-          wend
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN :" & vbnewline
+          objWSH.sendkeys strDMN
+          strDMN = objIN.readline
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SETUP NOTIFICATIONS (Y/N) :" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SETUP NOTIFICATIONS (Y/N) :" & vbnewline
           objWSH.sendkeys "Y"
           strIN = objIN.readline
           if (ucase(strIN) = "Y") then
             objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & " --label " & strDMN & " - " & strCST & _
+              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
               " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true"
             objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & " --label " & strDMN & " - " & strCST & _
+              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
               " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true"
-            call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & _
-              " --label " & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true")
+            call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
+              " --label " & strHOST & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true")
           elseif (ucase(strIN) = "N") then
             objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & " --label " & strDMN & " - " & strCST & _
+              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
               " --private-netowrk " & strPNET & " --firewall-group " & strFW
             objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & " --label " & strDMN & " - " & strCST & _
+              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
               " --private-netowrk " & strPNET & " --firewall-group " & strFW
-            call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & _
-              " --label " & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW)
+            call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
+              " --label " & strHOST & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW)
           end if
         case 3
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
