@@ -1,7 +1,7 @@
 ''DISK_USAGE.VBS
 ''DESIGNED TO AUTOMATE ANALYSIS AND REPORTING OF DISK USAGE STATISTICS USING X.ROBOT CMD UTILITY
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER, strIN, intOPT
 ''SCRIPT OBJECTS
@@ -174,12 +174,12 @@ elseif (errRET = 0) then                                      ''ARGUMENTS PASSED
       '  call makZIP("c:\temp\robot.htm", "c:\temp\robot.zip")
       end if
     end if
-    'if (objFSO.folderexists("C:\Windows\CSC")) then
-    '  set objFOL = objFSO.getfolder("C:\Windows\CSC")
-    '  intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
-    '  objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
-    '  objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
-    'end if
+    if (objFSO.folderexists("C:\Windows\CSC")) then
+      set objFOL = objFSO.getfolder("C:\Windows\CSC")
+      intSIZ = (objFOL.size / 1048576)  ''CONVERT TO MB
+      objOUT.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+      objLOG.write vbnewline & now & vbtab & vbtab & "CSC CACHE SIZE (MB) : " & intSIZ
+    end if
   end if
 end if
 ''END SCRIPT
