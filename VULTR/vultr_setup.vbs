@@ -7,7 +7,7 @@
 ''OPTIONAL PARAMETER 'STRINCL' ; STRING VALUE TO HOLD PASSED 'INCLUSIONS' ; SEPARATE MULTIPLE 'INCLUSIONS' VIA '|'
 ''OPTIONAL PARAMETER 'STRUSR' ; STRING VALUE TO HOLD PASSED 'USER ACCOUNT' TO EXCLUDE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strREPO, strBRCH, strDIR
@@ -194,6 +194,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           end if
           intPBX = 1
           erase arrPBX
+          redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
             strIN = objTMP.stdout.readline
@@ -205,7 +206,8 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           wend
           set objTMP = nothing
           for intPBX = 1 to ubound(arrPBX)
-            if (ucase(split(arrPBX(intPBX), vbtab)(2)) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
+            strLBL = split(arrPBX(intPBX), vbtab)(2)
+            if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
               strIP = split(arrPBX(intPBX), vbtab)(1)
               exit for
             end if
@@ -221,6 +223,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         case 3
           intPBX = 1
           erase arrPBX
+          redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
             strIN = objTMP.stdout.readline
@@ -236,41 +239,43 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             end if
           wend
           set objTMP = nothing
-          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ")" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ")" & vbnewline
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
           objWSH.sendkeys "1"
           strIN = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-          strPBX = split(arrPBX(strIN), vbtab)(1)
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
-          objWSH.sendkeys "root"
-          strUSR = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-          objWSH.sendkeys "Ipmcomputers1"
-          strPWD = objIN.readline
-          strXML = "C:\IT\3cx\upload\setupconfig.xml"
-          strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github " & strXML
-          objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
-          objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
-          'objOUT.write vbnewline & vbnewline & strRCMD
-          call HOOK(strRCMD)
-          wscript.sleep 1000
-          objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
-          objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
-          strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
-            chr(34) & "put " & strXML & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
-          objOUT.write vbnewline & vbnewline & strRCMD
-          call HOOK(strRCMD)
-          strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
-            chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
-          objOUT.write vbnewline & vbnewline & strRCMD
-          call HOOK(strRCMD)
-          objFSO.deletefile strXML, true
+          if (ucase(strIN) <> "!Q") then
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+            strPBX = split(arrPBX(strIN), vbtab)(1)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+            objWSH.sendkeys "root"
+            strUSR = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objWSH.sendkeys "Ipmcomputers1"
+            strPWD = objIN.readline
+            strXML = "C:\IT\3cx\upload\setupconfig.xml"
+            strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\setupconfig.xml " & strXML
+            objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
+            objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
+            objOUT.write vbnewline & vbnewline & strRCMD
+            call HOOK(strRCMD)
+            wscript.sleep 1000
+            objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
+            objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
+            'strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+            '  chr(34) & "put " & strXML & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
+            'objOUT.write vbnewline & vbnewline & strRCMD
+            'call HOOK(strRCMD)
+            strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+              chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
+            objOUT.write vbnewline & vbnewline & strRCMD
+            call HOOK(strRCMD)
+            objFSO.deletefile strXML, true
+          end if
         case 4
           intPBX = 1
           erase arrPBX
@@ -289,39 +294,43 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             end if
           wend
           set objTMP = nothing
-          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
           objWSH.sendkeys "1"
           strIN = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-          strPBX = split(arrPBX(strIN), vbtab)(1)
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
-          objWSH.sendkeys "root"
-          strUSR = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-          objWSH.sendkeys "Ipmcomputers1"
-          strPWD = objIN.readline
-          ''DOWNLOAD PBXUPLOAD.VBS SCRIPT
-          objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
-          objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
-          call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
-          ''EXECUTE PBXUPLOAD.VBS SCRIPT
-          call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strPBX & chr(34))
+          if (ucase(strIN) <> "!Q") then
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+            strPBX = split(arrPBX(strIN), vbtab)(1)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+            objWSH.sendkeys "root"
+            strUSR = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objWSH.sendkeys "Ipmcomputers1"
+            strPWD = objIN.readline
+            ''DOWNLOAD PBXUPLOAD.VBS SCRIPT
+            objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
+            objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
+            call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
+            ''EXECUTE PBXUPLOAD.VBS SCRIPT
+            call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strPBX & chr(34))
+          end if
         case 5
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
           objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
           strDMN = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
-          stRIP = objIN.readline
-          call HOOK("C:\IT\vultr-cli.exe dns domain create --domain " & strDMN & " --ip " & strIP)
+          if (ucase(strDMN) <> "!Q") then
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
+            stRIP = objIN.readline
+            call HOOK("C:\IT\vultr-cli.exe dns domain create --domain " & strDMN & " --ip " & strIP)
+          end if
         case 6
 
         case 7
