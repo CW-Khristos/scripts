@@ -129,8 +129,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 objOUT.write vbnewline & vbnewline & strRCMD
-                'call HOOK(strRCMD)
-                'objFSO.deletefile strPEM, true
+                call HOOK(strRCMD)
+                objFSO.deletefile strPEM, true
               elseif (instr(1, arrPEM(intPEM), "_") = 0) then
                 strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                 strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
@@ -144,8 +144,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 objOUT.write vbnewline & vbnewline & strRCMD
-                'call HOOK(strRCMD)
-                'objFSO.deletefile strPEM, true
+                call HOOK(strRCMD)
+                objFSO.deletefile strPEM, true
               end if
             end if
           next
@@ -157,11 +157,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           wscript.sleep 2000
           objWSH.sendkeys "{RIGHT}{ENTER}"
           wscript.sleep 1000
-          'objWSH.sendkeys "service nginx restart{ENTER}"
+          objWSH.sendkeys "service nginx restart{ENTER}"
           wscript.sleep 4000
           objWSH.sendkeys "exit{ENTER}"
-          'objOUT.write vbnewline & vbnewline & strRCMD
-          'call HOOK(strRCMD)
+          objOUT.write vbnewline & vbnewline & strRCMD
+          call HOOK(strRCMD)
         end if
         wscript.sleep 1000
       wend
@@ -200,14 +200,14 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   objOUT.write vbnewline & vbnewline & strRCMD
-                  'call HOOK(strRCMD)
-                  'objFSO.deletefile strPEM, true
+                  call HOOK(strRCMD)
+                  objFSO.deletefile strPEM, true
                 elseif (instr(1, arrPEM(intPEM), "_") = 0) then
                   strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                   strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
                   objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING CERT : " & strPEM
-                  'objOUT.write vbnewline & vbnewline & strRCMD
+                  objOUT.write vbnewline & vbnewline & strRCMD
                   call HOOK(strRCMD)
                   wscript.sleep 1000
                   objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
@@ -215,8 +215,8 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   objOUT.write vbnewline & vbnewline & strRCMD
-                  'call HOOK(strRCMD)
-                  'objFSO.deletefile strPEM, true
+                  call HOOK(strRCMD)
+                  objFSO.deletefile strPEM, true
                 end if
               end if
             next
@@ -228,11 +228,11 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
             wscript.sleep 2000
             objWSH.sendkeys "{RIGHT}{ENTER}"
             wscript.sleep 1000
-            'objWSH.sendkeys "service nginx restart{ENTER}"
+            objWSH.sendkeys "service nginx restart{ENTER}"
             wscript.sleep 4000
             objWSH.sendkeys "exit{ENTER}"
-            'objOUT.write vbnewline & vbnewline & strRCMD
-            'call HOOK(strRCMD)
+            objOUT.write vbnewline & vbnewline & strRCMD
+            call HOOK(strRCMD)
           end if
         end if
         wscript.sleep 1000
