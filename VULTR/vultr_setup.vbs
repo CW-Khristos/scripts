@@ -124,17 +124,17 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(2) - CREATE A VULTR INSTANCE"
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(2) - CREATE A VULTR INSTANCE"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(3) - UPDATE A VULTR INSTANCE"
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(3) - UPDATE A VULTR INSTANCE"
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(3) - UPLOAD SETUPCONFIG TO PBX"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(3) - UPLOAD SETUPCONFIG TO PBX"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(4) - CREATE A VULTR DNS DOMAIN"
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(4) - CREATE A VULTR DNS DOMAIN"
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(4) - UPLOAD CERTIFICATE TO PBX"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(4) - UPLOAD CERTIFICATE TO PBX"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - UPDATE A VULTR DNS DOMAIN"
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - UPDATE A VULTR DNS DOMAIN"
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - CREATE A VULTR DNS DOMAIN"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - CREATE A VULTR DNS DOMAIN"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPLOAD CERTIFICATE TO PBX"
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPLOAD CERTIFICATE TO PBX"
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPDATE A VULTR DNS DOMAIN"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPDATE A VULTR DNS DOMAIN"
       
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
@@ -192,36 +192,103 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
               " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW)
           end if
-        case 3
-        case 4
-          objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
-          objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
-          strDMN = objIN.readline
-          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
-          stRIP = objIN.readline
-          call HOOK("C:\IT\vultr-cli.exe dns domain create --domain " & strDMN & " --ip " & strIP)
-        case 5
-        case 6
           intPBX = 1
-          set objHOOK = objWSH.exec("C:\IT\vultr-cli.exe instance list")
-          while (not objHOOK.stdout.atendofstream)
-            strIN = objHOOK.stdout.readline
+          erase arrPBX
+          set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objTMP.stdout.atendofstream)
+            strIN = objTMP.stdout.readline
             if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
-                arrPBX(intPBX) = strIN
-                objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
-                objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
-                redim preserve arrPBX(intPBX + 1)
-                intPBX = intPBX + 1
+              arrPBX(intPBX) = strIN
+              redim preserve arrPBX(intPBX + 1)
+              intPBX = intPBX + 1
+            end if
+          wend
+          set objTMP = nothing
+          for intPBX = 1 to ubound(arrPBX)
+            if (ucase(split(arrPBX(intPBX), vbtab)(2)) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
+              strIP = split(arrPBX(intPBX), vbtab)(1)
+              exit for
+            end if
+          next
+          set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 8)
+          objTMP.writeline strIP & "|" & strHOST & strDMN & " - " & strCST
+          objTMP.close
+          set objTMP = nothing
+          objOUT.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST) & chr(34) & " CREATED"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST) & chr(34) & " CREATED"
+          objOUT.write vbnewline & now & vbtab & vbtab & " - PLEASE LOGIN TO VULTR DASHBOARD AND ACCESS PBX CONSOLE TO COMPLETE 3CX DEBIAN INSTALLATION"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - PLEASE LOGIN TO VULTR DASHBOARD AND ACCESS PBX CONSOLE TO COMPLETE 3CX DEBIAN INSTALLATION"
+        case 3
+          intPBX = 1
+          erase arrPBX
+          set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objTMP.stdout.atendofstream)
+            strIN = objTMP.stdout.readline
+            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
+              arrPBX(intPBX) = strIN
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
+              redim preserve arrPBX(intPBX + 1)
+              intPBX = intPBX + 1
             else
               objOUT.write vbnewline & now & vbtab & vbtab & strIN 
               objLOG.write vbnewline & now & vbtab & vbtab & strIN
             end if
           wend
-          wscript.sleep 10
-          set objHOOK = nothing
+          set objTMP = nothing
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ")" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ")" & vbnewline
+          objWSH.sendkeys "1"
+          strIN = objIN.readline
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+          strPBX = split(arrPBX(strIN), vbtab)(1)
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+          objWSH.sendkeys "root"
+          strUSR = objIN.readline
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+          objWSH.sendkeys "Ipmcomputers1"
+          strPWD = objIN.readline
+          strXML = "C:\IT\3cx\upload\setupconfig.xml"
+          strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github " & strXML
+          objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
+          objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
+          'objOUT.write vbnewline & vbnewline & strRCMD
+          call HOOK(strRCMD)
+          wscript.sleep 1000
+          objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
+          objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
+          strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+            chr(34) & "put " & strXML & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
+          objOUT.write vbnewline & vbnewline & strRCMD
+          call HOOK(strRCMD)
+          strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+            chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
+          objOUT.write vbnewline & vbnewline & strRCMD
+          call HOOK(strRCMD)
+          objFSO.deletefile strXML, true
+        case 4
+          intPBX = 1
+          erase arrPBX
+          set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objTMP.stdout.atendofstream)
+            strIN = objTMP.stdout.readline
+            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
+              arrPBX(intPBX) = strIN
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
+              redim preserve arrPBX(intPBX + 1)
+              intPBX = intPBX + 1
+            else
+              objOUT.write vbnewline & now & vbtab & vbtab & strIN 
+              objLOG.write vbnewline & now & vbtab & vbtab & strIN
+            end if
+          wend
+          set objTMP = nothing
           objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
           objWSH.sendkeys "1"
@@ -245,6 +312,18 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
           ''EXECUTE PBXUPLOAD.VBS SCRIPT
           call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strPBX & chr(34))
+        case 5
+          objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
+          objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
+          strDMN = objIN.readline
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
+          stRIP = objIN.readline
+          call HOOK("C:\IT\vultr-cli.exe dns domain create --domain " & strDMN & " --ip " & strIP)
+        case 6
+
         case 7
           blnLOOP = false
       end select
