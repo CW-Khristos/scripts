@@ -211,8 +211,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             strIN = objHOOK.stdout.readline
             objOUT.write vbnewline & now & vbtab & vbtab & strIN 
             objLOG.write vbnewline & now & vbtab & vbtab & strIN
-            if ((strIN <> vbnullstring) and (instr(1, strIN, "======================================") = 0) and _
-              (instr(1, strIN, "LABEL") = 0) and (instr(1, strIN, "PREV PAGE") = 0)) then
+            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
                 arrPBX(intPBX) = strIN
                 redim preserve arrPBX(intPBX + 1)
                 intPBX = intPBX + 1
