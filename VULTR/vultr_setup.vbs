@@ -12,7 +12,7 @@
 dim errRET, strVER
 dim strREPO, strBRCH, strDIR
 ''VARIABLES ACCEPTING PARAMETERS
-dim blnLOOP, strAPI
+dim blnLOOP, strAPI, arrPBX()
 dim strIN, strOUT, strRCMD, strSAV
 dim strREG, strPLN, strOS, strHOST, strDMN, strIP
 ''SCRIPT OBJECTS
@@ -23,6 +23,8 @@ strVER = 1
 strREPO = "scripts"
 strBRCH = "dev"
 strDIR = "VULTR"
+redim arrPBX(1)
+strSCP = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com"
 ''VULTR DETAILS
 strAPI = "QLD7MNZAYSXP2LTYVZMUCKPRC7NRDBSDQ7PQ"
 strISO = "498b7c35-d407-4106-9c83-1dfc555fc447"
@@ -108,8 +110,10 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
   if ((intRET = 4) or (intRET = 10) or (intRET = 11) or (intRET = 1) or (intRET = 2147221505) or (intRET = 2147221517)) then
     set objENV = objWSH.Environment("User")
     objENV("VULTR_API_KEY") = strAPI
-    objOUT.write vbnewline & objENV("VULTR_API_KEY") & vbnewline
-    objOUT.write vbnewline & objWSH.expandenvironmentstrings("%VULTR_API_KEY%") & vbnewline
+    'objOUT.write vbnewline & objENV("VULTR_API_KEY") & vbnewline
+    'objOUT.write vbnewline & objWSH.expandenvironmentstrings("%VULTR_API_KEY%") & vbnewline
+    objOUT.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : VULTR_SETUP : " & strVER
+    objLOG.write vbnewline & now & vbtab & vbtab & " - NO UPDATE FOUND : VULTR_SETUP : " & strVER
     while blnLOOP
       objOUT.write vbnewline & vbnewline & now & vbtab & vbtab & " - PLEASE MAKE A SELECTION FROM THE FOLLOWING : "
       objLOG.write vbnewline & now & vbtab & vbtab & " - PLEASE MAKE A SELECTION FROM THE FOLLOWING : "
@@ -129,8 +133,11 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - UPDATE A VULTR DNS DOMAIN"
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(5) - UPDATE A VULTR DNS DOMAIN"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - QUIT, END SCRIPT" & vbnewline
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - QUIT, END SCRIPT" & vbnewline
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPLOAD CERTIFICATE TO PBX"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPLOAD CERTIFICATE TO PBX"
+      
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
       strIN = objIN.readline
       select case strIN
         case 1
@@ -171,25 +178,22 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objWSH.sendkeys "Y"
           strIN = objIN.readline
           if (ucase(strIN) = "Y") then
-            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
-              " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true"
-            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
-              " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true"
+            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
+              " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --notify=true"
+            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
+              " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --notify=true"
             call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
-              " --label " & strHOST & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW & " --notify=true")
+              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --notify=true")
           elseif (ucase(strIN) = "N") then
-            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
-              " --private-netowrk " & strPNET & " --firewall-group " & strFW
-            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & _
-              strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & strHOST & strDMN & " - " & strCST & _
-              " --private-netowrk " & strPNET & " --firewall-group " & strFW
+            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
+              " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW
+            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
+              " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW
             call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
-              " --label " & strHOST & strDMN & " - " & strCST & " --private-netowrk " & strPNET & " --firewall-group " & strFW)
+              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW)
           end if
         case 3
+        case 4
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
           objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET DNS DOMAIN NAME :" & vbnewline
@@ -199,7 +203,46 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SET IP ADDRESS :" & vbnewline
           stRIP = objIN.readline
           call HOOK("C:\IT\vultr-cli.exe dns domain create --domain " & strDMN & " --ip " & strIP)
-        case 4
+        case 5
+        case 6
+          intPBX = 1
+          set objHOOK = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objHOOK.stdout.atendofstream)
+            strIN = objHOOK.stdout.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & strIN 
+            objLOG.write vbnewline & now & vbtab & vbtab & strIN
+            if ((strIN <> vbnullstring) and (instr(1, strIN, "======================================") = 0) and _
+              (instr(1, strIN, "LABEL") = 0) and (instr(1, strIN, "PREV PAGE") = 0)) then
+                arrPBX(intPBX) = strIN
+                redim preserve arrPBX(intPBX + 1)
+                intPBX = intPBX + 1
+            end if
+          wend
+          wscript.sleep 10
+          set objHOOK = nothing
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 2) & ")" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 2) & ")" & vbnewline
+          objWSH.sendkeys "1"
+          strIN = objIN.readline
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
+          objWSH.sendkeys "root"
+          strUSR = objIN.readline
+          objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+          objWSH.sendkeys "Ipmcomputers1"
+          strPWD = objIN.readline
+          ''DOWNLOAD PBXUPLOAD.VBS SCRIPT
+          objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
+          objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
+          call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
+          ''EXECUTE PBXUPLOAD.VBS SCRIPT
+          call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strIP & chr(34))
+        case 7
           blnLOOP = false
       end select
     wend

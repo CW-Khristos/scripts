@@ -22,7 +22,7 @@ strSCP = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com"
 strVER = 1
 strREPO = "scripts"
 strBRCH = "dev"
-strDIR = vbnullstring
+strDIR = "VULTR"
 ''DEFAULT SUCCESS
 errRET = 0
 ''STDIN / STDOUT
@@ -78,7 +78,7 @@ end if
 if (errRET = 0) then                                        ''NO ERRORS DURING INITIAL START
   objOUT.write vbnewline & vbnewline & now & vbtab & " - STARTING PBXUPLOAD" & vbnewline
   objLOG.write vbnewline & vbnewline & now & vbtab & " - STARTING PBXUPLOAD" & vbnewline
-	''AUTOMATIC UPDATE, SNMPARAM.VBS, REF #2 , REF #69 , REF #68 , FIXES #9
+	''AUTOMATIC UPDATE, PBXUPLOAD.VBS, REF #2 , REF #69 , REF #68 , FIXES #9
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : PBXUPLOAD : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : PBXUPLOAD : " & strVER
   ''DOWNLOAD CHKAU.VBS SCRIPT, REF #2 , REF #69 , REF #68
@@ -128,8 +128,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
-                'objOUT.write vbnewline & vbnewline & strRCMD
-                call HOOK(strRCMD)
+                objOUT.write vbnewline & vbnewline & strRCMD
+                'call HOOK(strRCMD)
+                'objFSO.deletefile strPEM, true
               elseif (instr(1, arrPEM(intPEM), "_") = 0) then
                 strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                 strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
@@ -142,8 +143,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
-                'objOUT.write vbnewline & vbnewline & strRCMD
-                call HOOK(strRCMD)
+                objOUT.write vbnewline & vbnewline & strRCMD
+                'call HOOK(strRCMD)
+                'objFSO.deletefile strPEM, true
               end if
             end if
           next
@@ -197,8 +199,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
-                  'objOUT.write vbnewline & vbnewline & strRCMD
-                  call HOOK(strRCMD)
+                  objOUT.write vbnewline & vbnewline & strRCMD
+                  'call HOOK(strRCMD)
+                  'objFSO.deletefile strPEM, true
                 elseif (instr(1, arrPEM(intPEM), "_") = 0) then
                   strPEM = "C:\IT\3cx\upload\" & arrTMP(1) & "-crt.pem"
                   strRCMD = "cmd.exe /c copy /Y " & arrPEM(intPEM) & " " & strPEM
@@ -211,8 +214,9 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
-                  'objOUT.write vbnewline & vbnewline & strRCMD
-                  call HOOK(strRCMD)
+                  objOUT.write vbnewline & vbnewline & strRCMD
+                  'call HOOK(strRCMD)
+                  'objFSO.deletefile strPEM, true
                 end if
               end if
             next
