@@ -209,24 +209,28 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           set objHOOK = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objHOOK.stdout.atendofstream)
             strIN = objHOOK.stdout.readline
-            objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-            objLOG.write vbnewline & now & vbtab & vbtab & strIN
             if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
                 arrPBX(intPBX) = strIN
+                objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
+                objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
                 redim preserve arrPBX(intPBX + 1)
                 intPBX = intPBX + 1
+            else
+              objOUT.write vbnewline & now & vbtab & vbtab & strIN 
+              objLOG.write vbnewline & now & vbtab & vbtab & strIN
             end if
           wend
           wscript.sleep 10
           set objHOOK = nothing
-          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 2) & ")" & vbnewline
-          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 2) & ")" & vbnewline
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ")" & vbnewline
           objWSH.sendkeys "1"
           strIN = objIN.readline
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
+          strPBX = split(arrPBX(strIN), vbtab)(1)
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
           objWSH.sendkeys "root"
@@ -240,7 +244,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
           call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
           ''EXECUTE PBXUPLOAD.VBS SCRIPT
-          call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strIP & chr(34))
+          call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strPBX & chr(34))
         case 7
           blnLOOP = false
       end select
