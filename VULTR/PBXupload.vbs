@@ -157,7 +157,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           wscript.sleep 2000
           objWSH.sendkeys "{RIGHT}{ENTER}"
           wscript.sleep 1000
-          objWSH.sendkeys "service nginx restart{ENTER}"
+          'objWSH.sendkeys "service nginx restart{ENTER}"
           wscript.sleep 4000
           objWSH.sendkeys "exit{ENTER}"
           'objOUT.write vbnewline & vbnewline & strRCMD
