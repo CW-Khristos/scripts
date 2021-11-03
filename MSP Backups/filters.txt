@@ -101,6 +101,7 @@ C:\wu_output|
 %PROGRAMDATA%\Sophos\Certificates\AutoUpdate\Cache|
 %PROGRAMDATA%\Sophos\Clean\Logs|
 %PROGRAMDATA%\Sophos\CloudInstaller\Logs|
+C:\ProgramData\Sophos\Endpoint Defense\Data\Event Journals|
 %PROGRAMDATA%\Sophos\Endpoint Defense\Logs|
 %PROGRAMDATA%\Sophos\Endpoint Firewall\Logs|
 %PROGRAMDATA%\Sophos\Health\Logs|
