@@ -96,8 +96,8 @@ end if
 ''------------
 ''BEGIN SCRIPT
 if (errRET = 0) then
-  objOUT.write vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
-  objLOG.write vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
+  objOUT.write vbnewline & vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
+  objLOG.write vbnewline & vbnewline & now & " - EXECUTING MSP_CONFIG" & vbnewline
   ''AUTOMATIC UPDATE, MSP_CONFIG.VBS, REF #2 , REF #69 , REF #68 , FIXES #25
   objOUT.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
   objLOG.write vbnewline & now & vbtab & vbtab & " - CHECKING FOR UPDATE : MSP_CONFIG : " & strVER
@@ -142,10 +142,10 @@ if (errRET = 0) then
             blnINJ = true
             blnMOD = false
             arrIN(intIN) = strCHG & "=" & strVAL
-            exit for
+            'exit for
           end if  
         end if
-        exit for
+        'exit for
       end if
       if ((blnHDR) and (blnMOD) and (arrIN(intIN) = vbnullstring)) then   ''STRING TO INJECT NOT FOUND, INJECT UNDER CURRENT 'HEADER'
         blnINJ = true
@@ -307,11 +307,11 @@ sub CLEANUP()                                 			                  ''SCRIPT CLEA
   on error resume next
   if (errRET = 0) then         											                  ''MSP_CONFIG COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG SUCCESSFUL : " & now
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG SUCCESSFUL : " & now
+    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG SUCCESSFUL : " & now
     err.clear
   elseif (errRET <> 0) then    											                  ''MSP_CONFIG FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG FAILURE : " & now & " : " & errRET
-    objOUT.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG FAILURE : " & now & " : " & errRET
+    objLOG.write vbnewline & vbnewline & now & vbtab & "MSP_CONFIG FAILURE : " & now & " : " & errRET
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
     call err.raise(vbObjectError + errRET, "MSP_CONFIG", "FAILURE")
   end if
