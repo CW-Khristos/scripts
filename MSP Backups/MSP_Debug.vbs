@@ -36,7 +36,6 @@ set objIN = wscript.stdin
 set objOUT = wscript.stdout
 set objARG = wscript.arguments
 ''OBJECTS FOR LOCATING FOLDERS
-strTMP = "C:\temp\"
 set objWSH = createobject("wscript.shell")
 set objFSO = createobject("scripting.filesystemobject")
 ''MSP BACKUP MANAGER CONFIG.INI FILE
