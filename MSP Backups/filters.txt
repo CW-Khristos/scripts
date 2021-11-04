@@ -38,6 +38,10 @@ C:\wu_output|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\cache|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\log|
 %PROGRAMFILES(X86)%\N-Able Technologies\Windows Agent\Temp|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe\cache|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe\log|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe\Repository|
+%PROGRAMFILES(X86)%\N-able Technologies\Windows Software Probe\Temp|
 %PROGRAMFILES(X86)%\StorageCraft|
 %PROGRAMFILES%\Supermicro\SuperDoctor5\cache|
 %PROGRAMFILES(X86)%\Temp|
