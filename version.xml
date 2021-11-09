@@ -74,6 +74,7 @@
   <sysnfo.vbs>1</sysnfo.vbs>
   <TaskKill_Force.vbs>4</TaskKill_Force.vbs>
   <VSS_Fix.vbs>1</VSS_Fix.vbs>
+  <vultr_setup.vbs>1</vultr_setup.vbs>
   <wmi_disk.vbs>1</wmi_disk.vbs>
   <WMI_FIX_NORESTART.VBS>4</WMI_FIX_NORESTART.VBS>
   <WMI_FIX_RESTART.VBS>4</WMI_FIX_RESTART.VBS>
