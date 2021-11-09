@@ -23,8 +23,8 @@ C:\wu_output|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\ctc_cache|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\Logs|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
-%PROGRAMFILES%\N-Able Technologies\AVDefender\Signatures|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\Quarantine|
+%PROGRAMFILES%\N-Able Technologies\AVDefender\Signatures|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\ThreatScanner|
 %PROGRAMFILES(X86)%\N-able Technologies\NablePatchCache|
 %PROGRAMFILES(X86)%\N-Able Technologies\PatchManagement|
@@ -59,6 +59,8 @@ C:\wu_output|
 %PROGRAMDATA%\AdvancedMonitoringNetpathAgent|
 %PROGRAMDATA%\GetSupportService|
 %PROGRAMDATA%\GetSupportService_N-Central|
+%PROGRAMDATA%\Malwarebytes\Malwarebytes Anti-Malware\Logs|
+%PROGRAMDATA%\McAfee\MCLOGS|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
 %PROGRAMDATA%\Microsoft\Windows\Caches|
 %PROGRAMDATA%\Microsoft\Windows\AppRepository|
