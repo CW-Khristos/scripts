@@ -23,8 +23,9 @@ dim objFOL, arrFOL()
 ''USER FOLDER AND SUB-FOLDER ARRAYS
 dim objUFOL, arrUFOL()
 ''PRE-DEFINED ARRAYS
-dim arrAPP(), arrPROF(), arrPATH()
-dim arrEXCL(), arrPUSR(), arrPFOL()
+dim arrTMP, arrPATH
+dim arrPUSR(), arrPFOL()
+dim arrEXCL(), arrAPP(), arrPROF()
 ''SCRIPT OBJECTS
 dim objIN, objOUT, objARG, objWSH, objFSO
 dim objLOG, objEXEC, objHOOK, objHTTP, objXML
@@ -223,7 +224,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'FILTERS.TXT' BACKUP FILTER DEFINITION"
         ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
-        erase arrTMP
+        'erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\filters.txt")) then
           objFSO.deletefile "C:\IT\Scripts\filters.txt", true
@@ -247,7 +248,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               arrPATH = split(arrTMP(intTMP), "\")
               strPATH = objWSH.expandenvironmentstrings(arrPATH(0))
               for intPATH = 1 to ubound(arrPATH)
-                strPATH = strPATH & arrPATH(intPATH)
+                strPATH = strPATH & "\" & arrPATH(intPATH)
               next
             end if
             if (instr(1, arrTMP(intTMP), "*")) then                 ''APPLY BACKUP FILTERS
@@ -307,7 +308,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
-        erase arrTMP
+        'erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\includes.txt", true
@@ -354,7 +355,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
         objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_FILTERS.TXT' BACKUP FILTER DEFINITION"
         ''REMOVE PREVIOUS 'FILTERS.TXT' FILE
-        erase arrTMP
+        'erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\cloud_filters.txt")) then
           objFSO.deletefile "C:\IT\Scripts\cloud_filters.txt", true
@@ -439,7 +440,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         'objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         'objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING 'CLOUD_INCLUDES.TXT' BACKUP INCLUDES DEFINITION"
         ''REMOVE PREVIOUS 'INCLUDES.TXT' FILE
-        erase arrTMP
+        'erase arrTMP
         strTMP = vbnullstring
         if (objFSO.fileexists("C:\IT\Scripts\cloud_includes.txt")) then
           objFSO.deletefile "C:\IT\Scripts\cloud_includes.txt", true
@@ -609,7 +610,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34)
                 objLOG.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34)
-                'call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34))
+                call HOOK("C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -exclude " & chr(34) & subUFOL.path & chr(34))
                 ''INCLUDE 'SUB-FOLDER\DESKTOP.INI' FOR EACH SUB-FOLDER TO RETAIN ORIGINAL FOLDER STRUCTURE
                 objOUT.write vbnewline & now & vbtab & vbtab & _
                   "EXECUTING : C:\Program Files\Backup Manager\clienttool.exe control.selection.modify -datasource FileSystem -include " & chr(34) & subUFOL.path & "\desktop.ini" & chr(34)
