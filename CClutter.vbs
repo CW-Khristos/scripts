@@ -9,7 +9,7 @@
 ''SCRIPT VARIABLES
 dim strVER, errRET
 dim strREPO, strBRCH, strDIR, strNEW
-dim colFOL(48), blnLOG, lngSIZ, strFOL
+dim colFOL(49), blnLOG, lngSIZ, strFOL
 ''SCRIPT OBJECTS
 dim objLOG, objHOOK, objHTTP
 dim objIN, objOUT, objARG, objWSH, objFSO, objFOL
@@ -79,38 +79,39 @@ colFOL(16) = strPDFOL & "\N-able Technologies\AutomationManager\Logs"
 colFOL(17) = strPDFOL & "\N-able Technologies\AutomationManager\temp"
 colFOL(18) = strPDFOL & "\N-able Technologies\AutomationManager\ScriptResults"
 colFOL(19) = strPDFOL & "\SolarWinds MSP\AutomationManager\Logs"
-colFOL(20) = strPDFOL & "\SolarWinds MSP\PME\log"
-colFOL(21) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.Diagnostics\Logs"
-colFOL(22) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.CacheService\log"
-colFOL(23) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService\log"
-colFOL(24) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.RpcServerService\log"
+colFOL(20) = strPDFOL & "\SolarWinds MSP\Ecosystem Agent\log"
+colFOL(21) = strPDFOL & "\SolarWinds MSP\PME\log"
+colFOL(22) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.Diagnostics\Logs"
+colFOL(23) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.CacheService\log"
+colFOL(24) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.PME.Agent.PmeService\log"
+colFOL(25) = strPDFOL & "\SolarWinds MSP\SolarWinds.MSP.RpcServerService\log"
 ''PROGRAM FILES (X86)
-colfol(25) = str86FOL & "\N-able Technologies\Reactive\Log"
-colfol(26) = str86FOL & "\N-able Technologies\Tools\Log"
-colfol(27) = str86FOL & "\N-able Technologies\Windows Agent\Log"
-colfol(28) = str86FOL & "\N-able Technologies\Windows Software Probe\Log"
-colfol(29) = str86FOL & "\N-able Technologies\Windows Software Probe\syslog\Log"
+colfol(26) = str86FOL & "\N-able Technologies\Reactive\Log"
+colfol(27) = str86FOL & "\N-able Technologies\Tools\Log"
+colfol(28) = str86FOL & "\N-able Technologies\Windows Agent\Log"
+colfol(29) = str86FOL & "\N-able Technologies\Windows Software Probe\Log"
+colfol(30) = str86FOL & "\N-able Technologies\Windows Software Probe\syslog\Log"
 ''THESE FOLDERS ARE NORMAL FOLDER PATHS
-colFOL(30) =  "C:\temp"
-colFOL(31) = "C:\inetpub\logs\LogFiles\W3SVC2"
-colfol(32) = "C:\inetpub\logs\LogFiles\W3SVC1"
+colFOL(31) =  "C:\temp"
+colFOL(32) = "C:\inetpub\logs\LogFiles\W3SVC2"
+colfol(33) = "C:\inetpub\logs\LogFiles\W3SVC1"
 ''EXCHANGE LOGGING FOLDERS
 if (objFSO.folderexists(strPFFOL & "\Microsoft\Exchange Server")) then
-  colFOL(33) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
-  colFOL(34) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
-  colFOL(35) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
-  colFOL(36) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
-  colFOL(37) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
-  colFOL(38) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
-  colFOL(39) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
-  colFOL(40) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
-  colFOL(41) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
-  colFOL(42) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
-  colFOL(43) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
-  colFOL(44) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
-  colFOL(45) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
-  colFOL(46) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
-  colFOL(47) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
+  colFOL(34) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\AnalyzerLogs"
+  colFOL(35) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CertificateLogs"
+  colFOL(36) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\CosmosLog"
+  colFOL(37) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\DailyPerformanceLogs"
+  colFOL(38) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Dumps"
+  colFOL(39) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\EtwTraces"
+  colFOL(40) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Poison"
+  colFOL(41) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\ServiceLogs"
+  colFOL(42) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\Diagnostics\Watermarks"
+  colFOL(43) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssistantsLog"
+  colFOL(44) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MailboxAssociationLog"
+  colFOL(45) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\MigrationMonitorLogs"
+  colFOL(46) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC1"
+  colFOL(47) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\RpcHttp\W3SVC2"
+  colFOL(48) = strPFFOL & "\Microsoft\Exchange Server\V15\Logging\HttpProxy\RpcHttp"
 end if
 
 ''------------
