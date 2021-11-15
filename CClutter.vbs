@@ -228,7 +228,7 @@ if (errRET = 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
     objLOG.write vbnewline & now & vbtab & vbtab & " - FINAL CLEANUP : "
     call HOOK("cmd.exe /c " & chr(34) & "DIR " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34) & chr(34))
-    call HOOK("cmd.exe /c " & chr(34) & "DEL /S " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34))
+    call HOOK("cmd.exe /c " & chr(34) & "DEL /S /Q " & chr(34) & "C:\ProgramData\*.bdinstall.bin" & chr(34) & chr(34))
     ''ENUMERATE THROUGH PASSED FOLDER PATH
     'if (strFOL <> vbnullstring) then
     '  if (objFSO.folderexists(strFOL)) then                                      ''ENSURE FOLDER EXISTS BEFORE CLEARING
