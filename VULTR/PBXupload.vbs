@@ -126,7 +126,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 wscript.sleep 1000
                 objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=*" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 objOUT.write vbnewline & vbnewline & strRCMD
                 call HOOK(strRCMD)
@@ -141,7 +141,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                 wscript.sleep 1000
                 objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                 objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=*" & chr(34) & " " & _
                   chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                 objOUT.write vbnewline & vbnewline & strRCMD
                 call HOOK(strRCMD)
@@ -197,7 +197,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   wscript.sleep 1000
                   objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=*" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   objOUT.write vbnewline & vbnewline & strRCMD
                   call HOOK(strRCMD)
@@ -212,7 +212,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
                   wscript.sleep 1000
                   objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
                   objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING CERT : " & strPEM
-                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+                  strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strIP & ":22/ -hostkey=*" & chr(34) & " " & _
                     chr(34) & "put " & strPEM & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_winscp.log" & chr(34) & " /loglevel=0"
                   objOUT.write vbnewline & vbnewline & strRCMD
                   call HOOK(strRCMD)
