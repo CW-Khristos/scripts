@@ -114,6 +114,7 @@ C:\wu_output|
 %PROGRAMDATA%\Sophos\Endpoint Firewall\Logs|
 %PROGRAMDATA%\Sophos\Health\Logs|
 %PROGRAMDATA%\Sophos\Heartbeat\Logs|
+%PROGRAMDATA%\Sophos\Live Query\Data|
 %PROGRAMDATA%\Sophos\Live Query\Logs|
 %PROGRAMDATA%\Sophos\Live Query\Queries|
 %PROGRAMDATA%\Sophos\Live Terminal\Logs|
