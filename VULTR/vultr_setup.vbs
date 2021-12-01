@@ -143,7 +143,36 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         case 1
           objOUT.write vbnewline & now & vbtab & vbtab & " - LISTING ALL VULTR INSTANCES : "
           objLOG.write vbnewline & now & vbtab & vbtab & " - LISTING ALL VULTR INSTANCES : "
-          call HOOK("C:\IT\vultr-cli.exe instance list")
+          intPBX = 1
+          erase arrPBX
+          redim arrPBX(1)
+          wscript.sleep 20000
+          set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objTMP.stdout.atendofstream)
+            strIN = objTMP.stdout.readline
+            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
+              arrPBX(intPBX) = strIN
+              redim preserve arrPBX(intPBX + 1)
+              intPBX = intPBX + 1
+            end if
+          wend
+          set objTMP = nothing
+          set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 8)
+          while (not objTMP.stdout.atendofstream)
+            strIN = objTMP.stdout.readline
+            if (strIN <> vbnullstring) then
+              for intPBX = 1 to ubound(arrPBX)
+                strLBL = split(split(arrPBX(intPBX), vbtab)(2)," - ")(0)
+                if (ucase(strLBL) = ucase(split(strIN, "|")(1))) then
+                  strIP = split(arrPBX(intPBX), vbtab)(1)
+                  exit for
+                end if
+              next
+            end if
+          wend
+          objTMP.writeline strIP & "|" &  strLBL
+          objTMP.close
+          set objTMP = nothing
         case 2
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : "
           objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : "
@@ -195,6 +224,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           intPBX = 1
           erase arrPBX
           redim arrPBX(1)
+          wscript.sleep 20000
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
             strIN = objTMP.stdout.readline
@@ -213,7 +243,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             end if
           next
           set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 8)
-          objTMP.writeline strIP & "|" & strHOST & strDMN & " - " & strCST
+          objTMP.writeline strIP & "|" & strHOST & strDMN
           objTMP.close
           set objTMP = nothing
           objOUT.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST) & chr(34) & " CREATED"
@@ -266,11 +296,11 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             wscript.sleep 1000
             objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
             objLOG.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
-            'strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+            'strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=*" & chr(34) & " " & _
             '  chr(34) & "put " & strXML & " /var/lib/3cxpbx/Bin/nginx/conf/Instance1/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
             'objOUT.write vbnewline & vbnewline & strRCMD
             'call HOOK(strRCMD)
-            strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=acceptnew" & chr(34) & " " & _
+            strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=*" & chr(34) & " " & _
               chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
             objOUT.write vbnewline & vbnewline & strRCMD
             call HOOK(strRCMD)
