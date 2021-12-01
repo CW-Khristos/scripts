@@ -83,7 +83,7 @@ if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE P
   end if
 elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=2
   call LOGERR(2)
-  call CLEANUP()
+  'call CLEANUP()
 end if
 
 ''------------
@@ -432,8 +432,8 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
       objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - VULTR-CLI CHECK FAILED, ENDING VULTR_SETUP"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - VULTR-CLI CHECK FAILED, ENDING VULTR_SETUP"
     case 2                                                  ''VULTR_SETUP - NOT ENOUGH ARGUMENTS, 'ERRRET'=2
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - NO ARGUMENTS PASSED, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - NO ARGUMENTS PASSED, END SCRIPT"
     case 11                                                 ''VULTR_SETUP - CALL FILEDL() FAILED, 'ERRRET'=11
       objOUT.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - VULTR_SETUP - CALL FILEDL() : " & strSAV
