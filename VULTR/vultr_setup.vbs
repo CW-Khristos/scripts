@@ -74,15 +74,15 @@ elseif (not objFSO.fileexists("C:\IT\vultr-cli.exe")) then
 end if
 ''READ PASSED COMMANDLINE ARGUMENTS
 if (wscript.arguments.count > 0) then                         ''ARGUMENTS WERE PASSED
-  for x = 0 to (wscript.arguments.count - 1)
-    objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-    objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
-  next 
   if (wscript.arguments.count > 0) then                       ''SET VARIABLES ACCEPTING ARGUMENTS
+    for x = 0 to (wscript.arguments.count - 1)
+      objOUT.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+      objLOG.write vbnewline & now & vbtab & " - ARGUMENT " & (x + 1) & " (ITEM " & x & ") " & " PASSED : " & ucase(objARG.item(x))
+    next
     strAPI = objARG.item(0)                                   ''SET REQUIRED PARAMETER 'STRAPI' , API KEY FOR AUTHENTICATION WITH VULTR
   end if
 elseif (wscript.arguments.count = 0) then                     ''NOT ENOUGH ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=2
-  call LOGERR(2)
+  'call LOGERR(2)
   'call CLEANUP()
 end if
 
@@ -258,7 +258,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             strXML = "C:\IT\3cx\upload\setupconfig.xml"
-            strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\setupconfig.xml " & strXML
+            strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\3cx\setupconfig_mancini.xml " & strXML
             objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
             objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
             objOUT.write vbnewline & vbnewline & strRCMD
