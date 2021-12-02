@@ -7,7 +7,7 @@
 ''OPTIONAL PARAMETER 'STRINCL' ; STRING VALUE TO HOLD PASSED 'INCLUSIONS' ; SEPARATE MULTIPLE 'INCLUSIONS' VIA '|'
 ''OPTIONAL PARAMETER 'STRUSR' ; STRING VALUE TO HOLD PASSED 'USER ACCOUNT' TO EXCLUDE
 ''WRITTEN BY : CJ BLEDSOE / CJ<@>THECOMPUTERWARRIORS.COM
-on error resume next
+'on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strREPO, strBRCH, strDIR
@@ -146,31 +146,33 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           intPBX = 1
           erase arrPBX
           redim arrPBX(1)
-          wscript.sleep 20000
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
             strIN = objTMP.stdout.readline
             if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
               arrPBX(intPBX) = strIN
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
               redim preserve arrPBX(intPBX + 1)
               intPBX = intPBX + 1
             end if
           wend
+          blnFND = false
           set objTMP = nothing
-          set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 8)
-          while (not objTMP.stdout.atendofstream)
-            strIN = objTMP.stdout.readline
-            if (strIN <> vbnullstring) then
-              for intPBX = 1 to ubound(arrPBX)
-                strLBL = split(split(arrPBX(intPBX), vbtab)(2)," - ")(0)
-                if (ucase(strLBL) = ucase(split(strIN, "|")(1))) then
-                  strIP = split(arrPBX(intPBX), vbtab)(1)
-                  exit for
-                end if
-              next
+          set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 2)
+          objTMP.writeline "''PBXLIST.TXT"
+          for intPBX = 1 to ubound(arrPBX)
+            if (arrPBX(intPBX) <> vbnullstring) then
+              strIP = split(arrPBX(intPBX), vbtab)(1)
+              if (instr(1, split(arrPBX(intPBX), vbtab)(3), " - ")) then
+                strLBL = split(split(arrPBX(intPBX), vbtab)(3)," - ")(0)
+              elseif (instr(1, split(arrPBX(intPBX), vbtab)(3), " - ") = 0) then
+                strLBL = split(arrPBX(intPBX), vbtab)(3)
+              end if
+              'objOUT.writeline vbnewline & strIP & vbtab & strLBL
+              objTMP.writeline strIP & "|" &  strLBL
             end if
-          wend
-          objTMP.writeline strIP & "|" &  strLBL
+          next
           objTMP.close
           set objTMP = nothing
         case 2
@@ -236,7 +238,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           wend
           set objTMP = nothing
           for intPBX = 1 to ubound(arrPBX)
-            strLBL = split(arrPBX(intPBX), vbtab)(2)
+            strLBL = split(arrPBX(intPBX), vbtab)(3)
             if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
               strIP = split(arrPBX(intPBX), vbtab)(1)
               exit for
@@ -304,11 +306,12 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
               chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
             objOUT.write vbnewline & vbnewline & strRCMD
             call HOOK(strRCMD)
-            objFSO.deletefile strXML, true
+            'objFSO.deletefile strXML, true
           end if
         case 4
           intPBX = 1
           erase arrPBX
+          redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
             strIN = objTMP.stdout.readline
