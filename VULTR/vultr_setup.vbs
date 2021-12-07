@@ -238,6 +238,10 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           wend
           set objTMP = nothing
           for intPBX = 1 to ubound(arrPBX)
+            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(0)
+            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(1)
+            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(2)
+            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(3)
             strLBL = split(arrPBX(intPBX), vbtab)(3)
             if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
               strIP = split(arrPBX(intPBX), vbtab)(1)
@@ -290,10 +294,10 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             strXML = "C:\IT\3cx\upload\setupconfig.xml"
-            strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\3cx\setupconfig_mancini.xml " & strXML
+            strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\3cx\setupconfig_vultr.xml " & strXML
             objOUT.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
             objLOG.write vbnewline & now & vbtab & vbtab & " - COPYING SETUPCONFIG : " & strXML
-            objOUT.write vbnewline & vbnewline & strRCMD
+            'objOUT.write vbnewline & vbnewline & strRCMD
             call HOOK(strRCMD)
             wscript.sleep 1000
             objOUT.write vbnewline & now & vbtab & vbtab & " - UPLOADING SETUPCONFIG : " & strXML
@@ -304,7 +308,7 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             'call HOOK(strRCMD)
             strRCMD = strSCP & " /command " & chr(34) & "open scp://" & strUSR & ":" & strPWD & "@" & strPBX & ":22/ -hostkey=*" & chr(34) & " " & _
               chr(34) & "put " & strXML & " /etc/3cxpbx/" & chr(34) & " " & chr(34) & "exit" & chr(34) & " /log=" & chr(34) & "C:\temp\pbx_setupconfig.log" & chr(34) & " /loglevel=0"
-            objOUT.write vbnewline & vbnewline & strRCMD
+            'objOUT.write vbnewline & vbnewline & strRCMD
             call HOOK(strRCMD)
             'objFSO.deletefile strXML, true
           end if
