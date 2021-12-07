@@ -79,10 +79,15 @@ if (errRET = 0) then
     call HOOK("sc config winmgmt start= disabled")
     call HOOK("net stop winmgmt /y")
     wscript.sleep 10000
-    call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /salvagerepository %windir%\System32\wbem" & chr(34)) 
-    call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /resetrepository %windir%\System32\wbem" & chr(34))
+    call HOOK("cmd.exe /C " & chr(34) & "ren %windir%\System32\wbem\Repository %windir%\System32\wbem\Repository_old" & chr(34))
+    call HOOK("cmd.exe /C " & chr(34) & "mkdir %windir%\System32\wbem\Repository" & chr(34))
     call HOOK("sc config winmgmt start= auto")
     call HOOK("net start winmgmt")
+    call HOOK("cmd.exe /C " & chr(34) & "cd %windir%\System32\wbem && for /f %s in ('dir /b *.mof') do mofcomp %s" & chr(34))
+    call HOOK("cmd.exe /C " & chr(34) & "cd %windir%\System32\wbem && for /f %s in ('dir /b en-us\*.mfl') do mofcomp en-us\%s" & chr(34))
+    call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /salvagerepository %windir%\System32\wbem" & chr(34)) 
+    call HOOK("cmd.exe /C " & chr(34) & "Winmgmt /resetrepository %windir%\System32\wbem" & chr(34))
+
     ''RESTART WMI DEPENDENT SERVICES, REF #19
     call CHKDEP()
   end if
