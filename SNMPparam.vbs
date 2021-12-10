@@ -62,7 +62,7 @@ if (wscript.arguments.count > 0) then                       ''ARGUMENTS WERE PAS
     call LOGERR(1)
   end if
 elseif (wscript.arguments.count = 0) then                   ''NO ARGUMENTS PASSED , END SCRIPT , 'ERRRET'=1
-  call LOGERR(1)
+  'call LOGERR(1)
 end if
 
 ''------------
@@ -121,7 +121,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
               call HOOK("DISM /online /add-capability /capabilityname:SNMP.Client~~~~0.0.1.0")  ''NEW COMMAND PER https://theitbros.com/snmp-service-on-windows-10/
               ''call HOOK("powershell Install-WindowsFeature " & chr(34) & "RSAT-SNMP" & chr(34)) ''NOT NECESSARY
               objOUT.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"
-              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"            
+              objLOG.write vbnewline & now & vbtab & vbtab & " - SNMP INSTALLED"
             end if
             strRET = vbnullstring
           end if
