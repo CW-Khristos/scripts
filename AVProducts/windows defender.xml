@@ -1,14 +1,12 @@
-<WINDOWSDEFENDER>
-  <bit64>
-    <ver>\SOFTWARE\WOW6432Node\Microsoft\Windows Defender\Signature Updates\</ver>
-    <verval>EngineVersion</verval>
-    <stat>\SOFTWARE\WOW6432Node\Microsoft\Windows Defender\</stat>
-    <statval>ProductStatus</statval>
-  </bit64>
-  <bit32>
-    <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
-    <verval>EngineVersion</verval>
-    <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
-    <statval>ProductStatus</statval>
-  </bit32>
-</WINDOWSDEFENDER>
+<bit64>
+  <ver>\SOFTWARE\WOW6432Node\Microsoft\Windows Defender\Signature Updates\</ver>
+  <verval>EngineVersion</verval>
+  <stat>\SOFTWARE\WOW6432Node\Microsoft\Windows Defender\</stat>
+  <statval>ProductStatus</statval>
+</bit64>
+<bit32>
+  <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
+  <verval>EngineVersion</verval>
+  <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
+  <statval>ProductStatus</statval>
+</bit32>
