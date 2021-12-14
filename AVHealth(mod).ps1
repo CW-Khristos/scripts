@@ -79,18 +79,14 @@ function Get-AntiVirusProduct {
     #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
     $i = 0
     $i_PAV = "Windows Defender"
-    #DOWNLOAD AV PRODUCT 'DEFINITIONS'
-    $destAVP = "C:\IT\" + $i_PAV.tolower() + ".xml"
     $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.tolower() + ".xml"
-    try {
-      start-bitstransfer -erroraction stop -source $srcAVP -destination $destAVP
-    } catch {
-      $web = new-object system.net.webclient
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      $web.downloadfile($srcAVP, $destAVP)
-    }
     #READ AV PRODUCT DETAILS FROM XML
-    [xml]$avXML = get-content -path $destAVP
+    try {
+      $avXML = New-Object System.Xml.XmlDocument
+      $avXML.Load($srcAVP)
+    } catch {
+      [xml]$avXML = (New-Object System.Net.WebClient).DownloadString($srcAVP)
+    }
     #64BIT AV PRODUCT VERSION KEY PATH AND VALUE
     $i_64verkey = $avXML.NODE.bit64.ver
     $i_64verval = $avXML.NODE.bit64.verval
@@ -177,6 +173,6 @@ function Get-AntiVirusProduct {
     Write-Error "\\$computername : WMI Error"
     Write-Error $_
   }
-  remove-item $destAVP
+  #remove-item $destAVP
 }
 Get-AntiVirusProduct
