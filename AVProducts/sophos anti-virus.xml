@@ -1,0 +1,14 @@
+<SOPHOS>
+  <64bit>
+    <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
+    <verval>MarketingVersion</verval>
+    <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
+    <statval>UpToDateState</statval>
+  </64bit>
+  <32bit>
+    <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
+    <verval>MarketingVersion</verval>
+    <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
+    <statval>UpToDateState</statval>
+  </32bit>
+</SOPHOS>
