@@ -1,12 +1,14 @@
-<bit64>
-  <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
-  <verval>Version</verval>
-  <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
-  <statval>ClientUpgradeStatus</statval>
-</bit64>
-<bit32>
-  <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
-  <verval>Version</verval>
-  <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
-  <statval>ClientUpgradeStatus</statval>
-</bit32>
+<NODE>
+  <bit64>
+    <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+    <verval>Version</verval>
+    <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+    <statval>ClientUpgradeStatus</statval>
+  </bit64>
+  <bit32>
+    <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+    <verval>Version</verval>
+    <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+    <statval>ClientUpgradeStatus</statval>
+  </bit32>
+</NODE>
