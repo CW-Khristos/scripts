@@ -1,14 +1,12 @@
-<SOPHOSANTI-VIRUS>
-  <bit64>
-    <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
-    <verval>MarketingVersion</verval>
-    <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
-    <statval>UpToDateState</statval>
-  </bit64>
-  <bit32>
-    <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
-    <verval>MarketingVersion</verval>
-    <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
-    <statval>UpToDateState</statval>
-  </bit32>
-</SOPHOSANTI-VIRUS>
+<bit64>
+  <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
+  <verval>MarketingVersion</verval>
+  <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
+  <statval>UpToDateState</statval>
+</bit64>
+<bit32>
+  <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
+  <verval>MarketingVersion</verval>
+  <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
+  <statval>UpToDateState</statval>
+</bit32>
