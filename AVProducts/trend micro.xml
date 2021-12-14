@@ -1,4 +1,4 @@
-<TREND MICRO>
+<TRENDMICRO>
   <bit64>
     <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
     <verval>Version</verval>
@@ -11,4 +11,4 @@
     <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
     <statval>ClientUpgradeStatus</statval>
   </bit32>
-</TREND MICRO>
+</TRENDMICRO>
