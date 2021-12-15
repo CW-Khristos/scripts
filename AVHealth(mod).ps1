@@ -1,6 +1,9 @@
 <# 
 .SYNOPSIS 
     AV Health Monitoring
+    This was based on "Get Installed Antivirus Information" by SyncroMSP
+    But omits the Hex Conversions and utilization of WSC_SECURITY_PROVIDER , WSC_SECURITY_PRODUCT_STATE , WSC_SECURITY_SIGNATURE_STATUS
+    https://mspscripts.com/get-installed-antivirus-information-2/
 
 .DESCRIPTION 
     Provide Primary AV Product Status and Report Possible AV Conflicts
