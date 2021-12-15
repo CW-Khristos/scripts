@@ -88,6 +88,7 @@ function Get-AntiVirusProduct {
     #format output
     #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
     $i = 0
+    #COMMENT OUT THE BELOW LINE (LN92) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
     $i_PAV = "Windows Defender"
     $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.tolower() + ".xml"
     #READ AV PRODUCT DETAILS FROM XML
@@ -117,6 +118,9 @@ function Get-AntiVirusProduct {
     $string = $AntiVirusProduct.productState
     $avstat = $string -split ', '
     #ITERATE THROUGH EACH FOUND AV PRODUCT
+    #USE OF '-NE' AND '-EQ' WHEN EVALUATING AV PRODUCT COULD POSSIBLY BE IMPROVED
+    #USE OF '-NOTMATCH' AND '-MATCH' COULD THEN INPUT VENDOR / GENERAL AV NAME LIKE 'SOPHOS'
+    #THIS WOULD ALLOW EXPANDING AV XML / JSON TO INCLUDE EACH VENDORS' SPECIFIC SEPARATE PRODUCTS AND THEIR RESPECTIVE KEYS / VALUES
     foreach ($av in $avs) {
       #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
       if (($avs[$i] -ne $i_PAV) -And ($avs[$i] -ne "Windows Defender")) {
