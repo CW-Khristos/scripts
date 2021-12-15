@@ -53,6 +53,7 @@ function Get-AVState {
     "393472" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
     "397584" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
     "397568" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+    "401664" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
     #
     "393232" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
     "393488" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
@@ -161,10 +162,10 @@ function Get-AntiVirusProduct {
             write-host "-path HKLM:$i_32statkey -name $i_32statval" -foregroundcolor Red
             #$global:o_AVStatus = get-itemproperty -path HKLM:\SOFTWARE\Sophos\SavService\Status\ -name UpToDateState -ErrorAction Stop
           } catch {
-            $global:o_AVStatus | add-member -NotePropertyName $i_64statval -NotePropertyValue 0
+            $global:o_AVStatus | add-member -NotePropertyName $i_64statval -NotePropertyValue "0"
           }
         }
-        if ($global:o_AVStatus.$i_64statval = 0) {
+        if ($global:o_AVStatus.$i_64statval = "0") {
           $global:o_AVStatus = $true
         } else {
           $global:o_AVStatus = $false
