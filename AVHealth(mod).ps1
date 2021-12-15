@@ -1,34 +1,44 @@
+<# 
+.SYNOPSIS 
+    AV Health Monitoring
+
+.DESCRIPTION 
+    Provide Primary AV Product Status and Report Possible AV Conflicts
+    Script is intended to be universal / as flexible as possible without being excessively complicated
+    Script is intended to replace 'AV Status' VBS Monitoring Script
+ 
+.NOTES
+    Version        : 0.1.0 
+    Creation Date  : 14 December 2021
+    Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
+    File Name      : AVHealth_<version_info>.ps1 
+    Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com 
+    Requires       : PowerShell Version 2.0+ installed
+#> 
+
+#REGION ----- DECLARATIONS ----
 $global:o_AVname = ""
 $global:o_AVVersion = ""
 $global:o_AVpath = ""
 $global:o_AVStatus = ""
-$global:rtstatus = ""
-$global:o_RTstate = ""
-$global:defstatus = ""
-$global:o_DefStatus = ""
+$global:rtstatus = "Unknown"
+$global:o_RTstate = "Unknown"
+$global:defstatus = "Unknown"
+$global:o_DefStatus = "Unknown"
 $global:o_AVcon = 0
 $global:o_CompAV = " "
 $global:o_CompPath = " "
 $global:o_Compstate = " "
+#ENDREGION ----- DECLARATIONS ----
 
-#CHECK 'PERSISTENT' FOLDERS
-if (-not (test-path -path "C:\temp")) {
-  new-item -path "C:\temp" -itemtype directory
-}
-if (-not (test-path -path "C:\IT")) {
-  new-item -path "C:\IT" -itemtype directory
-}
-if (-not (test-path -path "C:\IT\Scripts")) {
-  new-item -path "C:\IT\Scripts" -itemtype directory
-}
-
+#REGION ----- FUNCTIONS ----
 #Determine Antivirus State
 function Get-AVState {
   param (
     $state
   )
   #Switch to determine the status of antivirus definitions and real-time protection.
-  #switch ($AntiVirusProduct.productState) {
+  #THIS COULD PROBABLY ALSO BE TURNED INTO A SIMPLE XML / JSON LOOKUP TO FACILITATE COMMUNITY CONTRIBUTION
   switch ($state) {
     #AVG IS 2012 AV / CrowdStrike / Kaspersky
     "262144" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
@@ -53,7 +63,7 @@ function Get-AVState {
     "327696" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
     default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
   }
-}
+} ## Get-AVState
 
 #Call Antivirus function to check if it is up to date or not
 function Get-AntiVirusProduct {
@@ -99,34 +109,35 @@ function Get-AntiVirusProduct {
     #32BIT AV PRODUCT STATE KEY PATH AND VALUE
     $i_32statkey = $avXML.NODE.bit32.stat
     $i_32statval = $avXML.NODE.bit32.statval
-    
-    
+    #SEPARATE RETURNED WMI AV PRODUCT INSTANCES
     $string = $AntiVirusProduct.displayName
     $avs = $string -split ', '
     $string = $AntiVirusProduct.pathToSignedProductExe
     $avpath = $string -split ', '
     $string = $AntiVirusProduct.productState
     $avstat = $string -split ', '
-    
+    #ITERATE THROUGH EACH FOUND AV PRODUCT
     foreach ($av in $avs) {
+      #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
       if (($avs[$i] -ne $i_PAV) -And ($avs[$i] -ne "Windows Defender")) {
         $global:o_AVcon = 1
         $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
         $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
         $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "
+      #PRIMARY AV PRODUCT
       } elseif ($avs[$i] -eq $i_PAV) {
         $global:o_AVname = $avs[$i]
         $global:o_AVpath = $avpath[$i]
         Get-AVState($avstat[$i])
         $global:o_DefStatus = $global:defstatus
         $global:o_RTstate = $global:rtstatus
-        
-        try {
+        #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
+        try {       #64BIT REGISTRY LOCATIONS
           $global:o_AVVersion = get-itemproperty -path HKLM:$i_64verkey -name $i_64verval -ErrorAction Stop
           write-host "-path HKLM:$i_64verkey -name $i_64verval" -foregroundcolor Red
           #$global:o_AVVersion = get-itemproperty -path HKLM:\SOFTWARE\WOW6432Node\Sophos\SAVService\Application -name MarketingVersion -ErrorAction Stop
         } catch {
-          try {
+          try {     #32BIT REGISTRY LOCATIONS
             $global:o_AVVersion = get-itemproperty -path HKLM:$i_32verkey -name $i_32verval -ErrorAction Stop
             write-host "-path HKLM:$i_32verkey -name $i_32verval" -foregroundcolor Red
             #$global:o_AVVersion = get-itemproperty -path HKLM:\SOFTWARE\Sophos\SAVService\Application -name MarketingVersion -ErrorAction Stop
@@ -135,12 +146,13 @@ function Get-AntiVirusProduct {
           }
         }
         $global:o_AVVersion = $global:o_AVVersion.$i_64verval
-        try {
+        #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
+        try {       #64BIT REGISTRY LOCATIONS
           $global:o_AVStatus = get-itemproperty -path HKLM:$i_64statkey -name $i_64statval -ErrorAction Stop
           write-host "-path HKLM:$i_64statkey -name $i_64statval" -foregroundcolor Red
           #$global:o_AVStatus = get-itemproperty -path HKLM:\SOFTWARE\WOW6432Node\Sophos\SavService\Status\ -name UpToDateState -ErrorAction Stop
         } catch {
-          try {
+          try {     #32BIT REGISTRY LOCATIONS
             $global:o_AVStatus = get-itemproperty -path HKLM:$i_32statkey -name $i_32statval -ErrorAction Stop
             write-host "-path HKLM:$i_32statkey -name $i_32statval" -foregroundcolor Red
             #$global:o_AVStatus = get-itemproperty -path HKLM:\SOFTWARE\Sophos\SavService\Status\ -name UpToDateState -ErrorAction Stop
@@ -148,11 +160,12 @@ function Get-AntiVirusProduct {
             $global:o_AVStatus | add-member -NotePropertyName $i_64statval -NotePropertyValue 0
           }
         }
-        if ($global:o_AVStatus.$i_64statval = 1) {
+        if ($global:o_AVStatus.$i_64statval = 0) {
           $global:o_AVStatus = $true
         } else {
           $global:o_AVStatus = $false
         }
+      #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$i] -eq "Windows Defender") {
         $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
         $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
@@ -160,6 +173,7 @@ function Get-AntiVirusProduct {
       }
       $i = $i + 1
     }
+    #OUTPUT
     write-host "AV Display Name :" $global:o_AVname -foregroundcolor Green
     write-host "AV Version : " $global:o_AVVersion -foregroundcolor Green
     write-host "AV Path : " $global:o_AVpath -foregroundcolor Green
@@ -173,6 +187,7 @@ function Get-AntiVirusProduct {
     Write-Error "\\$computername : WMI Error"
     Write-Error $_
   }
-  #remove-item $destAVP
-}
+} ## Get-AntiVirusProduct
+#ENDREGION ----- FUNCTIONS ----
+
 Get-AntiVirusProduct
