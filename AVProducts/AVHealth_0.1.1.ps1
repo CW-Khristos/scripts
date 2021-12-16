@@ -181,7 +181,8 @@ function Get-AntiVirusProduct {
             $global:o_AVStatus | add-member -NotePropertyName $i_64statval -NotePropertyValue "0"
           }
         }
-        if ($global:o_AVStatus.$i_64statval = "0") {
+        $global:o_AVStatus.$i_64statval
+        if ($global:o_AVStatus.$i_64statval -eq "1") {
           $global:o_AVStatus = $true
         } else {
           $global:o_AVStatus = $false
