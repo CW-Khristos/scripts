@@ -182,10 +182,18 @@ function Get-AntiVirusProduct {
           }
         }
         $global:o_AVStatus.$i_64statval
-        if ($global:o_AVStatus.$i_64statval -eq "1") {
-          $global:o_AVStatus = $true
-        } else {
-          $global:o_AVStatus = $false
+        if ($i_PAV -match "Symantec") {
+          if ($global:o_AVStatus.$i_64statval -eq "0") {
+            $global:o_AVStatus = $true
+          } else {
+            $global:o_AVStatus = $false
+          }
+        } elseif ($i_PAV -notmatch "Symantec") {
+          if ($global:o_AVStatus.$i_64statval -eq "1") {
+            $global:o_AVStatus = $true
+          } else {
+            $global:o_AVStatus = $false
+          }
         }
       #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$i] -eq "Windows Defender") {
