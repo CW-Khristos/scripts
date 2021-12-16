@@ -11,7 +11,7 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.1
+    Version        : 0.1.1 (16 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_<version_info>.ps1 
