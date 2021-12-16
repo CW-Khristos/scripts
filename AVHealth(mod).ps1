@@ -11,12 +11,17 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.0 
+    Version        : 0.1.1
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_<version_info>.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com 
     Requires       : PowerShell Version 2.0+ installed
+
+.CHANGELOG
+    0.1.0 Initial Release
+    0.1.1 Switched to use of '-match' and 'notmatch' for accepting input of vendor / general AV name like 'Sophos'
+          Switched to use and expanded AV Product 'Definition' XMLs to be vendor specific instead of product specific
 #> 
 
 #REGION ----- DECLARATIONS ----
