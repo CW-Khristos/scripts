@@ -14,7 +14,7 @@
     Version        : 0.1.1 (16 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_<version_info>.ps1 
+    File Name      : AVHealth_0.1.1.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com 
     Requires       : PowerShell Version 2.0+ installed
 
