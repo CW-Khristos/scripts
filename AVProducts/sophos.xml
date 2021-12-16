@@ -24,7 +24,7 @@
       <ver>\SOFTWARE\Sophos\SAVIntercept\Application\</ver>
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SAVIntercept\Status\</stat>
-      <statval>UpToDateStates</statval>
+      <statval>UpToDateState</statval>
     </bit32>
   </SOPHOSINTERCEPTX>
 </NODE>
