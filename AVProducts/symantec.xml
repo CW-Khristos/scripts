@@ -1,0 +1,16 @@
+<NODE>
+  <SYMANTECENDPOINTPROTECTION>
+    <bit64>
+      <ver>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion</ver>
+      <verval>PRODUCTVERSION</verval>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify</stat>
+      <statval>Update</statval>
+    </bit64>
+    <bit32>
+      <ver>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion</ver>
+      <verval>PRODUCTVERSION</verval>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify</stat>
+      <statval>Update</statval>
+    </bit32>
+  </SYMANTECENDPOINTPROTECTION>
+</NODE>
