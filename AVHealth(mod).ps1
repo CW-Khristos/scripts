@@ -93,8 +93,9 @@ function Get-AntiVirusProduct {
     #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
     $i = 0
     #COMMENT OUT THE BELOW LINE (LN92) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-    $i_PAV = "Windows Defender"
-    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.tolower() + ".xml"
+    #$i_PAV = "Sophos"
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+    $srcAVP
     #READ AV PRODUCT DETAILS FROM XML
     try {
       $avXML = New-Object System.Xml.XmlDocument
@@ -102,18 +103,7 @@ function Get-AntiVirusProduct {
     } catch {
       [xml]$avXML = (New-Object System.Net.WebClient).DownloadString($srcAVP)
     }
-    #64BIT AV PRODUCT VERSION KEY PATH AND VALUE
-    $i_64verkey = $avXML.NODE.bit64.ver
-    $i_64verval = $avXML.NODE.bit64.verval
-    #32BIT AV PRODUCT VERSION KEY PATH AND VALUE
-    $i_32verkey = $avXML.NODE.bit32.ver
-    $i_32verval = $avXML.NODE.bit32.verval
-    #64BIT AV PRODUCT STATE KEY PATH AND VALUE
-    $i_64statkey = $avXML.NODE.bit64.stat
-    $i_64statval = $avXML.NODE.bit64.statval
-    #32BIT AV PRODUCT STATE KEY PATH AND VALUE
-    $i_32statkey = $avXML.NODE.bit32.stat
-    $i_32statval = $avXML.NODE.bit32.statval
+
     #SEPARATE RETURNED WMI AV PRODUCT INSTANCES
     $string = $AntiVirusProduct.displayName
     $avs = $string -split ', '
@@ -127,18 +117,36 @@ function Get-AntiVirusProduct {
     #THIS WOULD ALLOW EXPANDING AV XML / JSON TO INCLUDE EACH VENDORS' SPECIFIC SEPARATE PRODUCTS AND THEIR RESPECTIVE KEYS / VALUES
     foreach ($av in $avs) {
       #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
-      if (($avs[$i] -ne $i_PAV) -And ($avs[$i] -ne "Windows Defender")) {
+      #if (($avs[$i] -ne $i_PAV) -And ($avs[$i] -ne "Windows Defender")) {
+      if (($avs[$i] -notmatch $i_PAV) -And ($avs[$i] -notmatch "Windows Defender")) {
         $global:o_AVcon = 1
         $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
         $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
         $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "
       #PRIMARY AV PRODUCT
-      } elseif ($avs[$i] -eq $i_PAV) {
+      #} elseif ($avs[$i] -eq $i_PAV) {
+      } elseif ($avs[$i] -match $i_PAV) {
         $global:o_AVname = $avs[$i]
         $global:o_AVpath = $avpath[$i]
         Get-AVState($avstat[$i])
         $global:o_DefStatus = $global:defstatus
         $global:o_RTstate = $global:rtstatus
+        
+        #PARSE XML FOR SPECIFIC VENDOR AV PRODUCT
+        $node = $avs[$i].replace(" ", "").replace("-", "").toupper()
+        #64BIT AV PRODUCT VERSION KEY PATH AND VALUE
+        $i_64verkey = $avXML.NODE.$node.bit64.ver
+        $i_64verval = $avXML.NODE.$node.bit64.verval
+        #32BIT AV PRODUCT VERSION KEY PATH AND VALUE
+        $i_32verkey = $avXML.NODE.$node.bit32.ver
+        $i_32verval = $avXML.NODE.$node.bit32.verval
+        #64BIT AV PRODUCT STATE KEY PATH AND VALUE
+        $i_64statkey = $avXML.NODE.$node.bit64.stat
+        $i_64statval = $avXML.NODE.$node.bit64.statval
+        #32BIT AV PRODUCT STATE KEY PATH AND VALUE
+        $i_32statkey = $avXML.NODE.$node.bit32.stat
+        $i_32statval = $avXML.NODE.$node.bit32.statval
+        
         #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
         try {       #64BIT REGISTRY LOCATIONS
           $global:o_AVVersion = get-itemproperty -path HKLM:$i_64verkey -name $i_64verval -ErrorAction Stop
