@@ -15,16 +15,16 @@
   </SOPHOSANTIVIRUS>
   <SOPHOSINTERCEPTX>
     <bit64>
-      <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
-      <verval>MarketingVersion</verval>
-      <stat>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\</stat>
-      <statval>UpToDateState</statval>
+      <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
+      <verval>Version</verval>
+      <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
+      <statval>Result</statval>
     </bit64>
     <bit32>
-      <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
-      <verval>MarketingVersion</verval>
-      <stat>\SOFTWARE\Sophos\SAVService\Status\</stat>
-      <statval>UpToDateState</statval>
+      <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
+      <verval>Version</verval>
+      <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
+      <statval>Result</statval>
     </bit32>
   </SOPHOSINTERCEPTX>
 </NODE>
