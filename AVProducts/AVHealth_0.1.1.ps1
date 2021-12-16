@@ -99,7 +99,7 @@ function Get-AntiVirusProduct {
     $i = 0
     #COMMENT OUT THE BELOW LINE (LN92) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
     #$i_PAV = "Sophos"
-    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
     $srcAVP
     #READ AV PRODUCT DETAILS FROM XML
     try {
