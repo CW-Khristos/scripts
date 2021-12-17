@@ -106,8 +106,9 @@ try {
   $avXML = New-Object System.Xml.XmlDocument
   $avXML.Load($srcAVP)
 } catch {
+  $web = new-object system.net.webclient
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-  [xml]$avXML = (New-Object System.Net.WebClient).DownloadString($srcAVP)
+  [xml]$avXML = $web.DownloadString($srcAVP)
 }
 #QUERY WMI SECURITYCENTER NAMESPACE FOR AV PRODUCT DETAILS
 if ($OSVersion -ge [system.version]'6.0.0.0') {
