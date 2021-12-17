@@ -257,8 +257,8 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
       #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$i] -eq "Windows Defender") {
         $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
-        #$global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
-        #$global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
+        $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
+        $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
       }
     }
     $i = $i + 1
