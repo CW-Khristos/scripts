@@ -11,7 +11,7 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.2 (17 December 2021)
+    Version        : 0.1.3 (17 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_0.1.1.ps1 
@@ -26,6 +26,7 @@
           Added support for monitoring on Servers using 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' since WMI SecurityCenter2 Namespace does not exist on Server OSes
           Note : Obtaining AV Products from 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' only works *if* the AV Product registers itself in that key!
             If the above registry check fails to find any registered AV Products; script will attempt to fallback to WMI "root\cimv2" Namespace and "Win32_Product" Class -filter "Name like '$i_PAV'"
+    0.1.3 Correcting some bugs and adding better error handling
 #> 
 
 #REGION ----- DECLARATIONS ----
@@ -233,7 +234,14 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
           $global:o_AVStatus | add-member -NotePropertyName $i_statval -NotePropertyValue "0"
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
+        #$global:o_AVStatus.$i_statval
         if ($i_PAV -match "Symantec") {
+          if ($global:o_AVStatus.$i_statval -eq "0") {
+            $global:o_AVStatus = $true
+          } else {
+            $global:o_AVStatus = $false
+          }
+        } elseif ($avs[$i] -match "Sophos Intercept X") {
           if ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $true
           } else {
