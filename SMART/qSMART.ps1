@@ -325,7 +325,7 @@ if (-not (test-path -path $smartEXE -pathtype leaf)) {
     start-bitstransfer -erroraction stop -source $srcSMART -destination $smartEXE
   } catch {
     $web = new-object system.net.webclient
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
     $web.downloadfile($srcSMART, $smartEXE)
   }
 }
@@ -335,7 +335,7 @@ if (-not (test-path -path $dbEXE -pathtype leaf)) {
     start-bitstransfer -erroraction stop -source $srcDB -destination $dbEXE
   } catch {
     $web = new-object system.net.webclient
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
     $web.downloadfile($srcDB, $dbEXE)
   }
 }
