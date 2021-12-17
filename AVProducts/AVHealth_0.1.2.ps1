@@ -236,13 +236,13 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
         if ($i_PAV -match "Symantec") {
           if ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $true
-          } elseif ($global:o_AVStatus.$i_statval -eq "1") {
+          } else {
             $global:o_AVStatus = $false
           }
         } elseif ($i_PAV -notmatch "Symantec") {
           if ($global:o_AVStatus.$i_statval -eq "1") {
             $global:o_AVStatus = $true
-          } elseif ($global:o_AVStatus.$i_statval -eq "0") {
+          } else {
             $global:o_AVStatus = $false
           }
         }
