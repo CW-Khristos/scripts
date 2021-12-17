@@ -130,10 +130,14 @@ if (-not $blnWMI) {       #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE ; POSSI
     write-host "Failed to query WMI SecurityCenter Namespace" -foregroundcolor Red
     write-host "Possibly Server, attempting to  fallback to using 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' registry key" -foregroundcolor Red
     #QUERY 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' AND SEE IF AN AV IS REGISTRERED THERE
-    if ($global:bitarch = "bit64") {
-      $AntiVirusProduct = (get-itemproperty -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\*").PSChildName
-    } elseif ($global:bitarch = "bit32") {
-      $AntiVirusProduct = (get-itemproperty -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\*").PSChildName
+    try {
+      if ($global:bitarch = "bit64") {
+        $AntiVirusProduct = (get-itemproperty -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\*" -ErrorAction Stop).PSChildName
+      } elseif ($global:bitarch = "bit32") {
+        $AntiVirusProduct = (get-itemproperty -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\*" -ErrorAction Stop).PSChildName
+      }
+    } catch {
+      $AntiVirusProduct = $null
     }
     if ($AntiVirusProduct -ne $null) {            #RETURNED 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
       foreach ($av in $AntiVirusProduct) {
@@ -149,21 +153,25 @@ if (-not $blnWMI) {       #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE ; POSSI
     } elseif ($AntiVirusProduct -eq $null) {      #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
       write-host "Could not find AV registered in HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\*" -foregroundcolor Red
       write-host "Falling back to using WMI Win32_Product" -foregroundcolor Red
-      $AntiVirusProduct = get-wmiobject -Namespace "root\cimv2" -class "Win32_Product" -ComputerName $computername -filter "Name like '$i_PAV'"
-      foreach ($av in $AntiVirusProduct) {
-        $string1 = $string1 + $av + ", "
-        $string2 = $string2 + "Unknown, "
-        $string3 = $string3 + "Unknown, "
+      try {
+        $AntiVirusProduct = get-wmiobject -Namespace "root\cimv2" -class "Win32_Product" -ComputerName $computername -filter "Name like '$i_PAV'"
+        foreach ($av in $AntiVirusProduct) {
+          $string1 = $string1 + $av + ", "
+          $string2 = $string2 + "Unknown, "
+          $string3 = $string3 + "Unknown, "
+        }
+        $avs = $string1 -split ", "
+        $avpath = $string2 -split ", "
+        $avstat = $string3 -split ", "
+        $global:blnSecMon = $false
+      } catch {
+        $AntiVirusProduct = $null
       }
-      $avs = $string1 -split ", "
-      $avpath = $string2 -split ", "
-      $avstat = $string3 -split ", "
-      $global:blnSecMon = $false
     }
   } catch {
     $global:blnSecMon = $false
   }
-} elseif ($blnWMI) {      #RETURNED WMI SECURITYCENTER NAMESPACE
+} elseif ($blnWMI) {                              #RETURNED WMI SECURITYCENTER NAMESPACE
   #SEPARATE RETURNED WMI AV PRODUCT INSTANCES
   $string = $AntiVirusProduct.displayName
   $avs = $string -split ", "
@@ -172,80 +180,97 @@ if (-not $blnWMI) {       #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE ; POSSI
   $string = $AntiVirusProduct.productState
   $avstat = $string -split ", "
 }
-#ITERATE THROUGH EACH FOUND AV PRODUCT
-foreach ($av in $avs) {
-  if (($av -ne $null) -And ($av -ne "")) {
-    #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
-    if (($avs[$i] -notmatch $i_PAV) -And ($avs[$i] -notmatch "Windows Defender")) {
-      $global:o_AVcon = 1
-      $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
-      $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
-      $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "
-    #PRIMARY AV PRODUCT
-    } elseif ($avs[$i] -match $i_PAV) {
-      $global:o_AVname = $avs[$i]
-      $global:o_AVpath = $avpath[$i]
-      #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
-      Get-AVState($avstat[$i])
-      $global:o_DefStatus = $global:defstatus
-      $global:o_RTstate = $global:rtstatus
-      
-      #PARSE XML FOR SPECIFIC VENDOR AV PRODUCT
-      $node = $avs[$i].replace(" ", "").replace("-", "").toupper()
-      #AV PRODUCT VERSION KEY PATH AND VALUE
-      $i_verkey = $avXML.NODE.$node.$global:bitarch.ver
-      $i_verval = $avXML.NODE.$node.$global:bitarch.verval
-      #AV PRODUCT STATE KEY PATH AND VALUE
-      $i_statkey = $avXML.NODE.$node.$global:bitarch.stat
-      $i_statval = $avXML.NODE.$node.$global:bitarch.statval
-      
-      #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
-      try {
-        $global:o_AVVersion = get-itemproperty -path HKLM:$i_verkey -name $i_verval -ErrorAction Stop
-        write-host "-path HKLM:$i_verkey -name $i_verval" -foregroundcolor Yellow
-      } catch {
-        $global:o_AVVersion | add-member -NotePropertyName $i_verval -NotePropertyValue "."
-      }
-      $global:o_AVVersion = $global:o_AVVersion.$i_verval
-      #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
-      try {
-        $global:o_AVStatus = get-itemproperty -path HKLM:$i_statkey -name $i_statval -ErrorAction Stop
-        write-host "-path HKLM:$i_statkey -name $i_statval" -foregroundcolor Yellow
-      } catch {
-        $global:o_AVStatus | add-member -NotePropertyName $i_statval -NotePropertyValue "0"
-      }
-      #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
-      if ($i_PAV -match "Symantec") {
-        if ($global:o_AVStatus.$i_statval -eq "0") {
-          $global:o_AVStatus = $true
-        } else {
-          $global:o_AVStatus = $false
+if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
+  write-host "Could not find any AV Product registered" -foregroundcolor Red
+  $global:o_AVname = "No AV Product Found"
+  $global:o_AVVersion = ""
+  $global:o_AVpath = ""
+  $global:o_AVStatus = "Unknown"
+  $global:o_RTstate = "Unknown"
+  $global:o_DefStatus = "Unknown"
+  $global:o_AVcon = 0
+  $global:o_CompAV = "Unknown"
+  $global:o_CompPath = "Unknown"
+} elseif ($AntiVirusProduct -ne $null) {          #FOUND AV PRODUCTS
+  foreach ($av in $avs) {                         #ITERATE THROUGH EACH FOUND AV PRODUCT
+    if (($av -ne $null) -And ($av -ne "")) {
+      #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
+      if (($avs[$i] -notmatch $i_PAV) -And ($avs[$i] -notmatch "Windows Defender")) {
+        $global:o_AVcon = 1
+        $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
+        $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
+        $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "
+      #PRIMARY AV PRODUCT
+      } elseif ($avs[$i] -match $i_PAV) {
+        $global:o_AVname = $avs[$i]
+        $global:o_AVpath = $avpath[$i]
+        #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
+        Get-AVState($avstat[$i])
+        $global:o_DefStatus = $global:defstatus
+        $global:o_RTstate = $global:rtstatus
+        
+        #PARSE XML FOR SPECIFIC VENDOR AV PRODUCT
+        $node = $avs[$i].replace(" ", "").replace("-", "").toupper()
+        #AV PRODUCT VERSION KEY PATH AND VALUE
+        $i_verkey = $avXML.NODE.$node.$global:bitarch.ver
+        $i_verval = $avXML.NODE.$node.$global:bitarch.verval
+        #AV PRODUCT STATE KEY PATH AND VALUE
+        $i_statkey = $avXML.NODE.$node.$global:bitarch.stat
+        $i_statval = $avXML.NODE.$node.$global:bitarch.statval
+        
+        #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
+        try {
+          $global:o_AVVersion = get-itemproperty -path HKLM:$i_verkey -name $i_verval -ErrorAction Stop
+          write-host "-path HKLM:$i_verkey -name $i_verval" -foregroundcolor Yellow
+        } catch {
+          $global:o_AVVersion | add-member -NotePropertyName $i_verval -NotePropertyValue "."
         }
-      } elseif ($i_PAV -notmatch "Symantec") {
-        if ($global:o_AVStatus.$i_statval -eq "1") {
-          $global:o_AVStatus = $true
-        } else {
-          $global:o_AVStatus = $false
+        $global:o_AVVersion = $global:o_AVVersion.$i_verval
+        #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
+        try {
+          $global:o_AVStatus = get-itemproperty -path HKLM:$i_statkey -name $i_statval -ErrorAction Stop
+          write-host "-path HKLM:$i_statkey -name $i_statval" -foregroundcolor Yellow
+        } catch {
+          $global:o_AVStatus | add-member -NotePropertyName $i_statval -NotePropertyValue "0"
         }
+        #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
+        if ($i_PAV -match "Symantec") {
+          if ($global:o_AVStatus.$i_statval -eq "0") {
+            $global:o_AVStatus = $true
+          } else {
+            $global:o_AVStatus = $false
+          }
+        } elseif ($i_PAV -notmatch "Symantec") {
+          if ($global:o_AVStatus.$i_statval -eq "1") {
+            $global:o_AVStatus = $true
+          } else {
+            $global:o_AVStatus = $false
+          }
+        }
+      #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
+      } elseif ($avs[$i] -eq "Windows Defender") {
+        $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
+        $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
+        $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
       }
-    #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
-    } elseif ($avs[$i] -eq "Windows Defender") {
-      $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
-      $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
-      $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
     }
+    $i = $i + 1
   }
-  $i = $i + 1
 }
 #OUTPUT
-write-host "AV Display Name :" $global:o_AVname -foregroundcolor Green
-write-host "AV Version : " $global:o_AVVersion -foregroundcolor Green
-write-host "AV Path : " $global:o_AVpath -foregroundcolor Green
-write-host "AV Status : " $global:o_AVStatus -foregroundcolor Green
-write-host "Real-Time Status : " $global:o_RTstate -foregroundcolor Green
-write-host "Definition Status : " $global:o_DefStatus -foregroundcolor Green
-write-host "AV Conflict : " $global:o_AVcon -foregroundcolor Green
-write-host "Competitor AV : " $global:o_CompAV -foregroundcolor Green
-write-host "Competitor Path : " $global:o_CompPath -foregroundcolor Green
+if ($global:o_AVname -ne "No AV Product Found") {
+  $ccode = "Green"
+} elseif ($global:o_AVname -eq "No AV Product Found") {
+  $ccode = "Red"
+}
+write-host "AV Display Name :" $global:o_AVname -foregroundcolor $ccode
+write-host "AV Version : " $global:o_AVVersion -foregroundcolor $ccode
+write-host "AV Path : " $global:o_AVpath -foregroundcolor $ccode
+write-host "AV Status : " $global:o_AVStatus -foregroundcolor $ccode
+write-host "Real-Time Status : " $global:o_RTstate -foregroundcolor $ccode
+write-host "Definition Status : " $global:o_DefStatus -foregroundcolor $ccode
+write-host "AV Conflict : " $global:o_AVcon -foregroundcolor $ccode
+write-host "Competitor AV : " $global:o_CompAV -foregroundcolor $ccode
+write-host "Competitor Path : " $global:o_CompPath -foregroundcolor $ccode
 #END SCRIPT
 #------------
