@@ -189,8 +189,8 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
   $global:o_RTstate = "Unknown"
   $global:o_DefStatus = "Unknown"
   $global:o_AVcon = 0
-  $global:o_CompAV = "Unknown"
-  $global:o_CompPath = "Unknown"
+  $global:o_CompAV = "Windows Defender ,"
+  $global:o_CompPath = "windowsdefender:// ,"
 } elseif ($AntiVirusProduct -ne $null) {          #FOUND AV PRODUCTS
   foreach ($av in $avs) {                         #ITERATE THROUGH EACH FOUND AV PRODUCT
     if (($av -ne $null) -And ($av -ne "")) {
