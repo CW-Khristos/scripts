@@ -97,7 +97,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN100) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Sophos"
+$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
@@ -190,8 +190,6 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
   $global:o_RTstate = "Unknown"
   $global:o_DefStatus = "Unknown"
   $global:o_AVcon = 0
-  $global:o_CompAV = "Windows Defender ,"
-  $global:o_CompPath = "windowsdefender:// ,"
 } elseif ($AntiVirusProduct -ne $null) {          #FOUND AV PRODUCTS
   foreach ($av in $avs) {                         #ITERATE THROUGH EACH FOUND AV PRODUCT
     if (($av -ne $null) -And ($av -ne "")) {
@@ -251,8 +249,8 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
       #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$i] -eq "Windows Defender") {
         $global:o_CompAV = $global:o_CompAV + $avs[$i] + " , "
-        $global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
-        $global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
+        #$global:o_CompPath = $global:o_CompPath + $avpath[$i] + " , "
+        #$global:o_Compstate = $global:o_Compstate + $avstat[$i] + " , "  
       }
     }
     $i = $i + 1
