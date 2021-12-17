@@ -234,16 +234,17 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
           $global:o_AVStatus | add-member -NotePropertyName $i_statval -NotePropertyValue "0"
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
+        $global:o_AVStatus.$i_statval
         if ($i_PAV -match "Symantec") {
           if ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $true
-          } else {
+          } elseif ($global:o_AVStatus.$i_statval -eq "1") {
             $global:o_AVStatus = $false
           }
         } elseif ($i_PAV -notmatch "Symantec") {
           if ($global:o_AVStatus.$i_statval -eq "1") {
             $global:o_AVStatus = $true
-          } else {
+          } elseif ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $false
           }
         }
