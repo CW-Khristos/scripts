@@ -814,7 +814,7 @@ function chkSFOL(strSFOL)
 end function
 
 ''SUB-ROUTINES
-sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
+sub FILEDL(strURL, strDL, strFILE)                            ''CALL HOOK TO DOWNLOAD FILE FROM URL , 'ERRRET'=11
   strSAV = vbnullstring
   ''SET DOWNLOAD PATH
   strSAV = strDL & "\" & strFILE
@@ -853,17 +853,17 @@ sub FILEDL(strURL, strDL, strFILE)                          ''CALL HOOK TO DOWNL
     objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOAD : " & strSAV & " : SUCCESSFUL"
   end if
 	set objHTTP = nothing
-  if ((err.number <> 0) and (err.number <> 58)) then        ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
+  if ((err.number <> 0) and (err.number <> 58)) then          ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=11
     call LOGERR(11)
   end if
 end sub
 
-sub HOOK(strCMD)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
+sub HOOK(strCMD)                                              ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND , 'ERRRET'=12
   on error resume next
   objOUT.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   objLOG.write vbnewline & now & vbtab & vbtab & " - EXECUTING : HOOK(" & strCMD & ")"
   set objHOOK = objWSH.exec(strCMD)
-  if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
+  if (instr(1, strCMD, "takeown /F ") = 0) then               ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
       strIN = objHOOK.stdout.readline
       if (strIN <> vbnullstring) then
@@ -879,12 +879,12 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
     end if
   end if
   set objHOOK = nothing
-  if (err.number <> 0) then                                 ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
+  if (err.number <> 0) then                                   ''ERROR RETURNED DURING UPDATE CHECK , 'ERRRET'=12
     call LOGERR(12)
   end if
 end sub
 
-sub LOGERR(intSTG)                                          ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
+sub LOGERR(intSTG)                                            ''CALL HOOK TO MONITOR OUTPUT OF CALLED COMMAND
   errRET = intSTG
   if (err.number <> 0) then
     objOUT.write vbnewline & now & vbtab & vbtab & vbtab & err.number & vbtab & err.description & vbnewline
@@ -892,31 +892,31 @@ sub LOGERR(intSTG)                                          ''CALL HOOK TO MONIT
 		err.clear
   end if
   select case intSTG
-    case 0                                                  ''MSP_FILTER - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
+    case 0                                                    ''MSP_FILTER - CLIENTTOOL CHECK PASSED, 'ERRRET'=0
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK PASSED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK PASSED"
-    case 1                                                  ''MSP_FILTER - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
+    case 1                                                    ''MSP_FILTER - CLIENTTOOL CHECK FAILED, 'ERRRET'=1
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CLIENTTOOL CHECK FAILED, ENDING MSP_FILTER"
-    case 2                                                  ''MSP_FILTER - NOT ENOUGH ARGUMENTS, 'ERRRET'=2
-      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
-      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_CONFIG - NO ARGUMENTS PASSED, END SCRIPT"
-    case 11                                                 ''MSP_FILTER - CALL FILEDL() FAILED, 'ERRRET'=11
+    case 2                                                    ''MSP_FILTER - NOT ENOUGH ARGUMENTS, 'ERRRET'=2
+      objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - NO ARGUMENTS PASSED, END SCRIPT"
+      objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - NO ARGUMENTS PASSED, END SCRIPT"
+    case 11                                                   ''MSP_FILTER - CALL FILEDL() FAILED, 'ERRRET'=11
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL FILEDL() : " & strSAV
-    case 12                                                 ''MSP_FILTER - 'CALL HOOK() FAILED, 'ERRRET'=12
+    case 12                                                   ''MSP_FILTER - 'CALL HOOK() FAILED, 'ERRRET'=12
       objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
       objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER - CALL HOOK('STRCMD') : " & strRCMD & " : FAILED"
   end select
 end sub
 
-sub CLEANUP()                                               ''SCRIPT CLEANUP
+sub CLEANUP()                                                 ''SCRIPT CLEANUP
   on error resume next
-  if (errRET = 0) then         															''MSP_FILTER COMPLETED SUCCESSFULLY
+  if (errRET = 0) then         															  ''MSP_FILTER COMPLETED SUCCESSFULLY
     objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER SUCCESSFUL : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER SUCCESSFUL : " & now
     err.clear
-  elseif (errRET <> 0) then    															''MSP_FILTER FAILED
+  elseif (errRET <> 0) then    															  ''MSP_FILTER FAILED
     objOUT.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER FAILURE : " & errRET & " : " & now
     objLOG.write vbnewline & vbnewline & now & vbtab & " - MSP_FILTER FAILURE : " & errRET & " : " & now
     ''RAISE CUSTOMIZED ERROR CODE, ERROR CODE WILL BE DEFINE RESTOP NUMBER INDICATING WHICH SECTION FAILED
