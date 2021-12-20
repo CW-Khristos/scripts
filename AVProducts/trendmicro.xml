@@ -1,0 +1,20 @@
+<NODE>
+  <TRENDMICROSECURITYAGENT>
+    <bit64>
+      <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+      <verval>Version</verval>
+      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <statval>ClientUpgradeStatus</statval>
+    </bit64>
+    <bit32>
+      <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+      <verval>Version</verval>
+      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <statval>ClientUpgradeStatus</statval>
+    </bit32>
+  </TRENDMICROSECURITYAGENT>
+</NODE>
