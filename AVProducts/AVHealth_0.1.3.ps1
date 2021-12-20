@@ -97,7 +97,7 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN100) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#COMMENT OUT THE BELOW LINE (LN101) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
 #$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
