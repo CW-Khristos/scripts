@@ -23,20 +23,20 @@
   </SOPHOSANTIVIRUS>
   <SOPHOSINTERCEPTX>
     <bit64>
-      <display>\</display>
-      <displayval>\</displayval>
-      <path>\</path>
-      <pathval>\</pathval>
+      <display>\SophosInterceptX</display>
+      <displayval>\SophosInterceptX</displayval>
+      <path>\SophosInterceptX</path>
+      <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
     </bit64>
     <bit32>
-      <display>\</display>
-      <displayval>\</displayval>
-      <path>\</path>
-      <pathval>\</pathval>
+      <display>\SophosInterceptX</display>
+      <displayval>\SophosInterceptX</displayval>
+      <path>\SophosInterceptX</path>
+      <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
