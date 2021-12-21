@@ -1,12 +1,20 @@
 <NODE>
   <SOPHOSANTIVIRUS>
     <bit64>
+      <display>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</display>
+      <displayval>EventSource</displayval>
+      <path>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</path>
+      <pathval>Path</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
     </bit64>
     <bit32>
+      <display>\SOFTWARE\Sophos\SAVService\Application\</display>
+      <displayval>EventSource</displayval>
+      <path>\SOFTWARE\Sophos\SAVService\Application\</path>
+      <pathval>Path</pathval>
       <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
