@@ -27,7 +27,12 @@
           Note : Obtaining AV Products from 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' only works *if* the AV Product registers itself in that key!
             If the above registry check fails to find any registered AV Products; script will attempt to fallback to WMI "root\cimv2" Namespace and "Win32_Product" Class -filter "Name like '$i_PAV'"
     0.1.3 Correcting some bugs and adding better error handling
-    0.1.4 
+    0.1.4 Switched to reading AV Product 'Definition' XML data into hashtable format to allow flexible and efficient support of Servers; plan to utilize this method for all devices vs. direcly pulling XML data on each check
+          Replaced fallback to WMI "root\cimv2" Namespace and "Win32_Product" Class; per MS documentation this process also starts a consistency check of packages installed, verifying, and repairing the install
+          Attempted to utilize 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' as well but this produced inconsistent results with installed software / nomenclature of installed software
+          Instead; Script will retrieve the specified Vendor's AV Products 'Definition' XML and attempt to validate each AV Product via their respective Registry Keys similar to original 'AV Status' Script
+          Per MS documentation; fallback to WMI "root\cimv2" Namespace and "Win32reg_AddRemovePrograms" Class may serve as suitable replacement
+            https://docs.microsoft.com/en-US/troubleshoot/windows-server/admin-development/windows-installer-reconfigured-all-applications
 #> 
 
 #REGION ----- DECLARATIONS ----
@@ -99,7 +104,7 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN101) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#COMMENT OUT THE BELOW LINE (LN108) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
 #$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
@@ -113,6 +118,7 @@ try {
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
   [xml]$avXML = $web.DownloadString($srcAVP)
 }
+#READ XML DATA INTO NESTED HASHTABLE FORMAT FOR LATER USE
 foreach ($itm in $avXML.NODE.ChildNodes) {
   $hash = @{
     display = $itm.$global:bitarch.display
