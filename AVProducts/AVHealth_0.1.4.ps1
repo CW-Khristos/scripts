@@ -335,6 +335,6 @@ write-host "Definition Status : " $global:o_DefStatus -foregroundcolor $ccode
 write-host "AV Conflict : " $global:o_AVcon -foregroundcolor $ccode
 write-host "Competitor AV : " $global:o_CompAV -foregroundcolor $ccode
 write-host "Competitor Path : " $global:o_CompPath -foregroundcolor $ccode
-Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear();
+#Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear();
 #END SCRIPT
 #------------
