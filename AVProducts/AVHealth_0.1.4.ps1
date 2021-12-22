@@ -11,7 +11,7 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.4 (21 December 2021)
+    Version        : 0.1.4 (22 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_0.1.4.ps1 
@@ -27,10 +27,12 @@
           Note : Obtaining AV Products from 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' only works *if* the AV Product registers itself in that key!
             If the above registry check fails to find any registered AV Products; script will attempt to fallback to WMI "root\cimv2" Namespace and "Win32_Product" Class -filter "Name like '$i_PAV'"
     0.1.3 Correcting some bugs and adding better error handling
-    0.1.4 Switched to reading AV Product 'Definition' XML data into hashtable format to allow flexible and efficient support of Servers; plan to utilize this method for all devices vs. direcly pulling XML data on each check
+    0.1.4 Enhanced error handling a bit more to include $_.scriptstacktrace
+          Switched to reading AV Product 'Definition' XML data into hashtable format to allow flexible and efficient support of Servers; plan to utilize this method for all devices vs. direcly pulling XML data on each check
           Replaced fallback to WMI "root\cimv2" Namespace and "Win32_Product" Class; per MS documentation this process also starts a consistency check of packages installed, verifying, and repairing the install
           Attempted to utilize 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' as well but this produced inconsistent results with installed software / nomenclature of installed software
           Instead; Script will retrieve the specified Vendor's AV Products 'Definition' XML and attempt to validate each AV Product via their respective Registry Keys similar to original 'AV Status' Script
+            If the Script is able to validate an AV Product for the specified Vendor; it will then write the AV Product name to 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' for easy retrieval on subsequent runs
           Per MS documentation; fallback to WMI "root\cimv2" Namespace and "Win32reg_AddRemovePrograms" Class may serve as suitable replacement
             https://docs.microsoft.com/en-US/troubleshoot/windows-server/admin-development/windows-installer-reconfigured-all-applications
 #> 
@@ -104,7 +106,7 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN108) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#COMMENT OUT THE BELOW LINE (LN110) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
 #$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
@@ -184,15 +186,25 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
         try {
           if (test-path "HKLM:$reg1") {           #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
             write-host "Found 'HKLM:$reg1' for product : $key" -foregroundcolor Yellow
-            try {                                 #IF VALIDATIO PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+            try {                                 #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
               $keyval1 = get-itemproperty -path "HKLM:$reg1" -name "$reg2" -erroraction stop
               $keyval2 = get-itemproperty -path "HKLM:$reg3" -name "$reg4" -erroraction stop
               $keyval3 = get-itemproperty -path "HKLM:$reg5" -name "$reg6" -erroraction stop
               write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $keyval1.$reg2 " for : " $keyval1.$reg2 -foregroundcolor Red
               if ($global:bitarch = "bit64") {
-                new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 –force
+                try {
+                  new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 -force
+                } catch {
+                  write-host $_.scriptstacktrace
+                  write-host $_
+                }
               } elseif ($global:bitarch = "bit32") {
-                new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 –force
+                try {
+                  new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 -force
+                } catch {
+                  write-host $_.scriptstacktrace
+                  write-host $_
+                }
               }
               $string1 = $string1 + $keyval1.$reg2 + ", "
               $string2 = $string2 + $keyval2.$reg4 + ", "
@@ -204,16 +216,23 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
               $AntiVirusProduct = "."
             } catch {
               write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $keyval1.$reg2 " for : " $keyval1.$reg2 -foregroundcolor Red
+              write-host $_.scriptstacktrace
+              write-host $_
               $AntiVirusProduct = $null
             }
             break
           }
         } catch {
           write-host "Not Found 'HKLM:$reg1' for product : $key" -foregroundcolor Red
+          write-host $_.scriptstacktrace
+          write-host $_
         }
       }
     }
   } catch {
+    write-host "Failed to validate selected AV Products for : " $i_PAV -foregroundcolor Red
+    write-host $_.scriptstacktrace
+    write-host $_
     $global:blnSecMon = $false
   }
 } elseif ($blnWMI) {                              #RETURNED WMI SECURITYCENTER NAMESPACE
