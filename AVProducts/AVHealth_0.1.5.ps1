@@ -195,36 +195,37 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
               $keyval1 = get-itemproperty -path "HKLM:$reg1" -name "$reg2" -erroraction stop
               $keyval2 = get-itemproperty -path "HKLM:$reg3" -name "$reg4" -erroraction stop
               $keyval3 = get-itemproperty -path "HKLM:$reg5" -name "$reg6" -erroraction stop
-              write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $keyval1.$reg2 " for : " $keyval1.$reg2 -foregroundcolor Red
+              $string1 = $string1 + $keyval1.$reg2 + ", "
+              $string2 = $string2 + $keyval2.$reg4 + ", "
+              $string3 = $string3 + $keyval3.$reg6.tostring() + ", "
+              #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+              if ($string1 -match "Windows Defender") {
+                $string1 = "Windows Defender, "
+              }
+              $string4 = $string1.substring(0, $string1.length - 2)
+              write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $string4 " for : " $string4 -foregroundcolor Red
               if ($global:bitarch = "bit64") {
                 try {
-                  new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 -force
+                  new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $string4 -value $string4 -force
                 } catch {
                   write-host $_.scriptstacktrace
                   write-host $_
                 }
               } elseif ($global:bitarch = "bit32") {
                 try {
-                  new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $keyval1.$reg2 -value $keyval1.$reg2 -force
+                  new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $string4 -value $string4 -force
                 } catch {
                   write-host $_.scriptstacktrace
                   write-host $_
                 }
               }
-              $string1 = $string1 + $keyval1.$reg2 + ", "
-              #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-              if ($string1 = "windowsdefender://,") {
-                $string1 = "Windows Defender,"
-              }
-              $string2 = $string2 + $keyval2.$reg4 + ", "
-              $string3 = $string3 + $keyval3.$reg6.tostring() + ", "
               $avs = $string1 -split ", "
               $avpath = $string2 -split ", "
               $avstat = $string3 -split ", "
               $global:blnSecMon = $false
               $AntiVirusProduct = "."
             } catch {
-              write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $keyval1.$reg2 " for : " $keyval1.$reg2 -foregroundcolor Red
+              write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $string4 " for : " $string4 -foregroundcolor Red
               write-host $_.scriptstacktrace
               write-host $_
               $AntiVirusProduct = $null
@@ -288,7 +289,6 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
         #AV PRODUCT STATE KEY PATH AND VALUE
         $i_statkey = $avXML.NODE.$node.$global:bitarch.stat
         $i_statval = $avXML.NODE.$node.$global:bitarch.statval
-        
         #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
         try {
           $global:o_AVVersion = get-itemproperty -path "HKLM:$i_verkey" -name "$i_verval" -ErrorAction Stop
