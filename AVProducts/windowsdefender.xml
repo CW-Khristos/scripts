@@ -4,7 +4,7 @@
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
       <displayval>RemediationExe</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
-      <pathval>ProductAppDataPath</pathval>
+      <pathval>RemediationExe</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
@@ -14,7 +14,7 @@
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
       <displayval>RemediationExe</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
-      <pathval>ProductAppDataPath</pathval>
+      <pathval>RemediationExe</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
