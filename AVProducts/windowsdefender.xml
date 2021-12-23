@@ -2,9 +2,9 @@
   <WINDOWSDEFENDER>
     <bit64>
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
-      <displayval>RemediationExe</displayval>
+      <displayval>ProductAppDataPath</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
-      <pathval>RemediationExe</pathval>
+      <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
@@ -12,9 +12,9 @@
     </bit64>
     <bit32>
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
-      <displayval>RemediationExe</displayval>
+      <displayval>ProductAppDataPath</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
-      <pathval>RemediationExe</pathval>
+      <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
