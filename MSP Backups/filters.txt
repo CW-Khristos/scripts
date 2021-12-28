@@ -156,8 +156,11 @@ C:\wu_output|
 %SystemRoot%\ModemLogs|
 %SystemRoot%\rescache|
 %SystemRoot%\SchCache|
+%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache|
 %SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Microsoft\Dlna\DeviceIcons|
 %SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\INetCache|
+%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Microsoft\Windows\INetCookies|
+%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Packages|
 %SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Temp|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\INetCache|
