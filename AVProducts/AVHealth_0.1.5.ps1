@@ -111,8 +111,8 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN110) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Windows Defender"
+#COMMENT OUT THE BELOW LINE (LN115) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
