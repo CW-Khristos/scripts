@@ -115,7 +115,7 @@ Get-OSArch
 #$i_PAV = "Sophos"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
-$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
   $avXML = New-Object System.Xml.XmlDocument
