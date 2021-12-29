@@ -20,6 +20,12 @@ C:\Qoobox|
 C:\tempini|
 C:\temp|
 C:\wu_output|
+%PROGRAMFILES%\BitDefender\Endpoint Security\ctc_cache|
+%PROGRAMFILES%\BitDefender\Endpoint Security\Logs|
+%PROGRAMFILES%\BitDefender\Endpoint Security\mitm_cache|
+%PROGRAMFILES%\BitDefender\Endpoint Security\Quarantine|
+%PROGRAMFILES%\BitDefender\Endpoint Security\Signatures|
+%PROGRAMFILES%\BitDefender\Endpoint Security\ThreatScanner|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\ctc_cache|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\Logs|
 %PROGRAMFILES%\N-Able Technologies\AVDefender\mitm_cache|
