@@ -7,8 +7,12 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
+      <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
+      <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
     <bit32>
       <display>\SOFTWARE\Sophos\SAVService\Application\</display>
@@ -17,8 +21,12 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
+      <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSANTIVIRUS>
   <SOPHOSINTERCEPTX>
@@ -29,8 +37,12 @@
       <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
+      <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
+      <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
     <bit32>
       <display>\SophosInterceptX</display>
@@ -39,8 +51,12 @@
       <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
+      <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSINTERCEPTX>
 </NODE>

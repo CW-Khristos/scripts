@@ -7,8 +7,12 @@
       <pathval>BasePath</pathval>
       <ver>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
+      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
+      <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
     </bit64>
     <bit32>
       <display>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
@@ -17,8 +21,12 @@
       <pathval>BasePath</pathval>
       <ver>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
+      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
+      <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
     </bit32>
   </SYMANTECENDPOINTPROTECTION>
 </NODE>

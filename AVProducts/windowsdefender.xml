@@ -7,8 +7,12 @@
       <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
+      <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
+      <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
     </bit64>
     <bit32>
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
@@ -17,8 +21,12 @@
       <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
+      <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
+      <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
     </bit32>
   </WINDOWSDEFENDER>
 </NODE>

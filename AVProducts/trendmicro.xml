@@ -11,9 +11,11 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit64>
     <bit32>
-      <display>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion</display>
+      <display>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion</display>
       <displayval>ApplicationName</displayval>
       <path>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent</path>
       <pathval>Path</pathval>
@@ -23,6 +25,8 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit32>
   </TRENDMICROSECURITYAGENT>
 </NODE>
