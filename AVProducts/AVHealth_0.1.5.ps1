@@ -14,7 +14,7 @@
     Version        : 0.1.5 (23 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.4.ps1 
+    File Name      : AVHealth_0.1.5.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -100,6 +100,7 @@ function Get-AVState {
     "397328" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
     #Sophos
     "331776" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+    "335872" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
     #Norton Security
     "327696" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
     default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
@@ -112,7 +113,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN115) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Sophos"
+#$i_PAV = "Windows Defender"
 $computername=$env:computername
 [system.Version]$OSVersion = (get-wmiobject win32_operatingsystem -computername $computername).version
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
@@ -182,27 +183,27 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
       $global:blnSecMon = $true
     } elseif ($AntiVirusProduct -eq $null) {      #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
       foreach ($key in $global:avkey.keys) {      #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-        $reg1 = $global:avkey[$key].display
-        $reg2 = $global:avkey[$key].displayval
-        $reg3 = $global:avkey[$key].path
-        $reg4 = $global:avkey[$key].pathval
-        $reg5 = $global:avkey[$key].stat
-        $reg6 = $global:avkey[$key].statval
+        $regDisplay = $global:avkey[$key].display
+        $regDisplayVal = $global:avkey[$key].displayval
+        $regPath = $global:avkey[$key].path
+        $regPathVal = $global:avkey[$key].pathval
+        $regStat = $global:avkey[$key].stat
+        $regStatVal = $global:avkey[$key].statval
         try {
-          if (test-path "HKLM:$reg5") {           #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
-            write-host "Found 'HKLM:$reg1' for product : $key" -foregroundcolor Yellow
+          if (test-path "HKLM:$regDisplay") {           #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+            write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor Yellow
             try {                                 #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
-              $keyval1 = get-itemproperty -path "HKLM:$reg1" -name "$reg2" -erroraction stop
-              $keyval2 = get-itemproperty -path "HKLM:$reg3" -name "$reg4" -erroraction stop
-              $keyval3 = get-itemproperty -path "HKLM:$reg5" -name "$reg6" -erroraction stop
-              $string1 = $string1 + $keyval1.$reg2 + ", "
-              $string2 = $string2 + $keyval2.$reg4 + ", "
-              $string3 = $string3 + $keyval3.$reg6.tostring() + ", "
+              $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
+              $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
+              $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+              $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
+              $strPath = $strPath + $keyval2.$regPathVal + ", "
+              $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
               #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-              if ($string1 -match "Windows Defender") {
-                $string1 = "Windows Defender, "
+              if ($strDisplay -match "Windows Defender") {
+                $strDisplay = "Windows Defender, "
               }
-              $string4 = $string1.substring(0, $string1.length - 2)
+              $string4 = $strDisplay.substring(0, $strDisplay.length - 2)
               write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $string4 " for : " $string4 -foregroundcolor Red
               if ($global:bitarch = "bit64") {
                 try {
@@ -219,9 +220,9 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
                   write-host $_
                 }
               }
-              $avs = $string1 -split ", "
-              $avpath = $string2 -split ", "
-              $avstat = $string3 -split ", "
+              $avs = $strDisplay -split ", "
+              $avpath = $strPath -split ", "
+              $avstat = $strStat -split ", "
               $global:blnSecMon = $false
               $AntiVirusProduct = "."
             } catch {
@@ -233,7 +234,7 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
             break
           }
         } catch {
-          write-host "Not Found 'HKLM:$reg1' for product : $key" -foregroundcolor Red
+          write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor Red
           write-host $_.scriptstacktrace
           write-host $_
         }
