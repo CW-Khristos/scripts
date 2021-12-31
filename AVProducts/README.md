@@ -13,7 +13,7 @@
     Version        : 0.1.5 (23 December 2021)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.4.ps1 
+    File Name      : AVHealth_0.1.5.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -33,14 +33,14 @@ To setup each respective Custom Server; modify the 'Primary AV Product' input fo
  - **Note :** It is also possible to use Custom Properties (Customer or Device) for the 'Primary AV Product' input; this method would forego needing multiple Custom Services
 
 Configure the Thresholds as indicated below :
- - AV Name and AV Path should be set to "Contain" and should only need to input the Vendor (assumption based on default install paths)
- - AV Version should be set to "Contains" and "."
+ - AV Name and AV Path should be set to "Off" or "Contain" and should only need to input the Vendor (assumption based on default install paths)
+ - AV Version should be set to "Off"  or "Contains" and "."
  - AV Product Up-to-Date should be set to "Match" and "True"
  - Real-Time Protection should be set to "Match" and "Enabled"
  - Definition Status should be set to "Match" and "Up to date"
  - AV Conflict should be set to "Match" and "0"
- - Competitor AV should be set to "Contain" and "Windows Defender ,"
- - Competitor Path should be set to "Contain" and "windowsdefender:// ,"
+ - Competitor AV should be set to "Off" or "Contain" and "Windows Defender ,"
+ - Competitor Path should be set to "Off" or "Contain" and "windowsdefender:// ,"
 
 ![image](https://user-images.githubusercontent.com/10928642/147267471-10d07628-3f95-44a3-9ea3-5d6b693a71d6.png)
 ![image](https://user-images.githubusercontent.com/10928642/147267542-1590e6dc-b385-4e12-8261-9947c8ae1857.png)
