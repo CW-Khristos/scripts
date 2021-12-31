@@ -30,6 +30,7 @@ To setup each respective Custom Server; modify the 'Primary AV Product' input fo
 ![image](https://user-images.githubusercontent.com/10928642/147267004-6d98e2ed-daba-41d0-af1c-cb77ecb6b843.png)
  - **Note :** The only exception to this is for Windows Defender; if using Windows Defender as the Primary AV Product simply input "Windows Defender"
  - **Note :** It is not necessary to also fill in the "Service Identifier"; I personally prefer to do so so the Service Monitor will appear as "AV Health - Vendor" in NC
+ - **Note :** It is also possible to use Custom Properties (Customer or Device) for the 'Primary AV Product' input; this method would forego needing multiple Custom Services
 
 Configure the Thresholds as indicated below :
  - AV Name and AV Path should be set to "Contain" and should only need to input the Vendor (assumption based on default install paths)
