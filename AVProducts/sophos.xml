@@ -7,10 +7,14 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
+      <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
+      <tamperval>Emabled</tamperval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
@@ -21,26 +25,34 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
+      <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
+      <tamperval>Emabled</tamperval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSANTIVIRUS>
   <SOPHOSINTERCEPTX>
     <bit64>
-      <display>\SophosInterceptX</display>
+      <display>\SophosInterceptX\</display>
       <displayval>\SophosInterceptX</displayval>
-      <path>\SophosInterceptX</path>
+      <path>\SophosInterceptX\</path>
       <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
+      <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
+      <tamperval>tamper_protection_enabled</tamperval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
@@ -51,10 +63,14 @@
       <pathval>\SophosInterceptX</pathval>
       <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
+      <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
+      <tamperval>tamper_protection_enabled</tamperval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
