@@ -40,7 +40,7 @@
           Per MS documentation; fallback to WMI "root\cimv2" Namespace and "Win32reg_AddRemovePrograms" Class may serve as suitable replacement
             https://docs.microsoft.com/en-US/troubleshoot/windows-server/admin-development/windows-installer-reconfigured-all-applications
     0.1.5 Couple bugfixes and fixing a few issues when attempting to monitor 'Windows Defender' as the 'Primary AV Product'
-    0.1.6 Bugfixes for monitoring 'Windows Defender' and multiple AVs on Servers. Adding placeholders for Real-Time Status, Infection Status, and Threats
+    0.1.6 Bugfixes for monitoring 'Windows Defender' and multiple AVs on Servers. Adding placeholders for Real-Time Status, Infection Status, and Threats. Added Epoch Timestamp conversion for future use.
 
 .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
@@ -72,6 +72,11 @@ $global:blnWMI = $true
 #ENDREGION ----- DECLARATIONS ----
 
 #REGION ----- FUNCTIONS ----
+#Convert Epoch Date Timestamps to Local Time
+function Get-EpochDate ($epochDate) {
+    [timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddSeconds($epochDate))
+} ## Get-EpochDate
+
 #Determine Bit Architecture & OS Type
 function Get-OSArch {
   #OS Bit Architecture
