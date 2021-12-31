@@ -197,9 +197,6 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
       foreach ($av in $AntiVirusProduct) {
         write-host "Found 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor Yellow
         $strDisplay = $strDisplay + $av + ", "
-        #$strPath = $strPath + "Unknown, "
-        #$strRealTime = $strRealTime + "Unknown, "
-        #$strStat = $strStat + "Unknown, "
         foreach ($key in $global:avkey.keys) {    #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
           if ($av = $key) {
             $regDisplay = $global:avkey[$key].display
@@ -250,10 +247,6 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
                   write-host $_
                 }
               }
-              #$avs = $strDisplay -split ", "
-              #$avpath = $strPath -split ", "
-              #$avrt = $strRealTime -split ", "
-              #$avstat = $strStat -split ", "
               $AntiVirusProduct = "."
             } catch {
               write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $string4 " for : " $string4 -foregroundcolor Red
@@ -320,10 +313,6 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
                   write-host $_
                 }
               }
-              #$avs = $strDisplay -split ", "
-              #$avpath = $strPath -split ", "
-              #$avrt = $strRealTime -split ", "
-              #$avstat = $strStat -split ", "
               $AntiVirusProduct = "."
             } catch {
               write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $string4 " for : " $string4 -foregroundcolor Red
