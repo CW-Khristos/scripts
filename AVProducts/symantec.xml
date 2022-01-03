@@ -1,4 +1,34 @@
 <NODE>
+  <SYMANTECANTIVIRUS>
+    <bit64>
+      <display>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
+      <displayval>PRODUCTNAME</displayval>
+      <path>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
+      <pathval>BasePath</pathval>
+      <ver>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
+      <verval>PRODUCTVERSION</verval>
+      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
+      <statval>Update</statval>
+      <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
+      <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
+    </bit64>
+    <bit32>
+      <display>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
+      <displayval>PRODUCTNAME</displayval>
+      <path>\SOFTWARE\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
+      <pathval>BasePath</pathval>
+      <ver>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
+      <verval>PRODUCTVERSION</verval>
+      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
+      <statval>Update</statval>
+      <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
+      <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
+    </bit32>
+  </SYMANTECANTIVIRUS>
   <SYMANTECENDPOINTPROTECTION>
     <bit64>
       <display>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
