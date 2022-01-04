@@ -71,6 +71,13 @@ $global:o_CompAV = " "
 $global:o_CompPath = " "
 $global:o_Compstate = " "
 $global:blnWMI = $true
+#AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
+$global:zUpgrade = @(
+  "Sophos"
+  "Symantec"
+  "Trend Micro"
+  "Windows Defender"
+)
 #ENDREGION ----- DECLARATIONS ----
 
 #REGION ----- FUNCTIONS ----
@@ -141,7 +148,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN144) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Symantec"
+#$i_PAV = "Sophos"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
@@ -402,13 +409,13 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
         #$global:o_AVStatus.$i_statval
-        if (($avs[$i] -match "Symantec") -or ($avs[$i] -match "Sophos Intercept X") -or ($avs[$i] -match "Windows Defender")) {
+        if ($avs[$i] -match $global:zUpgrade) {
           if ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $true
           } else {
             $global:o_AVStatus = $false
           }
-        } elseif ($avs[$i] -notmatch "Symantec") {
+        } elseif ($avs[$i] -notmatch $global:zUpgrade) {
           if ($global:o_AVStatus.$i_statval -eq "1") {
             $global:o_AVStatus = $true
           } else {
