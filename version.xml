@@ -18,6 +18,8 @@
   <fastnet.vbs>5</fastnet.vbs>
   <fileback.vbs>1</fileback.vbs>
   <Fix_Control.vbs>1</Fix_Control.vbs>
+  <Fix_Control_v1.vbs>2</Fix_Control_v1.vbs>
+  <Fix_Control_v2.vbs>2</Fix_Control_v2.vbs>
   <gtfo.vbs>1</gtfo.vbs>
   <iasdatasync.vbs>1</iasdatasync.vbs>
   <Install_PowerShell.vbs>1</Install_PowerShell.vbs>
