@@ -73,7 +73,7 @@ $global:o_Compstate = " "
 $global:blnWMI = $true
 #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
 $global:zUpgrade = @(
-  "Sophos"
+  "Sophos Intercept X"
   "Symantec"
   "Trend Micro"
   "Windows Defender"
@@ -395,7 +395,7 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
         #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
         try {
           $global:o_AVVersion = get-itemproperty -path "HKLM:$i_verkey" -name "$i_verval" -ErrorAction Stop
-          write-host "-path HKLM:$i_verkey -name $i_verval" -foregroundcolor Yellow
+          write-host "Reading -path HKLM:$i_verkey -name $i_verval" -foregroundcolor Yellow
         } catch {
           $global:o_AVVersion | add-member -NotePropertyName "$i_verval" -NotePropertyValue "."
         }
@@ -403,19 +403,21 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
         #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
         try {
           $global:o_AVStatus = get-itemproperty -path "HKLM:$i_statkey" -name "$i_statval" -ErrorAction Stop
-          write-host "-path HKLM:$i_statkey -name $i_statval" -foregroundcolor Yellow
+          write-host "Reading -path HKLM:$i_statkey -name $i_statval" -foregroundcolor Yellow
         } catch {
           $global:o_AVStatus | add-member -NotePropertyName "$i_statval" -NotePropertyValue "0"
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
         #$global:o_AVStatus.$i_statval
-        if ($avs[$i] -match $global:zUpgrade) {
+        if ($global:zUpgrade -contains $avs[$i]) {
+          write-host $avs[$i] " reports " $global:o_AVStatus.$i_statval " for 'Up-To-Date' (Expected : '0')" -foregroundcolor Yellow
           if ($global:o_AVStatus.$i_statval -eq "0") {
             $global:o_AVStatus = $true
           } else {
             $global:o_AVStatus = $false
           }
-        } elseif ($avs[$i] -notmatch $global:zUpgrade) {
+        } elseif ($global:zUpgrade -notcontains $avs[$i]) {
+          write-host $avs[$i] " reports " $global:o_AVStatus.$i_statval " for 'Up-To-Date' (Expected : '1')" -foregroundcolor Yellow
           if ($global:o_AVStatus.$i_statval -eq "1") {
             $global:o_AVStatus = $true
           } else {
