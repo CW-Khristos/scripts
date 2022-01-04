@@ -141,7 +141,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN137) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Windows Defender"
+#$i_PAV = "Symantec"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
@@ -231,9 +231,9 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
               $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
               $strPath = $strPath + $keyval2.$regPathVal + ", "
               if ($keyval3.$regRTVal = "0") {
-                $strRealTime = $strRealTime + "True, "
+                $strRealTime = $strRealTime + "Enabled, "
               } elseif ($keyval3.$regRTVal = "1") {
-                $strRealTime = $strRealTime + "False, "
+                $strRealTime = $strRealTime + "Disabled, "
               }
               $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
               #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
@@ -281,9 +281,9 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
               $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
               $strPath = $strPath + $keyval2.$regPathVal + ", "
               if ($keyval3.$regRTVal = "0") {
-                $strRealTime = $strRealTime + "True, "
+                $strRealTime = $strRealTime + "Enabled, "
               } elseif ($keyval3.$regRTVal = "1") {
-                $strRealTime = $strRealTime + "False, "
+                $strRealTime = $strRealTime + "Disabled, "
               }
               $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
               #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
