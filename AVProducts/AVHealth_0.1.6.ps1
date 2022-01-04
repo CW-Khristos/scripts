@@ -74,8 +74,8 @@ $global:blnWMI = $true
 #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
 $global:zUpgrade = @(
   "Sophos Intercept X"
-  "Symantec"
-  "Trend Micro"
+  "Symantec Endpoint Protection"
+  "Trend Micro Security Agent"
   "Windows Defender"
 )
 #ENDREGION ----- DECLARATIONS ----
@@ -148,8 +148,8 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN144) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Sophos"
-$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+#$i_PAV = "Symantec"
+$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
   $avXML = New-Object System.Xml.XmlDocument
