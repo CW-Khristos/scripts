@@ -140,7 +140,7 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN137) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#COMMENT OUT THE BELOW LINE (LN144) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
 #$i_PAV = "Symantec"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
