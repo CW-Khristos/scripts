@@ -141,7 +141,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN137) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Symantec"
+#$i_PAV = "Windows Defender"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
@@ -207,7 +207,7 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
       foreach ($av in $AntiVirusProduct) {
         write-host "Found 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor Yellow
         foreach ($key in $global:avkey.keys) {    #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-          if ($av.toupper() -eq $key) {
+          if ($av.replace(" ", "").replace("-", "").toupper() -eq $key.toupper()) {
             $regDisplay = $global:avkey[$key].display
             $regDisplayVal = $global:avkey[$key].displayval
             $regPath = $global:avkey[$key].path
@@ -216,11 +216,10 @@ if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITY
             $regRTVal = $global:avkey[$key].rtval
             $regStat = $global:avkey[$key].stat
             $regStatVal = $global:avkey[$key].statval
-            break
+            break 
           }
         }
         try {
-          $key
           if (test-path "HKLM:$regDisplay") {     #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
             write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor Yellow
             try {                                 #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
