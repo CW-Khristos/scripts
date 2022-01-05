@@ -29,4 +29,34 @@
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit32>
   </TRENDMICROSECURITYAGENT>
+  <WORRYFREEBUSINESSSECURITY>
+    <bit64>
+      <display>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion</display>
+      <displayval>ApplicationName</displayval>
+      <path>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent</path>
+      <pathval>Path</pathval>
+      <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+      <verval>Version</verval>
+      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <statval>ClientUpgradeStatus</statval>
+      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
+    </bit64>
+    <bit32>
+      <display>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion</display>
+      <displayval>ApplicationName</displayval>
+      <path>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent</path>
+      <pathval>Path</pathval>
+      <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
+      <verval>Version</verval>
+      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <statval>ClientUpgradeStatus</statval>
+      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
+    </bit32>
+  </WORRYFREEBUSINESSSECURITY>
 </NODE>
