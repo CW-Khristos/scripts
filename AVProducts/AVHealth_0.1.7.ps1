@@ -70,9 +70,9 @@ $global:o_RTstate = "Unknown"
 $global:defstatus = "Unknown"
 $global:o_DefStatus = "Unknown"
 $global:o_AVcon = 0
-$global:o_CompAV = @("Windows Defender<br>")
-$global:o_CompPath = @("windowsdefender://<br>")
-$global:o_Compstate = @()
+$global:o_CompAV = "Windows Defender<br>"
+$global:o_CompPath = "windowsdefender://<br>"
+$global:o_Compstate = ""
 
 #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
 $global:zUpgrade = @(
