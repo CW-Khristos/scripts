@@ -152,8 +152,8 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN144) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-#$i_PAV = "Trend Micro"
-$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+$i_PAV = "Trend Micro"
+$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
   $avXML = New-Object System.Xml.XmlDocument
@@ -369,13 +369,21 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
   foreach ($av in $avs) {                         #ITERATE THROUGH EACH FOUND AV PRODUCT
     if (($av -ne $null) -And ($av -ne "")) {
       #NEITHER PRIMARY AV PRODUCT NOR WINDOWS DEFENDER
-      if (($i_PAV -notmatch "Trend Micro") -and ($avs[$i] -notmatch $i_PAV) -And ($avs[$i] -notmatch "Windows Defender")) {
-        $global:o_AVcon = 1
-        $global:o_CompAV += $avs[$i] + '<br>' #$global:o_CompAV + $avs[$i] + " , "
-        $global:o_CompPath += $avpath[$i] + '<br>' #$global:o_CompPath + $avpath[$i] + " , "
-        $global:o_Compstate += $avstat[$i] + '<br>' #$global:o_Compstate + $avstat[$i] + " , "
+      if (($avs[$i] -notmatch $i_PAV) -And ($avs[$i] -notmatch "Windows Defender")) {
+        if (($i_PAV -eq "Trend Micro") -and (($avs[$i] -notmatch "Trend Micro") -and ($avs[$i] -notmatch "Worry-Free Business Security"))) {
+          $global:o_AVcon = 1
+          $global:o_CompAV += $avs[$i] + '<br>' #$global:o_CompAV + $avs[$i] + " , "
+          $global:o_CompPath += $avpath[$i] + '<br>' #$global:o_CompPath + $avpath[$i] + " , "
+          $global:o_Compstate += $avstat[$i] + '<br>' #$global:o_Compstate + $avstat[$i] + " , "
+        } elseif ($i_PAV -ne "Trend Micro") {
+          $global:o_AVcon = 1
+          $global:o_CompAV += $avs[$i] + '<br>' #$global:o_CompAV + $avs[$i] + " , "
+          $global:o_CompPath += $avpath[$i] + '<br>' #$global:o_CompPath + $avpath[$i] + " , "
+          $global:o_Compstate += $avstat[$i] + '<br>' #$global:o_Compstate + $avstat[$i] + " , "
+        }
+      }
       #PRIMARY AV PRODUCT
-      } elseif (($avs[$i] -match $i_PAV) -or 
+      if (($avs[$i] -match $i_PAV) -or 
         (($i_PAV -eq "Trend Micro") -and (($avs[$i] -match "Trend Micro") -or ($avs[$i] -match "Worry-Free Business Security")))) {
         #AV DETAILS
         $global:o_AVname = $avs[$i]
