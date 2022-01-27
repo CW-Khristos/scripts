@@ -73,7 +73,6 @@ $global:o_AVcon = 0
 $global:o_CompAV = "Windows Defender<br>"
 $global:o_CompPath = "windowsdefender://<br>"
 $global:o_Compstate = ""
-
 #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
 $global:zUpgrade = @(
   "Sophos Intercept X"
@@ -152,7 +151,7 @@ function Get-AVState {
 $i = 0
 Get-OSArch
 #COMMENT OUT THE BELOW LINE (LN144) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
-$i_PAV = "Trend Micro"
+#$i_PAV = "Sophos"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
 try {
@@ -197,6 +196,7 @@ if ([system.version]$global:OSVersion -ge [system.version]'6.0.0.0') {
     $blnWMI = $false
   }
 }
+$blnWMI = $false
 if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE
   try {
     write-host "Failed to query WMI SecurityCenter Namespace" -foregroundcolor Red
