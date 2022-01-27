@@ -49,7 +49,7 @@ Configure the Thresholds as indicated below :
 After creating the desired Custom Services; create Service Templates for your Windows Devices
  - If planning to monitor multiple AV Products; it will be necessary to create Service Templates for each AV Product you wish to monitor
  - **Note :** Workstations / Laptops; Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
- - **Note :** Servers; Thresholds for AV Path, Real-Time Protection, Definition Status, Competitor AV, and Competitor Path should be set to "Off"
+ - **Note :** Servers; Thresholds for AV Path, Definition Status, Competitor AV, and Competitor Path should be set to "Off"
    - Setting Real-Time Protection and Definition Status Thresholds to "Off" is only a temporary measure until the script fully supports retrieving these values on Servers
 
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
