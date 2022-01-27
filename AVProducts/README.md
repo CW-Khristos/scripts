@@ -1,19 +1,19 @@
-# .SYNOPSIS
+#.SYNOPSIS 
     AV Health Monitoring
     This was based on "Get Installed Antivirus Information" by SyncroMSP
     But omits the Hex Conversions and utilization of WSC_SECURITY_PROVIDER , WSC_SECURITY_PRODUCT_STATE , WSC_SECURITY_SIGNATURE_STATUS
     https://mspscripts.com/get-installed-antivirus-information-2/
 
-# .DESCRIPTION 
+#.DESCRIPTION 
     Provide Primary AV Product Status and Report Possible AV Conflicts
     Script is intended to be universal / as flexible as possible without being excessively complicated
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
-# .NOTES
-    Version        : 0.1.5 (23 December 2021)
+#.NOTES
+    Version        : 0.1.7 (26 January 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.5.ps1 
+    File Name      : AVHealth_0.1.6.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -21,7 +21,7 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 
-# .USE
+#.USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
@@ -39,8 +39,8 @@ Configure the Thresholds as indicated below :
  - Real-Time Protection should be set to "Match" and "Enabled"
  - Definition Status should be set to "Match" and "Up to date"
  - AV Conflict should be set to "Match" and "0"
- - Competitor AV should be set to "Off" or "Contain" and "Windows Defender ,"
- - Competitor Path should be set to "Off" or "Contain" and "windowsdefender:// ,"
+ - Competitor AV should be set to "Off" or "Contain" and "Windows Defender"
+ - Competitor Path should be set to "Off" or "Contain" and "windowsdefender://"
 
 ![image](https://user-images.githubusercontent.com/10928642/147267471-10d07628-3f95-44a3-9ea3-5d6b693a71d6.png)
 ![image](https://user-images.githubusercontent.com/10928642/147267542-1590e6dc-b385-4e12-8261-9947c8ae1857.png)
@@ -55,7 +55,7 @@ After creating the desired Custom Services; create Service Templates for your Wi
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
 
 
-# .CHANGELOG
+#.CHANGELOG
  - 0.1.0
     - Initial Release
  - 0.1.1
@@ -79,6 +79,17 @@ After creating the desired Custom Services; create Service Templates for your Wi
       - https://docs.microsoft.com/en-US/troubleshoot/windows-server/admin-development/windows-installer-reconfigured-all-applications
  - 0.1.5
     - Couple bugfixes and fixing a few issues when attempting to monitor 'Windows Defender' as the 'Primary AV Product'
+ - 0.1.6 Bugfixes for monitoring 'Windows Defender' and 'Symantec Anti-Virus' and 'Symantect Endpoint Protection' and multiple AVs on Servers.
+    - These 2 'Symantec' AV Products are actually the same product; this is simply to deal with differing names in Registry Keys that cannot be changed with Symantec installed
+    - Adding placeholders for Real-Time Status, Infection Status, and Threats. Added Epoch Timestamp conversion for future use.
+ - 0.1.7 Bugfixes for monitoring 'Trend Micro' and 'Worry-Free Business Security' and multiple AVs on Servers.
+    - These 2 'Trend Micro' AV Products are actually the same product; this is simply to deal with differing names in Registry Keys that cannot be changed with Trend Micro installed
+
+#.TODO
+    Still need more AV Product registry samples for identifying keys to monitor for relevant data
+    Need to obtain version and calculate date timestamps for AV Product updates, Definition updates, and Last Scan
+    Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics
+        Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
 
 # Supported AV Products :
  - Sophos Anti-Virus
