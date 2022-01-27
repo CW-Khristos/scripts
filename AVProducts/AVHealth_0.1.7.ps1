@@ -70,8 +70,8 @@ $global:o_RTstate = "Unknown"
 $global:defstatus = "Unknown"
 $global:o_DefStatus = "Unknown"
 $global:o_AVcon = 0
-$global:o_CompAV = "Windows Defender<br>"
-$global:o_CompPath = "windowsdefender://<br>"
+$global:o_CompAV = ""
+$global:o_CompPath = ""
 $global:o_Compstate = ""
 #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
 $global:zUpgrade = @(
@@ -150,7 +150,7 @@ function Get-AVState {
 #BEGIN SCRIPT
 $i = 0
 Get-OSArch
-#COMMENT OUT THE BELOW LINE (LN153) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
+#COMMENT OUT THE BELOW LINE (LN154) FOR USE WITH AMP / PASSING OF PRIMARY AV AS INPUT
 #$i_PAV = "Sophos"
 $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 #READ AV PRODUCT DETAILS FROM XML
@@ -196,7 +196,6 @@ if ([system.version]$global:OSVersion -ge [system.version]'6.0.0.0') {
     $blnWMI = $false
   }
 }
-$blnWMI = $false
 if (-not $blnWMI) {                               #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE
   try {
     write-host "Failed to query WMI SecurityCenter Namespace" -foregroundcolor Red
@@ -441,8 +440,8 @@ if ($AntiVirusProduct -eq $null) {                #NO AV PRODUCT FOUND
       #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$i] -eq "Windows Defender") {
         $global:o_CompAV += $avs[$i] + '<br>' #$global:o_CompAV + $avs[$i] + " , "
-        $global:o_CompPath += $avs[$i] + '<br>' #$global:o_CompPath + $avpath[$i] + " , "
-        $global:o_Compstate += $avs[$i] + '<br>' #$global:o_Compstate + $avstat[$i] + " , "  
+        $global:o_CompPath += $avpath[$i] + '<br>' #$global:o_CompPath + $avpath[$i] + " , "
+        $global:o_Compstate += $avstat[$i] + '<br>' #$global:o_Compstate + $avstat[$i] + " , "  
       }
     }
     $i = $i + 1
