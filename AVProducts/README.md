@@ -1,15 +1,15 @@
-#.SYNOPSIS 
+# .SYNOPSIS 
     AV Health Monitoring
     This was based on "Get Installed Antivirus Information" by SyncroMSP
     But omits the Hex Conversions and utilization of WSC_SECURITY_PROVIDER , WSC_SECURITY_PRODUCT_STATE , WSC_SECURITY_SIGNATURE_STATUS
     https://mspscripts.com/get-installed-antivirus-information-2/
 
-#.DESCRIPTION 
+# .DESCRIPTION 
     Provide Primary AV Product Status and Report Possible AV Conflicts
     Script is intended to be universal / as flexible as possible without being excessively complicated
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
-#.NOTES
+# .NOTES
     Version        : 0.1.7 (26 January 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
@@ -21,7 +21,7 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 
-#.USE
+# .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
@@ -55,7 +55,7 @@ After creating the desired Custom Services; create Service Templates for your Wi
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
 
 
-#.CHANGELOG
+# .CHANGELOG
  - 0.1.0
     - Initial Release
  - 0.1.1
@@ -85,7 +85,7 @@ After creating the desired Custom Services; create Service Templates for your Wi
  - 0.1.7 Bugfixes for monitoring 'Trend Micro' and 'Worry-Free Business Security' and multiple AVs on Servers.
     - These 2 'Trend Micro' AV Products are actually the same product; this is simply to deal with differing names in Registry Keys that cannot be changed with Trend Micro installed
 
-#.TODO
+# .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
     Need to obtain version and calculate date timestamps for AV Product updates, Definition updates, and Last Scan
     Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics
