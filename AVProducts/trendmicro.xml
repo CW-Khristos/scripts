@@ -11,7 +11,7 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
-      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\Virus/Malware Count</infect>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit64>
     <bit32>
@@ -25,7 +25,7 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
-      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\Virus/Malware Count</infect>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit32>
   </TRENDMICROSECURITYAGENT>
@@ -41,7 +41,7 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
-      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\Virus/Malware Count</infect>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit64>
     <bit32>
@@ -55,7 +55,7 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
-      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</infect>
+      <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\Virus/Malware Count</infect>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit32>
   </WORRYFREEBUSINESSSECURITY>
