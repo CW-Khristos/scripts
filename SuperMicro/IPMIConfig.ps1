@@ -1,15 +1,15 @@
 <# 
 .SYNOPSIS 
     Automate rotation of SuperMicro IPMI Interface passwords and export BIOS / IPMI Configurations
-    
 
 .DESCRIPTION
     Script will automatically download SuperMicro Update Manager (SUM) & SMCIPMITool utilities
     Script will generate a randomized password string up to a configurable character length
     Script can be configured to use either SUM or SMCIPMITool to automate rotation of SuperMicro IPMI Interface passwords (requires administrative IPMI / BMC username & password)
     Script can be configured to use either SUM or SMCIPMITool to automate export of BIOS / IPMI / RAID Configurations
-      Notes : Changing IPMI / BMC user passwords requires passing of IPMI / BMC User ID
-             SUM requires the passing of the administrative IPMI / BMC username & password to change passwords
+      Notes : Changing IPMI / BMC user passwords requires passing of IPMI / BMC User ID (1 - Anonymous, 2 - ADMIN)
+             RAID Configuration export requires Node product key be activated to execute
+             Both utilities require the passing of the IPMI / BMC IP Address and administrative IPMI / BMC username & password to change user passwords
              SMCIPMITool requires the passing of the IPMI / BMC IP Address and administrative username and password to perform *all* functions
              SMCIPMITool cannot export RAID Configurations
  
@@ -119,7 +119,7 @@ if (($i_NewPwd -eq $null) -or ($i_NewPwd -eq "NULL")) {
   $i_NewPwd = $i_NewPwd
 }
 #SELECT WHICH UTILITY TO USE BASED ON PASS PARAMETER($i_Tool)
-switch ($i_Tool) {
+switch ($i_Tool.topupper()) {
   "SUM" {                                                               #SUPERMICRO UPDATE MANAGER (SUM) CALLS
     if (test-path -path $sumEXE -pathtype leaf) {                       #DOWNLOAD SUM IF NEEDED
     } elseif (-not (test-path -path $sumEXE -pathtype leaf)) {
@@ -145,11 +145,12 @@ switch ($i_Tool) {
       write-host "SUM - CANNOT SET IPMI / BMC USER PASSWORD WITHOUT IPMI / BMC LOGIN" -foregroundcolor red
     } elseif (($i_IPMIuser -ne $null) -and ($i_IPMIpwd -ne $null)) {
       write-host "SUM - SETTING IPMI / BMC USER PASSWORD" -foregroundcolor yellow
-      $output = Get-ProcessOutput -FileName $sumEXE "-c SetBmcPassword -u $i_IPMIuser -p $i_IPMIpwd --user_id $i_UserID --new_password $i_NewPwd"
+      $output = Get-ProcessOutput -FileName $sumEXE "-c SetBmcPassword -i $i_IPMIaddress -u $i_IPMIuser -p $i_IPMIpwd --user_id $i_UserID --new_password $i_NewPwd --confirm_password $i_NewPwd"
       #PARSE SUM OUTPUT LINE BY LINE
       $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
+          write-host $line
         }
       }
     }
@@ -160,6 +161,7 @@ switch ($i_Tool) {
     $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
     foreach ($line in $lines) {
       if ($line -ne $null) {
+        write-host $line
       }
     }
     #BACKUP IPMI / BMC CONFIGURATIONS
@@ -169,6 +171,7 @@ switch ($i_Tool) {
     $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
     foreach ($line in $lines) {
       if ($line -ne $null) {
+        write-host $line
       }
     }
     #BACKUP RAID CONFIGURATIONS
@@ -178,6 +181,7 @@ switch ($i_Tool) {
     $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
     foreach ($line in $lines) {
       if ($line -ne $null) {
+        write-host $line
       }
     }
   }
@@ -210,6 +214,7 @@ switch ($i_Tool) {
       $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
+          write-host $line
         }
       }
       #BACKUP IPMI / BMC CONFIGURATIONS AS TEXT
@@ -219,6 +224,7 @@ switch ($i_Tool) {
       $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
+          write-host $line
         }
       }
       #BACKUP IPMI / BMC CONFIGURATIONS AS BINARY
@@ -228,6 +234,7 @@ switch ($i_Tool) {
       $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
+          write-host $line
         }
       }
     }
