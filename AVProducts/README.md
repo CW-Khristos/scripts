@@ -26,7 +26,7 @@ Import "AV Health.amp" AMP in NC Script/Software Repository
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
 ![image](https://user-images.githubusercontent.com/10928642/147266859-583eccc5-cc72-40ad-a8b8-43d6d0c461a2.png)
-To setup each respective Custom Server; modify the 'Primary AV Product' input for the desired AV Product Vendor
+To setup each respective Custom Service; modify the 'Primary AV Product' input for the desired AV Product Vendor
 ![image](https://user-images.githubusercontent.com/10928642/147267004-6d98e2ed-daba-41d0-af1c-cb77ecb6b843.png)
  - **Note :** The only exception to this is for Windows Defender; if using Windows Defender as the Primary AV Product simply input "Windows Defender"
  - **Note :** It is not necessary to also fill in the "Service Identifier"; I personally prefer to do so so the Service Monitor will appear as "AV Health - Vendor" in NC
@@ -49,8 +49,8 @@ Configure the Thresholds as indicated below :
 After creating the desired Custom Services; create Service Templates for your Windows Devices
  - If planning to monitor multiple AV Products; it will be necessary to create Service Templates for each AV Product you wish to monitor
  - **Note :** Workstations / Laptops; Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
- - **Note :** Servers; Thresholds for AV Path, Real-Time Protection, Definition Status, Competitor AV, and Competitor Path should be set to "Off"
-   - Setting Real-Time Protection and Definition Status Thresholds to "Off" is only a temporary measure until the script fully supports retrieving these values on Servers
+ - **Note :** Servers; Thresholds for AV Path, Definition Status, Competitor AV, and Competitor Path should be set to "Off"
+   - Setting Definition Status Thresholds to "Off" is only a temporary measure until the script fully supports retrieving these values on Servers
 
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
 
