@@ -54,96 +54,93 @@
 #> 
 
 #REGION ----- DECLARATIONS ----
-$global:bitarch = ""
-$global:OSCaption = ""
-$global:OSVersion = ""
-$global:producttype = ""
-$global:computername = ""
-$global:blnWMI = $true
-$global:avkey = @{}
-$global:o_AVname = ""
-$global:o_AVVersion = ""
-$global:o_AVpath = ""
-$global:o_AVStatus = ""
-$global:rtstatus = "Unknown"
-$global:o_RTstate = "Unknown"
-$global:defstatus = "Unknown"
-$global:o_DefStatus = "Unknown"
-$global:o_AVcon = 0
-$global:o_CompAV = ""
-$global:o_CompPath = ""
-$global:o_Compstate = ""
-#AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
-$global:zUpgrade = @(
-  "Sophos Intercept X"
-  "Symantec Endpoint Protection"
-  "Trend Micro Security Agent"
-  "Worry-Free Business Security"
-  "Windows Defender"
-)
+  $global:bitarch = ""
+  $global:OSCaption = ""
+  $global:OSVersion = ""
+  $global:producttype = ""
+  $global:computername = ""
+  $global:blnWMI = $true
+  $global:avkey = @{}
+  $global:o_AVname = ""
+  $global:o_AVVersion = ""
+  $global:o_AVpath = ""
+  $global:o_AVStatus = ""
+  $global:rtstatus = "Unknown"
+  $global:o_RTstate = "Unknown"
+  $global:defstatus = "Unknown"
+  $global:o_DefStatus = "Unknown"
+  $global:o_AVcon = 0
+  $global:o_CompAV = ""
+  $global:o_CompPath = ""
+  $global:o_Compstate = ""
+  #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
+  $global:zUpgrade = @(
+    "Sophos Intercept X"
+    "Symantec Endpoint Protection"
+    "Trend Micro Security Agent"
+    "Worry-Free Business Security"
+    "Windows Defender"
+  )
 #ENDREGION ----- DECLARATIONS ----
 
 #REGION ----- FUNCTIONS ----
-#Convert Epoch Date Timestamps to Local Time
-function Get-EpochDate ($epochDate) {
-  [timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddSeconds($epochDate))
-} ## Get-EpochDate
+  function Get-EpochDate ($epochDate) {           #Convert Epoch Date Timestamps to Local Time
+    [timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddSeconds($epochDate))
+  } ## Get-EpochDate
 
-#Determine Bit Architecture & OS Type
-function Get-OSArch {
-  #OS Bit Architecture
-  $osarch = (get-wmiobject win32_operatingsystem).osarchitecture
-  if ($osarch -like '*64*') {
-    $global:bitarch = "bit64"
-  } elseif ($osarch -like '*32*') {
-    $global:bitarch = "bit32"
-  }
-  #OS Type & Version
-  $global:computername = $env:computername
-  $global:OSCaption = (Get-WmiObject Win32_OperatingSystem).Caption
-  $global:OSVersion = (Get-WmiObject Win32_OperatingSystem).Version
-  $osproduct = (Get-WmiObject -class Win32_OperatingSystem).Producttype
-  Switch ($osproduct) {
-    "1" {$global:producttype = "Workstation"}
-    "2" {$global:producttype = "DC"}
-    "3" {$global:producttype = "Server"}
-  }
-} ## Get-OSArch
+  function Get-OSArch {                           #Determine Bit Architecture & OS Type
+    #OS Bit Architecture
+    $osarch = (get-wmiobject win32_operatingsystem).osarchitecture
+    if ($osarch -like '*64*') {
+      $global:bitarch = "bit64"
+    } elseif ($osarch -like '*32*') {
+      $global:bitarch = "bit32"
+    }
+    #OS Type & Version
+    $global:computername = $env:computername
+    $global:OSCaption = (Get-WmiObject Win32_OperatingSystem).Caption
+    $global:OSVersion = (Get-WmiObject Win32_OperatingSystem).Version
+    $osproduct = (Get-WmiObject -class Win32_OperatingSystem).Producttype
+    Switch ($osproduct) {
+      "1" {$global:producttype = "Workstation"}
+      "2" {$global:producttype = "DC"}
+      "3" {$global:producttype = "Server"}
+    }
+  } ## Get-OSArch
 
-#Determine Antivirus State
-function Get-AVState {
-  param (
-    $state
-  )
-  #Switch to determine the status of antivirus definitions and real-time protection.
-  #THIS COULD PROBABLY ALSO BE TURNED INTO A SIMPLE XML / JSON LOOKUP TO FACILITATE COMMUNITY CONTRIBUTION
-  switch ($state) {
-    #AVG IS 2012 AV / CrowdStrike / Kaspersky
-    "262144" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-    "266240" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-    #AVG IS 2012 FW
-    "266256" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
-    "262160" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-    #MSSE
-    "393216" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-    "397312" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-    #Windows Defender
-    "393472" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-    "397584" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
-    "397568" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-    "401664" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-    #
-    "393232" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-    "393488" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-    "397328" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
-    #Sophos
-    "331776" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-    "335872" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-    #Norton Security
-    "327696" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-    default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
-  }
-} ## Get-AVState
+  function Get-AVState {                          #DETERMINE ANTIVIRUS STATE
+    param (
+      $state
+    )
+    #Switch to determine the status of antivirus definitions and real-time protection.
+    #THIS COULD PROBABLY ALSO BE TURNED INTO A SIMPLE XML / JSON LOOKUP TO FACILITATE COMMUNITY CONTRIBUTION
+    switch ($state) {
+      #AVG IS 2012 AV / CrowdStrike / Kaspersky
+      "262144" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      "266240" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      #AVG IS 2012 FW
+      "266256" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
+      "262160" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
+      #MSSE
+      "393216" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      "397312" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      #Windows Defender
+      "393472" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      "397584" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
+      "397568" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      "401664" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      #
+      "393232" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
+      "393488" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
+      "397328" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
+      #Sophos
+      "331776" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      "335872" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      #Norton Security
+      "327696" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
+      default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
+    }
+  } ## Get-AVState
 #ENDREGION ----- FUNCTIONS ----
 
 #------------
@@ -464,6 +461,5 @@ write-host "Definition Status : " $global:o_DefStatus -foregroundcolor $ccode
 write-host "AV Conflict : " $global:o_AVcon -foregroundcolor $ccode
 write-host "Competitor AV : " $global:o_CompAV -foregroundcolor $ccode
 write-host "Competitor Path : " $global:o_CompPath -foregroundcolor $ccode
-#Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear();
 #END SCRIPT
 #------------
