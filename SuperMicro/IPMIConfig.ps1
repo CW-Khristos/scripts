@@ -110,7 +110,7 @@ if (-not (test-path -path "C:\IT\SuperMicro\Backups\SMCIPMITOOL")) {
   new-item -path "C:\IT\SuperMicro\Backups\SMCIPMITOOL" -itemtype directory
 }
 #GENERATE RANDOMIZED PASSWORD UP TO LEN($i_PwdLength)
-if (($i_PwdLength -eq 0) -or ($i_PwdLength -lt 8)) {
+if (($i_PwdLength -eq 0) -or ($i_PwdLength -lt 8) -or ($i_PwdLength -gt 19)) {
   $i_PwdLength = 8
 }
 if (($i_NewPwd -eq $null) -or ($i_NewPwd -eq "NULL")) {
@@ -119,7 +119,7 @@ if (($i_NewPwd -eq $null) -or ($i_NewPwd -eq "NULL")) {
   $i_NewPwd = $i_NewPwd
 }
 #SELECT WHICH UTILITY TO USE BASED ON PASS PARAMETER($i_Tool)
-switch ($i_Tool.topupper()) {
+switch ($i_Tool.toupper()) {
   "SUM" {                                                               #SUPERMICRO UPDATE MANAGER (SUM) CALLS
     if (test-path -path $sumEXE -pathtype leaf) {                       #DOWNLOAD SUM IF NEEDED
     } elseif (-not (test-path -path $sumEXE -pathtype leaf)) {
@@ -145,9 +145,9 @@ switch ($i_Tool.topupper()) {
       write-host "SUM - CANNOT SET IPMI / BMC USER PASSWORD WITHOUT IPMI / BMC LOGIN" -foregroundcolor red
     } elseif (($i_IPMIuser -ne $null) -and ($i_IPMIpwd -ne $null)) {
       write-host "SUM - SETTING IPMI / BMC USER PASSWORD" -foregroundcolor yellow
-      $output = Get-ProcessOutput -FileName $sumEXE "-c SetBmcPassword -i $i_IPMIaddress -u $i_IPMIuser -p $i_IPMIpwd --user_id $i_UserID --new_password $i_NewPwd --confirm_password $i_NewPwd"
+      $pwdoutput = Get-ProcessOutput -FileName $sumEXE "-c SetBmcPassword -i $i_IPMIaddress -u $i_IPMIuser -p $i_IPMIpwd --user_id $i_UserID --new_password $i_NewPwd --confirm_password $i_NewPwd"
       #PARSE SUM OUTPUT LINE BY LINE
-      $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
+      $lines = $pwdoutput.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
           write-host $line
@@ -209,9 +209,9 @@ switch ($i_Tool.topupper()) {
       }
       #SET IPMI / BMC USER PASSWORD
       write-host "SMCIPMITOOL - SETTING IPMI / BMC USER PASSWORD" -foregroundcolor yellow
-      $output = Get-ProcessOutput -FileName $smcipmiEXE "$i_IPMIaddress $i_IPMIuser $i_IPMIpwd user setpwd $i_UserID $i_NewPwd"
+      $pwdoutput = Get-ProcessOutput -FileName $smcipmiEXE "$i_IPMIaddress $i_IPMIuser $i_IPMIpwd user setpwd $i_UserID $i_NewPwd"
       #PARSE SMCIPMITOOL OUTPUT LINE BY LINE
-      $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
+      $lines = $pwdoutput.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
       foreach ($line in $lines) {
         if ($line -ne $null) {
           write-host $line
@@ -241,6 +241,8 @@ switch ($i_Tool.topupper()) {
   }
 }
 #RETURN NEW IPMI / BMC PASSWORD TO NABLE
-$o_Pwd = $i_NewPwd
+if ($pwdoutput -match "The BMC password is set") {
+  $o_Pwd = $i_NewPwd
+}
 #END SCRIPT
 #------------
