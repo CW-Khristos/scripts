@@ -54,6 +54,9 @@
 #> 
 
 #REGION ----- DECLARATIONS ----
+  Param(
+    [Parameter(Mandatory=$true)]$i_PAV
+  )
   $global:bitarch = ""
   $global:OSCaption = ""
   $global:OSVersion = ""
