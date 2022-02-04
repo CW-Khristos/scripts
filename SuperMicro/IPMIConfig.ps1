@@ -38,7 +38,9 @@
     $i_UserID,
     $i_NewPwd
   )
-
+  arrPWD = @(
+    "!", "@", "#", "$", "%", "^", "&", "*"
+  )
   #SUPERMICRO UPDATE MANAGER (SUM)
   $sumZIP = "C:\IT\SuperMicro\SUM.zip"
   $sumBAK = "C:\IT\SuperMicro\Backups\SUM"
@@ -114,7 +116,17 @@ if (($i_PwdLength -eq 0) -or ($i_PwdLength -lt 8) -or ($i_PwdLength -gt 19)) {
   $i_PwdLength = 8
 }
 if (($i_NewPwd -eq $null) -or ($i_NewPwd -eq "NULL")) {
-  $i_NewPwd = -join ((33..33) + (35..38) + (42..42) + (50..57) + (63..72) + (74..75) + (77..78) + (80..90) + (97..104) + (106..107) + (109..110) + (112..122) | Get-Random -Count $i_PwdLength | ForEach-Object {[char]$_})
+  $blnPass = $false
+  while (-not $blnPass) {
+    $i_NewPwd = -join ((33..33) + (35..38) + (42..42) + (50..57) + (63..72) + (74..75) + (77..78) + (80..90) + (97..104) + (106..107) + (109..110) + (112..122) | Get-Random -Count $i_PwdLength | ForEach-Object {[char]$_})
+    #PASSWORD COMPLEXITY CHECK
+    foreach ($char in $arrPWD) {
+      if ($i_NewPwd -match $char) {
+        $blnPass = $true
+        break
+      }
+    }
+  }
 } else {
   $i_NewPwd = $i_NewPwd
 }
