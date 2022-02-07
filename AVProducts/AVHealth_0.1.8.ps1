@@ -161,7 +161,7 @@
 #BEGIN SCRIPT
 Get-OSArch
 #READ AV PRODUCT DETAILS FROM XML
-$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
+$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
 try {
   $avXML = New-Object System.Xml.XmlDocument
   $avXML.Load($srcAVP)
@@ -194,6 +194,7 @@ foreach ($itm in $avXML.NODE.ChildNodes) {
     stat = $itm.$global:bitarch.stat
     statval = $itm.$global:bitarch.statval
     infect = $itm.$global:bitarch.infect
+    infectval = $itm.$global:bitarch.infectval
     threat = $itm.$global:bitarch.threat
   }
   $avkey.add($itm.name, $hash)
@@ -258,8 +259,8 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
               $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
               $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
               $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
-              $keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-              $keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
+              #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
+              #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
               #FORMAT AV DATA
               $strName = $keyval1.$regDisplayVal
               $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
@@ -308,8 +309,8 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
               $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
               $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
               $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
-              $keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-              $keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
+              #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
+              #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
               #FORMAT AV DATA
               $strName = $keyval1.$regDisplayVal
               $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
@@ -482,6 +483,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         $i_statval = $avXML.NODE.$node.$global:bitarch.statval
         #AV PRODUCT INFECTIONS KEY PATH
         $i_infect = $avXML.NODE.$node.$global:bitarch.infect
+        $i_infectval = $avXML.NODE.$node.$global:bitarch.infectval
         #AV PRODUCT THREATS KEY PATH
         $i_threat = $avXML.NODE.$node.$global:bitarch.threat
         #AV DETAILS
@@ -534,14 +536,23 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
           write-host "Reading -path 'HKLM:$i_infect'" -foregroundcolor yellow
-          $keyval6 = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
-          foreach ($infect in $keyval6.psobject.Properties) {
-            if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
-              if ($infect.value -eq 0) {
-                $global:o_Infect += "Type - $($infect.name) : $false`r`n"
-              } elseif ($infect.value -eq 1) {
-                $global:o_Infect += "Type - $($infect.name) : $true`r`n"
+          if ($i_PAV -match "Sophos") {
+            $keyval5 = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
+            foreach ($infect in $keyval5.psobject.Properties) {
+              if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
+                if ($infect.value -eq 0) {
+                  $global:o_Infect += "Type - $($infect.name) : $false`r`n"
+                } elseif ($infect.value -eq 1) {
+                  $global:o_Infect += "Type - $($infect.name) : $true`r`n"
+                }
               }
+            }
+          } elseif ($i_PAV -match "Trend Micro") {
+            $keyval5 = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
+            if ($keyval5.value -eq 0) {
+              $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($keyval5.$i_infectval)`r`n"
+            } elseif ($keyval5. -gt 0) {
+              $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($keyval5.$i_infectval) : $true`r`n"
             }
           }
         } catch {
@@ -551,14 +562,14 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         #GET PRIMARY AV PRODUCT DETECTED THREATS VIA REGISTRY
         try {
           write-host "Reading -path 'HKLM:$i_threat'" -foregroundcolor yellow
-          $keyval7 = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
-          if ($keyval7.count -gt 0) {
-            foreach ($threat in $keyval7) {
-              $keyval8 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction continue
-              $keyval9 = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction continue
-              foreach ($detection in $keyval9) {
-                $keyval10 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($keyval9.PSChildName)\" -name "Path" -erroraction continue
-                $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($keyval8.type) - Path : $($keyval10.path)`r`n"
+          $keyval6 = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
+          if ($keyval6.count -gt 0) {
+            foreach ($threat in $keyval6) {
+              $keyval7 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
+              $keyval8 = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
+              foreach ($detection in $keyval8) {
+                $keyval9 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($keyval8.PSChildName)\" -name "Path" -erroraction silentlycontinue
+                $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($keyval7.type) - Path : $($keyval9.path)`r`n"
               }
             }
           } elseif ($keyval7.count -le 0) {
