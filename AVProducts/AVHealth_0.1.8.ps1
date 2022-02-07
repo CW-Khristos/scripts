@@ -237,6 +237,11 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
       $blnSecMon = $false
       foreach ($av in $AntiVirusProduct) {
         write-host "Found 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor yellow
+        if ($av -match "Windows Defender") {
+          $strDisplay = $strDisplay + "Windows Defender, "
+        } else {
+          $strDisplay = $strDisplay + "$av, "
+        }
         foreach ($key in $global:avkey.keys) {              #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
           if ($av.replace(" ", "").replace("-", "").toupper() -eq $key.toupper()) {
             $strName = ""
@@ -266,10 +271,10 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
                 #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
                 #FORMAT AV DATA
                 $strName = $keyval1.$regDisplayVal
-                $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
-                if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-                  $strDisplay = "Windows Defender, "
-                }
+                #$strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
+                #if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                #  $strDisplay = "Windows Defender, "
+                #}
                 $strPath = $strPath + $keyval2.$regPathVal + ", "
                 if ($keyval3.$regRTVal = "0") {               #INTERPRET REAL-TIME SCANNING STATUS
                   $strRealTime = $strRealTime + "Enabled, "
