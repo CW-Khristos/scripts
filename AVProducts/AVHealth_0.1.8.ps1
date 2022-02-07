@@ -70,7 +70,8 @@
   $global:computername = ""
   $global:blnWMI = $true
   $global:avs = @{}
-  $global:avkey = @{}
+  $global:pavkey = @{}
+  $global:cavkey = @{}
   $global:o_AVname = ""
   $global:o_AVVersion = ""
   $global:o_AVpath = ""
@@ -155,52 +156,59 @@
       default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
     }
   } ## Get-AVState
+  
+  function Get-AVXML {
+    param (
+      $src, $dest
+    )
+    #READ AV PRODUCT DETAILS FROM XML
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+    try {
+      $avXML = New-Object System.Xml.XmlDocument
+      $avXML.Load($srcAVP)
+    } catch {
+      write-host "XML.Load() - Could not open $srcAVP" -foregroundcolor red
+      try {
+        $web = new-object system.net.webclient
+        [xml]$avXML = $web.DownloadString($srcAVP)
+      } catch {
+        write-host "Web.DownloadString() - Could not download $srcAVP" -foregroundcolor red
+        try {
+          start-bitstransfer -erroraction stop -source $srcAVP -destination "C:\IT\Scripts\" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+          [xml]$avXML = "C:\IT\Scripts\" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+        } catch {
+          write-host "BITS.Transfer() - Could not download $srcAVP" -foregroundcolor red
+        }
+      }
+    }
+    #READ PRIMARY AV VENDOR XML DATA INTO NESTED HASHTABLE FORMAT FOR LATER USE
+    foreach ($itm in $avXML.NODE.ChildNodes) {
+      $hash = @{
+        display = $itm.$global:bitarch.display
+        displayval = $itm.$global:bitarch.displayval
+        path = $itm.$global:bitarch.path
+        pathval = $itm.$global:bitarch.pathval
+        ver = $itm.$global:bitarch.ver
+        verval = $itm.$global:bitarch.verval
+        stat = $itm.$global:bitarch.stat
+        statval = $itm.$global:bitarch.statval
+        update = $itm.$global:bitarch.update
+        updateval = $itm.$global:bitarch.updateval
+        rt = $itm.$global:bitarch.rt
+        rtval = $itm.$global:bitarch.rtval
+        infect = $itm.$global:bitarch.infect
+        infectval = $itm.$global:bitarch.infectval
+        threat = $itm.$global:bitarch.threat
+      }
+      $dest.add($itm.name, $hash)
+    }
+  } ## Get-AVXML
 #ENDREGION ----- FUNCTIONS ----
 
 #------------
 #BEGIN SCRIPT
 Get-OSArch
-#READ AV PRODUCT DETAILS FROM XML
-$srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
-try {
-  $avXML = New-Object System.Xml.XmlDocument
-  $avXML.Load($srcAVP)
-} catch {
-  write-host "XML.Load() - Could not open $srcAVP" -foregroundcolor red
-  try {
-    $web = new-object system.net.webclient
-    [xml]$avXML = $web.DownloadString($srcAVP)
-  } catch {
-    write-host "Web.DownloadString() - Could not download $srcAVP" -foregroundcolor red
-    try {
-      start-bitstransfer -erroraction stop -source $srcAVP -destination "C:\IT\Scripts\" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
-      [xml]$avXML = "C:\IT\Scripts\" + $i_PAV.replace(" ", "").replace("-", "").tolower() + ".xml"
-    } catch {
-      write-host "BITS.Transfer() - Could not download $srcAVP" -foregroundcolor red
-    }
-  }
-}
-#READ XML DATA INTO NESTED HASHTABLE FORMAT FOR LATER USE
-foreach ($itm in $avXML.NODE.ChildNodes) {
-  $hash = @{
-    display = $itm.$global:bitarch.display
-    displayval = $itm.$global:bitarch.displayval
-    path = $itm.$global:bitarch.path
-    pathval = $itm.$global:bitarch.pathval
-    ver = $itm.$global:bitarch.ver
-    verval = $itm.$global:bitarch.verval
-    rt = $itm.$global:bitarch.rt
-    rtval = $itm.$global:bitarch.rtval
-    stat = $itm.$global:bitarch.stat
-    statval = $itm.$global:bitarch.statval
-    update = $itm.$global:bitarch.update
-    updateval = $itm.$global:bitarch.updateval
-    infect = $itm.$global:bitarch.infect
-    infectval = $itm.$global:bitarch.infectval
-    threat = $itm.$global:bitarch.threat
-  }
-  $avkey.add($itm.name, $hash)
-}
+Get-AVXML $i_PAV $pavkey
 #QUERY WMI SECURITYCENTER NAMESPACE FOR AV PRODUCT DETAILS
 if ([system.version]$global:OSVersion -ge [system.version]'6.0.0.0') {
   write-verbose "OS Windows Vista/Server 2008 or newer detected."
@@ -242,19 +250,20 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
         } else {
           $strDisplay = $strDisplay + "$av, "
         }
-        foreach ($key in $global:avkey.keys) {              #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+        #SEARCH PASSED PRIMARY AV VENDOR XML
+        foreach ($key in $global:pavkey.keys) {              #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
           if ($av.replace(" ", "").replace("-", "").toupper() -eq $key.toupper()) {
             $strName = ""
-            $regDisplay = $global:avkey[$key].display
-            $regDisplayVal = $global:avkey[$key].displayval
-            $regPath = $global:avkey[$key].path
-            $regPathVal = $global:avkey[$key].pathval
-            $regRealTime = $global:avkey[$key].rt
-            $regRTVal = $global:avkey[$key].rtval
-            $regStat = $global:avkey[$key].stat
-            $regStatVal = $global:avkey[$key].statval
-            $regInfect = $global:avkey[$key].infect
-            $regThreat = $global:avkey[$key].threat
+            $regDisplay = $global:pavkey[$key].display
+            $regDisplayVal = $global:pavkey[$key].displayval
+            $regPath = $global:pavkey[$key].path
+            $regPathVal = $global:pavkey[$key].pathval
+            $regRealTime = $global:pavkey[$key].rt
+            $regRTVal = $global:pavkey[$key].rtval
+            $regStat = $global:pavkey[$key].stat
+            $regStatVal = $global:pavkey[$key].statval
+            $regInfect = $global:pavkey[$key].infect
+            $regThreat = $global:pavkey[$key].threat
             break
           }
         }
@@ -298,18 +307,18 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
     } elseif ($AntiVirusProduct -eq $null) {                #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
       $strDisplay = ""
       $blnSecMon = $true
-      foreach ($key in $global:avkey.keys) {                #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+      foreach ($key in $global:pavkey.keys) {                #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
         $strName = ""
-        $regDisplay = $global:avkey[$key].display
-        $regDisplayVal = $global:avkey[$key].displayval
-        $regPath = $global:avkey[$key].path
-        $regPathVal = $global:avkey[$key].pathval
-        $regRealTime = $global:avkey[$key].rt
-        $regRTVal = $global:avkey[$key].rtval
-        $regStat = $global:avkey[$key].stat
-        $regStatVal = $global:avkey[$key].statval
-        $regInfect = $global:avkey[$key].infect
-        $regThreat = $global:avkey[$key].threat
+        $regDisplay = $global:pavkey[$key].display
+        $regDisplayVal = $global:pavkey[$key].displayval
+        $regPath = $global:pavkey[$key].path
+        $regPathVal = $global:pavkey[$key].pathval
+        $regRealTime = $global:pavkey[$key].rt
+        $regRTVal = $global:pavkey[$key].rtval
+        $regStat = $global:pavkey[$key].stat
+        $regStatVal = $global:pavkey[$key].statval
+        $regInfect = $global:pavkey[$key].infect
+        $regThreat = $global:pavkey[$key].threat
         try {
           if (test-path "HKLM:$regDisplay") {               #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
             write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
@@ -481,26 +490,26 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         (($i_PAV -eq "Trend Micro") -and (($avs[$av].display -match "Trend Micro") -or ($avs[$av].display -match "Worry-Free Business Security")))) {
         #PARSE XML FOR SPECIFIC VENDOR AV PRODUCT
         $node = $avs[$av].display.replace(" ", "").replace("-", "").toupper()
+        #AV DETAILS
+        $global:o_AVname = $global:pavkey[$node].display
+        $global:o_AVpath = $global:pavkey[$node].path
         #AV PRODUCT VERSION KEY PATH AND VALUE
-        $i_verkey = $avXML.NODE.$node.$global:bitarch.ver
-        $i_verval = $avXML.NODE.$node.$global:bitarch.verval
-        #AV PRODUCT REAL-TIME SCANNING KEY PATH AND VALUE
-        $i_rtkey = $avXML.NODE.$node.$global:bitarch.rt
-        $i_rtval = $avXML.NODE.$node.$global:bitarch.rtval
+        $i_verkey = $global:pavkey[$node].ver
+        $i_verval = $global:pavkey[$node].verval
         #AV PRODUCT STATE KEY PATH AND VALUE
-        $i_statkey = $avXML.NODE.$node.$global:bitarch.stat
-        $i_statval = $avXML.NODE.$node.$global:bitarch.statval
+        $i_statkey = $global:pavkey[$node].stat
+        $i_statval = $global:pavkey[$node].statval
         #AV PRODUCT LAST UPDATE TIMESTAMP
         $i_update = $avXML.NODE.$node.$global:bitarch.update
-        $i_updateval = $avXML.NODE.$node.$global:bitarch.updateval
+        $i_updateval = $global:pavkey[$node].updateval
+        #AV PRODUCT REAL-TIME SCANNING KEY PATH AND VALUE
+        $i_rtkey = $global:pavkey[$node].rt
+        $i_rtval = $global:pavkey[$node].rtval
         #AV PRODUCT INFECTIONS KEY PATH
-        $i_infect = $avXML.NODE.$node.$global:bitarch.infect
-        $i_infectval = $avXML.NODE.$node.$global:bitarch.infectval
+        $i_infect = $global:pavkey[$node].infect
+        $i_infectval = $global:pavkey[$node].infectval
         #AV PRODUCT THREATS KEY PATH
-        $i_threat = $avXML.NODE.$node.$global:bitarch.threat
-        #AV DETAILS
-        $global:o_AVname = $avs[$av].display
-        $global:o_AVpath = $avs[$av].path
+        $i_threat = $global:pavkey[$node].threat
         #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
         try {
           write-host "Reading -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor yellow
@@ -623,7 +632,7 @@ if ($global:o_AVname -ne "No AV Product Found") {
 }
 #DEVICE INFO
 write-host "`r`nDevice : $global:computername" -foregroundcolor $ccode
-write-host "Operating System : $global:OSCaption ($global:OSVersion)" -foregroundcolor $ccode
+write-host "Operating System : $global:OSCaption ($global:OSVersion)`r`n" -foregroundcolor $ccode
 #AV DETAILS
 write-host "AV Display Name : $global:o_AVname" -foregroundcolor $ccode
 write-host "AV Version : $global:o_AVVersion" -foregroundcolor $ccode
