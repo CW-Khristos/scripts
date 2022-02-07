@@ -10,7 +10,7 @@
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastSuccessUtc</updateval>
+      <updateval>LastUpdateTime</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
