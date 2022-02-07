@@ -219,7 +219,7 @@ if ([system.version]$global:OSVersion -ge [system.version]'6.0.0.0') {
 }
 if (-not $blnWMI) {                                         #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE
   try {
-    write-host "Failed to query WMI SecurityCenter Namespace" -foregroundcolor red
+    write-host "`r`nFailed to query WMI SecurityCenter Namespace" -foregroundcolor red
     write-host "Possibly Server, attempting to  fallback to using 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' registry key" -foregroundcolor red
     try {                                                   #QUERY 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' AND SEE IF AN AV IS REGISTRERED THERE
       if ($global:bitarch = "bit64") {
@@ -254,32 +254,34 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
           }
         }
         try {
-          if (test-path "HKLM:$regDisplay") {               #ATTEMPT TO VALIDATE INSTALLED AV PRODUCT BY TEST READING A KEY
-            write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-            try {                                           #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
-              $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
-              $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
-              $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-              $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
-              #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-              #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
-              #FORMAT AV DATA
-              $strName = $keyval1.$regDisplayVal
-              $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
-              if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-                $strDisplay = "Windows Defender, "
+          if (($regDisplay -ne "") -and ($regDisplay -ne $null)) {
+            if (test-path "HKLM:$regDisplay") {               #ATTEMPT TO VALIDATE INSTALLED AV PRODUCT BY TEST READING A KEY
+              write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
+              try {                                           #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+                $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
+                $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
+                $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
+                $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
+                #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
+                #FORMAT AV DATA
+                $strName = $keyval1.$regDisplayVal
+                $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
+                if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                  $strDisplay = "Windows Defender, "
+                }
+                $strPath = $strPath + $keyval2.$regPathVal + ", "
+                if ($keyval3.$regRTVal = "0") {               #INTERPRET REAL-TIME SCANNING STATUS
+                  $strRealTime = $strRealTime + "Enabled, "
+                } elseif ($keyval3.$regRTVal = "1") {
+                  $strRealTime = $strRealTime + "Disabled, "
+                }
+                $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
+              } catch {
+                write-host "Could not validate Registry data for product : $key" -foregroundcolor red
+                write-host $_.scriptstacktrace
+                write-host $_
               }
-              $strPath = $strPath + $keyval2.$regPathVal + ", "
-              if ($keyval3.$regRTVal = "0") {               #INTERPRET REAL-TIME SCANNING STATUS
-                $strRealTime = $strRealTime + "Enabled, "
-              } elseif ($keyval3.$regRTVal = "1") {
-                $strRealTime = $strRealTime + "Disabled, "
-              }
-              $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
-            } catch {
-              write-host "Could not validate Registry data for product : $key" -foregroundcolor red
-              write-host $_.scriptstacktrace
-              write-host $_
             }
           }
         } catch {
@@ -516,16 +518,16 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         if ($global:zUpgrade -contains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_AVStatus.$i_statval)' for 'Up-To-Date' (Expected : '0')" -foregroundcolor yellow
           if ($global:o_AVStatus.$i_statval -eq "0") {
-            $global:o_AVStatus = "AV Product Up-to-Date : $true`r`n"
+            $global:o_AVStatus = "Up-to-Date : $true`r`n"
           } else {
-            $global:o_AVStatus = "AV Product Up-to-Date : $false`r`n"
+            $global:o_AVStatus = "Up-to-Date : $false`r`n"
           }
         } elseif ($global:zUpgrade -notcontains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_AVStatus.$i_statval)' for 'Up-To-Date' (Expected : '1')" -foregroundcolor yellow
           if ($global:o_AVStatus.$i_statval -eq "1") {
-            $global:o_AVStatus = "AV Product Up-to-Date : $true`r`n"
+            $global:o_AVStatus = "Up-to-Date : $true`r`n"
           } else {
-            $global:o_AVStatus = "AV Product Up-to-Date : $false`r`n"
+            $global:o_AVStatus = "Up-to-Date : $false`r`n"
           }
         }
         #GET PRIMARY AV PRODUCT LAST UPDATE TIMESTAMP VIA REGISTRY
@@ -621,7 +623,7 @@ write-host "Operating System : $global:OSCaption ($global:OSVersion)" -foregroun
 write-host "AV Display Name : $global:o_AVname" -foregroundcolor $ccode
 write-host "AV Version : $global:o_AVVersion" -foregroundcolor $ccode
 write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
-write-host "AV Status : $global:o_AVStatus" -foregroundcolor $ccode
+write-host "`r`nAV Status : `r`n$global:o_AVStatus" -foregroundcolor $ccode
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
 write-host "Definition Status : $global:o_DefStatus`r`n" -foregroundcolor $ccode
