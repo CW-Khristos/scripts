@@ -11,6 +11,8 @@
       <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <update>\PLACEHOLDER\</update>
+      <updateval>PLACEHOLDER</updateval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
@@ -26,6 +28,8 @@
       <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <update>\PLACEHOLDER\</update>
+      <updateval>PLACEHOLDER</updateval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
