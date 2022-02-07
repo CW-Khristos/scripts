@@ -9,7 +9,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
@@ -30,7 +30,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -46,14 +46,14 @@
   <SOPHOSINTERCEPTX>
     <bit64>
       <display>\SophosInterceptX\</display>
-      <displayval>\SophosInterceptX</displayval>
+      <displayval>SophosInterceptX</displayval>
       <path>\SophosInterceptX\</path>
-      <pathval>\SophosInterceptX</pathval>
+      <pathval>SophosInterceptX</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
@@ -68,14 +68,14 @@
     </bit64>
     <bit32>
       <display>\SophosInterceptX</display>
-      <displayval>\SophosInterceptX</displayval>
+      <displayval>SophosInterceptX</displayval>
       <path>\SophosInterceptX</path>
-      <pathval>\SophosInterceptX</pathval>
+      <pathval>SophosInterceptX</pathval>
       <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -99,7 +99,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
@@ -121,7 +121,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
