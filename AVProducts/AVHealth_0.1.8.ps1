@@ -500,7 +500,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         $i_statkey = $global:pavkey[$node].stat
         $i_statval = $global:pavkey[$node].statval
         #AV PRODUCT LAST UPDATE TIMESTAMP
-        $i_update = $avXML.NODE.$node.$global:bitarch.update
+        $i_update = $global:pavkey[$node].update
         $i_updateval = $global:pavkey[$node].updateval
         #AV PRODUCT REAL-TIME SCANNING KEY PATH AND VALUE
         $i_rtkey = $global:pavkey[$node].rt
