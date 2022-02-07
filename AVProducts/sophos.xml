@@ -9,6 +9,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -28,6 +30,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -49,6 +53,8 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -69,6 +75,8 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -91,6 +99,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -111,6 +121,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
