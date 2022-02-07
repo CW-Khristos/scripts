@@ -94,6 +94,14 @@
     "Worry-Free Business Security"
     "Windows Defender"
   )
+  #AV PRODUCTS USING '0' FOR 'REAL-TIME SCANNING' STATUS
+  $global:zRealTime = @(
+    "Sophos Intercept X"
+    "Symantec Endpoint Protection"
+    "Trend Micro Security Agent"
+    "Worry-Free Business Security"
+    "Windows Defender"
+  )
   #SET TLS SECURITY FOR CONNECTING TO GITHUB
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 #ENDREGION ----- DECLARATIONS ----
@@ -491,8 +499,8 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         #PARSE XML FOR SPECIFIC VENDOR AV PRODUCT
         $node = $avs[$av].display.replace(" ", "").replace("-", "").toupper()
         #AV DETAILS
-        $global:o_AVname = $global:pavkey[$node].display
-        $global:o_AVpath = $global:pavkey[$node].path
+        $global:o_AVname = $avs[$av].display
+        $global:o_AVpath = $avs[$av].path
         #AV PRODUCT VERSION KEY PATH AND VALUE
         $i_verkey = $global:pavkey[$node].ver
         $i_verval = $global:pavkey[$node].verval
@@ -525,7 +533,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           $global:o_AVStatus = get-itemproperty -path "HKLM:$i_statkey" -name "$i_statval" -erroraction stop
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor red
-          $global:o_AVStatus | add-member -NotePropertyName "$i_statval" -NotePropertyValue "0"
+          $global:o_AVStatus | add-member -NotePropertyName "$i_statval" -NotePropertyValue "-1"
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
         #$global:o_AVStatus.$i_statval
@@ -549,20 +557,51 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           write-host "Reading -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
           $keyval5 = get-itemproperty -path "HKLM:$i_update" -name "$i_updateval" -erroraction stop
           $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
+          $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
+          write-host "AGE : $($age.tostring("dd\:hh\:mm"))"
+          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_statval'" -foregroundcolor red
-          $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
+          $global:o_AVStatus += "Last Update : N/A`r`n"
+          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
         }
         #REAL-TIME SCANNING & DEFINITIONS
-        if ($blnWMI) {
-          #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
-          Get-AVState($avs[$av].stat)
-          $global:o_DefStatus = $global:defstatus
-          $global:o_RTstate = $global:rtstatus
-        } elseif (-not $blnWMI) {
-          $global:o_DefStatus = "N/A`r`n" #$global:defstatus
-          $global:o_RTstate = $avs[$av].rt
+        try {
+          write-host "Reading -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
+          $global:o_RTstate = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
+        } catch {
+          write-host "Could not validate Registry data : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor red
+          $global:o_RTstate = "N/A"
         }
+        #INTERPRET 'REAL-TIME SCANNING' STATUS BASED ON ANY AV PRODUCT VALUE REPRESENTATION
+        if ($global:zRealTime -contains $avs[$av].display) {
+          write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '0')" -foregroundcolor yellow
+          if ($global:o_RTstate.$i_rtval -eq 0) {
+            $global:o_RTstate = "$true"
+          } elseif ($global:o_RTstate.$i_rtval -eq 1) {
+            $global:o_RTstate = "$false"
+          } else {
+            $global:o_RTstate = "N/A"
+          }
+        } elseif ($global:zUpgrade -notcontains $avs[$av].display) {
+          write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '1')" -foregroundcolor yellow
+          if ($global:o_RTstate.$i_rtval -eq 1) {
+            $global:o_RTstate = "$true"
+          } elseif ($global:o_RTstate.$i_rtval -eq 0) {
+            $global:o_RTstate = "$false"
+          } else {
+            $global:o_RTstate = "N/A"
+          }
+        }
+        #if ($blnWMI) {
+        #  #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
+        #  Get-AVState($avs[$av].stat)
+        #  $global:o_DefStatus = $global:defstatus
+        #  $global:o_RTstate = $global:rtstatus
+        #} elseif (-not $blnWMI) {
+        #  $global:o_DefStatus = "N/A`r`n" #$global:defstatus
+        #  $global:o_RTstate = $avs[$av].rt
+        #}
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
           write-host "Reading -path 'HKLM:$i_infect'" -foregroundcolor yellow
@@ -582,7 +621,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
             if ($keyval6.$i_infectval -eq 0) {
               $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($keyval6.$i_infectval)`r`n"
             } elseif ($keyval6.$i_infectval -gt 0) {
-              $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($keyval6.$i_infectval) : $true`r`n"
+              $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($keyval6.$i_infectval)`r`n"
             }
           }
         } catch {
@@ -640,9 +679,9 @@ write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
 write-host "`r`nAV Status : `r`n$global:o_AVStatus" -foregroundcolor $ccode
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
-write-host "Definition Status : $global:o_DefStatus`r`n" -foregroundcolor $ccode
+write-host "Definition Status : $global:o_DefStatus" -foregroundcolor $ccode
 #THREATS
-write-host "Active Detections : `r`n$global:o_Infect" -foregroundcolor $ccode
+write-host "`r`nActive Detections : `r`n$global:o_Infect" -foregroundcolor $ccode
 write-host "Detected Threats : `r`n$global:o_Threats" -foregroundcolor $ccode
 #COMPETITOR AV
 write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
