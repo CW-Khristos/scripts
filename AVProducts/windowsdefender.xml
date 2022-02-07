@@ -12,6 +12,7 @@
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
+      <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
     </bit64>
     <bit32>
@@ -26,6 +27,7 @@
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
+      <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
     </bit32>
   </WINDOWSDEFENDER>
