@@ -11,6 +11,8 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
+      <updateval>LastUpdate</updateval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -26,6 +28,8 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
+      <updateval>LastUpdate</updateval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -43,6 +47,8 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
+      <updateval>LastUpdate</updateval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -58,6 +64,8 @@
       <rtval>Enable</rtval>
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
+      <updateval>LastUpdate</updateval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
