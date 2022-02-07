@@ -549,9 +549,9 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
             }
           } elseif ($i_PAV -match "Trend Micro") {
             $keyval5 = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-            if ($keyval5.value -eq 0) {
+            if ($keyval5.$i_infectval -eq 0) {
               $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($keyval5.$i_infectval)`r`n"
-            } elseif ($keyval5. -gt 0) {
+            } elseif ($keyval5.$i_infectval -gt 0) {
               $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($keyval5.$i_infectval) : $true`r`n"
             }
           }
