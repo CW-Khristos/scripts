@@ -13,6 +13,8 @@
       <statval>Update</statval>
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <defupdate>\PLACEHOLDER\</defupdate>
+      <defupdateval>PLACEHOLDER</defupdateval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
@@ -30,6 +32,8 @@
       <statval>Update</statval>
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <defupdate>\PLACEHOLDER\</defupdate>
+      <defupdateval>PLACEHOLDER</defupdateval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
@@ -49,6 +53,8 @@
       <statval>Update</statval>
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <defupdate>\PLACEHOLDER\</defupdate>
+      <defupdateval>PLACEHOLDER</defupdateval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
@@ -66,6 +72,8 @@
       <statval>Update</statval>
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <defupdate>\PLACEHOLDER\</defupdate>
+      <defupdateval>PLACEHOLDER</defupdateval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
