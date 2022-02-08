@@ -181,6 +181,7 @@
     )
     #READ AV PRODUCT DETAILS FROM XML
     #$dest = @{}
+    write-host "Loading : '$src' AV Product XML" -foregroundcolor yellow
     $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
     try {
       $avXML = New-Object System.Xml.XmlDocument
@@ -267,11 +268,11 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
         #RETRIEVE DETECTED AV PRODUCT VENDOR XML
         foreach ($vendor in $global:avVendors) {
           if ($av -match $vendor) {
-            write-host "Loading '$vendor' AV Product XML" -foregroundcolor yellow
+            #write-host "Loading : '$vendor' AV Product XML" -foregroundcolor yellow
             Get-AVXML $vendor $global:vavkey
             break
           } elseif ($av -match "Worry-Free Business Security") {
-            write-host "Loading 'Trend Micro' AV Product XML" -foregroundcolor yellow
+            #write-host "Loading : 'Trend Micro' AV Product XML" -foregroundcolor yellow
             Get-AVXML "Trend Micro" $global:vavkey
             break
           }
@@ -337,7 +338,7 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
       #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
       write-host "`r`nNo AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
       foreach ($vendor in $global:avVendors) {
-        write-host "Loading AV Product XML : '$vendor'" -foregroundcolor yellow
+        #write-host "Loading AV Product XML : '$vendor'" -foregroundcolor yellow
         Get-AVXML $vendor $global:vavkey
         foreach ($key in $global:vavkey.keys) {             #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
           write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
@@ -537,7 +538,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         $i_threat = $global:pavkey[$node].threat
         #GET PRIMARY AV PRODUCT VERSION VIA REGISTRY
         try {
-          write-host "Reading -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor yellow
           $global:o_AVVersion = get-itemproperty -path "HKLM:$i_verkey" -name "$i_verval" -erroraction stop
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor red
@@ -546,7 +547,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         $global:o_AVVersion = $global:o_AVVersion.$i_verval
         #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
         try {
-          write-host "Reading -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor yellow
           $global:o_AVStatus = get-itemproperty -path "HKLM:$i_statkey" -name "$i_statval" -erroraction stop
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor red
@@ -570,7 +571,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         }
         #GET PRIMARY AV PRODUCT LAST UPDATE TIMESTAMP VIA REGISTRY
         try {
-          write-host "Reading -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
           $keyval5 = get-itemproperty -path "HKLM:$i_update" -name "$i_updateval" -erroraction stop
           $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
           $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
@@ -583,7 +584,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         }
         #REAL-TIME SCANNING
         try {
-          write-host "Reading -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
           $global:o_RTstate = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor red
@@ -621,7 +622,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         }
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
-          write-host "Reading -path 'HKLM:$i_infect'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
           if ($i_PAV -match "Sophos") {
             $keyval6 = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
             foreach ($infect in $keyval6.psobject.Properties) {
@@ -647,7 +648,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         }
         #GET PRIMARY AV PRODUCT DETECTED THREATS VIA REGISTRY
         try {
-          write-host "Reading -path 'HKLM:$i_threat'" -foregroundcolor yellow
+          write-host "Reading : -path 'HKLM:$i_threat'" -foregroundcolor yellow
           $keyval7 = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
           if ($keyval7.count -gt 0) {
             foreach ($threat in $keyval7) {
