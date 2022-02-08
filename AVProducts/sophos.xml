@@ -11,12 +11,14 @@
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
-      <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Emabled</tamperval>
+      <defupdate>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>SignaturesLastUpdated</defupdateval>
+      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
+      <managed>IsManaged</managed>
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
@@ -32,14 +34,17 @@
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
-      <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Emabled</tamperval>
+      <defupdate>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>LastUpdateTime</defupdateval>
+      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
+      <managedval>IsManaged</managedval>
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSANTIVIRUS>
@@ -55,12 +60,14 @@
       <statval>Result</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
-      <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <defupdate>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>LastUpdateTime</defupdateval>
+      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
+      <managed>IsManaged</managed>
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infectval>
@@ -77,12 +84,14 @@
       <statval>Result</statval>
       <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
-      <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <defupdate>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>LastUpdateTime</defupdateval>
+      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
+      <managedval>IsManaged</managedval>
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
       <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
@@ -101,12 +110,14 @@
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
-      <managed>IsManaged</managed>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Emabled</tamperval>
+      <defupdate>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>LastUpdateTime</defupdateval>
+      <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
+      <managed>IsManaged</managed>
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infectval>
@@ -123,12 +134,14 @@
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
       <updateval>LastUpdateTime</updateval>
-      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
-      <managedval>IsManaged</managedval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Emabled</tamperval>
+      <defupdate>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</defupdate>
+      <defupdateval>LastUpdateTime</defupdateval>
+      <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
+      <managedval>IsManaged</managedval>
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
       <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
