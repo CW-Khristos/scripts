@@ -16,7 +16,7 @@
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Emabled</tamperval>
       <defupdate>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</defupdate>
-      <defupdateval>SignaturesLastUpdated</defupdateval>
+      <defupdateval>LastUpdateTime</defupdateval>
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managed>IsManaged</managed>
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
