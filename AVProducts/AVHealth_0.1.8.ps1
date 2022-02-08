@@ -49,14 +49,17 @@
             Switched to allow passing of '$i_PAV' via command line; this must be disabled in the AMP code to function properly with NCentral
             Corrected issue where 'Windows Defender' would be populated twice in Competitor AV; this was caused because WMI may report multiple instances of the same AV Product causing competitor check to do multiple runs
             Switched to using a hashtable for storing detected AV Products; this was to prevent duplicate entires for the same AV Product caused by WMI
+            Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
             Began expansion of metrics to include 'Detection Types' and "Active Detections" based on Sophos' infection status and detected threats registry keys
             Cleaned up formatting for legibility for CLI and within NCentral
 
 .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
     Need to obtain version and calculate date timestamps for AV Product updates, Definition updates, and Last Scan
-    Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics
+    Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics - Partially Complete (Sophos - full support; Trend Micro - 'Active Detections Present / Count')
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
+        Still need to determine if timestamps are possible for detected threats
+    If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
 #> 
 
 #REGION ----- DECLARATIONS ----
@@ -71,21 +74,28 @@
   $global:blnWMI = $true
   $global:avs = @{}
   $global:pavkey = @{}
-  $global:cavkey = @{}
-  $global:o_AVname = ""
-  $global:o_AVVersion = ""
-  $global:o_AVpath = ""
-  $global:o_AVStatus = ""
+  $global:vavkey = @{}
+  $global:o_AVname = "Selected AV Product Not Found"
+  $global:o_AVVersion = "Selected AV Product Not Found"
+  $global:o_AVpath = "Selected AV Product Not Found"
+  $global:o_AVStatus = "Selected AV Product Not Found"
   $global:rtstatus = "Unknown"
   $global:o_RTstate = "Unknown"
   $global:defstatus = "Unknown"
   $global:o_DefStatus = "Unknown"
-  $global:o_Infect = ""
-  $global:o_Threats = ""
+  $global:o_Infect = "Selected AV Product Not Found"
+  $global:o_Threats = "Selected AV Product Not Found"
   $global:o_AVcon = 0
   $global:o_CompAV = ""
   $global:o_CompPath = ""
   $global:o_CompState = ""
+  #SUPPORTED AV VENDORS
+  $global:avVendors = @(
+    "Sophos"
+    "Symantec"
+    "Trend Micro"
+    "Windows Defender"
+  )
   #AV PRODUCTS USING '0' FOR 'UP-TO-DATE' PRODUCT STATUS
   $global:zUpgrade = @(
     "Sophos Intercept X"
@@ -170,6 +180,7 @@
       $src, $dest
     )
     #READ AV PRODUCT DETAILS FROM XML
+    #$dest = @{}
     $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
     try {
       $avXML = New-Object System.Xml.XmlDocument
@@ -216,7 +227,7 @@
 #------------
 #BEGIN SCRIPT
 Get-OSArch
-Get-AVXML $i_PAV $pavkey
+Get-AVXML $i_PAV $global:pavkey
 #QUERY WMI SECURITYCENTER NAMESPACE FOR AV PRODUCT DETAILS
 if ([system.version]$global:OSVersion -ge [system.version]'6.0.0.0') {
   write-verbose "OS Windows Vista/Server 2008 or newer detected."
@@ -252,50 +263,58 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
       $strDisplay = ""
       $blnSecMon = $false
       foreach ($av in $AntiVirusProduct) {
-        write-host "Found 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor yellow
-        if ($av -match "Windows Defender") {
-          $strDisplay = $strDisplay + "Windows Defender, "
-        } else {
-          $strDisplay = $strDisplay + "$av, "
+        write-host "`r`nFound 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor yellow
+        #RETRIEVE DETECTED AV PRODUCT VENDOR XML
+        foreach ($vendor in $global:avVendors) {
+          if ($av -match $vendor) {
+            write-host "Loading '$vendor' AV Product XML" -foregroundcolor yellow
+            Get-AVXML $vendor $global:vavkey
+            break
+          } elseif ($av -match "Worry-Free Business Security") {
+            write-host "Loading 'Trend Micro' AV Product XML" -foregroundcolor yellow
+            Get-AVXML "Trend Micro" $global:vavkey
+            break
+          }
         }
         #SEARCH PASSED PRIMARY AV VENDOR XML
-        foreach ($key in $global:pavkey.keys) {              #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+        foreach ($key in $global:vavkey.keys) {             #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
           if ($av.replace(" ", "").replace("-", "").toupper() -eq $key.toupper()) {
+            write-host "Matched AV : '$av' - '$key.toupper()' AV Product" -foregroundcolor yellow
             $strName = ""
-            $regDisplay = $global:pavkey[$key].display
-            $regDisplayVal = $global:pavkey[$key].displayval
-            $regPath = $global:pavkey[$key].path
-            $regPathVal = $global:pavkey[$key].pathval
-            $regRealTime = $global:pavkey[$key].rt
-            $regRTVal = $global:pavkey[$key].rtval
-            $regStat = $global:pavkey[$key].stat
-            $regStatVal = $global:pavkey[$key].statval
-            $regInfect = $global:pavkey[$key].infect
-            $regThreat = $global:pavkey[$key].threat
+            $regDisplay = $global:vavkey[$key].display
+            $regDisplayVal = $global:vavkey[$key].displayval
+            $regPath = $global:vavkey[$key].path
+            $regPathVal = $global:vavkey[$key].pathval
+            $regStat = $global:vavkey[$key].stat
+            $regStatVal = $global:vavkey[$key].statval
+            $regRealTime = $global:vavkey[$key].rt
+            $regRTVal = $global:vavkey[$key].rtval
+            $regInfect = $global:vavkey[$key].infect
+            $regThreat = $global:vavkey[$key].threat
             break
           }
         }
         try {
           if (($regDisplay -ne "") -and ($regDisplay -ne $null)) {
-            if (test-path "HKLM:$regDisplay") {               #ATTEMPT TO VALIDATE INSTALLED AV PRODUCT BY TEST READING A KEY
+            if (test-path "HKLM:$regDisplay") {             #ATTEMPT TO VALIDATE INSTALLED AV PRODUCT BY TEST READING A KEY
               write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-              try {                                           #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+              try {                                         #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
                 $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
                 $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
-                $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-                $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
                 #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
                 #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
                 #FORMAT AV DATA
                 $strName = $keyval1.$regDisplayVal
-                #$strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
-                #if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-                #  $strDisplay = "Windows Defender, "
-                #}
+                if ($strName -match "Windows Defender") {   #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                  $strName = "Windows Defender"
+                }
+                $strDisplay = $strDisplay + $strName + ", "
                 $strPath = $strPath + $keyval2.$regPathVal + ", "
-                if ($keyval3.$regRTVal = "0") {               #INTERPRET REAL-TIME SCANNING STATUS
+                if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
                   $strRealTime = $strRealTime + "Enabled, "
-                } elseif ($keyval3.$regRTVal = "1") {
+                } elseif ($keyval4.$regRTVal = "1") {
                   $strRealTime = $strRealTime + "Disabled, "
                 }
                 $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
@@ -315,74 +334,80 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
     } elseif ($AntiVirusProduct -eq $null) {                #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
       $strDisplay = ""
       $blnSecMon = $true
-      foreach ($key in $global:pavkey.keys) {                #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-        $strName = ""
-        $regDisplay = $global:pavkey[$key].display
-        $regDisplayVal = $global:pavkey[$key].displayval
-        $regPath = $global:pavkey[$key].path
-        $regPathVal = $global:pavkey[$key].pathval
-        $regRealTime = $global:pavkey[$key].rt
-        $regRTVal = $global:pavkey[$key].rtval
-        $regStat = $global:pavkey[$key].stat
-        $regStatVal = $global:pavkey[$key].statval
-        $regInfect = $global:pavkey[$key].infect
-        $regThreat = $global:pavkey[$key].threat
-        try {
-          if (test-path "HKLM:$regDisplay") {               #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
-            write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-            try {                                           #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
-              $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
-              $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
-              $keyval3 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-              $keyval4 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
-              #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-              #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
-              #FORMAT AV DATA
-              $strName = $keyval1.$regDisplayVal
-              $strDisplay = $strDisplay + $keyval1.$regDisplayVal + ", "
-              if ($strName -match "Windows Defender") {     #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-                $strDisplay = $strDisplay + "Windows Defender, "
-              }
-              $strPath = $strPath + $keyval2.$regPathVal + ", "
-              if ($keyval3.$regRTVal = "0") {               #INTERPRET REAL-TIME SCANNING STATUS
-                $strRealTime = $strRealTime + "Enabled, "
-              } elseif ($keyval3.$regRTVal = "1") {
-                $strRealTime = $strRealTime + "Disabled, "
-              }
-              $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
-              if ($blnSecMon) {
-                write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                if ($global:bitarch = "bit64") {
-                  try {
-                    new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
-                  } catch {
-                    write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                    write-host $_.scriptstacktrace
-                    write-host $_
-                  }
-                } elseif ($global:bitarch = "bit32") {
-                  try {
-                    new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
-                  } catch {
-                    write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                    write-host $_.scriptstacktrace
-                    write-host $_
+      #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
+      write-host "`r`nNo AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
+      foreach ($vendor in $global:avVendors) {
+        write-host "Loading AV Product XML : '$vendor'" -foregroundcolor yellow
+        Get-AVXML $vendor $global:vavkey
+        foreach ($key in $global:vavkey.keys) {             #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+          write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
+          $strName = ""
+          $regDisplay = $global:vavkey[$key].display
+          $regDisplayVal = $global:vavkey[$key].displayval
+          $regPath = $global:vavkey[$key].path
+          $regPathVal = $global:vavkey[$key].pathval
+          $regStat = $global:vavkey[$key].stat
+          $regStatVal = $global:vavkey[$key].statval
+          $regRealTime = $global:vavkey[$key].rt
+          $regRTVal = $global:vavkey[$key].rtval
+          $regInfect = $global:vavkey[$key].infect
+          $regThreat = $global:vavkey[$key].threat
+          try {
+            if (test-path "HKLM:$regDisplay") {             #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+              write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
+              try {                                         #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+                $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
+                $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
+                $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
+                #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
+                #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
+                #FORMAT AV DATA
+                $strName = $keyval1.$regDisplayVal
+                if ($strName -match "Windows Defender") {   #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                  $strDisplay = $strDisplay + "Windows Defender"
+                }
+                $strDisplay = $strDisplay + $strName + ", "
+                $strPath = $strPath + $keyval2.$regPathVal + ", "
+                if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
+                  $strRealTime = $strRealTime + "Enabled, "
+                } elseif ($keyval4.$regRTVal = "1") {
+                  $strRealTime = $strRealTime + "Disabled, "
+                }
+                $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
+                if ($blnSecMon) {
+                  write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                  if ($global:bitarch = "bit64") {
+                    try {
+                      new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
+                    } catch {
+                      write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                      write-host $_.scriptstacktrace
+                      write-host $_
+                    }
+                  } elseif ($global:bitarch = "bit32") {
+                    try {
+                      new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
+                    } catch {
+                      write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                      write-host $_.scriptstacktrace
+                      write-host $_
+                    }
                   }
                 }
+                $AntiVirusProduct = "."
+              } catch {
+                write-host "Could not validate Registry data for product : $key" -foregroundcolor red
+                write-host $_.scriptstacktrace
+                write-host $_
+                $AntiVirusProduct = $null
               }
-              $AntiVirusProduct = "."
-            } catch {
-              write-host "Could not validate Registry data for product : $key" -foregroundcolor red
-              write-host $_.scriptstacktrace
-              write-host $_
-              $AntiVirusProduct = $null
             }
-            #break
+          } catch {
+            write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor red
+            write-host $_.scriptstacktrace
+            write-host $_
           }
-        } catch {
-          write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor red
-          write-host $_.scriptstacktrace
-          write-host $_
         }
       }
     }
@@ -390,12 +415,8 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
     $tmppaths = $strPath -split ", "
     $tmprts = $strRealTime -split ", "
     $tmpstats = $strStat -split ", "
-    #$avs = $strDisplay -split ", "
-    #$avpath = $strPath -split ", "
-    #$avrt = $strRealTime -split ", "
-    #$avstat = $strStat -split ", "
   } catch {
-    write-host "Failed to validate selected AV Products for : " $i_PAV -foregroundcolor red
+    write-host "Failed to validate supported AV Products" -foregroundcolor red
     write-host $_.scriptstacktrace
     write-host $_
   }
@@ -404,9 +425,6 @@ if (-not $blnWMI) {                                         #FAILED TO RETURN WM
   $tmpavs = $AntiVirusProduct.displayName -split ", "
   $tmppaths = $AntiVirusProduct.pathToSignedProductExe -split ", "
   $tmpstats = $AntiVirusProduct.productState -split ", "
-  #$avs = $string -split ", "
-  #$avpath = $string -split ", "
-  #$avstat = $string -split ", "
 }
 #ENSURE ONLY UNIQUE AV PRODUCTS ARE IN '$avs' HASHTABLE
 $i = 0
@@ -456,7 +474,6 @@ foreach ($tmpav in $tmpavs) {
   $i = $i + 1
 }
 #OBTAIN FINAL AV PRODUCT DETAILS
-$i = 0
 if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
   write-host "Could not find any AV Product registered" -foregroundcolor red
   $global:o_AVname = "No AV Product Found"
@@ -473,23 +490,23 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
       if (($avs[$av].display -notmatch $i_PAV) -and ($avs[$av].display -notmatch "Windows Defender")) {
         if (($i_PAV -eq "Trend Micro") -and (($avs[$av].display -notmatch "Trend Micro") -and ($avs[$av].display -notmatch "Worry-Free Business Security"))) {
           $global:o_AVcon = 1
-          $global:o_CompAV += "$($avs[$av].display)`r`n" #$avs[$i] + '<br>'
-          $global:o_CompPath += "$($avs[$av].display) - $($avs[$av].path)`r`n" #$avpath[$i] + '<br>'
+          $global:o_CompAV += "$($avs[$av].display)`r`n"
+          $global:o_CompPath += "$($avs[$av].display) - $($avs[$av].path)`r`n"
           if ($blnWMI) {
             Get-AVState($avs[$av].stat)
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n" #$avstat[$i] + '<br>'
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
           } elseif (-not $blnWMI) {
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n" #$avstat[$i] + '<br>'
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
           }
         } elseif ($i_PAV -ne "Trend Micro") {
           $global:o_AVcon = 1
-          $global:o_CompAV += "$($avs[$av].display)`r`n" #$avs[$i] + '<br>'
-          $global:o_CompPath += "$($avs[$av].path)`r`n" #$avpath[$i] + '<br>'
+          $global:o_CompAV += "$($avs[$av].display)`r`n"
+          $global:o_CompPath += "$($avs[$av].path)`r`n"
           if ($blnWMI) {
             Get-AVState($avs[$av].stat)
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n" #$avstat[$i] + '<br>'
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
           } elseif (-not $blnWMI) {
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n" #$avstat[$i] + '<br>'
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
           }
         }
       }
@@ -536,7 +553,6 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           $global:o_AVStatus | add-member -NotePropertyName "$i_statval" -NotePropertyValue "-1"
         }
         #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION - SOME TREAT '0' AS 'UPTODATE' SOME TREAT '1' AS 'UPTODATE'
-        #$global:o_AVStatus.$i_statval
         if ($global:zUpgrade -contains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_AVStatus.$i_statval)' for 'Up-To-Date' (Expected : '0')" -foregroundcolor yellow
           if ($global:o_AVStatus.$i_statval -eq "0") {
@@ -561,11 +577,11 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           write-host "AGE : $($age.tostring("dd\:hh\:mm"))"
           $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
         } catch {
-          write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_statval'" -foregroundcolor red
+          write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
           $global:o_AVStatus += "Last Update : N/A`r`n"
           $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
         }
-        #REAL-TIME SCANNING & DEFINITIONS
+        #REAL-TIME SCANNING
         try {
           write-host "Reading -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
           $global:o_RTstate = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
@@ -583,7 +599,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           } else {
             $global:o_RTstate = "N/A"
           }
-        } elseif ($global:zUpgrade -notcontains $avs[$av].display) {
+        } elseif ($global:zRealTime -notcontains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '1')" -foregroundcolor yellow
           if ($global:o_RTstate.$i_rtval -eq 1) {
             $global:o_RTstate = "$true"
@@ -593,15 +609,16 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
             $global:o_RTstate = "N/A"
           }
         }
-        #if ($blnWMI) {
-        #  #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
-        #  Get-AVState($avs[$av].stat)
-        #  $global:o_DefStatus = $global:defstatus
+        #DEFINITIONS / SIGNATURES / PATTERN
+        if ($blnWMI) {
+          #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
+          Get-AVState($avs[$av].stat)
+          $global:o_DefStatus = $global:defstatus
         #  $global:o_RTstate = $global:rtstatus
-        #} elseif (-not $blnWMI) {
-        #  $global:o_DefStatus = "N/A`r`n" #$global:defstatus
+        } elseif (-not $blnWMI) {
+          $global:o_DefStatus = "N/A`r`n" #$global:defstatus
         #  $global:o_RTstate = $avs[$av].rt
-        #}
+        }
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
           write-host "Reading -path 'HKLM:$i_infect'" -foregroundcolor yellow
@@ -650,44 +667,51 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         }
       #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
       } elseif ($avs[$av].display -eq "Windows Defender") {
-        $global:o_CompAV += "$($avs[$av].display)`r`n" #$global:o_CompAV + $avs[$i] + " , "
-        $global:o_CompPath += "$($avs[$av].path)`r`n" #$global:o_CompPath + $avpath[$i] + " , "
+        $global:o_CompAV += "$($avs[$av].display)`r`n"
+        $global:o_CompPath += "$($avs[$av].path)`r`n"
         if ($blnWMI) {
           Get-AVState($avs[$av].stat)
-          $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n" #$avstat[$i] + '<br>'
+          $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
         } elseif (-not $blnWMI) {
-          $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n" #$avstat[$i] + '<br>'
+          $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
         } 
       }
     }
-    $i = $i + 1
   }
 }
 #OUTPUT
-if ($global:o_AVname -ne "No AV Product Found") {
-  $ccode = "green"
-} elseif ($global:o_AVname -eq "No AV Product Found") {
+if (($global:o_AVname -eq "No AV Product Found") -or ($global:o_AVname -eq "Selected AV Product Not Found")) {
   $ccode = "red"
+} else {
+  $ccode = "green"
 }
 #DEVICE INFO
-write-host "`r`nDevice : $global:computername" -foregroundcolor $ccode
-write-host "Operating System : $global:OSCaption ($global:OSVersion)`r`n" -foregroundcolor $ccode
+write-host "`r`nDevice Info :" -foregroundcolor yellow
+write-host "Device : $global:computername" -foregroundcolor $ccode
+write-host "Operating System : $global:OSCaption ($global:OSVersion)" -foregroundcolor $ccode
 #AV DETAILS
+write-host "`r`nAV Details :" -foregroundcolor yellow
 write-host "AV Display Name : $global:o_AVname" -foregroundcolor $ccode
 write-host "AV Version : $global:o_AVVersion" -foregroundcolor $ccode
 write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
-write-host "`r`nAV Status : `r`n$global:o_AVStatus" -foregroundcolor $ccode
+write-host "`r`nAV Status :" -foregroundcolor yellow
+write-host "$global:o_AVStatus" -foregroundcolor $ccode
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
 write-host "Definition Status : $global:o_DefStatus" -foregroundcolor $ccode
 #THREATS
-write-host "`r`nActive Detections : `r`n$global:o_Infect" -foregroundcolor $ccode
-write-host "Detected Threats : `r`n$global:o_Threats" -foregroundcolor $ccode
+write-host "`r`nActive Detections :" -foregroundcolor yellow
+write-host "$global:o_Infect" -foregroundcolor $ccode
+write-host "Detected Threats :" -foregroundcolor yellow
+write-host "$global:o_Threats" -foregroundcolor $ccode
 #COMPETITOR AV
-write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
-write-host "Competitor AV : `r`n$global:o_CompAV" -foregroundcolor $ccode
-write-host "Competitor Path : `r`n$global:o_CompPath" -foregroundcolor $ccode
-write-host "Competitor State : `r`n$global:o_CompState" -foregroundcolor $ccode
+write-host "`r`nAV Conflict : $global:o_AVcon" -foregroundcolor $ccode
+write-host "Competitor AV :" -foregroundcolor yellow
+write-host "$global:o_CompAV" -foregroundcolor $ccode
+write-host "Competitor Path :" -foregroundcolor yellow
+write-host "$global:o_CompPath" -foregroundcolor $ccode
+write-host "Competitor State :" -foregroundcolor yellow
+write-host "$global:o_CompState" -foregroundcolor $ccode
 #REFORMAT OUTPUT METRICS FOR LEGIBILITY IN NCENTRAL
 #AV DETAILS
 $global:o_AVStatus = $global:o_AVStatus.replace("`r`n", "<br>")
