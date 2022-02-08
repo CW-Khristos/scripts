@@ -51,8 +51,8 @@ Configure the Thresholds as indicated below :
 
 After creating the desired Custom Services; create Service Templates for your Windows Devices
  - If planning to monitor multiple AV Products; it will be necessary to create Service Templates for each AV Product you wish to monitor
- - **Note :** Workstations / Laptops; Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
- - **Note :** Servers; Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
+ - **Note :** Workstations / Laptops - Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
+ - **Note :** Servers - Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
    - Setting Definition Status Thresholds to "Off" is only a temporary measure until the script fully supports retrieving these values on Servers
  - **Note :** I have included Service Template exports available in this repo (configured for Sophos; but these can easily be modified per below settings)
 
