@@ -249,7 +249,6 @@ if (-not ($global:blnAVXML)) {
   $global:o_Infect = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_Threats = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   #COMPETITOR AV
-  $global:o_AVcon = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompAV = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompPath = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompState = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
