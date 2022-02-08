@@ -9,8 +9,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
@@ -32,8 +32,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
@@ -58,8 +58,8 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
@@ -82,8 +82,8 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
@@ -108,8 +108,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
@@ -132,8 +132,8 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</update>
-      <updateval>LastUpdateTime</updateval>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
