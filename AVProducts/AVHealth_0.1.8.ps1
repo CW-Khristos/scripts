@@ -226,7 +226,11 @@
           infectval = $itm.$global:bitarch.infectval
           threat = $itm.$global:bitarch.threat
         }
-        $dest.add($itm.name, $hash)
+        if ($dest.containskey($itm.name)) {
+          continue
+        } elseif (-not $dest.containskey($itm.name)) {
+          $dest.add($itm.name, $hash)
+        }
       }
     }
   } ## Get-AVXML
