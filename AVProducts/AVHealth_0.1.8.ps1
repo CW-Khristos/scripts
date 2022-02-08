@@ -647,7 +647,7 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           $global:o_DefStatus += "Definition Age : $($age.tostring("dd\:hh\:mm"))"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
-          $global:o_Infect = "N/A"
+          $global:o_DefStatus = "N/A"
         }
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
