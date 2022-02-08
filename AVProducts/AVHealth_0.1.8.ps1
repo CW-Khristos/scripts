@@ -83,8 +83,8 @@
   $global:o_RTstate = "Unknown"
   $global:defstatus = "Unknown"
   $global:o_DefStatus = "Unknown"
-  $global:o_Infect = "Selected AV Product Not Found"
-  $global:o_Threats = "Selected AV Product Not Found"
+  $global:o_Infect = ""
+  $global:o_Threats = ""
   $global:o_AVcon = 0
   $global:o_CompAV = ""
   $global:o_CompPath = ""
@@ -579,21 +579,22 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
           write-host "Reading : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
           $keyval5 = get-itemproperty -path "HKLM:$i_update" -name "$i_updateval" -erroraction stop
           if ($avs[$av].display -match "Windows Defender") {
-            $Int64Value = [System.BitConverter]::ToInt64($keyval5.SignaturesLastUpdated,0)
+            $Int64Value = [System.BitConverter]::ToInt64($keyval5.i_updateval, 0)
             $time = [DateTime]::FromFileTime($Int64Value)
             $update = Get-Date $time
+            $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($update))`r`n"
             $age = new-timespan -start $update -end (Get-Date)
           } elseif ($avs[$av].display -notmatch "Windows Defender") {
-            $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
+            $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
             $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
           }
-          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
+          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
-          $global:o_AVStatus += "Last Update : N/A`r`n"
+          $global:o_AVStatus += "Last Major Update : N/A`r`n"
           $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A"
         }
-        #REAL-TIME SCANNING
+        #GET PRIMARY AV PRODUCT REAL-TIME SCANNING
         try {
           write-host "Reading : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
           $global:o_RTstate = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
@@ -605,27 +606,27 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         if ($global:zRealTime -contains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '0')" -foregroundcolor yellow
           if ($global:o_RTstate.$i_rtval -eq 0) {
-            $global:o_RTstate = "$true"
+            $global:o_RTstate = "Enabled"
           } elseif ($global:o_RTstate.$i_rtval -eq 1) {
-            $global:o_RTstate = "$false"
+            $global:o_RTstate = "Disabled"
           } else {
-            $global:o_RTstate = "N/A"
+            $global:o_RTstate = "Unknown"
           }
         } elseif ($global:zRealTime -notcontains $avs[$av].display) {
           write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '1')" -foregroundcolor yellow
           if ($global:o_RTstate.$i_rtval -eq 1) {
-            $global:o_RTstate = "$true"
+            $global:o_RTstate = "Enabled"
           } elseif ($global:o_RTstate.$i_rtval -eq 0) {
-            $global:o_RTstate = "$false"
+            $global:o_RTstate = "Disabled"
           } else {
-            $global:o_RTstate = "N/A"
+            $global:o_RTstate = "Unknown"
           }
         }
-        #DEFINITIONS / SIGNATURES / PATTERN
+        #GET PRIMARY AV PRODUCT DEFINITIONS / SIGNATURES / PATTERN
         if ($blnWMI) {
           #will still return if it is unknown, etc. if it is unknown look at the code it returns, then look up the status and add it above
           Get-AVState($avs[$av].stat)
-          $global:o_DefStatus = $global:defstatus
+          $global:o_DefStatus = $global:defstatus + "`r`n"
         #  $global:o_RTstate = $global:rtstatus
         } elseif (-not $blnWMI) {
           $global:o_DefStatus = "N/A`r`n" #$global:defstatus
@@ -638,16 +639,18 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
             $Int64Value = [System.BitConverter]::ToInt64($keyval5.SignaturesLastUpdated,0)
             $time = [DateTime]::FromFileTime($Int64Value)
             $update = Get-Date $time
-            $global:o_DefStatus += "`r`nLast Update : $update`r`n"
+            $global:o_DefStatus += "Last Definition Update : $update`r`n"
             $age = new-timespan -start $update -end (Get-Date)
           } elseif ($avs[$av].display -notmatch "Windows Defender") {
-            $global:o_DefStatus += "`r`nLast Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
-            $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
+            $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($keyval5.$i_defupdateval))`r`n"
+            $age = new-timespan -start (Get-EpochDate($keyval5.$i_defupdateval)) -end (Get-Date)
           }
-          $global:o_DefStatus += "Definition Age : $($age.tostring("dd\:hh\:mm"))"
+          $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
-          $global:o_DefStatus = "N/A"
+          $global:o_DefStatus += "Last Definition Update : N/A`r`n"
+          $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
+          #$global:o_DefStatus = "N/A"
         }
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
@@ -679,17 +682,19 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         try {
           write-host "Reading : -path 'HKLM:$i_threat'" -foregroundcolor yellow
           $keyval7 = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
-          if ($keyval7.count -gt 0) {
-            foreach ($threat in $keyval7) {
-              $keyval8 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
-              $keyval9 = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
-              foreach ($detection in $keyval9) {
-                $keyval10 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($keyval9.PSChildName)\" -name "Path" -erroraction silentlycontinue
-                $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($keyval8.type) - Path : $($keyval10.path)`r`n"
+          if ($i_PAV -match "Sophos") {
+            if ($keyval7.count -gt 0) {
+              foreach ($threat in $keyval7) {
+                $keyval8 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
+                $keyval9 = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
+                foreach ($detection in $keyval9) {
+                  $keyval10 = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($keyval9.PSChildName)\" -name "Path" -erroraction silentlycontinue
+                  $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($keyval8.type) - Path : $($keyval10.path)`r`n"
+                }
               }
+            } elseif ($keyval7.count -le 0) {
+              $global:o_Threats += "N/A`r`n"
             }
-          } elseif ($keyval7.count -le 0) {
-            $global:o_Threats += "N/A`r`n"
           }
         } catch {
           write-host "Could not validate Registry data : 'HKLM:$i_threat'" -foregroundcolor red
@@ -736,7 +741,7 @@ write-host "$global:o_Infect" -foregroundcolor $ccode
 write-host "Detected Threats :" -foregroundcolor yellow
 write-host "$global:o_Threats" -foregroundcolor $ccode
 #COMPETITOR AV
-write-host "`r`nAV Conflict : $global:o_AVcon" -foregroundcolor $ccode
+write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
 write-host "Competitor AV :" -foregroundcolor yellow
 write-host "$global:o_CompAV" -foregroundcolor $ccode
 write-host "Competitor Path :" -foregroundcolor yellow
@@ -746,6 +751,8 @@ write-host "$global:o_CompState" -foregroundcolor $ccode
 #REFORMAT OUTPUT METRICS FOR LEGIBILITY IN NCENTRAL
 #AV DETAILS
 $global:o_AVStatus = $global:o_AVStatus.replace("`r`n", "<br>")
+#DEFINITIONS
+$global:o_DefStatus = $global:o_DefStatus.replace("`r`n", "<br>")
 #THREATS
 $global:o_Infect = $global:o_Infect.replace("`r`n", "<br>")
 $global:o_Threats = $global:o_Threats.replace("`r`n", "<br>")
