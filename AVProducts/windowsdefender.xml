@@ -9,10 +9,12 @@
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
-      <update>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</update>
-      <updateval>SignaturesLastUpdated</updateval>
+      <update>\PLACEHOLDER\</update>
+      <updateval>PLACEHOLDER</updateval>
       <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
       <rtval>DpaDisabled</rtval>
+      <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</defupdate>
+      <defupdateval>SignaturesLastUpdated</defupdateval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
@@ -26,10 +28,12 @@
       <verval>EngineVersion</verval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
-      <update>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</update>
-      <updateval>SignaturesLastUpdated</updateval>
+      <update>\PLACEHOLDER\</update>
+      <updateval>PLACEHOLDER</updateval>
       <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
       <rtval>DpaDisabled</rtval>
+      <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</defupdate>
+      <defupdateval>SignaturesLastUpdated</defupdateval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
