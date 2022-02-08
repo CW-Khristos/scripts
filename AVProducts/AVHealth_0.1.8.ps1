@@ -107,7 +107,6 @@
   )
   #AV PRODUCTS USING '0' FOR 'REAL-TIME SCANNING' STATUS
   $global:zRealTime = @(
-    "Sophos Intercept X"
     "Symantec Endpoint Protection"
     "Trend Micro Security Agent"
     "Worry-Free Business Security"
