@@ -214,6 +214,8 @@
         statval = $itm.$global:bitarch.statval
         update = $itm.$global:bitarch.update
         updateval = $itm.$global:bitarch.updateval
+        defupdate = $itm.$global:bitarch.defupdate
+        defupdateval = $itm.$global:bitarch.defupdateval
         rt = $itm.$global:bitarch.rt
         rtval = $itm.$global:bitarch.rtval
         infect = $itm.$global:bitarch.infect
@@ -531,6 +533,9 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         #AV PRODUCT REAL-TIME SCANNING KEY PATH AND VALUE
         $i_rtkey = $global:pavkey[$node].rt
         $i_rtval = $global:pavkey[$node].rtval
+        #AV PRODUCT DEFINITIONS KEY PATH AND VALUE
+        $i_defupdate = $global:pavkey[$node].defupdate
+        $i_defupdateval = $global:pavkey[$node].defupdateval
         #AV PRODUCT INFECTIONS KEY PATH
         $i_infect = $global:pavkey[$node].infect
         $i_infectval = $global:pavkey[$node].infectval
@@ -573,14 +578,21 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         try {
           write-host "Reading : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
           $keyval5 = get-itemproperty -path "HKLM:$i_update" -name "$i_updateval" -erroraction stop
-          $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
-          $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
+          if ($avs[$av].display -match "Windows Defender") {
+            $Int64Value = [System.BitConverter]::ToInt64($keyval5.SignaturesLastUpdated,0)
+            $time = [DateTime]::FromFileTime($Int64Value)
+            $update = Get-Date $time
+            $age = new-timespan -start $update -end (Get-Date)
+          } elseif ($avs[$av].display -notmatch "Windows Defender") {
+            $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
+            $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
+          }
           write-host "AGE : $($age.tostring("dd\:hh\:mm"))"
           $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
           $global:o_AVStatus += "Last Update : N/A`r`n"
-          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
+          $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A"
         }
         #REAL-TIME SCANNING
         try {
@@ -619,6 +631,24 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
         } elseif (-not $blnWMI) {
           $global:o_DefStatus = "N/A`r`n" #$global:defstatus
         #  $global:o_RTstate = $avs[$av].rt
+        }
+        try {
+          write-host "Reading : -path 'HKLM:$i_defupdate' -name '$i_defupdateval'" -foregroundcolor yellow
+          $keyval5 = get-itemproperty -path "HKLM:$i_defupdate" -name "$i_defupdateval" -erroraction stop
+          if ($avs[$av].display -match "Windows Defender") {
+            $Int64Value = [System.BitConverter]::ToInt64($keyval5.SignaturesLastUpdated,0)
+            $time = [DateTime]::FromFileTime($Int64Value)
+            $update = Get-Date $time
+            $global:o_DefStatus += "`r`nLast Update : $update`r`n"
+            $age = new-timespan -start $update -end (Get-Date)
+          } elseif ($avs[$av].display -notmatch "Windows Defender") {
+            $global:o_DefStatus += "`r`nLast Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
+            $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
+          }
+          $global:o_DefStatus += "Definition Age : $($age.tostring("dd\:hh\:mm"))"
+        } catch {
+          write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
+          $global:o_Infect = "N/A"
         }
         #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
         try {
@@ -698,8 +728,9 @@ write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
 write-host "`r`nAV Status :" -foregroundcolor yellow
 write-host "$global:o_AVStatus" -foregroundcolor $ccode
 #REAL-TIME SCANNING & DEFINITIONS
-write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
-write-host "Definition Status : $global:o_DefStatus" -foregroundcolor $ccode
+write-host "Real-Time Status : $global:o_RTstate`r`n" -foregroundcolor $ccode
+write-host "Definitions :" -foregroundcolor yellow
+write-host "Status : $global:o_DefStatus" -foregroundcolor $ccode
 #THREATS
 write-host "`r`nActive Detections :" -foregroundcolor yellow
 write-host "$global:o_Infect" -foregroundcolor $ccode
