@@ -13,6 +13,8 @@
       <statval>ClientUpgradeStatus</statval>
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
+      <defupdateval>LastUpdate</defupdateval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -30,6 +32,8 @@
       <statval>ClientUpgradeStatus</statval>
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <defupdate>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
+      <defupdateval>LastUpdate</defupdateval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -49,6 +53,8 @@
       <statval>ClientUpgradeStatus</statval>
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
+      <defupdateval>LastUpdate</defupdateval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -66,6 +72,8 @@
       <statval>ClientUpgradeStatus</statval>
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
+      <defupdateval>LastUpdate</defupdateval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
