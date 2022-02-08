@@ -7,12 +7,12 @@
       <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
-      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
-      <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
-      <update>\PLACEHOLDER\</update>
-      <updateval>PLACEHOLDER</updateval>
+      <update>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</update>
+      <updateval>SignaturesLastUpdated</updateval>
+      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
+      <rtval>DpaDisabled</rtval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
@@ -24,12 +24,12 @@
       <pathval>ProductAppDataPath</pathval>
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
-      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
-      <rtval>DpaDisabled</rtval>
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
-      <update>\PLACEHOLDER\</update>
-      <updateval>PLACEHOLDER</updateval>
+      <update>\SOFTWARE\Microsoft\Windows Defender\Signature Updates</update>
+      <updateval>SignaturesLastUpdated</updateval>
+      <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
+      <rtval>DpaDisabled</rtval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
