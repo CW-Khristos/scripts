@@ -587,7 +587,6 @@ if ($AntiVirusProduct -eq $null) {                          #NO AV PRODUCT FOUND
             $global:o_AVStatus += "Last Update : $(Get-EpochDate($keyval5.$i_updateval))`r`n"
             $age = new-timespan -start (Get-EpochDate($keyval5.$i_updateval)) -end (Get-Date)
           }
-          write-host "AGE : $($age.tostring("dd\:hh\:mm"))"
           $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
         } catch {
           write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
