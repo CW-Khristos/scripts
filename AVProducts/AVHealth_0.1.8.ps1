@@ -249,7 +249,6 @@ if (-not ($global:blnAVXML)) {
   $global:o_Infect = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_Threats = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   #COMPETITOR AV
-  $global:o_AVcon = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompAV = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompPath = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompState = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
@@ -305,7 +304,7 @@ if (-not ($global:blnAVXML)) {
           #SEARCH PASSED PRIMARY AV VENDOR XML
           foreach ($key in $global:vavkey.keys) {             #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
             if ($av.replace(" ", "").replace("-", "").toupper() -eq $key.toupper()) {
-              write-host "Matched AV : '$av' - '$key.toupper()' AV Product" -foregroundcolor yellow
+              write-host "Matched AV : '$av' - '$key' AV Product" -foregroundcolor yellow
               $strName = ""
               $regDisplay = $global:vavkey[$key].display
               $regDisplayVal = $global:vavkey[$key].displayval
@@ -338,12 +337,12 @@ if (-not ($global:blnAVXML)) {
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
+                  $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
                   if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
                     $strRealTime = $strRealTime + "Enabled, "
                   } elseif ($keyval4.$regRTVal = "1") {
                     $strRealTime = $strRealTime + "Disabled, "
                   }
-                  $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
                 } catch {
                   write-host "Could not validate Registry data for product : $key" -foregroundcolor red
                   write-host $_.scriptstacktrace
@@ -395,12 +394,12 @@ if (-not ($global:blnAVXML)) {
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
+                  $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
                   if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
                     $strRealTime = $strRealTime + "Enabled, "
                   } elseif ($keyval4.$regRTVal = "1") {
                     $strRealTime = $strRealTime + "Disabled, "
                   }
-                  $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
                   if ($blnSecMon) {
                     write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
                     if ($global:bitarch = "bit64") {
@@ -785,7 +784,6 @@ $global:o_DefStatus = $global:o_DefStatus.replace("`r`n", "<br>")
 $global:o_Infect = $global:o_Infect.replace("`r`n", "<br>")
 $global:o_Threats = $global:o_Threats.replace("`r`n", "<br>")
 #COMPETITOR AV
-$global:o_AVcon = $global:o_AVcon.replace("`r`n", "<br>")
 $global:o_CompAV = $global:o_CompAV.replace("`r`n", "<br>")
 $global:o_CompPath = $global:o_CompPath.replace("`r`n", "<br>")
 $global:o_CompState = $global:o_CompState.replace("`r`n", "<br>")
