@@ -249,6 +249,7 @@ if (-not ($global:blnAVXML)) {
   $global:o_Infect = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_Threats = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   #COMPETITOR AV
+  $global:o_AVcon = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompAV = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompPath = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
   $global:o_CompState = "Selected AV Product Not Found`r`nUnable to download AV Vendor XML`r`n"
@@ -773,13 +774,18 @@ write-host "Competitor State :" -foregroundcolor yellow
 write-host "$global:o_CompState" -foregroundcolor $ccode
 #REFORMAT OUTPUT METRICS FOR LEGIBILITY IN NCENTRAL
 #AV DETAILS
+$global:o_AVname = $global:o_AVname.replace("`r`n", "<br>")
+$global:o_AVpath = $global:o_AVpath.replace("`r`n", "<br>")
+$global:o_AVVersion = $global:o_AVVersion.replace("`r`n", "<br>")
 $global:o_AVStatus = $global:o_AVStatus.replace("`r`n", "<br>")
-#DEFINITIONS
+#REAL-TIME SCANNING & DEFINITIONS
+$global:o_RTstate = $global:o_RTstate.replace("`r`n", "<br>")
 $global:o_DefStatus = $global:o_DefStatus.replace("`r`n", "<br>")
 #THREATS
 $global:o_Infect = $global:o_Infect.replace("`r`n", "<br>")
 $global:o_Threats = $global:o_Threats.replace("`r`n", "<br>")
 #COMPETITOR AV
+$global:o_AVcon = $global:o_AVcon.replace("`r`n", "<br>")
 $global:o_CompAV = $global:o_CompAV.replace("`r`n", "<br>")
 $global:o_CompPath = $global:o_CompPath.replace("`r`n", "<br>")
 $global:o_CompState = $global:o_CompState.replace("`r`n", "<br>")
