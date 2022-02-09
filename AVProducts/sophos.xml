@@ -1,4 +1,5 @@
 <NODE>
+  <!--Sophos Anti-Virus-->
   <SOPHOSANTIVIRUS>
     <bit64>
       <display>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</display>
@@ -9,7 +10,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
@@ -32,7 +33,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
@@ -48,6 +49,7 @@
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSANTIVIRUS>
+  <!--Sophos Anti-Virus "InterceptX" Beta-->
   <SOPHOSINTERCEPTX>
     <bit64>
       <display>\SophosInterceptX\</display>
@@ -58,7 +60,7 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
@@ -82,7 +84,7 @@
       <verval>Version</verval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
@@ -108,7 +110,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
@@ -132,7 +134,7 @@
       <verval>MarketingVersion</verval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate</update>
+      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
       <rtval>RealTimeScanning</rtval>
