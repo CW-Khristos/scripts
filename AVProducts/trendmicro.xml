@@ -2,39 +2,65 @@
   <!--Trend Micro Security Agent-->
   <TRENDMICROSECURITYAGENT>
     <bit64>
+      <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\</display>
       <displayval>ApplicationName</displayval>
       <path>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</path>
       <pathval>Path</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
       <verval>Version</verval>
-      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
-      <rtval>Enable</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <!--AV Product Updates-->
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
       <defupdateval>LastUpdate</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit64>
     <bit32>
+      <!--AV Details-->
       <display>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\</display>
       <displayval>ApplicationName</displayval>
       <path>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</path>
       <pathval>Path</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
       <verval>Version</verval>
-      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
-      <rtval>Enable</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
       <defupdateval>LastUpdate</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -43,39 +69,65 @@
   <!--Trend Micro Worry-FreeBusiness Security-->
   <WORRYFREEBUSINESSSECURITY>
     <bit64>
+      <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\</display>
       <displayval>ApplicationName</displayval>
       <path>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</path>
       <pathval>Path</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
       <verval>Version</verval>
-      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
-      <rtval>Enable</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <!--AV Product Updates-->
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
       <defupdateval>LastUpdate</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
     </bit64>
     <bit32>
+      <!--AV Details-->
       <display>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\</display>
       <displayval>ApplicationName</displayval>
       <path>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</path>
       <pathval>Path</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
       <verval>Version</verval>
-      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
-      <rtval>Enable</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
       <statval>ClientUpgradeStatus</statval>
+      <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
-      <defupdate>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
+      <rtval>Enable</rtval>
+      <!--AV Definition Updates-->
+      <defupdate>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</defupdate>
       <defupdateval>LastUpdate</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
