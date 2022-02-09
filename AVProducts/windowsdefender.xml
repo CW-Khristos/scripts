@@ -2,39 +2,65 @@
   <!--Windows Defender-->
   <WINDOWSDEFENDER>
     <bit64>
+      <!--AV Details-->
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
       <displayval>ProductAppDataPath</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
       <pathval>ProductAppDataPath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
       <rtval>DpaDisabled</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</defupdate>
       <defupdateval>SignaturesLastUpdated</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
     </bit64>
     <bit32>
+      <!--AV Details-->
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
       <displayval>ProductAppDataPath</displayval>
       <path>\SOFTWARE\Microsoft\Windows Defender\</path>
       <pathval>ProductAppDataPath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
       <rtval>DpaDisabled</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</defupdate>
       <defupdateval>SignaturesLastUpdated</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
