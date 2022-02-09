@@ -635,7 +635,7 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
             $global:o_AVStatus += "Last Major Update : N/A`r`n"
-            $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A"
+            $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
           }
           $global:o_AVStatus += "Core Version : $global:o_AVVersion"
           #GET PRIMARY AV PRODUCT REAL-TIME SCANNING
