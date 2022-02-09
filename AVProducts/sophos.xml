@@ -8,6 +8,8 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <compver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
@@ -31,6 +33,8 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <compver>\SOFTWARE\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
@@ -58,6 +62,8 @@
       <pathval>SophosInterceptX</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <compver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
@@ -82,6 +88,8 @@
       <pathval>SophosInterceptX</pathval>
       <ver>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
+      <compver>\SOFTWARE\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
       <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
@@ -108,6 +116,8 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <compver>\SOFTWARE\WOW6432Node\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\WOW6432Node\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
@@ -132,6 +142,8 @@
       <pathval>Path</pathval>
       <ver>\SOFTWARE\Sophos\SAVService\Application\</ver>
       <verval>MarketingVersion</verval>
+      <compver>\SOFTWARE\Sophos\SAVService\Application\</compver>
+      <compverval>MarketingVersion</compverval>
       <stat>\SOFTWARE\Sophos\SavService\Status\</stat>
       <statval>UpToDateState</statval>
       <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
