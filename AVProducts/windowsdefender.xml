@@ -31,6 +31,8 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
+      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
@@ -65,6 +67,8 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
+      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
