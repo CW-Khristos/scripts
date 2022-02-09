@@ -1,4 +1,5 @@
 <NODE>
+  <!--Windows Defender-->
   <WINDOWSDEFENDER>
     <bit64>
       <display>\SOFTWARE\Microsoft\Windows Defender\</display>
