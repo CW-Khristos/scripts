@@ -16,6 +16,8 @@
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <source>\PLACEHOLDER\</source>
+      <sourceval>PLACEHOLDER</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
       <rtval>OnOff</rtval>
@@ -48,6 +50,8 @@
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <source>\PLACEHOLDER\</source>
+      <sourceval>PLACEHOLDER</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
       <rtval>OnOff</rtval>
@@ -83,6 +87,8 @@
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <source>\PLACEHOLDER\</source>
+      <sourceval>PLACEHOLDER</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
       <rtval>OnOff</rtval>
@@ -115,6 +121,8 @@
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <source>\PLACEHOLDER\</source>
+      <sourceval>PLACEHOLDER</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
       <rtval>OnOff</rtval>
