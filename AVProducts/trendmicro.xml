@@ -16,6 +16,8 @@
       <!--AV Product Updates-->
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <source>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</source>
+      <sourceval>Updatefrom</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
       <rtval>Enable</rtval>
@@ -48,6 +50,8 @@
       <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <source>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</source>
+      <sourceval>Updatefrom</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
       <rtval>Enable</rtval>
@@ -83,6 +87,8 @@
       <!--AV Product Updates-->
       <update>\SOFTWARE\Wow6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <source>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</source>
+      <sourceval>Updatefrom</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
       <rtval>Enable</rtval>
@@ -115,6 +121,8 @@
       <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\UpdateInfo\</update>
       <updateval>LastUpdate</updateval>
+      <source>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</source>
+      <sourceval>Updatefrom</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Real Time Scan Configuration\</rt>
       <rtval>Enable</rtval>
