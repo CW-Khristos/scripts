@@ -34,6 +34,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
     <bit32>
@@ -69,6 +70,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSANTIVIRUS>
@@ -107,6 +109,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
     <bit32>
@@ -142,6 +145,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSINTERCEPTX>
@@ -179,6 +183,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\WOW6432Node\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit64>
     <bit32>
@@ -214,6 +219,7 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
+      <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
   </SOPHOSENDPOINTAGENT>
