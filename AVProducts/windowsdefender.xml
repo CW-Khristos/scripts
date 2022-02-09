@@ -10,6 +10,7 @@
       <!--AV Versions-->
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
@@ -46,6 +47,7 @@
       <!--AV Versions-->
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
+      <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
