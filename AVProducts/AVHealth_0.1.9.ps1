@@ -631,7 +631,7 @@ if (-not ($global:blnAVXML)) {
               $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($keyval6.$i_updateval))`r`n"
               $age = new-timespan -start (Get-EpochDate($keyval6.$i_updateval)) -end (Get-Date)
             }
-            $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
+            $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
             $global:o_AVStatus += "Last Major Update : N/A`r`n"
