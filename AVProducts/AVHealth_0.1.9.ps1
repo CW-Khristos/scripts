@@ -50,7 +50,7 @@
             Corrected issue where 'Windows Defender' would be populated twice in Competitor AV; this was caused because WMI may report multiple instances of the same AV Product causing competitor check to do multiple runs
             Switched to using a hashtable for storing detected AV Products; this was to prevent duplicate entires for the same AV Product caused by WMI
             Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
-            Began expansion of metrics to include 'Detection Types' and "Active Detections" based on Sophos' infection status and detected threats registry keys
+            Began expansion of metrics to include 'Detection Types' and 'Active Detections' based on Sophos' infection status and detected threats registry keys
             Cleaned up formatting for legibility for CLI and within NCentral
 
 .TODO
@@ -637,6 +637,7 @@ if (-not ($global:blnAVXML)) {
             $global:o_AVStatus += "Last Major Update : N/A`r`n"
             $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A"
           }
+          $global:o_AVStatus += "Core Version : $global:o_AVVersion"
           #GET PRIMARY AV PRODUCT REAL-TIME SCANNING
           try {
             write-host "Reading : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
@@ -775,7 +776,7 @@ write-host "AV Display Name : $global:o_AVname" -foregroundcolor $ccode
 write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
 write-host "`r`nAV Status :" -foregroundcolor yellow
 write-host "$global:o_AVStatus" -foregroundcolor $ccode
-write-host "Core Version : $global:o_AVVersion" -foregroundcolor $ccode
+#write-host "Core Version : $global:o_AVVersion" -foregroundcolor $ccode
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Real-Time Status : $global:o_RTstate`r`n" -foregroundcolor $ccode
 write-host "Definitions :" -foregroundcolor yellow
