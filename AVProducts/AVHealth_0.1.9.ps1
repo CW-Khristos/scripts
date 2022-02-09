@@ -567,6 +567,9 @@ if (-not ($global:blnAVXML)) {
           #AV PRODUCT DEFINITIONS KEY PATH AND VALUE
           $i_defupdate = $global:pavkey[$node].defupdate
           $i_defupdateval = $global:pavkey[$node].defupdateval
+          #AV PRODUCT SCANS KEY PATH
+          $i_scan = $global:pavkey[$node].scan
+          $i_scanval = $global:pavkey[$node].scanval
           #AV PRODUCT INFECTIONS KEY PATH
           $i_infect = $global:pavkey[$node].infect
           $i_infectval = $global:pavkey[$node].infectval
