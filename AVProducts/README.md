@@ -114,5 +114,9 @@ After creating the desired Custom Services; create Service Templates for your Wi
 
 # AV Products Needing XML 'Definitions' :
  - AVG
+ - Avast
  - BitDefender
+ - CrowdStrike
+ - McAfee
+ - Microsoft Defender for Endpoints
  - Norton
