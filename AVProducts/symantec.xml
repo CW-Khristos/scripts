@@ -1,79 +1,133 @@
 <NODE>
+  <!--Symantec Anti-Virus-->
   <SYMANTECANTIVIRUS>
     <bit64>
+      <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
       <displayval>PRODUCTNAME</displayval>
       <path>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
       <pathval>BasePath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
-      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
-      <rtval>OnOff</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\PLACEHOLDER\</defupdate>
       <defupdateval>PLACEHOLDER</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
     </bit64>
     <bit32>
+      <!--AV Details-->
       <display>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
       <displayval>PRODUCTNAME</displayval>
       <path>\SOFTWARE\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
       <pathval>BasePath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
-      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
-      <rtval>OnOff</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\PLACEHOLDER\</defupdate>
       <defupdateval>PLACEHOLDER</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
     </bit32>
   </SYMANTECANTIVIRUS>
+  <!--Symantec Endpoint Protection-->
   <SYMANTECENDPOINTPROTECTION>
     <bit64>
+      <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
       <displayval>PRODUCTNAME</displayval>
       <path>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
       <pathval>BasePath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
-      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
-      <rtval>OnOff</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\PLACEHOLDER\</defupdate>
       <defupdateval>PLACEHOLDER</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
     </bit64>
     <bit32>
+      <!--AV Details-->
       <display>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</display>
       <displayval>PRODUCTNAME</displayval>
       <path>\SOFTWARE\Symantec\Symantec Endpoint Protection\InstalledApps\</path>
       <pathval>BasePath</pathval>
+      <!--AV Versions-->
       <ver>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\</ver>
       <verval>PRODUCTVERSION</verval>
-      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
-      <rtval>OnOff</rtval>
+      <!--AV Status-->
       <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
+      <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
       <updateval>PLACEHOLDER</updateval>
+      <!--AV Real-Time Scanning-->
+      <rt>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\Storages\Filesystem\RealTimeScan\</rt>
+      <rtval>OnOff</rtval>
+      <!--AV Definition Updates-->
       <defupdate>\PLACEHOLDER\</defupdate>
       <defupdateval>PLACEHOLDER</defupdateval>
+      <!--AV Tamper Protection-->
+      <tamper>\PLACEHOLDER\</tamper>
+      <tamperval>PLACEHOLDER</tamperval>
+      <!--AV Is Managed-->
+      <managed>\PLACEHOLDER\</managed>
+      <managedval>PLACEHOLDER</managedval>
+      <!--AV Threats-->
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
       <infectval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infectval>
       <threat>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</threat>
