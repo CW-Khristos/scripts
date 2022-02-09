@@ -608,6 +608,7 @@ if (-not ($global:blnAVXML)) {
               $global:o_AVStatus = "Up-to-Date : $false`r`n"
             }
           }
+          $global:o_AVStatus += "Core Version : $global:o_AVVersion`r`n"
           #GET AV PRODUCT UPDATE SOURCE
           try {
             write-host "Reading : -path 'HKLM:$i_source' -name '$i_sourceval'" -foregroundcolor yellow
@@ -637,7 +638,6 @@ if (-not ($global:blnAVXML)) {
             $global:o_AVStatus += "Last Major Update : N/A`r`n"
             $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
           }
-          $global:o_AVStatus += "Core Version : $global:o_AVVersion"
           #GET PRIMARY AV PRODUCT REAL-TIME SCANNING
           try {
             write-host "Reading : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor yellow
