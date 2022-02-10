@@ -727,14 +727,20 @@ if (-not ($global:blnAVXML)) {
           #  $global:o_RTstate = $avs[$av].rt
           }
           try {
+            $time1 = New-TimeSpan -days 1
             write-host "Reading : -path 'HKLM:$i_defupdate' -name '$i_defupdateval'" -foregroundcolor yellow
             $defkey = get-itemproperty -path "HKLM:$i_defupdate" -name "$i_defupdateval" -erroraction stop
             if ($avs[$av].display -match "Windows Defender") {
               $Int64Value = [System.BitConverter]::ToInt64($defkey.SignaturesLastUpdated,0)
               $time = [DateTime]::FromFileTime($Int64Value)
               $update = Get-Date $time
-              $global:o_DefStatus += "Last Definition Update : $update`r`n"
               $age = new-timespan -start $update -end (Get-Date)
+              if ($age.compareto($time1) -le 0) {
+                
+              } elseif ($age.compareto($time1) -gt 0) {
+                
+              }
+              $global:o_DefStatus += "Last Definition Update : $update`r`n"
             } elseif ($avs[$av].display -notmatch "Windows Defender") {
               $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
               $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)) -end (Get-Date)
@@ -832,7 +838,7 @@ write-host "$o_compver" -foregroundcolor $ccode
 $global:o_AVStatus += "`r`n$o_compver`r`n"
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Definitions :" -foregroundcolor yellow
-write-host "Status : $global:o_DefStatus" -foregroundcolor $ccode
+write-host "WMI Status : $global:o_DefStatus" -foregroundcolor $ccode
 #THREATS
 write-host "`r`nActive Detections :" -foregroundcolor yellow
 write-host "$global:o_Infect" -foregroundcolor $ccode
