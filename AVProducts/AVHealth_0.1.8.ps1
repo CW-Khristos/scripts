@@ -204,33 +204,38 @@
       }
     }
     #READ PRIMARY AV PRODUCT VENDOR XML DATA INTO NESTED HASHTABLE FORMAT FOR LATER USE
-    if ($global:blnAVXML) {
-      foreach ($itm in $avXML.NODE.ChildNodes) {
-        $hash = @{
-          display = $itm.$global:bitarch.display
-          displayval = $itm.$global:bitarch.displayval
-          path = $itm.$global:bitarch.path
-          pathval = $itm.$global:bitarch.pathval
-          ver = $itm.$global:bitarch.ver
-          verval = $itm.$global:bitarch.verval
-          stat = $itm.$global:bitarch.stat
-          statval = $itm.$global:bitarch.statval
-          update = $itm.$global:bitarch.update
-          updateval = $itm.$global:bitarch.updateval
-          defupdate = $itm.$global:bitarch.defupdate
-          defupdateval = $itm.$global:bitarch.defupdateval
-          rt = $itm.$global:bitarch.rt
-          rtval = $itm.$global:bitarch.rtval
-          infect = $itm.$global:bitarch.infect
-          infectval = $itm.$global:bitarch.infectval
-          threat = $itm.$global:bitarch.threat
-        }
-        if ($dest.containskey($itm.name)) {
-          continue
-        } elseif (-not $dest.containskey($itm.name)) {
-          $dest.add($itm.name, $hash)
+    try {
+      if ($global:blnAVXML) {
+        foreach ($itm in $avXML.NODE.ChildNodes) {
+          $hash = @{
+            display = $itm.$global:bitarch.display
+            displayval = $itm.$global:bitarch.displayval
+            path = $itm.$global:bitarch.path
+            pathval = $itm.$global:bitarch.pathval
+            ver = $itm.$global:bitarch.ver
+            verval = $itm.$global:bitarch.verval
+            stat = $itm.$global:bitarch.stat
+            statval = $itm.$global:bitarch.statval
+            update = $itm.$global:bitarch.update
+            updateval = $itm.$global:bitarch.updateval
+            defupdate = $itm.$global:bitarch.defupdate
+            defupdateval = $itm.$global:bitarch.defupdateval
+            rt = $itm.$global:bitarch.rt
+            rtval = $itm.$global:bitarch.rtval
+            infect = $itm.$global:bitarch.infect
+            infectval = $itm.$global:bitarch.infectval
+            threat = $itm.$global:bitarch.threat
+          }
+          if ($dest.containskey($itm.name)) {
+            continue
+          } elseif (-not $dest.containskey($itm.name)) {
+            $dest.add($itm.name, $hash)
+          }
         }
       }
+    } catch {
+      write-host $_.scriptstacktrace
+      write-host $_
     }
   } ## Get-AVXML
 #ENDREGION ----- FUNCTIONS ----
