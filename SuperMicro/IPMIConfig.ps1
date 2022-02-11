@@ -39,7 +39,14 @@
     $i_NewPwd
   )
   arrPWD = @(
-    "!", "@", "#", "$", "%", "^", "&", "*"
+    "!"
+    "@"
+    "#"
+    "$"
+    "%"
+    "^"
+    "&"
+    "*"
   )
   #SUPERMICRO UPDATE MANAGER (SUM)
   $sumZIP = "C:\IT\SuperMicro\SUM.zip"
