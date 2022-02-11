@@ -37,6 +37,7 @@ To setup each respective Custom Service; modify the 'Primary AV Product' input f
 
 Configure the Thresholds as indicated below :
  - AV Name and AV Path should be set to "Off" or "Contain" and should only need to input the Vendor  for "Normal" status (assumption based on default install paths)
+ - **Note :** If monitoring Trend Micro on a Server; the AV Product reports the name as "Worry-Free Business Security" for AV Name, so this threshold should be set to "Off" or modified to match
  - AV Version should be set to "Off"  or "Contain" and "." for "Normal" status
  - AV Product Up-to-Date should be set to "Contain" and "True" for "Normal" status
  - Real-Time Protection should be set to "Match" and "Enabled" for "Normal" status
