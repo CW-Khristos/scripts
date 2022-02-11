@@ -25,6 +25,8 @@
  - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
  - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
    - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
+   - Supported Ciphers : https://docs.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-7
+ - Fix :
    - Install the KB3140245 Security Patch : https://www.catalog.update.microsoft.com/search.aspx?q=kb3140245
    - Configure TLS1.2 Support : https://support.microsoft.com/en-us/topic/update-to-enable-tls-1-1-and-tls-1-2-as-default-secure-protocols-in-winhttp-in-windows-c4bd73d2-31d7-761e-0178-11268bb10392
    - A full "guide" : https://www.ryadel.com/en/enable-tls-1-1-1-2-windows-7-8-os-regedit-patch-download/
