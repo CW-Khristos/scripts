@@ -736,19 +736,19 @@ if (-not ($global:blnAVXML)) {
               $update = Get-Date $time
               $age = new-timespan -start $update -end (Get-Date)
               if ($age.compareto($time1) -le 0) {
-                
+                $global:o_DefStatus += "Up to date (REG Check)`r`n"
               } elseif ($age.compareto($time1) -gt 0) {
-                
+                $global:o_DefStatus += "Out of date (REG Check)`r`n"
               }
               $global:o_DefStatus += "Last Definition Update : $update`r`n"
             } elseif ($avs[$av].display -notmatch "Windows Defender") {
-              $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
               $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)) -end (Get-Date)
               if ($age.compareto($time1) -le 0) {
                 $global:o_DefStatus += "Up to date (REG Check)`r`n"
               } elseif ($age.compareto($time1) -gt 0) {
                 $global:o_DefStatus += "Out of date (REG Check)`r`n"
               }
+              $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
