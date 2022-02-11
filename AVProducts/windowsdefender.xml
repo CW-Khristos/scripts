@@ -26,14 +26,14 @@
       <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</defupdate>
       <defupdateval>SignaturesLastUpdated</defupdateval>
       <!--AV Tamper Protection-->
-      <tamper>\PLACEHOLDER\</tamper>
-      <tamperval>PLACEHOLDER</tamperval>
+      <tamper>\SOFTWARE\Microsoft\Windows Defender\Features\</tamper>
+      <tamperval>TamperProtection</tamperval>
       <!--AV Is Managed-->
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\SOFTWARE\Microsoft\Windows Defender\Scan\</scan>
+      <scanval>LastScanRun</scanval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
@@ -63,14 +63,14 @@
       <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</defupdate>
       <defupdateval>SignaturesLastUpdated</defupdateval>
       <!--AV Tamper Protection-->
-      <tamper>\PLACEHOLDER\</tamper>
-      <tamperval>PLACEHOLDER</tamperval>
+      <tamper>\SOFTWARE\Microsoft\Windows Defender\Features\</tamper>
+      <tamperval>TamperProtection</tamperval>
       <!--AV Is Managed-->
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\SOFTWARE\Microsoft\Windows Defender\Scan\</scan>
+      <scanval>LastScanRun</scanval>
       <infect>\SOFTWARE\Microsoft\Windows Defender\Threats\</infect>
       <infectval>\SOFTWARE\Microsoft\Windows Defender\Threats\</infectval>
       <threat>\SOFTWARE\Microsoft\Windows Defender\Threats\</threat>
