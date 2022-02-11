@@ -23,7 +23,11 @@
 
 # .OS COMPATIBILITY
  - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
- - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information : https://github.com/blog/2507-weak-cryptographic-standards-removed
+ - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
+   - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
+   - Install the KB3140245 Security Patch : https://www.catalog.update.microsoft.com/search.aspx?q=kb3140245&WT.mc_id=DT-MVP-5003202
+   - Configure TLS1.2 Support : https://support.microsoft.com/en-us/topic/update-to-enable-tls-1-1-and-tls-1-2-as-default-secure-protocols-in-winhttp-in-windows-c4bd73d2-31d7-761e-0178-11268bb10392
+   - A full "guide" : https://www.ryadel.com/en/enable-tls-1-1-1-2-windows-7-8-os-regedit-patch-download/
  - You can check OS support for TLS via Powershell with the following command :
    - `[Net.ServicePointManager]::SecurityProtocol`
  - If the return does not include "Tls12"; then the OS will not support secure SSL connections to GitHub and will not be able to retrieve AV Vendor XML files
