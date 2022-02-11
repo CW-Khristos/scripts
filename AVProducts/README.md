@@ -21,6 +21,13 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 
+# .OS COMPATIBILITY
+ - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
+ - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information : https://github.com/blog/2507-weak-cryptographic-standards-removed
+ - You can check OS support for TLS via Powershell with the following command :
+   - `[Net.ServicePointManager]::SecurityProtocol`
+ - If the return does not include "Tls12"; then the OS will not support secure SSL connections to GitHub and will not be able to retrieve AV Vendor XML files
+
 # .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
  - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detection Types' and 'Active Detections'
