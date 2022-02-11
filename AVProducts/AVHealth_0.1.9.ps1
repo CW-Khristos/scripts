@@ -859,7 +859,7 @@ write-host "$o_compver" -foregroundcolor $ccode
 $global:o_AVStatus += "`r`n$o_compver`r`n"
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Definitions :" -foregroundcolor yellow
-write-host "WMI Status : $global:o_DefStatus" -foregroundcolor $ccode
+write-host "Status : $global:o_DefStatus" -foregroundcolor $ccode
 #THREATS
 write-host "`r`nActive Detections :" -foregroundcolor yellow
 write-host "$global:o_Infect" -foregroundcolor $ccode
