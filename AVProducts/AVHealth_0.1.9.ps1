@@ -111,6 +111,18 @@
     "Symantec Endpoint Protection"
     "Windows Defender"
   )
+  #AV PRODUCTS NOT SUPPORTING INFECTION DETECTIONS
+  $global:zNoInfect = @(
+    "Symantec Endpoint Protection"
+    "Windows Defender"
+  )
+  #AV PRODUCTS NOT SUPPORTING THREAT DETECTIONS
+  $global:zNoThreat = @(
+    "Symantec Endpoint Protection"
+    "Trend Micro Security Agent"
+    "Worry-Free Business Security"
+    "Windows Defender"
+  )
   #SET TLS SECURITY FOR CONNECTING TO GITHUB
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 #ENDREGION ----- DECLARATIONS ----
@@ -736,75 +748,78 @@ if (-not ($global:blnAVXML)) {
               $update = Get-Date $time
               $age = new-timespan -start $update -end (Get-Date)
               if ($age.compareto($time1) -le 0) {
-                $global:o_DefStatus += "Up to date (REG Check)`r`n"
+                $global:o_DefStatus += "Status : Up to date (REG Check)`r`n"
               } elseif ($age.compareto($time1) -gt 0) {
-                $global:o_DefStatus += "Out of date (REG Check)`r`n"
+                $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
               }
               $global:o_DefStatus += "Last Definition Update : $update`r`n"
             } elseif ($avs[$av].display -notmatch "Windows Defender") {
               $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)) -end (Get-Date)
               if ($age.compareto($time1) -le 0) {
-                $global:o_DefStatus += "Up to date (REG Check)`r`n"
+                $global:o_DefStatus += "Status : Up to date (REG Check)`r`n"
               } elseif ($age.compareto($time1) -gt 0) {
-                $global:o_DefStatus += "Out of date (REG Check)`r`n"
+                $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
               }
               $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
-            $global:o_DefStatus += "Out of date (REG Check)`r`n"
+            $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
             $global:o_DefStatus += "Last Definition Update : N/A`r`n"
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
-            #$global:o_DefStatus = "N/A"
           }
           #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
-          try {
-            write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
-            if ($i_PAV -match "Sophos") {
-              $infectkey = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
-              foreach ($infect in $infectkey.psobject.Properties) {
-                if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
-                  if ($infect.value -eq 0) {
-                    $global:o_Infect += "Type - $($infect.name) : $false`r`n"
-                  } elseif ($infect.value -eq 1) {
-                    $global:o_Infect += "Type - $($infect.name) : $true`r`n"
+          if ($global:zNoInfect -notcontains $i_PAV) {
+            try {
+              write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
+              if ($i_PAV -match "Sophos") {
+                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
+                foreach ($infect in $infectkey.psobject.Properties) {
+                  if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
+                    if ($infect.value -eq 0) {
+                      $global:o_Infect += "Type - $($infect.name) : $false`r`n"
+                    } elseif ($infect.value -eq 1) {
+                      $global:o_Infect += "Type - $($infect.name) : $true`r`n"
+                    }
                   }
                 }
+              } elseif ($i_PAV -match "Trend Micro") {
+                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
+                if ($infectkey.$i_infectval -eq 0) {
+                  $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
+                } elseif ($infectkey.$i_infectval -gt 0) {
+                  $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
+                }
               }
-            } elseif ($i_PAV -match "Trend Micro") {
-              $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-              if ($infectkey.$i_infectval -eq 0) {
-                $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
-              } elseif ($infectkey.$i_infectval -gt 0) {
-                $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
-              }
+            } catch {
+              write-host "Could not validate Registry data : 'HKLM:$i_infect'" -foregroundcolor red
+              $global:o_Infect = "N/A"
             }
-          } catch {
-            write-host "Could not validate Registry data : 'HKLM:$i_infect'" -foregroundcolor red
-            $global:o_Infect = "N/A"
           }
           #GET PRIMARY AV PRODUCT DETECTED THREATS VIA REGISTRY
-          try {
-            write-host "Reading : -path 'HKLM:$i_threat'" -foregroundcolor yellow
-            $threatkey = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
-            if ($i_PAV -match "Sophos") {
-              if ($threatkey.count -gt 0) {
-                foreach ($threat in $threatkey) {
-                  $threattype = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
-                  $threatfile = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
-                  foreach ($detection in $threatfile) {
-                    $threatpath = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($threatfile.PSChildName)\" -name "Path" -erroraction silentlycontinue
-                    $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($threattype.type) - Path : $($threatpath.path)`r`n"
+          if ($global:zNoThreat -notcontains $i_PAV) {
+            try {
+              write-host "Reading : -path 'HKLM:$i_threat'" -foregroundcolor yellow
+              $threatkey = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
+              if ($i_PAV -match "Sophos") {
+                if ($threatkey.count -gt 0) {
+                  foreach ($threat in $threatkey) {
+                    $threattype = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
+                    $threatfile = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
+                    foreach ($detection in $threatfile) {
+                      $threatpath = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($threatfile.PSChildName)\" -name "Path" -erroraction silentlycontinue
+                      $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($threattype.type) - Path : $($threatpath.path)`r`n"
+                    }
                   }
+                } elseif ($threatkey.count -le 0) {
+                  $global:o_Threats += "N/A`r`n"
                 }
-              } elseif ($threatkey.count -le 0) {
-                $global:o_Threats += "N/A`r`n"
               }
+            } catch {
+              write-host "Could not validate Registry data : 'HKLM:$i_threat'" -foregroundcolor red
+              $global:o_Threats = "N/A`r`n"
             }
-          } catch {
-            write-host "Could not validate Registry data : 'HKLM:$i_threat'" -foregroundcolor red
-            $global:o_Threats = "N/A`r`n"
           }
         #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
         } elseif ($avs[$av].display -eq "Windows Defender") {
@@ -814,7 +829,7 @@ if (-not ($global:blnAVXML)) {
             Get-AVState($avs[$av].stat)
             $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
           } elseif (-not $global:blnWMI) {
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions :`r`n"
           } 
         }
       }
