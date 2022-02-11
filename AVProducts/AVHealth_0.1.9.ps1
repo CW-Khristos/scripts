@@ -148,29 +148,29 @@
     #THIS COULD PROBABLY ALSO BE TURNED INTO A SIMPLE XML / JSON LOOKUP TO FACILITATE COMMUNITY CONTRIBUTION
     switch ($state) {
       #AVG IS 2012 AV / CrowdStrike / Kaspersky
-      "262144" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-      "266240" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      "262144" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "266240" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #AVG IS 2012 FW
-      "266256" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
-      "262160" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
+      "266256" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "262160" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #MSSE
-      "393216" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-      "397312" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
+      "393216" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397312" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #Windows Defender
-      "393472" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
-      "397584" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
-      "397568" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-      "401664" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      "393472" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397584" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "397568" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "401664" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #
-      "393232" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-      "393488" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-      "397328" {$global:defstatus = "Out of date" ;$global:rtstatus = "Enabled"}
+      "393232" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "393488" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397328" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #Sophos
-      "331776" {$global:defstatus = "Up to date" ;$global:rtstatus = "Enabled"}
-      "335872" {$global:defstatus = "Up to date" ;$global:rtstatus = "Disabled"}
+      "331776" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "335872" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #Norton Security
-      "327696" {$global:defstatus = "Out of date" ;$global:rtstatus = "Disabled"}
-      default {$global:defstatus = "Unknown" ;$global:rtstatus = "Unknown"}
+      "327696" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      default {$global:defstatus = "Status : Unknown (WMI Check)" ;$global:rtstatus = "Unknown (WMI Check)"}
     }
   } ## Get-AVState
   
@@ -368,9 +368,9 @@ if (-not ($global:blnAVXML)) {
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
                   $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
                   if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
-                    $strRealTime = $strRealTime + "Enabled, "
+                    $strRealTime = $strRealTime + "Enabled (REG Check), "
                   } elseif ($keyval4.$regRTVal = "1") {
-                    $strRealTime = $strRealTime + "Disabled, "
+                    $strRealTime = $strRealTime + "Disabled (REG Check), "
                   }
                 } catch {
                   write-host "Could not validate Registry data for product : $key" -foregroundcolor red
@@ -425,9 +425,9 @@ if (-not ($global:blnAVXML)) {
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
                   $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
                   if ($keyval4.$regRTVal = "0") {             #INTERPRET REAL-TIME SCANNING STATUS
-                    $strRealTime = $strRealTime + "Enabled, "
+                    $strRealTime = $strRealTime + "Enabled (REG Check), "
                   } elseif ($keyval4.$regRTVal = "1") {
-                    $strRealTime = $strRealTime + "Disabled, "
+                    $strRealTime = $strRealTime + "Disabled (REG Check), "
                   }
                   if ($blnSecMon) {
                     write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
@@ -550,7 +550,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A`r`n"
             }
           } elseif ($i_PAV -ne "Trend Micro") {
             $global:o_AVcon = 1
@@ -560,7 +560,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A`r`n"
             }
           }
         }
@@ -647,16 +647,16 @@ if (-not ($global:blnAVXML)) {
           if ($global:zUpgrade -contains $avs[$av].display) {
             write-host "$($avs[$av].display) reports '$($global:o_AVStatus.$i_statval)' for 'Up-To-Date' (Expected : '0')" -foregroundcolor yellow
             if ($global:o_AVStatus.$i_statval -eq "0") {
-              $global:o_AVStatus = "Up-to-Date : $true`r`n"
+              $global:o_AVStatus = "Up-to-Date : $true (REG Check)`r`n"
             } else {
-              $global:o_AVStatus = "Up-to-Date : $false`r`n"
+              $global:o_AVStatus = "Up-to-Date : $false (REG Check)`r`n"
             }
           } elseif ($global:zUpgrade -notcontains $avs[$av].display) {
             write-host "$($avs[$av].display) reports '$($global:o_AVStatus.$i_statval)' for 'Up-To-Date' (Expected : '1')" -foregroundcolor yellow
             if ($global:o_AVStatus.$i_statval -eq "1") {
-              $global:o_AVStatus = "Up-to-Date : $true`r`n"
+              $global:o_AVStatus = "Up-to-Date : $true (REG Check)`r`n"
             } else {
-              $global:o_AVStatus = "Up-to-Date : $false`r`n"
+              $global:o_AVStatus = "Up-to-Date : $false (REG Check)`r`n"
             }
           }
           #GET AV PRODUCT UPDATE SOURCE
@@ -694,26 +694,26 @@ if (-not ($global:blnAVXML)) {
             $global:o_RTstate = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor red
-            $global:o_RTstate = "N/A"
+            $global:o_RTstate = "N/A (REG Check)"
           }
           #INTERPRET 'REAL-TIME SCANNING' STATUS BASED ON ANY AV PRODUCT VALUE REPRESENTATION
           if ($global:zRealTime -contains $avs[$av].display) {
             write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '0')" -foregroundcolor yellow
             if ($global:o_RTstate.$i_rtval -eq 0) {
-              $global:o_RTstate = "Enabled"
+              $global:o_RTstate = "Enabled (REG Check)"
             } elseif ($global:o_RTstate.$i_rtval -eq 1) {
-              $global:o_RTstate = "Disabled"
+              $global:o_RTstate = "Disabled (REG Check)"
             } else {
-              $global:o_RTstate = "Unknown"
+              $global:o_RTstate = "Unknown (REG Check)"
             }
           } elseif ($global:zRealTime -notcontains $avs[$av].display) {
             write-host "$($avs[$av].display) reports '$($global:o_RTstate.$i_rtval)' for 'Real-Time Scanning' (Expected : '1')" -foregroundcolor yellow
             if ($global:o_RTstate.$i_rtval -eq 1) {
-              $global:o_RTstate = "Enabled"
+              $global:o_RTstate = "Enabled (REG Check)"
             } elseif ($global:o_RTstate.$i_rtval -eq 0) {
-              $global:o_RTstate = "Disabled"
+              $global:o_RTstate = "Disabled (REG Check)"
             } else {
-              $global:o_RTstate = "Unknown"
+              $global:o_RTstate = "Unknown (REG Check)"
             }
           }
           #GET PRIMARY AV PRODUCT DEFINITIONS / SIGNATURES / PATTERN
@@ -744,10 +744,16 @@ if (-not ($global:blnAVXML)) {
             } elseif ($avs[$av].display -notmatch "Windows Defender") {
               $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
               $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)) -end (Get-Date)
+              if ($age.compareto($time1) -le 0) {
+                $global:o_DefStatus += "Up to date (REG Check)`r`n"
+              } elseif ($age.compareto($time1) -gt 0) {
+                $global:o_DefStatus += "Out of date (REG Check)`r`n"
+              }
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
+            $global:o_DefStatus += "Out of date (REG Check)`r`n"
             $global:o_DefStatus += "Last Definition Update : N/A`r`n"
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
             #$global:o_DefStatus = "N/A"
