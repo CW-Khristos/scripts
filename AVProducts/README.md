@@ -22,7 +22,7 @@
     Requires       : PowerShell Version 2.0+ installed
 
 # .OS COMPATIBILITY
- - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
+ - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML" status returned for all metrics
  - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
    - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
    - Supported Ciphers : https://docs.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-7
