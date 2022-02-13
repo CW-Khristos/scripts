@@ -36,7 +36,9 @@
 
 # .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
- - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detection Types' and 'Active Detections'
+ - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detected Infections' and 'Detected Threats'
+   - Detected Infections is based on Sophos' 'Infection' registry data representing the "category" of infection types found to be active (Currently only supported by Sophos and Trend Micro; though Trend Micro only provides the total active "Count" and not the category / type)
+   - Detected Threats is based on Sophos' 'Threats' registry data representing the actual active threats, the threat type, and the threat location (Currently only supported by Sophos)
    - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
@@ -60,6 +62,9 @@ Configure the Thresholds as indicated below :
  - AV Conflict should be set to "Match" and "0" for "Normal" status
  - Competitor AV should be set to "Off" or "Contain" and "Windows Defender" for "Normal" status
  - Competitor Path should be set to "Off" or "Contain" and "windowsdefender://" for "Normal" status
+ - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detected Infections' and 'Detected Threats'
+ - Detected Infections should be set to "Off" or "Contain" and "True" for "Failed" status
+ - Detected Threats should be set to "Off" or "Contain" and "N/A" for "Normal" status
 
 ![image](https://user-images.githubusercontent.com/10928642/147267471-10d07628-3f95-44a3-9ea3-5d6b693a71d6.png)
 ![image](https://user-images.githubusercontent.com/10928642/147267542-1590e6dc-b385-4e12-8261-9947c8ae1857.png)
