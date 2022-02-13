@@ -21,8 +21,23 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 
+# .OS COMPATIBILITY
+ - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
+ - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
+   - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
+   - Supported Ciphers : https://docs.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-7
+ - Fix :
+   - Install the KB3140245 Security Patch : https://www.catalog.update.microsoft.com/search.aspx?q=kb3140245
+   - Configure TLS1.2 Support : https://support.microsoft.com/en-us/topic/update-to-enable-tls-1-1-and-tls-1-2-as-default-secure-protocols-in-winhttp-in-windows-c4bd73d2-31d7-761e-0178-11268bb10392
+   - A full "guide" : https://www.ryadel.com/en/enable-tls-1-1-1-2-windows-7-8-os-regedit-patch-download/
+ - You can check OS support for TLS via Powershell with the following command :
+   - `[Net.ServicePointManager]::SecurityProtocol`
+ - If the return does not include "Tls12"; then the OS will not support secure SSL connections to GitHub and will not be able to retrieve AV Vendor XML files. Follow the above steps to attempt to enable TLS1.2 support on this OS
+
 # .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
+ - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detection Types' and 'Active Detections'
+   - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
 ![image](https://user-images.githubusercontent.com/10928642/147266859-583eccc5-cc72-40ad-a8b8-43d6d0c461a2.png)
@@ -31,10 +46,11 @@ To setup each respective Custom Service; modify the 'Primary AV Product' input f
  - **Note :** The only exception to this is for Windows Defender; if using Windows Defender as the Primary AV Product simply input "Windows Defender"
  - **Note :** It is not necessary to also fill in the "Service Identifier"; I personally prefer to do so so the Service Monitor will appear as "AV Health - Vendor" in NC
  - **Note :** It is also possible to use Custom Properties (Customer or Device) for the 'Primary AV Product' input; this method would forego needing multiple Custom Services
- - **Note :** I have included individual Custom Service for each of the supported Vendors at this time
+ - **Note :** I have included individual Custom Service exports for each of the supported Vendors at this time
 
 Configure the Thresholds as indicated below :
  - AV Name and AV Path should be set to "Off" or "Contain" and should only need to input the Vendor  for "Normal" status (assumption based on default install paths)
+ - **Note :** If monitoring Trend Micro on a Server; the AV Product reports the name as "Worry-Free Business Security" for AV Name, so this threshold should be set to "Off" or modified to match
  - AV Version should be set to "Off"  or "Contain" and "." for "Normal" status
  - AV Product Up-to-Date should be set to "Contain" and "True" for "Normal" status
  - Real-Time Protection should be set to "Match" and "Enabled" for "Normal" status
@@ -50,7 +66,7 @@ Configure the Thresholds as indicated below :
 ![image](https://user-images.githubusercontent.com/10928642/147268240-0b8b5def-d4a3-4ecd-a5bb-b0527a46c94d.png)
 
 After creating the desired Custom Services; create Service Templates for your Windows Devices
- - If planning to monitor multiple AV Products; it will be necessary to create Service Templates for each AV Product you wish to monitor
+ - **Note :** If **not** using Custom Properties to pass Primary AV Product and are planning to monitor multiple AV Products; it will be necessary to create Service Templates for each AV Product you wish to monitor
  - **Note :** Workstations / Laptops - Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
  - **Note :** Servers - Thresholds for AV Path, Competitor AV, and Competitor Path should be set to "Off"
    - Setting Definition Status Thresholds to "Off" is only a temporary measure until the script fully supports retrieving these values on Servers
@@ -114,5 +130,15 @@ After creating the desired Custom Services; create Service Templates for your Wi
 
 # AV Products Needing XML 'Definitions' :
  - AVG
+ - Avast
+ - Avira
  - BitDefender
+ - CrowdStrike
+ - FortiClient
+ - FSecure
+ - Kaspersky
+ - McAfee
+ - Microsoft Defender for Endpoints
  - Norton
+ - VIPRE
+ - Webroot
