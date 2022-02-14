@@ -1,15 +1,28 @@
-# .SYNOPSIS 
+***
+# **AVHealth**
+  * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
+  * **Current Validation : [Validated - v0.1.8]**
+  * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master) (Validated)**
+***
+## **Script Details :**
+  * **NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AV%20Health.amp)**
+  * **PS1 Script - [AVHealth_0.1.8.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.8.ps1)**
+  * **Command :** powershell -file .\AVHealth_0.1.8.ps1 -i_PAV "[AV Vendor]"
+  * **Arguments :** 1, Required 1
+    * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
+***
+## .SYNOPSIS 
     AV Health Monitoring
     This was based on "Get Installed Antivirus Information" by SyncroMSP
     But omits the Hex Conversions and utilization of WSC_SECURITY_PROVIDER , WSC_SECURITY_PRODUCT_STATE , WSC_SECURITY_SIGNATURE_STATUS
     https://mspscripts.com/get-installed-antivirus-information-2/
-
-# .DESCRIPTION 
+***
+## .DESCRIPTION 
     Provide Primary AV Product Status and Report Possible AV Conflicts
     Script is intended to be universal / as flexible as possible without being excessively complicated
     Script is intended to replace 'AV Status' VBS Monitoring Script
- 
-# .NOTES
+***
+## .NOTES
     Version        : 0.1.8 (08 February 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
@@ -20,9 +33,9 @@
                      Eddie for their patience and helping test and validate and assistance with Trend Micro and Windows Defender
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
-
-# .OS COMPATIBILITY
- - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML" status returned for all metrics
+***
+## .OS COMPATIBILITY
+ - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
  - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
    - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
    - Supported Ciphers : https://docs.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-7
@@ -33,12 +46,10 @@
  - You can check OS support for TLS via Powershell with the following command :
    - `[Net.ServicePointManager]::SecurityProtocol`
  - If the return does not include "Tls12"; then the OS will not support secure SSL connections to GitHub and will not be able to retrieve AV Vendor XML files. Follow the above steps to attempt to enable TLS1.2 support on this OS
-
-# .USE
+***
+## .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
- - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detected Infections' and 'Detected Threats'
-   - Detected Infections is based on Sophos' 'Infection' registry data representing the "category" of infection types found to be active (Currently only supported by Sophos and Trend Micro; though Trend Micro only provides the total active "Count" and not the category / type)
-   - Detected Threats is based on Sophos' 'Threats' registry data representing the actual active threats, the threat type, and the threat location (Currently only supported by Sophos)
+ - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Active Detections' and 'Detected Threats'
    - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
@@ -57,14 +68,11 @@ Configure the Thresholds as indicated below :
  - AV Product Up-to-Date should be set to "Contain" and "True" for "Normal" status
  - Real-Time Protection should be set to "Match" and "Enabled" for "Normal" status
  - Definition Status should be set to "Contain" and "Up to date" for "Normal" status
- - Detected Infections should be set to "Contain" and "True" for "Failed" status
+ - Active Detections should be set to "Contain" and "True" for "Failed" status
  - Detected Threats should be set to "Contain" and "N/A" for "Normal" status
  - AV Conflict should be set to "Match" and "0" for "Normal" status
  - Competitor AV should be set to "Off" or "Contain" and "Windows Defender" for "Normal" status
  - Competitor Path should be set to "Off" or "Contain" and "windowsdefender://" for "Normal" status
- - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Detected Infections' and 'Detected Threats'
- - Detected Infections should be set to "Off" or "Contain" and "True" for "Failed" status
- - Detected Threats should be set to "Off" or "Contain" and "N/A" for "Normal" status
 
 ![image](https://user-images.githubusercontent.com/10928642/147267471-10d07628-3f95-44a3-9ea3-5d6b693a71d6.png)
 ![image](https://user-images.githubusercontent.com/10928642/147267542-1590e6dc-b385-4e12-8261-9947c8ae1857.png)
@@ -78,9 +86,8 @@ After creating the desired Custom Services; create Service Templates for your Wi
  - **Note :** I have included Service Template exports available in this repo (configured for Sophos; but these can easily be modified per below settings)
 
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
-
-
-# .CHANGELOG
+***
+## .CHANGELOG
  - 0.1.0
     - Initial Release
  - 0.1.1
@@ -119,21 +126,21 @@ After creating the desired Custom Services; create Service Templates for your Wi
     - Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
     - Began expansion of metrics to include 'Detection Types' and "Active Detections" based on Sophos' infection status and detected threats registry keys
     - Cleaned up formatting for legibility for CLI and within NCentral
-
+***
 # .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
     Need to obtain version and calculate date timestamps for AV Product updates, Definition updates, and Last Scan
     Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
     If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
-
-# Supported AV Products :
+***
+## Supported AV Products :
  - Sophos Anti-Virus
  - Symantec Anti-Virus
  - Trend Micro
  - Windows Defender
-
-# AV Products Needing XML 'Definitions' :
+***
+## AV Products Needing XML 'Definitions' :
  - AVG
  - Avast
  - Avira
