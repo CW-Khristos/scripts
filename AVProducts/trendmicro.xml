@@ -34,6 +34,8 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <alert>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alert>
+      <alertval>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alertval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -69,8 +71,10 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
+      <alert>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alert>
+      <alertval>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alertval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -111,6 +115,8 @@
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
       <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <alert>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alert>
+      <alertval>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alertval>
       <infect>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
@@ -146,8 +152,10 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
+      <alert>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alert>
+      <alertval>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\Alerts\</alertval>
       <infect>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</infect>
       <infectval>Virus/Malware Count</infectval>
       <threat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\DC\</threat>
