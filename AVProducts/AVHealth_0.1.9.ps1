@@ -406,79 +406,81 @@ if (-not ($global:blnAVXML)) {
         foreach ($vendor in $global:avVendors) {
           Get-AVXML $vendor $global:vavkey
           foreach ($key in $global:vavkey.keys) {                                     #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-            write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
-            $strName = ""
-            $regDisplay = $global:vavkey[$key].display
-            $regDisplayVal = $global:vavkey[$key].displayval
-            $regPath = $global:vavkey[$key].path
-            $regPathVal = $global:vavkey[$key].pathval
-            $regStat = $global:vavkey[$key].stat
-            $regStatVal = $global:vavkey[$key].statval
-            $regRealTime = $global:vavkey[$key].rt
-            $regRTVal = $global:vavkey[$key].rtval
-            try {
-              if (test-path "HKLM:$regDisplay") {                                     #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
-                write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-                try {                                                                 #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
-                  $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
-                  $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
-                  $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
-                  $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-                  #FORMAT AV DATA
-                  $strName = $keyval1.$regDisplayVal
-                  if ($strName -match "Windows Defender") {                           #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
-                    $strName = "Windows Defender"
-                  }
-                  $strDisplay = $strDisplay + $strName + ", "
-                  $strPath = $strPath + $keyval2.$regPathVal + ", "
-                  $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
-                  #INTERPRET REAL-TIME SCANNING STATUS
-                  if ($global:zRealTime -contains $global:vavkey[$key].display) {     #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
-                    if ($keyval4.$regRTVal = "0") {
-                      $strRealTime = $strRealTime + "Enabled (REG Check), "
-                    } elseif ($keyval4.$regRTVal = "1") {
-                      $strRealTime = $strRealTime + "Disabled (REG Check), "
+            if ($key -notmatch "#comment") {                                          #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
+              write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
+              $strName = ""
+              $regDisplay = $global:vavkey[$key].display
+              $regDisplayVal = $global:vavkey[$key].displayval
+              $regPath = $global:vavkey[$key].path
+              $regPathVal = $global:vavkey[$key].pathval
+              $regStat = $global:vavkey[$key].stat
+              $regStatVal = $global:vavkey[$key].statval
+              $regRealTime = $global:vavkey[$key].rt
+              $regRTVal = $global:vavkey[$key].rtval
+              try {
+                if (test-path "HKLM:$regDisplay") {                                     #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+                  write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
+                  try {                                                                 #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+                    $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
+                    $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
+                    $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                    $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
+                    #FORMAT AV DATA
+                    $strName = $keyval1.$regDisplayVal
+                    if ($strName -match "Windows Defender") {                           #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                      $strName = "Windows Defender"
                     }
-                  } elseif ($global:zRealTime -notcontains $avs[$av].display) {       #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
-                    if ($keyval4.$regRTVal = "1") {
-                      $strRealTime = $strRealTime + "Enabled (REG Check), "
-                    } elseif ($keyval4.$regRTVal = "0") {
-                      $strRealTime = $strRealTime + "Disabled (REG Check), "
-                    }
-                  }
-                  #FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
-                  if ($blnSecMon) {
-                    write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                    if ($global:bitarch = "bit64") {
-                      try {
-                        new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
-                      } catch {
-                        write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                        write-host $_.scriptstacktrace
-                        write-host $_
+                    $strDisplay = $strDisplay + $strName + ", "
+                    $strPath = $strPath + $keyval2.$regPathVal + ", "
+                    $strStat = $strStat + $keyval4.$regStatVal.tostring() + ", "
+                    #INTERPRET REAL-TIME SCANNING STATUS
+                    if ($global:zRealTime -contains $global:vavkey[$key].display) {     #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                      if ($keyval4.$regRTVal = "0") {
+                        $strRealTime = $strRealTime + "Enabled (REG Check), "
+                      } elseif ($keyval4.$regRTVal = "1") {
+                        $strRealTime = $strRealTime + "Disabled (REG Check), "
                       }
-                    } elseif ($global:bitarch = "bit32") {
-                      try {
-                        new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
-                      } catch {
-                        write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
-                        write-host $_.scriptstacktrace
-                        write-host $_
+                    } elseif ($global:zRealTime -notcontains $avs[$av].display) {       #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                      if ($keyval4.$regRTVal = "1") {
+                        $strRealTime = $strRealTime + "Enabled (REG Check), "
+                      } elseif ($keyval4.$regRTVal = "0") {
+                        $strRealTime = $strRealTime + "Disabled (REG Check), "
                       }
                     }
+                    #FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+                    if ($blnSecMon) {
+                      write-host "Creating Registry Key HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                      if ($global:bitarch = "bit64") {
+                        try {
+                          new-item -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
+                        } catch {
+                          write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                          write-host $_.scriptstacktrace
+                          write-host $_
+                        }
+                      } elseif ($global:bitarch = "bit32") {
+                        try {
+                          new-item -path "HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" -name $strName -value $strName -force
+                        } catch {
+                          write-host "Could not create Registry Key `HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\" $strName " for product : " $strName -foregroundcolor red
+                          write-host $_.scriptstacktrace
+                          write-host $_
+                        }
+                      }
+                    }
+                    $AntiVirusProduct = "."
+                  } catch {
+                    write-host "Could not validate Registry data for product : $key" -foregroundcolor red
+                    write-host $_.scriptstacktrace
+                    write-host $_
+                    $AntiVirusProduct = $null
                   }
-                  $AntiVirusProduct = "."
-                } catch {
-                  write-host "Could not validate Registry data for product : $key" -foregroundcolor red
-                  write-host $_.scriptstacktrace
-                  write-host $_
-                  $AntiVirusProduct = $null
                 }
+              } catch {
+                write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor red
+                write-host $_.scriptstacktrace
+                write-host $_
               }
-            } catch {
-              write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor red
-              write-host $_.scriptstacktrace
-              write-host $_
             }
           }
         }
