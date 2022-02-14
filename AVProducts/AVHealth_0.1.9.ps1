@@ -111,6 +111,11 @@
     "Symantec Endpoint Protection"
     "Windows Defender"
   )
+  #AV PRODUCTS NOT SUPPORTING ALERTS DETECTIONS
+  $global:zNoAlert = @(
+    "Symantec Endpoint Protection"
+    "Windows Defender"
+  )
   #AV PRODUCTS NOT SUPPORTING INFECTION DETECTIONS
   $global:zNoInfect = @(
     "Symantec Endpoint Protection"
@@ -607,6 +612,9 @@ if (-not ($global:blnAVXML)) {
           #AV PRODUCT SCANS KEY PATH
           $i_scan = $global:pavkey[$node].scan
           $i_scanval = $global:pavkey[$node].scanval
+          #AV PRODUCT ALERTS KEY PATH
+          $i_alert = $global:pavkey[$node].alert
+          $i_alertval = $global:pavkey[$node].alertval
           #AV PRODUCT INFECTIONS KEY PATH
           $i_infect = $global:pavkey[$node].infect
           $i_infectval = $global:pavkey[$node].infectval
@@ -735,7 +743,7 @@ if (-not ($global:blnAVXML)) {
             $global:o_DefStatus = $global:defstatus + "`r`n"
           #  $global:o_RTstate = $global:rtstatus
           } elseif (-not $global:blnWMI) {
-            $global:o_DefStatus = "N/A`r`n" #$global:defstatus
+            $global:o_DefStatus = "N/A (WMI Check)`r`n" #$global:defstatus
           #  $global:o_RTstate = $avs[$av].rt
           }
           try {
@@ -764,10 +772,46 @@ if (-not ($global:blnAVXML)) {
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
-            write-host "Could not validate Registry data : -path 'HKLM:$i_infect' -name '$i_defupdateval'" -foregroundcolor red
+            write-host "Could not validate Registry data : -path 'HKLM:$i_defupdate' -name '$i_defupdateval'" -foregroundcolor red
             $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
             $global:o_DefStatus += "Last Definition Update : N/A`r`n"
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
+          }
+          #GET PRIMARY AV PRODUCT DETECTED ALERTS VIA REGISTRY
+          if ($global:zNoAlert -notcontains $i_PAV) {
+            try {
+              write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+              if ($i_PAV -match "Sophos") {
+                $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
+                foreach ($alert in $alertkey.psobject.Properties) {
+                  if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
+                    if ($alert.value -eq 0) {
+                      $global:o_Infect += "Type - $($alert.name) : $false`r`n"
+                    } elseif ($alert.value -eq 1) {
+                      $global:o_Infect += "Type - $($alert.name) : $true`r`n"
+                    }
+                  }
+                }
+              } elseif ($i_PAV -match "Trend Micro") {
+                if ($global:producttype -eq "Workstation") {
+                  $alertkey = get-ItemProperty -path "HKLM:$i_alertClient" -erroraction silentlycontinue
+                } elseif (($global:producttype -eq "Server") -or ($global:producttype -eq "DC")) {
+                  $alertkey = get-ItemProperty -path "HKLM:$i_alertServer" -erroraction silentlycontinue
+                }
+                foreach ($alert in $alertkey.psobject.Properties) {
+                  if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
+                    if ($alert.value -eq 0) {
+                      $global:o_Infect += "Type - $($alert.name) : $false`r`n"
+                    } elseif ($alert.value -eq 1) {
+                      $global:o_Infect += "Type - $($alert.name) : $true`r`n"
+                    }
+                  }
+                }
+              }
+            } catch {
+              write-host "Could not validate Registry data : 'HKLM:$i_alert'" -foregroundcolor red
+              $global:o_Infect = "N/A"
+            }
           }
           #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
           if ($global:zNoInfect -notcontains $i_PAV) {
@@ -786,9 +830,9 @@ if (-not ($global:blnAVXML)) {
                 }
               } elseif ($i_PAV -match "Trend Micro") {
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-                if ($infectkey.$i_infectval -eq 0) {
+                if ($infectkey.$alertval -eq 0) {
                   $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
-                } elseif ($infectkey.$i_infectval -gt 0) {
+                } elseif ($infectkey.$alertval -gt 0) {
                   $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
                 }
               }
