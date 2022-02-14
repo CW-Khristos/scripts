@@ -160,29 +160,29 @@
     #THIS COULD PROBABLY ALSO BE TURNED INTO A SIMPLE XML / JSON LOOKUP TO FACILITATE COMMUNITY CONTRIBUTION
     switch ($state) {
       #AVG IS 2012 AV / CrowdStrike / Kaspersky
-      "262144" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      "266240" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "262144" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "266240" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #AVG IS 2012 FW
-      "266256" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
-      "262160" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "266256" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "262160" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #MSSE
-      "393216" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      "397312" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "393216" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397312" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #Windows Defender
-      "393472" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      "397584" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
-      "397568" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
-      "401664" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "393472" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397584" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "397568" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "401664" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #
-      "393232" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      "393488" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      "397328" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "393232" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "393488" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "397328" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
       #Sophos
-      "331776" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
-      "335872" {$global:defstatus = "Status : Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      "331776" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Enabled (WMI Check)"}
+      "335872" {$global:defstatus = "Up to date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
       #Norton Security
-      "327696" {$global:defstatus = "Status : Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
-      default {$global:defstatus = "Status : Unknown (WMI Check)" ;$global:rtstatus = "Unknown (WMI Check)"}
+      "327696" {$global:defstatus = "Out of date (WMI Check)" ;$global:rtstatus = "Disabled (WMI Check)"}
+      default {$global:defstatus = "Unknown (WMI Check)" ;$global:rtstatus = "Unknown (WMI Check)"}
     }
   } ## Get-AVState
   
@@ -562,7 +562,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A (WMI Check)`r`n"
             }
           } elseif ($i_PAV -ne "Trend Micro") {
             $global:o_AVcon = 1
@@ -572,7 +572,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A (WMI Check)`r`n"
             }
           }
         }
@@ -854,7 +854,7 @@ write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
 write-host "`r`nAV Status :" -foregroundcolor yellow
 write-host "$global:o_AVStatus" -foregroundcolor $ccode
 write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
-write-host "`r`nCore Version :" -foregroundcolor yellow
+write-host "`r`nComponent Versions :" -foregroundcolor yellow
 write-host "$o_compver" -foregroundcolor $ccode
 $global:o_AVStatus += "`r`n$o_compver`r`n"
 #REAL-TIME SCANNING & DEFINITIONS
@@ -866,8 +866,8 @@ write-host "$global:o_Infect" -foregroundcolor $ccode
 write-host "Detected Threats :" -foregroundcolor yellow
 write-host "$global:o_Threats" -foregroundcolor $ccode
 #COMPETITOR AV
-write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
 write-host "Competitor AV :" -foregroundcolor yellow
+write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
 write-host "$global:o_CompAV" -foregroundcolor $ccode
 write-host "Competitor Path :" -foregroundcolor yellow
 write-host "$global:o_CompPath" -foregroundcolor $ccode
