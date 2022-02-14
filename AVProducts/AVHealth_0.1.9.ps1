@@ -774,8 +774,8 @@ if (-not ($global:blnAVXML)) {
           #GET PRIMARY AV PRODUCT DETECTED ALERTS VIA REGISTRY
           if ($global:zNoAlert -notcontains $i_PAV) {
             try {
-              write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
               if ($i_PAV -match "Sophos") {
+                write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
                 $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
                 foreach ($alert in $alertkey.psobject.Properties) {
                   if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
@@ -788,9 +788,13 @@ if (-not ($global:blnAVXML)) {
                 }
               } elseif ($i_PAV -match "Trend Micro") {
                 if ($global:producttype -eq "Workstation") {
-                  $alertkey = get-ItemProperty -path "HKLM:$i_alertClient" -erroraction silentlycontinue
+                  $i_alert += "Client"
+                  write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+                  $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
                 } elseif (($global:producttype -eq "Server") -or ($global:producttype -eq "DC")) {
-                  $alertkey = get-ItemProperty -path "HKLM:$i_alertServer" -erroraction silentlycontinue
+                  $i_alert += "Server"
+                  write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+                  $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
                 }
                 foreach ($alert in $alertkey.psobject.Properties) {
                   if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
