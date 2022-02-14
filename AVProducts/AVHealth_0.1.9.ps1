@@ -404,7 +404,6 @@ if (-not ($global:blnAVXML)) {
         #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
         write-host "`r`nNo AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
         foreach ($vendor in $global:avVendors) {
-          #write-host "Loading AV Product XML : '$vendor'" -foregroundcolor yellow
           Get-AVXML $vendor $global:vavkey
           foreach ($key in $global:vavkey.keys) {                                     #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
             write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
@@ -569,7 +568,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A (WMI Check)`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A (WMI Check)`r`n"
             }
           } elseif ($i_PAV -ne "Trend Micro") {
             $global:o_AVcon = 1
@@ -579,7 +578,7 @@ if (-not ($global:blnAVXML)) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
             } elseif (-not $global:blnWMI) {
-              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) (REG Check) - Definitions : N/A (WMI Check)`r`n"
+              $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A (WMI Check)`r`n"
             }
           }
         }
