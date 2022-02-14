@@ -12,7 +12,7 @@
       <verval>PRODUCTVERSION</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
@@ -93,7 +93,7 @@
       <verval>PRODUCTVERSION</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
+      <stat>\SOFTWARE\Symantec\Symantec Endpoint Protection\LiveUpdate\Notify\</stat>
       <statval>Update</statval>
       <!--AV Product Updates-->
       <update>\PLACEHOLDER\</update>
