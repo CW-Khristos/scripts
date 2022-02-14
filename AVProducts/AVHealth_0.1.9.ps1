@@ -11,7 +11,7 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.9 (08 February 2022)
+    Version        : 0.1.9 (14 February 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_0.1.9.ps1 
@@ -46,12 +46,18 @@
     0.1.7 Bugfixes for monitoring 'Trend Micro' and 'Worry-Free Business Security' and multiple AVs on Servers.
             These 2 'Trend Micro' AV Products are actually the same product; this is simply to deal with differing names in Registry Keys that cannot be changed with Trend Micro installed
     0.1.8 Optimization and more bugfixes
-            Switched to allow passing of '$i_PAV' via command line; this must be disabled in the AMP code to function properly with NCentral
-            Corrected issue where 'Windows Defender' would be populated twice in Competitor AV; this was caused because WMI may report multiple instances of the same AV Product causing competitor check to do multiple runs
-            Switched to using a hashtable for storing detected AV Products; this was to prevent duplicate entires for the same AV Product caused by WMI
-            Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
-            Began expansion of metrics to include 'Detection Types' and 'Active Detections' based on Sophos' infection status and detected threats registry keys
-            Cleaned up formatting for legibility for CLI and within NCentral
+          Switched to allow passing of '$i_PAV' via command line; this must be disabled in the AMP code to function properly with NCentral
+          Corrected issue where 'Windows Defender' would be populated twice in Competitor AV; this was caused because WMI may report multiple instances of the same AV Product causing competitor check to do multiple runs
+          Switched to using a hashtable for storing detected AV Products; this was to prevent duplicate entires for the same AV Product caused by WMI
+          Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
+          Began expansion of metrics to include 'Detection Types' and 'Active Detections' based on Sophos' infection status and detected threats registry keys
+          Cleaned up formatting for legibility for CLI and within NCentral
+    0.1.9 Optimization and more bugfixes
+          Working on finalizing looping routines to check for each AV Product for each Vendor both on Servers and Workstations; plan to move this to a function to avoid duplicate code
+          Finalizing moving away from using WMI calls to check status and only using it to check for installed AV Products
+          'AV Product Status', 'Real-Time Scanning', and 'Definition Status' will now report how script obtained information; either from WMI '(WMI Check)' or from Registry '(REG Check)'
+          Workstations will still report the Real-Time Scanning and Definitions status via WMI; but plan to remove this output entirely
+          Began adding in checks for AV Components' Versions, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
 
 .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
@@ -60,6 +66,7 @@
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
         Still need to determine if timestamps are possible for detected threats
     If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
+    Need to create a 'Get-AVProducts' function and move looped 'detection' code into a function to call
 #> 
 
 #REGION ----- DECLARATIONS ----
@@ -199,7 +206,7 @@
     #$dest = @{}
     $global:blnAVXML = $true
     write-host "Loading : '$src' AV Product XML" -foregroundcolor yellow
-    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
     try {
       $avXML = New-Object System.Xml.XmlDocument
       $avXML.Load($srcAVP)
@@ -496,9 +503,79 @@ if (-not ($global:blnAVXML)) {
     }
   } elseif ($global:blnWMI) {                                                                       #RETURNED WMI SECURITYCENTER NAMESPACE
     #SEPARATE RETURNED WMI AV PRODUCT INSTANCES
-    $tmpavs = $AntiVirusProduct.displayName -split ", "
-    $tmppaths = $AntiVirusProduct.pathToSignedProductExe -split ", "
-    $tmpstats = $AntiVirusProduct.productState -split ", "
+    if ($AntiVirusProduct -ne $null) {                                                              #RETURNED WMI AV PRODUCT DATA
+      $tmpavs = $AntiVirusProduct.displayName -split ", "
+      $tmppaths = $AntiVirusProduct.pathToSignedProductExe -split ", "
+      $tmpstats = $AntiVirusProduct.productState -split ", "
+    } elseif ($AntiVirusProduct -eq $null) {                                                        #FAILED TO RETURN WMI AV PRODUCT DATA
+      $strDisplay = ""
+      #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
+      write-host "`r`nNo AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
+      foreach ($vendor in $global:avVendors) {
+        Get-AVXML $vendor $global:vavkey
+        foreach ($key in $global:vavkey.keys) {                                                     #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+          if ($key -notmatch "#comment") {                                                          #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
+            write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
+            $strName = ""
+            $regDisplay = $global:vavkey[$key].display
+            $regDisplayVal = $global:vavkey[$key].displayval
+            $regPath = $global:vavkey[$key].path
+            $regPathVal = $global:vavkey[$key].pathval
+            $regStat = $global:vavkey[$key].stat
+            $regStatVal = $global:vavkey[$key].statval
+            $regRealTime = $global:vavkey[$key].rt
+            $regRTVal = $global:vavkey[$key].rtval
+            try {
+              if (test-path "HKLM:$regDisplay") {                                                   #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+                write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
+                try {                                                                               #IF VALIDATION PASSES
+                  $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
+                  $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
+                  $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
+                  $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
+                  #FORMAT AV DATA
+                  $strName = $keyval1.$regDisplayVal
+                  if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                    $strName = "Windows Defender"
+                  }
+                  $strDisplay = $strDisplay + $strName + ", "
+                  $strPath = $strPath + $keyval2.$regPathVal + ", "
+                  $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
+                  #INTERPRET REAL-TIME SCANNING STATUS
+                  if ($global:zRealTime -contains $global:vavkey[$key].display) {                   #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                    if ($keyval4.$regRTVal = "0") {
+                      $strRealTime = $strRealTime + "Enabled (REG Check), "
+                    } elseif ($keyval4.$regRTVal = "1") {
+                      $strRealTime = $strRealTime + "Disabled (REG Check), "
+                    }
+                  } elseif ($global:zRealTime -notcontains $global:vavkey[$key].display) {          #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                    if ($keyval4.$regRTVal = "1") {
+                      $strRealTime = $strRealTime + "Enabled (REG Check), "
+                    } elseif ($keyval4.$regRTVal = "0") {
+                      $strRealTime = $strRealTime + "Disabled (REG Check), "
+                    }
+                  }
+                  $AntiVirusProduct = "."
+                } catch {
+                  write-host "Could not validate Registry data for product : $key" -foregroundcolor red
+                  write-host $_.scriptstacktrace
+                  write-host $_
+                  $AntiVirusProduct = $null
+                }
+              }
+            } catch {
+              write-host "Not Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor red
+              write-host $_.scriptstacktrace
+              write-host $_
+            }
+          }
+        }
+      }
+      $tmpavs = $strDisplay -split ", "
+      $tmppaths = $strPath -split ", "
+      $tmprts = $strRealTime -split ", "
+      $tmpstats = $strStat -split ", "
+    }
   }
   #ENSURE ONLY UNIQUE AV PRODUCTS ARE IN '$avs' HASHTABLE
   $i = 0
@@ -549,6 +626,7 @@ if (-not ($global:blnAVXML)) {
   }
   #OBTAIN FINAL AV PRODUCT DETAILS
   if ($AntiVirusProduct -eq $null) {                                                                #NO AV PRODUCT FOUND
+    $AntiVirusProduct
     write-host "Could not find any AV Product registered" -foregroundcolor red
     $global:o_AVname = "No AV Product Found"
     $global:o_AVVersion = ""
@@ -565,7 +643,7 @@ if (-not ($global:blnAVXML)) {
           if (($i_PAV -eq "Trend Micro") -and (($avs[$av].display -notmatch "Trend Micro") -and ($avs[$av].display -notmatch "Worry-Free Business Security"))) {
             $global:o_AVcon = 1
             $global:o_CompAV += "$($avs[$av].display)`r`n"
-            $global:o_CompPath += "$($avs[$av].display) - $($avs[$av].path)`r`n"
+            $global:o_CompPath += "$($avs[$av].path)`r`n"
             if ($global:blnWMI) {
               Get-AVState($avs[$av].stat)
               $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
@@ -908,7 +986,7 @@ write-host "$global:o_AVStatus" -foregroundcolor $ccode
 write-host "Real-Time Status : $global:o_RTstate" -foregroundcolor $ccode
 write-host "`r`nComponent Versions :" -foregroundcolor yellow
 write-host "$o_compver" -foregroundcolor $ccode
-$global:o_AVStatus += "`r`n$o_compver`r`n"
+$global:o_AVStatus += "`r`n`r`n$o_compver`r`n"
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Definitions :" -foregroundcolor yellow
 write-host "Status : $global:o_DefStatus" -foregroundcolor $ccode
