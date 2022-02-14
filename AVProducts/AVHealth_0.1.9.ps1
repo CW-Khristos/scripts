@@ -786,26 +786,28 @@ if (-not ($global:blnAVXML)) {
                     }
                   }
                 }
-              } elseif ($i_PAV -match "Trend Micro") {
-                if ($global:producttype -eq "Workstation") {
-                  $i_alert += "Client"
-                  write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
-                  $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
-                } elseif (($global:producttype -eq "Server") -or ($global:producttype -eq "DC")) {
-                  $i_alert += "Server"
-                  write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
-                  $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
-                }
-                foreach ($alert in $alertkey.psobject.Properties) {
-                  if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
-                    if ($alert.value -eq 0) {
-                      $global:o_Infect += "Type - $($alert.name) : $false`r`n"
-                    } elseif ($alert.value -eq 1) {
-                      $global:o_Infect += "Type - $($alert.name) : $true`r`n"
-                    }
-                  }
-                }
               }
+              # NOT ACTUAL DETECTIONS - SAVE BELOW CODE FOR 'CONFIGURED ALERTS' METRIC
+              #elseif ($i_PAV -match "Trend Micro") {
+              #  if ($global:producttype -eq "Workstation") {
+              #    $i_alert += "Client"
+              #    write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+              #    $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
+              #  } elseif (($global:producttype -eq "Server") -or ($global:producttype -eq "DC")) {
+              #    $i_alert += "Server"
+              #    write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+              #    $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
+              #  }
+              #  foreach ($alert in $alertkey.psobject.Properties) {
+              #    if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
+              #      if ($alert.value -eq 0) {
+              #        $global:o_Infect += "Type - $($alert.name) : $false`r`n"
+              #      } elseif ($alert.value -eq 1) {
+              #        $global:o_Infect += "Type - $($alert.name) : $true`r`n"
+              #      }
+              #    }
+              #  }
+              #}
             } catch {
               write-host "Could not validate Registry data : 'HKLM:$i_alert'" -foregroundcolor red
               $global:o_Infect = "N/A"
@@ -814,8 +816,8 @@ if (-not ($global:blnAVXML)) {
           #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
           if ($global:zNoInfect -notcontains $i_PAV) {
             try {
-              write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
               if ($i_PAV -match "Sophos") {
+                write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
                 foreach ($infect in $infectkey.psobject.Properties) {
                   if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
@@ -827,6 +829,7 @@ if (-not ($global:blnAVXML)) {
                   }
                 }
               } elseif ($i_PAV -match "Trend Micro") {
+                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
                 if ($infectkey.$alertval -eq 0) {
                   $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
