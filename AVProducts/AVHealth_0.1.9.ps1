@@ -241,6 +241,8 @@
             defupdateval = $itm.$global:bitarch.defupdateval
             rt = $itm.$global:bitarch.rt
             rtval = $itm.$global:bitarch.rtval
+            alert = $itm.$global:bitarch.alert
+            alertval = $itm.$global:bitarch.alertval
             infect = $itm.$global:bitarch.infect
             infectval = $itm.$global:bitarch.infectval
             threat = $itm.$global:bitarch.threat
@@ -360,8 +362,6 @@ if (-not ($global:blnAVXML)) {
               $regStatVal = $global:vavkey[$key].statval
               $regRealTime = $global:vavkey[$key].rt
               $regRTVal = $global:vavkey[$key].rtval
-              $regInfect = $global:vavkey[$key].infect
-              $regThreat = $global:vavkey[$key].threat
               break
             }
           }
@@ -374,8 +374,6 @@ if (-not ($global:blnAVXML)) {
                   $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
                   $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
                   $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-                  #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-                  #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
                   #FORMAT AV DATA
                   $strName = $keyval1.$regDisplayVal
                   if ($strName -match "Windows Defender") {   #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
@@ -421,8 +419,6 @@ if (-not ($global:blnAVXML)) {
             $regStatVal = $global:vavkey[$key].statval
             $regRealTime = $global:vavkey[$key].rt
             $regRTVal = $global:vavkey[$key].rtval
-            $regInfect = $global:vavkey[$key].infect
-            $regThreat = $global:vavkey[$key].threat
             try {
               if (test-path "HKLM:$regDisplay") {             #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
                 write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
@@ -431,8 +427,6 @@ if (-not ($global:blnAVXML)) {
                   $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
                   $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
                   $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
-                  #$keyval5 = get-itemproperty -path "HKLM:$regInfect" -erroraction stop
-                  #$keyval6 = get-itemproperty -path "HKLM:$regThreat" -recurse -erroraction stop
                   #FORMAT AV DATA
                   $strName = $keyval1.$regDisplayVal
                   if ($strName -match "Windows Defender") {   #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
