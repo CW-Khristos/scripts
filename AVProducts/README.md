@@ -1,5 +1,5 @@
 ***
-## **AVHealth**
+# **AVHealth**
   * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
   * **Current Validation : [Validated - v0.1.8]**
   * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master) (Validated)**
@@ -11,18 +11,18 @@
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
 ***
-# .SYNOPSIS 
+## .SYNOPSIS 
     AV Health Monitoring
     This was based on "Get Installed Antivirus Information" by SyncroMSP
     But omits the Hex Conversions and utilization of WSC_SECURITY_PROVIDER , WSC_SECURITY_PRODUCT_STATE , WSC_SECURITY_SIGNATURE_STATUS
     https://mspscripts.com/get-installed-antivirus-information-2/
 ***
-# .DESCRIPTION 
+## .DESCRIPTION 
     Provide Primary AV Product Status and Report Possible AV Conflicts
     Script is intended to be universal / as flexible as possible without being excessively complicated
     Script is intended to replace 'AV Status' VBS Monitoring Script
 ***
-# .NOTES
+## .NOTES
     Version        : 0.1.8 (08 February 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
@@ -34,7 +34,7 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 ***
-# .OS COMPATIBILITY
+## .OS COMPATIBILITY
  - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
  - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
    - GitHub Announcement : https://github.com/blog/2507-weak-cryptographic-standards-removed
@@ -47,7 +47,7 @@
    - `[Net.ServicePointManager]::SecurityProtocol`
  - If the return does not include "Tls12"; then the OS will not support secure SSL connections to GitHub and will not be able to retrieve AV Vendor XML files. Follow the above steps to attempt to enable TLS1.2 support on this OS
 ***
-# .USE
+## .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
  - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Active Detections' and 'Detected Threats'
    - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
@@ -87,7 +87,7 @@ After creating the desired Custom Services; create Service Templates for your Wi
 
 ![image](https://user-images.githubusercontent.com/10928642/147269271-11f3a13e-f09d-48ad-bab8-192c673cafdb.png)
 ***
-# .CHANGELOG
+## .CHANGELOG
  - 0.1.0
     - Initial Release
  - 0.1.1
@@ -134,13 +134,13 @@ After creating the desired Custom Services; create Service Templates for your Wi
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
     If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
 ***
-# Supported AV Products :
+## Supported AV Products :
  - Sophos Anti-Virus
  - Symantec Anti-Virus
  - Trend Micro
  - Windows Defender
 ***
-# AV Products Needing XML 'Definitions' :
+## AV Products Needing XML 'Definitions' :
  - AVG
  - Avast
  - Avira
