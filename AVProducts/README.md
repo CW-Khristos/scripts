@@ -66,7 +66,7 @@ Configure the Thresholds as indicated below :
  - **Note :** If monitoring Trend Micro on a Server; the AV Product reports the name as "Worry-Free Business Security" for AV Name, so this threshold should be set to "Off" or modified to match
  - AV Version should be set to "Off"  or "Contain" and "." for "Normal" status
  - AV Product Up-to-Date should be set to "Contain" and "True" for "Normal" status
- - Real-Time Protection should be set to "Match" and "Enabled" for "Normal" status
+ - Real-Time Protection should be set to "Contain" and "Enabled" for "Normal" status
  - Definition Status should be set to "Contain" and "Up to date" for "Normal" status
  - Active Detections should be set to "Contain" and "True" for "Failed" status
  - Detected Threats should be set to "Contain" and "N/A" for "Normal" status
