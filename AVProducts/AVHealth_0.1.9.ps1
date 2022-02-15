@@ -79,6 +79,7 @@
   $global:producttype = ""
   $global:computername = ""
   $global:blnWMI = $true
+  $global:blnPAV = $false
   $global:blnAVXML = $true
   $global:avs = @{}
   $global:pavkey = @{}
@@ -342,7 +343,14 @@ if (-not ($global:blnAVXML)) {
       if ($AntiVirusProduct -ne $null) {                                                            #RETURNED 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
         $strDisplay = ""
         $blnSecMon = $false
+        write-host "`r`nPerforming AV Product discovery" -foregroundcolor yellow
         foreach ($av in $AntiVirusProduct) {
+          #PRIMARY AV REGISTERED UNDER 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'
+          if ($av -match $i_PAV) {
+            $global:blnPAV = $true
+          } elseif (($i_PAV -eq "Trend Micro") -and ($av -match "Worry-Free Business Security")) {
+            $global:blnPAV = $true
+          }
           write-host "`r`nFound 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\$av'" -foregroundcolor yellow
           #RETRIEVE DETECTED AV PRODUCT VENDOR XML
           foreach ($vendor in $global:avVendors) {
@@ -405,11 +413,12 @@ if (-not ($global:blnAVXML)) {
             write-host $_
           }
         }
-      } elseif ($AntiVirusProduct -eq $null) {                                                      #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+      }
+      if (($AntiVirusProduct -eq $null) -or (-not $global:blnPAV)) {                          #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
         $strDisplay = ""
         $blnSecMon = $true
         #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
-        write-host "`r`nNo AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
+        write-host "`r`nPrimary AV Product not found / No AV Products found; will check each AV Product in all Vendor XMLs" -foregroundcolor yellow
         foreach ($vendor in $global:avVendors) {
           Get-AVXML $vendor $global:vavkey
           foreach ($key in $global:vavkey.keys) {                                                   #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
@@ -625,6 +634,7 @@ if (-not ($global:blnAVXML)) {
     $i = $i + 1
   }
   #OBTAIN FINAL AV PRODUCT DETAILS
+  write-host "`r`nAV Product discovery completed`r`n" -foregroundcolor yellow
   if ($AntiVirusProduct -eq $null) {                                                                #NO AV PRODUCT FOUND
     $AntiVirusProduct
     write-host "Could not find any AV Product registered" -foregroundcolor red
@@ -937,10 +947,18 @@ if (-not ($global:blnAVXML)) {
                   foreach ($threat in $threatkey) {
                     $threattype = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\" -name "Type" -erroraction silentlycontinue
                     $threatfile = get-childitem -path "HKLM:$i_threat\$($threat.PSChildName)\Files\" -erroraction silentlycontinue
+                    $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($threattype.type) - Path : "
                     foreach ($detection in $threatfile) {
-                      $threatpath = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($threatfile.PSChildName)\" -name "Path" -erroraction silentlycontinue
-                      $global:o_Threats += "Threat : $($threat.PSChildName) - Type : $($threattype.type) - Path : $($threatpath.path)`r`n"
+                      try {
+                        $threatpath = get-itemproperty -path "HKLM:$i_threat\$($threat.PSChildName)\Files\$($threatfile.PSChildName)\" -name "Path" -erroraction silentlycontinue
+                        $global:o_Threats += "$($threatpath.path)"
+                      } catch {
+                        $global:o_Threats += "N/A"
+                        write-host $_.scriptstacktrace
+                        write-host $_
+                      }
                     }
+                    $global:o_Threats += "`r`n"
                   }
                 } elseif ($threatkey.count -le 0) {
                   $global:o_Threats += "N/A`r`n"
@@ -959,7 +977,7 @@ if (-not ($global:blnAVXML)) {
             Get-AVState($avs[$av].stat)
             $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $global:rtstatus - Definitions : $global:defstatus`r`n"
           } elseif (-not $global:blnWMI) {
-            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions :`r`n"
+            $global:o_CompState += "$($avs[$av].display) - Real-Time Scanning : $($avs[$av].rt) - Definitions : N/A (WMI Check)`r`n"
           } 
         }
       }
