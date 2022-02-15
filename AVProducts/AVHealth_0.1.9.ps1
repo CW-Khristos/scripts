@@ -328,7 +328,7 @@ if (-not ($global:blnAVXML)) {
   if (-not $global:blnWMI) {                                                                        #FAILED TO RETURN WMI SECURITYCENTER NAMESPACE
     try {
       write-host "`r`nFailed to query WMI SecurityCenter Namespace" -foregroundcolor red
-      write-host "Possibly Server, attempting to  fallback to using 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' registry key" -foregroundcolor red
+      write-host "Possibly Server, attempting to fallback to using 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' registry key" -foregroundcolor red
       try {                                                                                         #QUERY 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' AND SEE IF AN AV IS REGISTRERED THERE
         if ($global:bitarch = "bit64") {
           $AntiVirusProduct = (get-itemproperty -path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Security Center\Monitoring\*" -ErrorAction Stop).PSChildName
@@ -926,9 +926,9 @@ if (-not ($global:blnAVXML)) {
               } elseif ($i_PAV -match "Trend Micro") {
                 write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-                if ($infectkey.$alertval -eq 0) {
+                if ($infectkey.$i_infectval -eq 0) {
                   $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
-                } elseif ($infectkey.$alertval -gt 0) {
+                } elseif ($infectkey.$i_infectval -gt 0) {
                   $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
                 }
               }
