@@ -1,13 +1,13 @@
 ***
 # **AVHealth**
   * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
-  * **Current Validation : [Validated - v0.1.8]**
+  * **Current Validation : [Validated - v0.1.9]**
   * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master) (Validated)**
 ***
 ## **Script Details :**
   * **NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AV%20Health.amp)**
-  * **PS1 Script - [AVHealth_0.1.8.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.8.ps1)**
-  * **Command :** powershell -file .\AVHealth_0.1.8.ps1 -i_PAV "[AV Vendor]"
+  * **PS1 Script - [AVHealth_0.1.8.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.9.ps1)**
+  * **Command :** `powershell -file .\AVHealth_0.1.9.ps1 -i_PAV "[AV Vendor]"`
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
 ***
@@ -23,10 +23,10 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
 ***
 ## .NOTES
-    Version        : 0.1.8 (08 February 2022)
+    Version        : 0.1.9 (14 February 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.8.ps1 
+    File Name      : AVHealth_0.1.9.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -126,6 +126,13 @@ After creating the desired Custom Services; create Service Templates for your Wi
     - Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
     - Began expansion of metrics to include 'Detection Types' and "Active Detections" based on Sophos' infection status and detected threats registry keys
     - Cleaned up formatting for legibility for CLI and within NCentral
+ - 0.1.9
+    - Optimization and more bugfixes
+    - Working on finalizing looping routines to check for each AV Product for each Vendor both on Servers and Workstations; plan to move this to a function to avoid duplicate code
+    - Finalizing moving away from using WMI calls to check status and only using it to check for installed AV Products
+    - 'AV Product Status', 'Real-Time Scanning', and 'Definition Status' will now report how script obtained information; either from WMI '(WMI Check)' or from Registry '(REG Check)'
+    - Workstations will still report the Real-Time Scanning and Definitions status via WMI; but plan to remove this output entirely
+    - Began adding in checks for AV Components' Versions, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
 ***
 # .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
