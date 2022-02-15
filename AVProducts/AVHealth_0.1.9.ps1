@@ -414,7 +414,7 @@ if (-not ($global:blnAVXML)) {
           }
         }
       }
-      if (($AntiVirusProduct -eq $null) -or (-not $global:blnPAV)) {                          #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+      if (($AntiVirusProduct -eq $null) -or (-not $global:blnPAV)) {                                #FAILED TO RETURN 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
         $strDisplay = ""
         $blnSecMon = $true
         #RETRIEVE EACH VENDOR XML AND CHECK FOR ALL SUPPORTED AV PRODUCTS
