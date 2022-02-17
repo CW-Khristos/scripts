@@ -118,7 +118,7 @@ redim arrPFOL(2)
 arrPFOL(0) = ".PST"
 arrPFOL(1) = "Outlook\Roamcache"
 ''APPDATA FILES / FOLDERS
-redim arrAPP(57)
+redim arrAPP(58)
 arrAPP(0) = "\AppData\Local\CrashDumps"
 arrAPP(1) = "\AppData\Local\D3DSCache"
 arrAPP(2) = "\AppData\Local\Google\Chrome\User Data\~"
@@ -176,6 +176,7 @@ arrAPP(53) = "\AppData\Local\Microsoft\Edge\User Data\SwReporter"
 arrAPP(54) = "\AppData\Local\Microsoft\Edge\CrashReports"
 arrAPP(55) = "\AppData\Local\Microsoft\Edge\User Data\Default\Service Worker\CacheStorage"
 arrAPP(56) = "\AppData\Local\Microsoft\Edge\User Data\Default\Service Worker\ScriptCache"
+arrAPP(57) = "\AppData\Local\Packages"
 ''GOOGLE CHROME / MICROSOFT EDGE 'PROFILE' EXCLUSIONS
 ''\AppData\Local\~\~\User Data\Profile #\"
 redim arrPROF(6)
