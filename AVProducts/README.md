@@ -23,7 +23,7 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
 ***
 ## .NOTES
-    Version        : 0.1.9 (14 February 2022)
+    Version        : 0.1.9 (22 February 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
     File Name      : AVHealth_0.1.9.ps1 
@@ -132,7 +132,9 @@ After creating the desired Custom Services; create Service Templates for your Wi
     - Finalizing moving away from using WMI calls to check status and only using it to check for installed AV Products
     - 'AV Product Status', 'Real-Time Scanning', and 'Definition Status' will now report how script obtained information; either from WMI '(WMI Check)' or from Registry '(REG Check)'
     - Workstations will still report the Real-Time Scanning and Definitions status via WMI; but plan to remove this output entirely
-    - Began adding in checks for AV Components' Versions, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
+    - Began adding in checks for AV Components' Versions, Tamper Protection, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
+    - Added '$global:ncxml<vendor>' variables for assigning static 'fallback' sources for AV Product XMLs; XMLs should be uploaded to NC Script Repository and URLs updated (Begin Ln147)
+      - The above 'Fallback' method is to allow for uploading AV Product XML files to NCentral Script Repository to attempt to support older OSes which cannot securely connect to GitHub (Requires using "Compatibility" mode for NC Network Security)
 ***
 # .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
@@ -140,6 +142,7 @@ After creating the desired Custom Services; create Service Templates for your Wi
     Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
     If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
+    Need to create a 'Get-AVProducts' function and move looped 'detection' code into a function to call
 ***
 ## Supported AV Products :
  - Sophos Anti-Virus
