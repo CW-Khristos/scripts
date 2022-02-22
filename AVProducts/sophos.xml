@@ -27,7 +27,7 @@
       <defupdateval>LastUpdateTime</defupdateval>
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
-      <tamperval>Emabled</tamperval>
+      <tamperval>Enabled</tamperval>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -67,7 +67,7 @@
       <defupdateval>LastUpdateTime</defupdateval>
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
-      <tamperval>Emabled</tamperval>
+      <tamperval>Enabled</tamperval>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -192,7 +192,7 @@
       <defupdateval>LastUpdateTime</defupdateval>
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
-      <tamperval>Emabled</tamperval>
+      <tamperval>Enabled</tamperval>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -232,7 +232,7 @@
       <defupdateval>LastUpdateTime</defupdateval>
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
-      <tamperval>Emabled</tamperval>
+      <tamperval>Enabled</tamperval>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
