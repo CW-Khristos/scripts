@@ -32,8 +32,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\PLACEHOLDER\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>PLACEHOLDER</scanval>
       <alert>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -71,8 +72,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\PLACEHOLDER\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>PLACEHOLDER</scanval>
       <alert>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -113,8 +115,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\PLACEHOLDER\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>PLACEHOLDER</scanval>
       <alert>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -152,8 +155,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
-      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
+      <scan>\PLACEHOLDER\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>PLACEHOLDER</scanval>
       <alert>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
