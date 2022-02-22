@@ -6,7 +6,7 @@
 ***
 ## **Script Details :**
   * **NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AV%20Health.amp)**
-  * **PS1 Script - [AVHealth_0.1.8.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.9.ps1)**
+  * **PS1 Script - [AVHealth_0.1.9.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.9.ps1)**
   * **Command :** `powershell -file .\AVHealth_0.1.9.ps1 -i_PAV "[AV Vendor]"`
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
@@ -65,7 +65,7 @@ Configure the Thresholds as indicated below :
  - AV Name and AV Path should be set to "Off" or "Contain" and should only need to input the Vendor  for "Normal" status (assumption based on default install paths)
  - **Note :** If monitoring Trend Micro on a Server; the AV Product reports the name as "Worry-Free Business Security" for AV Name, so this threshold should be set to "Off" or modified to match
  - AV Version should be set to "Off"  or "Contain" and "." for "Normal" status
- - AV Product Up-to-Date should be set to "Contain" and "True" for "Normal" status
+ - AV Product Up-to-Date should be set to "Contain" and "False" for "Warning" status
  - Real-Time Protection should be set to "Contain" and "Enabled" for "Normal" status
  - Definition Status should be set to "Contain" and "Up to date" for "Normal" status
  - Active Detections should be set to "Contain" and "True" for "Failed" status
