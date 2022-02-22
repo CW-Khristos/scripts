@@ -49,7 +49,7 @@
           Switched to allow passing of '$i_PAV' via command line; this must be disabled in the AMP code to function properly with NCentral
           Corrected issue where 'Windows Defender' would be populated twice in Competitor AV; this was caused because WMI may report multiple instances of the same AV Product causing competitor check to do multiple runs
           Switched to using a hashtable for storing detected AV Products; this was to prevent duplicate entires for the same AV Product caused by WMI
-          Moved code to retrieve Ven AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
+          Moved code to retrieve Vendor AV Product XMLs to 'Get-AVXML' function to allow dynamic loading of Vendor XMLs and fallback to validating each AV Product from each supported Vendor
           Began expansion of metrics to include 'Detection Types' and 'Active Detections' based on Sophos' infection status and detected threats registry keys
           Cleaned up formatting for legibility for CLI and within NCentral
     0.1.9 Optimization and more bugfixes
@@ -146,10 +146,10 @@
     "Windows Defender"
   )
   #AV PRODUCT XML NC REPOSITORY URLS FOR FALLBACK - CHANGE THESE TO MATCH YOUR NCENTRAL URLS AFTER UPLOADING EACH XML TO REPO
-  $global:ncxmlSOPHOS = "https://nableserver/download/repository/1639682702/sophos.xml"
-  $global:ncxmlSYMANTEC = "https://nableserver/download/repository/1238159723/symantec.xml"
-  $global:ncxmlTRENDMICRO = "https://nableserver/download/repository/308457410/trendmicro.xml"
-  $global:ncxmlWINDEFEND = "https://nableserver/download/repository/968395355/windowsdefender.xml"
+  $global:ncxmlSOPHOS = "https://nable.ipmrms.com/download/repository/1639682702/sophos.xml"
+  $global:ncxmlSYMANTEC = "https://nable.ipmrms.com/download/repository/1238159723/symantec.xml"
+  $global:ncxmlTRENDMICRO = "https://nable.ipmrms.com/download/repository/308457410/trendmicro.xml"
+  $global:ncxmlWINDEFEND = "https://nable.ipmrms.com/download/repository/968395355/windowsdefender.xml"
   #SET TLS SECURITY FOR CONNECTING TO GITHUB
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 #ENDREGION ----- DECLARATIONS ----
@@ -221,7 +221,7 @@
     $global:blnAVXML = $true
     #RETRIEVE AV VENDOR XML FROM GITHUB
     write-host "Loading : '$src' AV Product XML" -foregroundcolor yellow
-    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
     try {
       $avXML = New-Object System.Xml.XmlDocument
       $avXML.Load($srcAVP)
@@ -772,7 +772,7 @@ if (-not ($global:blnAVXML)) {
             $global:o_AVVersion = get-itemproperty -path "HKLM:$i_verkey" -name "$i_verval" -erroraction stop
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor red
-            $global:o_AVVersion | add-member -NotePropertyName "$i_verval" -NotePropertyValue "."
+            $global:o_AVVersion = "."
           }
           $global:o_AVVersion = $global:o_AVVersion.$i_verval
           #GET PRIMARY AV PRODUCT COMPONENT VERSIONS
@@ -808,7 +808,7 @@ if (-not ($global:blnAVXML)) {
             $global:o_AVStatus = "Update Source : $($sourcekey.$i_sourceval)`r`n"
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_source' -name '$i_sourceval'" -foregroundcolor red
-            $global:o_AVStatus | add-member -NotePropertyName "$i_sourceval" -NotePropertyValue "Update Source : Unknown`r`n"
+            $global:o_AVStatus = "Update Source : Unknown`r`n"
           }
           #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
           try {
@@ -839,7 +839,7 @@ if (-not ($global:blnAVXML)) {
             write-host "Reading : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor yellow
             $updatekey = get-itemproperty -path "HKLM:$i_update" -name "$i_updateval" -erroraction stop
             if ($avs[$av].display -match "Windows Defender") {                                      #WINDOWS DEFENDER LAST UPDATE TIMESTAMP
-              $Int64Value = [System.BitConverter]::ToInt64($updatekey.i_updateval, 0)
+              $Int64Value = [System.BitConverter]::ToInt64($updatekey.$i_updateval, 0)
               $time = [DateTime]::FromFileTime($Int64Value)
               $update = Get-Date $time
               $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($update))`r`n"
@@ -951,6 +951,12 @@ if (-not ($global:blnAVXML)) {
                     $age = new-timespan -start (Get-EpochDate($scan.value)) -end (Get-Date)
                   }
                 }
+              } elseif ($avs[$av].display -match "Symantec") {
+                write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
+                $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
+                $scans = "Last Scan Type : $($scan.name)`r`n"
+                $scans += "Last Scan Time : $(Get-EpochDate($scan.value))`r`n"
+                $age = new-timespan -start (Get-EpochDate($scan.value)) -end (Get-Date)
               }
             }
             if ($age.compareto($time1) -le 0) {
@@ -1064,6 +1070,14 @@ if (-not ($global:blnAVXML)) {
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
                 if ($infectkey.$i_infectval -eq 0) {
                   $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
+                } elseif ($infectkey.$i_infectval -gt 0) {
+                  $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
+                }
+              } elseif ($i_PAV -match "Symantec") {
+                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
+                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
+                if ($infectkey.$i_infectval -eq 0) {
+                  $global:o_Infect += "Virus/Malware Present : $false`r`n"
                 } elseif ($infectkey.$i_infectval -gt 0) {
                   $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
                 }
