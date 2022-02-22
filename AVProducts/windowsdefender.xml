@@ -33,6 +33,7 @@
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\Microsoft\Windows Defender\Scan\</scan>
+      <scantype>LastScanType</scantype>
       <scanval>LastScanRun</scanval>
       <alert>\SOFTWARE\Microsoft\Windows Defender\Threats\</alert>
       <alertval>\SOFTWARE\Microsoft\Windows Defender\Threats\</alertval>
@@ -49,7 +50,7 @@
       <!--AV Versions-->
       <ver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</ver>
       <verval>EngineVersion</verval>
-      <compver>\PLACEHOLDER\</compver>
+      <compver>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</compver>
       <!--AV Status-->
       <stat>\SOFTWARE\Microsoft\Windows Defender\</stat>
       <statval>ProductStatus</statval>
@@ -72,6 +73,7 @@
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\Microsoft\Windows Defender\Scan\</scan>
+      <scantype>LastScanType</scantype>
       <scanval>LastScanRun</scanval>
       <alert>\SOFTWARE\Microsoft\Windows Defender\Threats\</alert>
       <alertval>\SOFTWARE\Microsoft\Windows Defender\Threats\</alertval>
