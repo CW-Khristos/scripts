@@ -33,6 +33,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
@@ -71,6 +73,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
@@ -112,6 +116,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
@@ -150,6 +156,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
@@ -190,6 +198,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
@@ -228,6 +238,8 @@
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
       <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scantype>PLACEHOLDER</scantype>
+      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
       <alert>\SOFTWARE\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
