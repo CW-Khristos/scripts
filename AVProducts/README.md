@@ -49,7 +49,9 @@
 ***
 ## .USE
 Import "AV Health.amp" AMP in NC Script/Software Repository
- - **Note :** As of 'AVHealth_0.1.8.ps1'; 2 new metrics were added to the monitor; 'Active Detections' and 'Detected Threats'
+ - **Note :** As of 'AVHealth_0.1.8'; 2 new metrics were added to the monitor; 'Active Detections' and 'Detected Threats'
+   - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
+ - **Note :** As of 'AVHealth_0.1.9'; new details were added to the script; 'Tamper Protection', 'Last Scan Type', 'Last Scan Time', 'Recently Scanned", 'Last Definition Update", and 'Definition Age'. These outputs will be returned under 'AV Status' and 'Definitions' metrics in the AMP monitor
    - If you had previously imported the AMP from any previous versions; you will need to remove the previous "AV Health.amp" and import the latest version of the AMP to enable these new metrics (this process may require removal of the previous Custom Services / Service Templates)
 
 After importing the AV Health AMP; multiple Custom Services can be created for each desired AV Product to be monitored
@@ -146,9 +148,16 @@ After creating the desired Custom Services; create Service Templates for your Wi
 ***
 ## Supported AV Products :
  - Sophos Anti-Virus
+![image](https://user-images.githubusercontent.com/10928642/155377321-8b5a54bd-782b-4890-8726-8166a94297f5.png)
+![image](https://user-images.githubusercontent.com/10928642/155377392-fa65b340-4dd8-4b61-a337-c33256fed339.png)
  - Symantec Anti-Virus
+![image](https://user-images.githubusercontent.com/10928642/155381430-af78427a-391d-4814-8b30-1bcd302718eb.png)
+![image](https://user-images.githubusercontent.com/10928642/155381514-93c16eb2-9d48-4539-b8a9-81243f544048.png)
  - Trend Micro
+![image](https://user-images.githubusercontent.com/10928642/155381777-5b438aa0-dec8-4dd8-ac9b-ed54c9c45192.png)
+![image](https://user-images.githubusercontent.com/10928642/155381894-91e88fa5-2898-420f-a20d-27cc455f25c4.png)
  - Windows Defender
+![image](https://user-images.githubusercontent.com/10928642/155382000-6cb8ab51-5d72-421d-9f47-ceaae0cfceb2.png)
 ***
 ## AV Products Needing XML 'Definitions' :
  - AVG
