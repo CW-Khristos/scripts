@@ -32,9 +32,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scan>
-      <scantype>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scantype>
-      <scanval>TimeOfLastScan</scanval>
+      <scan>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scan>
+      <scantype>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scantype>
+      <scanval>LastSuccessfulScanDateTime</scanval>
       <alert>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -72,9 +72,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\</scan>
-      <scantype>\SOFTWARE\Symantec\Symantec Endpoint Protection\AV\</scantype>
-      <scanval>TimeOfLastScan</scanval>
+      <scan>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scan>
+      <scantype>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scantype>
+      <scanval>LastSuccessfulScanDateTime</scanval>
       <alert>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -115,9 +115,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scan>
-      <scantype>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scantype>
-      <scanval>TimeOfLastScan</scanval>
+      <scan>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scan>
+      <scantype>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scantype>
+      <scanval>LastSuccessfulScanDateTime</scanval>
       <alert>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
@@ -155,9 +155,9 @@
       <managed>\PLACEHOLDER\</managed>
       <managedval>PLACEHOLDER</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scan>
-      <scantype>\SOFTWARE\WOW6432Node\Symantec\Symantec Endpoint Protection\AV\</scantype>
-      <scanval>TimeOfLastScan</scanval>
+      <scan>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scan>
+      <scantype>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</scantype>
+      <scanval>LastSuccessfulScanDateTime</scanval>
       <alert>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alert>
       <alertval>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</alertval>
       <infect>\SOFTWARE\Symantec\Symantec Endpoint Protection\CurrentVersion\public-opstate\</infect>
