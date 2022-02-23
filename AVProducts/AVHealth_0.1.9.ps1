@@ -155,8 +155,11 @@
 #ENDREGION ----- DECLARATIONS ----
 
 #REGION ----- FUNCTIONS ----
-  function Get-EpochDate ($epochDate) {                                                             #Convert Epoch Date Timestamps to Local Time
-    [timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddSeconds($epochDate))
+  function Get-EpochDate ($epochDate, $opt) {                                                       #Convert Epoch Date Timestamps to Local Time
+    switch ($opt) {
+      "sec" {[timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddSeconds($epochDate))}
+      "msec" {[timezone]::CurrentTimeZone.ToLocalTime(([datetime]'1/1/1970').AddMilliSeconds($epochDate))}
+    }
   } ## Get-EpochDate
 
   function Get-OSArch {                                                                             #Determine Bit Architecture & OS Type
@@ -337,6 +340,30 @@
       write-host $_
     }
   } ## Pop-Components
+
+  function SEP-Map {
+    param (
+      $intval
+    )
+    switch ($intval) {
+      0 {return "(Severity 0) Viral"}
+      1 {return "(Severity 1) Non-Viral Malicious"}
+      2 {return "(Severity 2) Malicious"}
+      3 {return "(Severity 3) Antivirus - Heuristic"}
+      5 {return "(Severity 5) Hack Tool"}
+      6 {return "(Severity 6) Spyware"}
+      7 {return "(Severity 7) Trackware"}
+      8 {return "(Severity 8) Dialer"}
+      9 {return "(Severity 9) Remote Access"}
+      10 {return "(Severity 10) Adware"}
+      11 {return "(Severity 11) Jokeware"}
+      12 {return "(Severity 12) Client Compliancy"}
+      13 {return "(Severity 13) Generic Load Point"}
+      14 {return "(Severity 14) Proactive Threat Scan - Heuristic"}
+      15 {return "(Severity 15) Cookie"}
+      9999 {return "No detections"}
+    }
+  } ## SEP-Map
 #ENDREGION ----- FUNCTIONS ----
 
 #------------
@@ -842,17 +869,24 @@ if (-not ($global:blnAVXML)) {
               $Int64Value = [System.BitConverter]::ToInt64($updatekey.$i_updateval, 0)
               $time = [DateTime]::FromFileTime($Int64Value)
               $update = Get-Date $time
-              $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($update))`r`n"
+              $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($update)("sec"))`r`n"
               $age = new-timespan -start $update -end (Get-Date)
             } elseif ($avs[$av].display -notmatch "Windows Defender") {                             #ALL OTHER AV LAST UPDATE TIMESTAMP
-              $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($updatekey.$i_updateval))`r`n"
-              $age = new-timespan -start (Get-EpochDate($updatekey.$i_updateval)) -end (Get-Date)
+              if ($avs[$av].display -match "Symantec") {                                            #SYMANTEC AV UPDATE TIMESTAMP
+                $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($updatekey.$i_updateval)("msec"))`r`n"
+                $age = new-timespan -start (Get-EpochDate($updatekey.$i_updateval)("msec")) -end (Get-Date)
+              } elseif ($avs[$av].display -notmatch "Symantec") {                                   #ALL OTHER AV LAST UPDATE TIMESTAMP
+                $global:o_AVStatus += "Last Major Update : $(Get-EpochDate($updatekey.$i_updateval)("sec"))`r`n"
+                $age = new-timespan -start (Get-EpochDate($updatekey.$i_updateval)("sec")) -end (Get-Date)
+              }
             }
             $global:o_AVStatus += "Days Since Update (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))`r`n"
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_update' -name '$i_updateval'" -foregroundcolor red
             $global:o_AVStatus += "Last Major Update : N/A`r`n"
             $global:o_AVStatus += "Days Since Update (DD:HH:MM) : N/A`r`n"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           #GET PRIMARY AV PRODUCT REAL-TIME SCANNING
           try {
@@ -882,6 +916,8 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_rtkey' -name '$i_rtval'" -foregroundcolor red
             $global:o_RTstate = "N/A (REG Check)`r`n"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           $global:o_AVStatus += "Real-Time Status : $global:o_RTstate"
           #GET PRIMARY AV PRODUCT TAMPER PROTECTION STATUS
@@ -920,53 +956,75 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_tamper' -name '$i_tamperval'" -foregroundcolor red
             $tamper = "Unknown (REG Check)"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           $global:o_AVStatus += "Tamper Protection : $tamper`r`n"
           #GET PRIMARY AV PRODUCT LAST SCAN DETAILS
-          try {
-            $time1 = New-TimeSpan -days 1
-            if ($avs[$av].display -match "Windows Defender") {
-              write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
-              $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
+          if ($avs[$av].display -match "Windows Defender") {                                      #WINDOWS DEFENDER SCAN DATA
+            try {
               write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor yellow
               $typekey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scantype" -erroraction stop
-              $Int64Value = [System.BitConverter]::ToInt64($scankey.$i_scanval,0)
-              $time = [DateTime]::FromFileTime($Int64Value)
-              $scan = Get-Date $time
-              $age = new-timespan -start $scan -end (Get-Date)
               if ($typekey.$i_scantype -eq 1) {
-                $scans = "Last Scan Type : Quick Scan`r`n"
+                $scans += "Last Scan Type : Quick Scan (REG Check)`r`n"
               } elseif ($typekey.$i_scantype -eq 2) {
-                $scans = "Last Scan Type : Full Scan`r`n"
+                $scans += "Last Scan Type : Full Scan (REG Check)`r`n"
               }
-              $scans += "Last Scan Time : $scan`r`n"
-            } elseif ($avs[$av].display -notmatch "Windows Defender") {
-              if ($avs[$av].display -match "Sophos") {
-                write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
+            } catch {
+              write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor red
+              $scans += "Last Scan Type : N/A (REG Check)`r`n"
+              write-host $_.scriptstacktrace
+              write-host $_
+            }
+            try {
+              write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
+              $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
+              $Int64Value = [System.BitConverter]::ToInt64($scankey.$i_scanval,0)
+              $stime = Get-Date([DateTime]::FromFileTime($Int64Value))
+              $age = new-timespan -start $stime -end (Get-Date)
+              $scans += "Last Scan Time : $stime`r`n"
+            } catch {
+              write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
+              $scans += "Last Scan Time : $N/A`r`n"
+              write-host $_.scriptstacktrace
+              write-host $_
+            }
+          } elseif ($avs[$av].display -notmatch "Windows Defender") {                             #NON-WINDOWS DEFENDER SCAN DATA
+            if ($avs[$av].display -match "Sophos") {                                              #SOPHOS SCAN DATA
+              try {
+                write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                 $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
                 foreach ($scan in $scankey.psobject.Properties) {
                   if (($scan.name -notlike "PS*") -and ($scan.name -notlike "(default)")) {
-                    $scans = "Last Scan Type : $($scan.name)`r`n"
-                    $scans += "Last Scan Time : $(Get-EpochDate($scan.value))`r`n"
-                    $age = new-timespan -start (Get-EpochDate($scan.value)) -end (Get-Date)
+                    $scans += "Last Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec"))`r`n"
+                    $age = new-timespan -start (Get-EpochDate($scan.value)("sec")) -end (Get-Date)
                   }
                 }
-              } elseif ($avs[$av].display -match "Symantec") {
+              } catch {
+                write-host "Could not validate Registry data : -path 'HKLM:$i_scan'" -foregroundcolor red
+                $scans = "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : False (REG Check)"
+                write-host $_.scriptstacktrace
+                write-host $_
+              }
+            } elseif ($avs[$av].display -match "Symantec") {                                      #SYMANTEC SCAN DATA
+              try {
                 write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
-                $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
-                $scans = "Last Scan Type : $($scan.name)`r`n"
-                $scans += "Last Scan Time : $(Get-EpochDate($scan.value))`r`n"
-                $age = new-timespan -start (Get-EpochDate($scan.value)) -end (Get-Date)
+                $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
+                $scans += "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : $(Get-Date($scankey.$i_scanval))`r`n"
+                $age = new-timespan -start ($scankey.$i_scanval) -end (Get-Date)
+              } catch {
+                write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
+                $scans = "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : False (REG Check)"
+                write-host $_.scriptstacktrace
+                write-host $_
               }
             }
-            if ($age.compareto($time1) -le 0) {
-              $scans += "Recently Scanned : True (REG Check)"
-            } elseif ($age.compareto($time1) -gt 0) {
-              $scans += "Recently Scanned : False (REG Check)"
-            }
-          } catch {
-            write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-            $scans = "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A (REG Check)`r`nRecently Scanned : False (REG Check)"
+          }
+          $time1 = New-TimeSpan -days 2
+          if ($age.compareto($time1) -le 0) {
+            $scans += "Recently Scanned : True (REG Check)"
+          } elseif ($age.compareto($time1) -gt 0) {
+            $scans += "Recently Scanned : False (REG Check)"
           }
           $global:o_AVStatus += $scans
           #GET PRIMARY AV PRODUCT DEFINITIONS / SIGNATURES / PATTERN
@@ -993,13 +1051,23 @@ if (-not ($global:blnAVXML)) {
               }
               $global:o_DefStatus += "Last Definition Update : $update`r`n"
             } elseif ($avs[$av].display -notmatch "Windows Defender") {                             #ALL OTHER AV DEFINITION UPDATE TIMESTAMP
-              $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)) -end (Get-Date)
-              if ($age.compareto($time1) -le 0) {
-                $global:o_DefStatus += "Status : Up to date (REG Check)`r`n"
-              } elseif ($age.compareto($time1) -gt 0) {
-                $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
+              if ($avs[$av].display -match "Symantec") {                                            #SYMANTEC DEFINITION UPDATE TIMESTAMP
+                $age = new-timespan -start ($defkey.$i_defupdateval) -end (Get-Date)
+                if ($age.compareto($time1) -le 0) {
+                  $global:o_DefStatus += "Status : Up to date (REG Check)`r`n"
+                } elseif ($age.compareto($time1) -gt 0) {
+                  $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
+                }
+                $global:o_DefStatus += "Last Definition Update : $($defkey.$i_defupdateval)`r`n"
+              } elseif ($avs[$av].display -notmatch "Symantec") {                                   #NON-SYMANTEC DEFINITION UPDATE TIMESTAMP
+                $age = new-timespan -start (Get-EpochDate($defkey.$i_defupdateval)("sec")) -end (Get-Date)
+                if ($age.compareto($time1) -le 0) {
+                  $global:o_DefStatus += "Status : Up to date (REG Check)`r`n"
+                } elseif ($age.compareto($time1) -gt 0) {
+                  $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
+                }
+                $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval)("sec"))`r`n"
               }
-              $global:o_DefStatus += "Last Definition Update : $(Get-EpochDate($defkey.$i_defupdateval))`r`n"
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
@@ -1007,6 +1075,8 @@ if (-not ($global:blnAVXML)) {
             $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
             $global:o_DefStatus += "Last Definition Update : N/A`r`n"
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           #GET PRIMARY AV PRODUCT DETECTED ALERTS VIA REGISTRY
           if ($global:zNoAlert -notcontains $i_PAV) {
@@ -1047,16 +1117,16 @@ if (-not ($global:blnAVXML)) {
               #}
             } catch {
               write-host "Could not validate Registry data : 'HKLM:$i_alert'" -foregroundcolor red
-              $global:o_Infect = "N/A"
+              $global:o_Infect = "N/A`r`n"
             }
           }
           #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
           if ($global:zNoInfect -notcontains $i_PAV) {
-            try {
-              if ($i_PAV -match "Sophos") {
+            if ($i_PAV -match "Sophos") {                                                           #SOPHOS DETECTED INFECTIONS
+              try {
                 write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
-                foreach ($infect in $infectkey.psobject.Properties) {
+                foreach ($infect in $infectkey.psobject.Properties) {                               #ENUMERATE EACH DETECTED INFECTION
                   if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
                     if ($infect.value -eq 0) {
                       $global:o_Infect += "Type - $($infect.name) : $false`r`n"
@@ -1065,26 +1135,48 @@ if (-not ($global:blnAVXML)) {
                     }
                   }
                 }
-              } elseif ($i_PAV -match "Trend Micro") {
-                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
-                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-                if ($infectkey.$i_infectval -eq 0) {
-                  $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
-                } elseif ($infectkey.$i_infectval -gt 0) {
-                  $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
-                }
-              } elseif ($i_PAV -match "Symantec") {
-                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
-                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
-                if ($infectkey.$i_infectval -eq 0) {
-                  $global:o_Infect += "Virus/Malware Present : $false`r`n"
-                } elseif ($infectkey.$i_infectval -gt 0) {
-                  $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
-                }
+              } catch {
+                write-host "Could not validate Registry data : 'HKLM:$i_infect'" -foregroundcolor red
+                $global:o_Infect += "Virus/Malware Present : N/A`r`n"
               }
-            } catch {
-              write-host "Could not validate Registry data : 'HKLM:$i_infect'" -foregroundcolor red
-              $global:o_Infect = "N/A"
+            } elseif ($i_PAV -match "Trend Micro") {                                                #TREND MICRO DETECTED INFECTIONS
+              try {
+                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
+                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
+                if ($infectkey.$i_infectval -eq 0) {                                                #NO DETECTED INFECTIONS
+                  $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
+                } elseif ($infectkey.$i_infectval -gt 0) {                                          #DETECTED INFECTIONS
+                  $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
+                }
+              } catch {
+                write-host "Could not validate Registry data : 'HKLM:$i_infect' -name 'i_infectval'" -foregroundcolor red
+                $global:o_Infect += "Virus/Malware Present : N/A`r`n"
+              }
+            } elseif ($i_PAV -match "Symantec") {                                                   #SYMANTEC DETECTED INFECTIONS
+              try {
+                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
+                $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
+                if ($infectkey.$i_infectval -gt 0) {                                                #NO DETECTED INFECTIONS
+                  $global:o_Infect += "Virus/Malware Present : $false`r`n"
+                } elseif ($infectkey.$i_infectval -eq 0) {                                          #DETECTED INFECTIONS
+                  try {
+                    write-host "Reading : -path 'HKLM:$i_scan' -name 'WorstInfectionType'" -foregroundcolor yellow
+                    $worstkey = get-ItemProperty -path "HKLM:$i_scan" -name "WorstInfectionType" -erroraction silentlycontinue
+                    $worst = SEP-Map($worstkey.WorstInfectionType)
+                  } catch {
+                    write-host "Could not validate Registry data : 'HKLM:$i_scan' -name 'WorstInfectionType'" -foregroundcolor red
+                    $worst = "N/A"
+                    write-host $_.scriptstacktrace
+                    write-host $_
+                  }
+                  $global:o_Infect += "Virus/Malware Present : $true`r`nWorst Infection Type : $worst`r`n"
+                }
+              } catch {
+                write-host "Could not validate Registry data : 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor red
+                $global:o_Infect += "Virus/Malware Present : N/A`r`nWorst Infection Type : N/A`r`n"
+                write-host $_.scriptstacktrace
+                write-host $_
+              }
             }
           }
           #GET PRIMARY AV PRODUCT DETECTED THREATS VIA REGISTRY
