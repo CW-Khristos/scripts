@@ -329,10 +329,12 @@
     #$dest = @{}
     #READ PRIMARY AV PRODUCT COMPONENTS DATA INTO NESTED HASHTABLE FORMAT FOR LATER USE
     try {
-      if ($dest.containskey($name)) {
-        continue
-      } elseif (-not $dest.containskey($name)) {
-        $dest.add($name, $version)
+      if (($name -ne $null) -and ($name -ne "")) {
+        if ($dest.containskey($name)) {
+          continue
+        } elseif (-not $dest.containskey($name)) {
+          $dest.add($name, $version)
+        }
       }
     } catch {
       write-host $_.scriptstacktrace
@@ -526,7 +528,7 @@ if (-not ($global:blnAVXML)) {
                   if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
                   } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
-                    $strName = "Sophos Intercept X Beta"
+                    $strName = "Sophos Intercept X"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
@@ -814,7 +816,7 @@ if (-not ($global:blnAVXML)) {
             if ($i_PAV -match "Sophos") {
               $compverkey = get-childitem -path "HKLM:$i_compverkey" -erroraction silentlycontinue
               foreach ($component in $compverkey) {
-                if ($component -ne $null) {
+                if (($component -ne $null) -and ($component -ne "")) {
                   #write-host "Reading -path HKLM:$i_compverkey$($component.PSChildName)"
                   $longname = get-itemproperty -path "HKLM:$i_compverkey$($component.PSChildName)" -name "LongName" -erroraction silentlycontinue
                   $installver = get-itemproperty -path "HKLM:$i_compverkey$($component.PSChildName)" -name "InstalledVersion" -erroraction silentlycontinue
