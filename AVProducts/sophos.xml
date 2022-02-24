@@ -88,8 +88,8 @@
       <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</display>
       <displayval>Version</displayval>
-      <path>\SophosInterceptX\</path>
-      <pathval>SophosInterceptX</pathval>
+      <path>\SOFTWARE\WOW6432Node\Sophos\Sophos UI\Application\</path>
+      <pathval>Path</pathval>
       <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</ver>
       <verval>Version</verval>
