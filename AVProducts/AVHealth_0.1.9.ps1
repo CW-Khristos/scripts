@@ -58,7 +58,7 @@
           'AV Product Status', 'Real-Time Scanning', and 'Definition Status' will now report how script obtained information; either from WMI '(WMI Check)' or from Registry '(REG Check)'
           Workstations will still report the Real-Time Scanning and Definitions status via WMI; but plan to remove this output entirely
           Began adding in checks for AV Components' Versions, Tamper Protection, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
-          Added '$global:ncxml<vendor>' variables for assigning static 'fallback' sources for AV Product XMLs; XMLs should be uploaded to NC Script Repository and URLs updated (Begin Ln147)
+          Added '$global:ncxml<vendor>' variables for assigning static 'fallback' sources for AV Product XMLs; XMLs should be uploaded to NC Script Repository and URLs updated (Begin Ln148)
             The above 'Fallback' method is to allow for uploading AV Product XML files to NCentral Script Repository to attempt to support older OSes which cannot securely connect to GitHub (Requires using "Compatibility" mode for NC Network Security)
 
 .TODO
@@ -124,7 +124,6 @@
   #AV PRODUCTS USING '0' FOR 'TAMPER PROTECTION' STATUS
   $global:zTamper = @(
     "Sophos Anti-Virus"
-    "Sophos Intercept X"
     "Symantec Endpoint Protection"
     "Windows Defender"
   )
@@ -224,7 +223,7 @@
     $global:blnAVXML = $true
     #RETRIEVE AV VENDOR XML FROM GITHUB
     write-host "Loading : '$src' AV Product XML" -foregroundcolor yellow
-    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/master/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
+    $srcAVP = "https://raw.githubusercontent.com/CW-Khristos/scripts/dev/AVProducts/" + $src.replace(" ", "").replace("-", "").tolower() + ".xml"
     try {
       $avXML = New-Object System.Xml.XmlDocument
       $avXML.Load($srcAVP)
@@ -922,32 +921,43 @@ if (-not ($global:blnAVXML)) {
           $global:o_AVStatus += "Real-Time Status : $global:o_RTstate"
           #GET PRIMARY AV PRODUCT TAMPER PROTECTION STATUS
           try {
-            write-host "Reading : -path 'HKLM:$i_tamper' -name '$i_tamperval'" -foregroundcolor yellow
-            $tamperkey = get-itemproperty -path "HKLM:$i_tamper" -name "$i_tamperval" -erroraction stop
+            if ($avs[$av].display -notmatch "Sophos Intercept X") {
+              write-host "Reading : -path 'HKLM:$i_tamper' -name '$i_tamperval'" -foregroundcolor yellow
+              $tamperkey = get-itemproperty -path "HKLM:$i_tamper" -name "$i_tamperval" -erroraction stop
+              $tval = $tamperkey.$i_tamperval
+            } elseif ($avs[$av].display -match "Sophos Intercept X") {
+              write-host "Reading : -path 'HKLM:$i_tamper' -name '$i_tamperval'" -foregroundcolor yellow
+              $tamperkey = get-childitem -path "HKLM:$i_tamper" -erroraction stop
+              foreach ($tkey in $tamperkey) {
+                $tamperkey = get-itemproperty -path "HKLM:$i_tamper$($tkey.PSChildName)\tamper_protection" -name "$i_tamperval" -erroraction stop
+                $tval = $tamperkey.$i_tamperval
+                break
+              }
+            }
             #INTERPRET 'TAMPER PROTECTION' STATUS BASED ON ANY AV PRODUCT VALUE REPRESENTATION
             if ($avs[$av].display -match "Windows Defender") {                                      #WINDOWS DEFENDER TREATS '5' AS 'ENABLED' FOR 'TAMPER PROTECTION'
               write-host "$($avs[$av].display) reports '$($tamperkey.$i_tamperval)' for 'Tamper Protection' (Expected : '5')" -foregroundcolor yellow
-              if ($tamperkey.$i_tamperval -eq 5) {
+              if ($tval -eq 5) {
                 $tamper = "$true (REG Check)"
-              } elseif ($tamperkey.$i_tamperval -le 4) {
+              } elseif ($tval -le 4) {
                 $tamper = "$false (REG Check)"
               } else {
                 $tamper = "Unknown (REG Check)"
               }
             } elseif ($global:zTamper -contains $avs[$av].display) {                                #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'TAMPER PROTECTION'
-              write-host "$($avs[$av].display) reports '$($tamperkey.$i_tamperval)' for 'Tamper Protection' (Expected : '0')" -foregroundcolor yellow
-              if ($tamperkey.$i_tamperval -eq 0) {
+              write-host "$($avs[$av].display) reports '$($tval)' for 'Tamper Protection' (Expected : '0')" -foregroundcolor yellow
+              if ($tval -eq 0) {
                 $tamper = "$true (REG Check)"
-              } elseif ($tamperkey.$i_tamperval -eq 1) {
+              } elseif ($tval -eq 1) {
                 $tamper = "$false (REG Check)"
               } else {
                 $tamper = "Unknown (REG Check)"
               }
             } elseif ($global:zTamper -notcontains $avs[$av].display) {                             #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'TAMPER PROTECTION'
-              write-host "$($avs[$av].display) reports '$($tamperkey.$i_tamperval)' for 'Tamper Protection' (Expected : '1')" -foregroundcolor yellow
-              if ($tamperkey.$i_tamperval -eq 1) {
+              write-host "$($avs[$av].display) reports '$($tval)' for 'Tamper Protection' (Expected : '1')" -foregroundcolor yellow
+              if ($tval -eq 1) {
                 $tamper = "$true (REG Check)"
-              } elseif ($tamperkey.$i_tamperval -eq 0) {
+              } elseif ($tval -eq 0) {
                 $tamper = "$false (REG Check)"
               } else {
                 $tamper = "Unknown (REG Check)"
@@ -966,13 +976,13 @@ if (-not ($global:blnAVXML)) {
               write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor yellow
               $typekey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scantype" -erroraction stop
               if ($typekey.$i_scantype -eq 1) {
-                $scans += "Last Scan Type : Quick Scan (REG Check)`r`n"
+                $scans += "Scan Type : Quick Scan (REG Check)`r`n"
               } elseif ($typekey.$i_scantype -eq 2) {
-                $scans += "Last Scan Type : Full Scan (REG Check)`r`n"
+                $scans += "Scan Type : Full Scan (REG Check)`r`n"
               }
             } catch {
               write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor red
-              $scans += "Last Scan Type : N/A (REG Check)`r`n"
+              $scans += "Scan Type : N/A (REG Check)`r`n"
               write-host $_.scriptstacktrace
               write-host $_
             }
@@ -992,17 +1002,25 @@ if (-not ($global:blnAVXML)) {
           } elseif ($avs[$av].display -notmatch "Windows Defender") {                             #NON-WINDOWS DEFENDER SCAN DATA
             if ($avs[$av].display -match "Sophos") {                                              #SOPHOS SCAN DATA
               try {
-                write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
-                $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
-                foreach ($scan in $scankey.psobject.Properties) {
-                  if (($scan.name -notlike "PS*") -and ($scan.name -notlike "(default)")) {
-                    $scans += "Last Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec"))`r`n"
-                    $age = new-timespan -start (Get-EpochDate($scan.value)("sec")) -end (Get-Date)
+                if ($avs[$av].display -match "Sophos Intercept X") {
+                  write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
+                  $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
+                  $stime = [datetime]::ParseExact($scankey.$i_scanval,'yyyyMMddTHHmmssK',[Globalization.CultureInfo]::InvariantCulture)
+                  $scans += "Scan Type : BackgroundScanV2 (REG Check)`r`nLast Scan Time : $stime`r`n"
+                  $age = new-timespan -start $stime -end (Get-Date)
+                } elseif ($avs[$av].display -notmatch "Sophos Intercept X") {
+                  write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
+                  $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
+                  foreach ($scan in $scankey.psobject.Properties) {
+                    if (($scan.name -notlike "PS*") -and ($scan.name -notlike "(default)")) {
+                      $scans += "Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec"))`r`n"
+                      $age = new-timespan -start (Get-EpochDate($scan.value)("sec")) -end (Get-Date)
+                    }
                   }
                 }
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan'" -foregroundcolor red
-                $scans = "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : False (REG Check)"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`n"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
@@ -1010,11 +1028,11 @@ if (-not ($global:blnAVXML)) {
               try {
                 write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
                 $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
-                $scans += "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : $(Get-Date($scankey.$i_scanval))`r`n"
+                $scans += "Scan Type : N/A (REG Check)`r`nLast Scan Time : $(Get-Date($scankey.$i_scanval))`r`n"
                 $age = new-timespan -start ($scankey.$i_scanval) -end (Get-Date)
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-                $scans = "Last Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : False (REG Check)"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`n"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
