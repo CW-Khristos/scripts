@@ -145,10 +145,10 @@
     "Windows Defender"
   )
   #AV PRODUCT XML NC REPOSITORY URLS FOR FALLBACK - CHANGE THESE TO MATCH YOUR NCENTRAL URLS AFTER UPLOADING EACH XML TO REPO
-  $global:ncxmlSOPHOS = "https://nableserver/download/repository/1639682702/sophos.xml"
-  $global:ncxmlSYMANTEC = "https://nableserver/download/repository/1238159723/symantec.xml"
-  $global:ncxmlTRENDMICRO = "https://nableserver/download/repository/308457410/trendmicro.xml"
-  $global:ncxmlWINDEFEND = "https://nableserver/download/repository/968395355/windowsdefender.xml"
+  $global:ncxmlSOPHOS = "https://nable.ipmrms.com/download/repository/1639682702/sophos.xml"
+  $global:ncxmlSYMANTEC = "https://nable.ipmrms.com/download/repository/1238159723/symantec.xml"
+  $global:ncxmlTRENDMICRO = "https://nable.ipmrms.com/download/repository/308457410/trendmicro.xml"
+  $global:ncxmlWINDEFEND = "https://nable.ipmrms.com/download/repository/968395355/windowsdefender.xml"
   #SET TLS SECURITY FOR CONNECTING TO GITHUB
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 #ENDREGION ----- DECLARATIONS ----
@@ -468,6 +468,8 @@ if (-not ($global:blnAVXML)) {
                   $strName = $keyval1.$regDisplayVal
                   if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
+                  } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                    $strName = "Sophos Intercept X Beta"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
@@ -499,8 +501,8 @@ if (-not ($global:blnAVXML)) {
         foreach ($vendor in $global:avVendors) {
           Get-AVXML $vendor $global:vavkey
         }
-        foreach ($key in $global:vavkey.keys) {                                                   #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-          if ($key -notmatch "#comment") {                                                        #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
+        foreach ($key in $global:vavkey.keys) {                                                     #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+          if ($key -notmatch "#comment") {                                                          #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
             write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
             $strName = ""
             $regDisplay = $global:vavkey[$key].display
@@ -512,29 +514,31 @@ if (-not ($global:blnAVXML)) {
             $regRealTime = $global:vavkey[$key].rt
             $regRTVal = $global:vavkey[$key].rtval
             try {
-              if (test-path "HKLM:$regDisplay") {                                                 #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+              if (test-path "HKLM:$regDisplay") {                                                   #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
                 write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-                try {                                                                             #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
+                try {                                                                               #IF VALIDATION PASSES; FABRICATE 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\' DATA
                   $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
                   $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
                   $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
                   $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
                   #FORMAT AV DATA
                   $strName = $keyval1.$regDisplayVal
-                  if ($strName -match "Windows Defender") {                                       #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                  if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
+                  } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                    $strName = "Sophos Intercept X Beta"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
                   $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
                   #INTERPRET REAL-TIME SCANNING STATUS
-                  if ($global:zRealTime -contains $global:vavkey[$key].display) {                 #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                  if ($global:zRealTime -contains $global:vavkey[$key].display) {                   #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
                     if ($keyval4.$regRTVal = "0") {
                       $strRealTime = $strRealTime + "Enabled (REG Check), "
                     } elseif ($keyval4.$regRTVal = "1") {
                       $strRealTime = $strRealTime + "Disabled (REG Check), "
                     }
-                  } elseif ($global:zRealTime -notcontains $global:vavkey[$key].display) {        #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                  } elseif ($global:zRealTime -notcontains $global:vavkey[$key].display) {          #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
                     if ($keyval4.$regRTVal = "1") {
                       $strRealTime = $strRealTime + "Enabled (REG Check), "
                     } elseif ($keyval4.$regRTVal = "0") {
@@ -600,8 +604,8 @@ if (-not ($global:blnAVXML)) {
       foreach ($vendor in $global:avVendors) {
         Get-AVXML $vendor $global:vavkey
       }
-      foreach ($key in $global:vavkey.keys) {                                                     #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
-        if ($key -notmatch "#comment") {                                                          #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
+      foreach ($key in $global:vavkey.keys) {                                                       #ATTEMPT TO VALIDATE EACH AV PRODUCT CONTAINED IN VENDOR XML
+        if ($key -notmatch "#comment") {                                                            #AVOID ODD 'BUG' WITH A KEY AS '#comment' WHEN SWITCHING AV VENDOR XMLS
           write-host "Attempting to detect AV Product : '$key'" -foregroundcolor yellow
           $strName = ""
           $regDisplay = $global:vavkey[$key].display
@@ -613,29 +617,31 @@ if (-not ($global:blnAVXML)) {
           $regRealTime = $global:vavkey[$key].rt
           $regRTVal = $global:vavkey[$key].rtval
           try {
-            if (test-path "HKLM:$regDisplay") {                                                   #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
+            if (test-path "HKLM:$regDisplay") {                                                     #VALIDATE INSTALLED AV PRODUCT BY TESTING READING A KEY
               write-host "Found 'HKLM:$regDisplay' for product : $key" -foregroundcolor yellow
-              try {                                                                               #IF VALIDATION PASSES
+              try {                                                                                 #IF VALIDATION PASSES
                 $keyval1 = get-itemproperty -path "HKLM:$regDisplay" -name "$regDisplayVal" -erroraction stop
                 $keyval2 = get-itemproperty -path "HKLM:$regPath" -name "$regPathVal" -erroraction stop
                 $keyval3 = get-itemproperty -path "HKLM:$regStat" -name "$regStatVal" -erroraction stop
                 $keyval4 = get-itemproperty -path "HKLM:$regRealTime" -name "$regRTVal" -erroraction stop
                 #FORMAT AV DATA
                 $strName = $keyval1.$regDisplayVal
-                if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
+                if ($strName -match "Windows Defender") {                                           #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                   $strName = "Windows Defender"
+                } elseif ($strName -match "BETA") {                                                 #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                  $strName = "Sophos Intercept X Beta"
                 }
                 $strDisplay = $strDisplay + $strName + ", "
                 $strPath = $strPath + $keyval2.$regPathVal + ", "
                 $strStat = $strStat + $keyval3.$regStatVal.tostring() + ", "
                 #INTERPRET REAL-TIME SCANNING STATUS
-                if ($global:zRealTime -contains $global:vavkey[$key].display) {                   #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                if ($global:zRealTime -contains $global:vavkey[$key].display) {                     #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
                   if ($keyval4.$regRTVal = "0") {
                     $strRealTime = $strRealTime + "Enabled (REG Check), "
                   } elseif ($keyval4.$regRTVal = "1") {
                     $strRealTime = $strRealTime + "Disabled (REG Check), "
                   }
-                } elseif ($global:zRealTime -notcontains $global:vavkey[$key].display) {          #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+                } elseif ($global:zRealTime -notcontains $global:vavkey[$key].display) {            #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
                   if ($keyval4.$regRTVal = "1") {
                     $strRealTime = $strRealTime + "Enabled (REG Check), "
                   } elseif ($keyval4.$regRTVal = "0") {
@@ -841,14 +847,14 @@ if (-not ($global:blnAVXML)) {
             write-host "Reading : -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor yellow
             $statkey = get-itemproperty -path "HKLM:$i_statkey" -name "$i_statval" -erroraction stop
             #INTERPRET 'AVSTATUS' BASED ON ANY AV PRODUCT VALUE REPRESENTATION
-            if ($global:zUpgrade -contains $avs[$av].display) {                                       #AV PRODUCTS TREATING '0' AS 'UPTODATE'
+            if ($global:zUpgrade -contains $avs[$av].display) {                                     #AV PRODUCTS TREATING '0' AS 'UPTODATE'
               write-host "$($avs[$av].display) reports '$($statkey.$i_statval)' for 'Up-To-Date' (Expected : '0')" -foregroundcolor yellow
               if ($statkey.$i_statval -eq "0") {
                 $global:o_AVStatus = "Up-to-Date : $true (REG Check)`r`n"
               } else {
                 $global:o_AVStatus = "Up-to-Date : $false (REG Check)`r`n"
               }
-            } elseif ($global:zUpgrade -notcontains $avs[$av].display) {                              #AV PRODUCTS TREATING '1' AS 'UPTODATE'
+            } elseif ($global:zUpgrade -notcontains $avs[$av].display) {                            #AV PRODUCTS TREATING '1' AS 'UPTODATE'
               write-host "$($avs[$av].display) reports '$($statkey.$i_statval)' for 'Up-To-Date' (Expected : '1')" -foregroundcolor yellow
               if ($statkey.$i_statval -eq "1") {
                 $global:o_AVStatus = "Up-to-Date : $true (REG Check)`r`n"
@@ -893,7 +899,7 @@ if (-not ($global:blnAVXML)) {
             $rtkey = get-itemproperty -path "HKLM:$i_rtkey" -name "$i_rtval" -erroraction stop
             $global:o_RTstate = $rtkey.$i_rtval
             #INTERPRET 'REAL-TIME SCANNING' STATUS BASED ON ANY AV PRODUCT VALUE REPRESENTATION
-            if ($global:zRealTime -contains $avs[$av].display) {                                      #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+            if ($global:zRealTime -contains $avs[$av].display) {                                    #AV PRODUCTS TREATING '0' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
               write-host "$($avs[$av].display) reports '$($rtkey.$i_rtval)' for 'Real-Time Scanning' (Expected : '0')" -foregroundcolor yellow
               if ($rtkey.$i_rtval -eq 0) {
                 $global:o_RTstate = "Enabled (REG Check)`r`n"
@@ -902,7 +908,7 @@ if (-not ($global:blnAVXML)) {
               } else {
                 $global:o_RTstate = "Unknown (REG Check)`r`n"
               }
-            } elseif ($global:zRealTime -notcontains $avs[$av].display) {                             #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
+            } elseif ($global:zRealTime -notcontains $avs[$av].display) {                           #AV PRODUCTS TREATING '1' AS 'ENABLED' FOR 'REAL-TIME SCANNING'
               write-host "$($avs[$av].display) reports '$($rtkey.$i_rtval)' for 'Real-Time Scanning' (Expected : '1')" -foregroundcolor yellow
               if ($rtkey.$i_rtval -eq 1) {
                 $global:o_RTstate = "Enabled (REG Check)`r`n"
@@ -971,7 +977,7 @@ if (-not ($global:blnAVXML)) {
           }
           $global:o_AVStatus += "Tamper Protection : $tamper`r`n"
           #GET PRIMARY AV PRODUCT LAST SCAN DETAILS
-          if ($avs[$av].display -match "Windows Defender") {                                      #WINDOWS DEFENDER SCAN DATA
+          if ($avs[$av].display -match "Windows Defender") {                                        #WINDOWS DEFENDER SCAN DATA
             try {
               write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor yellow
               $typekey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scantype" -erroraction stop
@@ -999,8 +1005,8 @@ if (-not ($global:blnAVXML)) {
               write-host $_.scriptstacktrace
               write-host $_
             }
-          } elseif ($avs[$av].display -notmatch "Windows Defender") {                             #NON-WINDOWS DEFENDER SCAN DATA
-            if ($avs[$av].display -match "Sophos") {                                              #SOPHOS SCAN DATA
+          } elseif ($avs[$av].display -notmatch "Windows Defender") {                               #NON-WINDOWS DEFENDER SCAN DATA
+            if ($avs[$av].display -match "Sophos") {                                                #SOPHOS SCAN DATA
               try {
                 if ($avs[$av].display -match "Sophos Intercept X") {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
@@ -1024,7 +1030,7 @@ if (-not ($global:blnAVXML)) {
                 write-host $_.scriptstacktrace
                 write-host $_
               }
-            } elseif ($avs[$av].display -match "Symantec") {                                      #SYMANTEC SCAN DATA
+            } elseif ($avs[$av].display -match "Symantec") {                                        #SYMANTEC SCAN DATA
               try {
                 write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
                 $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
