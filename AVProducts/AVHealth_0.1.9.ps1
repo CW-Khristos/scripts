@@ -145,10 +145,10 @@
     "Windows Defender"
   )
   #AV PRODUCT XML NC REPOSITORY URLS FOR FALLBACK - CHANGE THESE TO MATCH YOUR NCENTRAL URLS AFTER UPLOADING EACH XML TO REPO
-  $global:ncxmlSOPHOS = "https://nable.ipmrms.com/download/repository/1639682702/sophos.xml"
-  $global:ncxmlSYMANTEC = "https://nable.ipmrms.com/download/repository/1238159723/symantec.xml"
-  $global:ncxmlTRENDMICRO = "https://nable.ipmrms.com/download/repository/308457410/trendmicro.xml"
-  $global:ncxmlWINDEFEND = "https://nable.ipmrms.com/download/repository/968395355/windowsdefender.xml"
+  $global:ncxmlSOPHOS = "https://nableserver/download/repository/1639682702/sophos.xml"
+  $global:ncxmlSYMANTEC = "https://nableserver/download/repository/1238159723/symantec.xml"
+  $global:ncxmlTRENDMICRO = "https://nableserver/download/repository/308457410/trendmicro.xml"
+  $global:ncxmlWINDEFEND = "https://nableserver/download/repository/968395355/windowsdefender.xml"
   #SET TLS SECURITY FOR CONNECTING TO GITHUB
   [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 #ENDREGION ----- DECLARATIONS ----
