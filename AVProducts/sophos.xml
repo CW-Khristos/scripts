@@ -115,9 +115,9 @@
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scan>
+      <scan>\SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2\</scan>
       <scantype>PLACEHOLDER</scantype>
-      <scanval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\LastScan\</scanval>
+      <scanval>OverallLastCompletedTime</scanval>
       <alert>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</infect>
@@ -138,9 +138,9 @@
       <stat>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
       <!--AV Product Updates-->
-      <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
-      <updateval>LastSuccessUtc</updateval>
-      <source>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</source>
+      <update>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus</update>
+      <updateval>LastUpdateTime</updateval>
+      <source>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</source>
       <sourceval>UpdateSource</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -155,9 +155,9 @@
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scan>
+      <scan>\SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2\</scan>
       <scantype>PLACEHOLDER</scantype>
-      <scanval>\SOFTWARE\Sophos\SAVService\Status\LastScan\</scanval>
+      <scanval>OverallLastCompletedTime</scanval>
       <alert>\SOFTWARE\Sophos\SAVService\Status\Infected\</alert>
       <alertval>\SOFTWARE\Sophos\SAVService\Status\Infected\</alertval>
       <infect>\SOFTWARE\Sophos\SAVService\Status\Infected\</infect>
