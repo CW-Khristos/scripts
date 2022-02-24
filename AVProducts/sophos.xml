@@ -98,8 +98,8 @@
       <stat>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</stat>
       <statval>Result</statval>
       <!--AV Product Updates-->
-      <update>\SOFTWARE\WOW6432Node\Sophos\SAVService\Telemetry\MajorUpdate\</update>
-      <updateval>LastSuccessUtc</updateval>
+      <update>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus</update>
+      <updateval>LastUpdateTime</updateval>
       <source>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</source>
       <sourceval>UpdateSource</sourceval>
       <!--AV Real-Time Scanning-->
