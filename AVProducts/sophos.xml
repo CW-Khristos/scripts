@@ -83,7 +83,7 @@
     </bit32>
   </SOPHOSANTIVIRUS>
   <!--Sophos Anti-Virus "InterceptX" Beta-->
-  <SOPHOSINTERCEPTX>
+  <SOPHOSINTERCEPTXBETA>
     <bit64>
       <!--AV Details-->
       <display>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</display>
@@ -164,7 +164,7 @@
       <infectval>\SOFTWARE\Sophos\SAVService\Status\Infected\</infectval>
       <threat>\SOFTWARE\Sophos\SAVService\ThreatLifetime\Threats\</threat>
     </bit32>
-  </SOPHOSINTERCEPTX>
+  </SOPHOSINTERCEPTXBETA>
   <SOPHOSENDPOINTAGENT>
     <bit64>
       <!--AV Details-->
