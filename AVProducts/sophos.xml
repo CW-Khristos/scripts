@@ -115,7 +115,7 @@
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
-      <scan>\SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2</scan>
+      <scan>\SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2\</scan>
       <scantype>PLACEHOLDER</scantype>
       <scanval>OverallLastCompletedTime</scanval>
       <alert>\SOFTWARE\WOW6432Node\Sophos\SAVService\Status\Infected\</alert>
@@ -155,7 +155,7 @@
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
       <!--AV Threats-->
-      <scan>SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2</scan>
+      <scan>SOFTWARE\Sophos\EndpointDefense\BackgroundScanV2\</scan>
       <scantype>PLACEHOLDER</scantype>
       <scanval>OverallLastCompletedTime</scanval>
       <alert>\SOFTWARE\Sophos\SAVService\Status\Infected\</alert>
