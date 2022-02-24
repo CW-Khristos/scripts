@@ -86,8 +86,8 @@
   <SOPHOSINTERCEPTX>
     <bit64>
       <!--AV Details-->
-      <display>\SophosInterceptX\</display>
-      <displayval>SophosInterceptX</displayval>
+      <display>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\Details\</display>
+      <displayval>Version</displayval>
       <path>\SophosInterceptX\</path>
       <pathval>SophosInterceptX</pathval>
       <!--AV Versions-->
