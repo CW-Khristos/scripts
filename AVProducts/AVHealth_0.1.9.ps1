@@ -1010,6 +1010,7 @@ if (-not ($global:blnAVXML)) {
           } elseif ($avs[$av].display -notmatch "Windows Defender") {                               #NON-WINDOWS DEFENDER SCAN DATA
             if ($avs[$av].display -match "Sophos") {                                                #SOPHOS SCAN DATA
               try {
+                $lastage = 0
                 if ($avs[$av].display -match "Sophos Intercept X") {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
@@ -1023,6 +1024,9 @@ if (-not ($global:blnAVXML)) {
                     if (($scan.name -notlike "PS*") -and ($scan.name -notlike "(default)")) {
                       $scans += "Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec"))`r`n"
                       $age = new-timespan -start (Get-EpochDate($scan.value)("sec")) -end (Get-Date)
+                      if (($lastage -eq 0) -or ($age -lt $lastage)) {
+                        $lastage = $age
+                      }
                     }
                   }
                 }
@@ -1047,9 +1051,9 @@ if (-not ($global:blnAVXML)) {
             }
           }
           $time1 = New-TimeSpan -days 2
-          if ($age.compareto($time1) -le 0) {
+          if ($lastage.compareto($time1) -le 0) {
             $scans += "Recently Scanned : True (REG Check)"
-          } elseif ($age.compareto($time1) -gt 0) {
+          } elseif ($lastage.compareto($time1) -gt 0) {
             $scans += "Recently Scanned : False (REG Check)"
           }
           $global:o_AVStatus += $scans
