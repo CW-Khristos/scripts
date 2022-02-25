@@ -1016,7 +1016,7 @@ if (-not ($global:blnAVXML)) {
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
                   $stime = [datetime]::ParseExact($scankey.$i_scanval,'yyyyMMddTHHmmssK',[Globalization.CultureInfo]::InvariantCulture)
                   $scans += "Scan Type : BackgroundScanV2 (REG Check)`r`nLast Scan Time : $stime`r`n"
-                  $age = new-timespan -start $stime -end (Get-Date)
+                  $lastage = new-timespan -start $stime -end (Get-Date)
                 } elseif ($avs[$av].display -notmatch "Sophos Intercept X") {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
