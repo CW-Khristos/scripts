@@ -979,6 +979,7 @@ if (-not ($global:blnAVXML)) {
           }
           $global:o_AVStatus += "Tamper Protection : $tamper`r`n"
           #GET PRIMARY AV PRODUCT LAST SCAN DETAILS
+          $lastage = 0
           if ($avs[$av].display -match "Windows Defender") {                                        #WINDOWS DEFENDER SCAN DATA
             try {
               write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scantype'" -foregroundcolor yellow
@@ -1003,14 +1004,13 @@ if (-not ($global:blnAVXML)) {
               $scans += "Last Scan Time : $stime (REG Check)`r`n"
             } catch {
               write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-              $scans += "Last Scan Time : $N/A (REG Check)`r`n"
+              $scans += "Last Scan Time : N/A (REG Check)`r`nRecently Scanned : $false (REG Check)"
               write-host $_.scriptstacktrace
               write-host $_
             }
           } elseif ($avs[$av].display -notmatch "Windows Defender") {                               #NON-WINDOWS DEFENDER SCAN DATA
             if ($avs[$av].display -match "Sophos") {                                                #SOPHOS SCAN DATA
               try {
-                $lastage = 0
                 if ($avs[$av].display -match "Sophos Intercept X") {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
@@ -1032,7 +1032,7 @@ if (-not ($global:blnAVXML)) {
                 }
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan'" -foregroundcolor red
-                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A (REG Check)`r`nRecently Scanned : N/A (REG Check)"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A (REG Check)`r`nRecently Scanned : $false (REG Check)"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
@@ -1044,7 +1044,7 @@ if (-not ($global:blnAVXML)) {
                 $lastage = new-timespan -start ($scankey.$i_scanval) -end (Get-Date)
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : N/A (REG Check)"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : $false (REG Check)"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
@@ -1053,9 +1053,9 @@ if (-not ($global:blnAVXML)) {
           if ($lastage -ne 0) {
             $time1 = New-TimeSpan -days 2
             if ($lastage.compareto($time1) -le 0) {
-              $scans += "Recently Scanned : True (REG Check)"
+              $scans += "Recently Scanned : $true (REG Check)"
             } elseif ($lastage.compareto($time1) -gt 0) {
-              $scans += "Recently Scanned : False (REG Check)"
+              $scans += "Recently Scanned : $false (REG Check)"
             }
           }
           $global:o_AVStatus += $scans
