@@ -999,11 +999,11 @@ if (-not ($global:blnAVXML)) {
               $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
               $Int64Value = [System.BitConverter]::ToInt64($scankey.$i_scanval,0)
               $stime = Get-Date([DateTime]::FromFileTime($Int64Value))
-              $age = new-timespan -start $stime -end (Get-Date)
-              $scans += "Last Scan Time : $stime`r`n"
+              $lastage = new-timespan -start $stime -end (Get-Date)
+              $scans += "Last Scan Time : $stime (REG Check)`r`n"
             } catch {
               write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-              $scans += "Last Scan Time : $N/A`r`n"
+              $scans += "Last Scan Time : $N/A (REG Check)`r`n"
               write-host $_.scriptstacktrace
               write-host $_
             }
@@ -1015,14 +1015,14 @@ if (-not ($global:blnAVXML)) {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
                   $stime = [datetime]::ParseExact($scankey.$i_scanval,'yyyyMMddTHHmmssK',[Globalization.CultureInfo]::InvariantCulture)
-                  $scans += "Scan Type : BackgroundScanV2 (REG Check)`r`nLast Scan Time : $stime`r`n"
+                  $scans += "Scan Type : BackgroundScanV2 (REG Check)`r`nLast Scan Time : $stime (REG Check)`r`n"
                   $lastage = new-timespan -start $stime -end (Get-Date)
                 } elseif ($avs[$av].display -notmatch "Sophos Intercept X") {
                   write-host "Reading : -path 'HKLM:$i_scan'" -foregroundcolor yellow
                   $scankey = get-itemproperty -path "HKLM:$i_scan" -erroraction stop
                   foreach ($scan in $scankey.psobject.Properties) {
                     if (($scan.name -notlike "PS*") -and ($scan.name -notlike "(default)")) {
-                      $scans += "Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec"))`r`n"
+                      $scans += "Scan Type : $($scan.name) (REG Check)`r`nLast Scan Time : $(Get-EpochDate($scan.value)("sec")) (REG Check)`r`n"
                       $age = new-timespan -start (Get-EpochDate($scan.value)("sec")) -end (Get-Date)
                       if (($lastage -eq 0) -or ($age -lt $lastage)) {
                         $lastage = $age
@@ -1032,7 +1032,7 @@ if (-not ($global:blnAVXML)) {
                 }
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan'" -foregroundcolor red
-                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`n"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A (REG Check)`r`nRecently Scanned : N/A (REG Check)"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
@@ -1040,21 +1040,23 @@ if (-not ($global:blnAVXML)) {
               try {
                 write-host "Reading : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor yellow
                 $scankey = get-itemproperty -path "HKLM:$i_scan" -name "$i_scanval" -erroraction stop
-                $scans += "Scan Type : N/A (REG Check)`r`nLast Scan Time : $(Get-Date($scankey.$i_scanval))`r`n"
-                $age = new-timespan -start ($scankey.$i_scanval) -end (Get-Date)
+                $scans += "Scan Type : N/A (REG Check)`r`nLast Scan Time : $(Get-Date($scankey.$i_scanval)) (REG Check)`r`n"
+                $lastage = new-timespan -start ($scankey.$i_scanval) -end (Get-Date)
               } catch {
                 write-host "Could not validate Registry data : -path 'HKLM:$i_scan' -name '$i_scanval'" -foregroundcolor red
-                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`n"
+                $scans = "Scan Type : N/A (REG Check)`r`nLast Scan Time : N/A`r`nRecently Scanned : N/A (REG Check)"
                 write-host $_.scriptstacktrace
                 write-host $_
               }
             }
           }
-          $time1 = New-TimeSpan -days 2
-          if ($lastage.compareto($time1) -le 0) {
-            $scans += "Recently Scanned : True (REG Check)"
-          } elseif ($lastage.compareto($time1) -gt 0) {
-            $scans += "Recently Scanned : False (REG Check)"
+          if ($lastage -ne 0) {
+            $time1 = New-TimeSpan -days 2
+            if ($lastage.compareto($time1) -le 0) {
+              $scans += "Recently Scanned : True (REG Check)"
+            } elseif ($lastage.compareto($time1) -gt 0) {
+              $scans += "Recently Scanned : False (REG Check)"
+            }
           }
           $global:o_AVStatus += $scans
           #GET PRIMARY AV PRODUCT DEFINITIONS / SIGNATURES / PATTERN
