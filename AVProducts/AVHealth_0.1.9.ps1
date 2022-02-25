@@ -528,7 +528,7 @@ if (-not ($global:blnAVXML)) {
                   if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
                   } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
-                    $strName = "Sophos Intercept X"
+                    $strName = "Sophos Intercept X Beta"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
                   $strPath = $strPath + $keyval2.$regPathVal + ", "
