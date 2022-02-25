@@ -470,7 +470,7 @@ if (-not ($global:blnAVXML)) {
                   $strName = $keyval1.$regDisplayVal
                   if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
-                  } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                  } elseif (($strName -match "Sophos") -and ($strName -match "BETA")) {             #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
                     $strName = "Sophos Intercept X Beta"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
@@ -527,7 +527,7 @@ if (-not ($global:blnAVXML)) {
                   $strName = $keyval1.$regDisplayVal
                   if ($strName -match "Windows Defender") {                                         #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                     $strName = "Windows Defender"
-                  } elseif ($strName -match "BETA") {                                               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                  } elseif (($strName -match "Sophos") -and ($strName -match "BETA")) {             #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
                     $strName = "Sophos Intercept X Beta"
                   }
                   $strDisplay = $strDisplay + $strName + ", "
@@ -630,7 +630,7 @@ if (-not ($global:blnAVXML)) {
                 $strName = $keyval1.$regDisplayVal
                 if ($strName -match "Windows Defender") {                                           #'NORMALIZE' WINDOWS DEFENDER DISPLAY NAME
                   $strName = "Windows Defender"
-                } elseif ($strName -match "BETA") {                                                 #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
+                } elseif (($strName -match "Sophos") -and ($strName -match "BETA")) {               #'NORMALIZE' SOPHOS INTERCEPT X BETA DISPLAY NAME AND FIX SERVER REG CHECK
                   $strName = "Sophos Intercept X Beta"
                 }
                 $strDisplay = $strDisplay + $strName + ", "
