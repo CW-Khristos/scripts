@@ -488,13 +488,14 @@ foreach ($objDRV in $arrDRV) {
     foreach ($prop in $global:arrDRV[$global:i].psobject.properties) {
       if ($prop.value -eq $null) {$prop.value = -1}
     }
-    write-host " - SMART REPORT DRIVE : $($global:arrDRV[$global:i].drvID)" -ForegroundColor red
+    write-host " - SMART REPORT : " -ForegroundColor yellow
+    $allout = "STATUS=SMART REPORT DRIVE : $($global:arrDRV[$global:i].drvID)`r`n"
     #GET DRIVE IDENTITY
     $output = Get-ProcessOutput -FileName $smartEXE -Args "-i $($objDRV.drvID)"
     #PARSE SMARTCTL OUTPUT LINE BY LINE
     $lines = $output.StandardOutput.split("`r`n", [StringSplitOptions]::RemoveEmptyEntries)
     foreach ($line in $lines) {
-      write-host "  - $($line)" -foregroundcolor green
+      $allout = "  - $($line)`r`n"
     }
     #BASIC HEALTH
     if ($global:arrDRV[$global:i].fail -eq "PASSED") {
