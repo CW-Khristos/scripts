@@ -1,4 +1,5 @@
 #REGION ----- DECLARATIONS ----
+  #BELOW PARAM() MUST BE COMMENTED OUT FOR USE WITHIN NABLE NCENTRAL RMM
   #Param (
   #  [Parameter(Mandatory=$true)]$i_drive
   #)
