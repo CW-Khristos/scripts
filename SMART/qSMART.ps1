@@ -1,7 +1,7 @@
 #REGION ----- DECLARATIONS ----
-  Param (
-    [Parameter(Mandatory=$true)]$i_drive
-  )
+  #Param (
+  #  [Parameter(Mandatory=$true)]$i_drive
+  #)
   #SET DRIVE INDEX
   $global:i = -1
   $global:arrDRV = @()
@@ -489,7 +489,7 @@ foreach ($objDRV in $arrDRV) {
       if ($prop.value -eq $null) {$prop.value = -1}
     }
     write-host " - SMART REPORT : " -ForegroundColor yellow
-    $allout = "STATUS=SMART REPORT DRIVE : $($global:arrDRV[$global:i].drvID)`r`n"
+    $allout = "SMART REPORT DRIVE : $($global:arrDRV[$global:i].drvID)`r`n"
     #GET DRIVE IDENTITY
     $output = Get-ProcessOutput -FileName $smartEXE -Args "-i $($objDRV.drvID)"
     #PARSE SMARTCTL OUTPUT LINE BY LINE
