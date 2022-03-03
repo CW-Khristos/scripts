@@ -12,7 +12,7 @@
       <verval>Version</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
       <statval>ClientUpgradeStatus</statval>
       <!--AV Product Updates-->
       <update>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</update>
@@ -52,7 +52,7 @@
       <verval>Version</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
       <statval>ClientUpgradeStatus</statval>
       <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</update>
@@ -95,7 +95,7 @@
       <verval>Version</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
       <statval>ClientUpgradeStatus</statval>
       <!--AV Product Updates-->
       <update>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</update>
@@ -135,7 +135,7 @@
       <verval>Version</verval>
       <compver>\PLACEHOLDER\</compver>
       <!--AV Status-->
-      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</stat>
+      <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
       <statval>ClientUpgradeStatus</statval>
       <!--AV Product Updates-->
       <update>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</update>
