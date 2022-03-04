@@ -11,10 +11,10 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
  
 .NOTES
-    Version        : 0.1.9 (22 February 2022)
+    Version        : 0.2.0 (04 March 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.9.ps1 
+    File Name      : AVHealth_0.2.0.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -60,6 +60,9 @@
           Began adding in checks for AV Components' Versions, Tamper Protection, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
           Added '$global:ncxml<vendor>' variables for assigning static 'fallback' sources for AV Product XMLs; XMLs should be uploaded to NC Script Repository and URLs updated (Begin Ln148)
             The above 'Fallback' method is to allow for uploading AV Product XML files to NCentral Script Repository to attempt to support older OSes which cannot securely connect to GitHub (Requires using "Compatibility" mode for NC Network Security)
+    0.2.0 Optimization and more bugfixes
+          Forked script to implement 'AV Health' script into Datto RMM
+          Planning to re-organize repo to account for implementation of scripts to multiple RMM platforms
 
 .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
@@ -67,19 +70,19 @@
     Need to obtain Infection Status and Detected Threats; bonus for timestamps for these metrics - Partially Complete (Sophos - full support; Trend Micro - 'Active Detections Present / Count')
         Do other AVs report individual Threat information in the registry? Sophos does; but if others don't will we be able to use this metric?
         Still need to determine if timestamps are possible for detected threats
-    If no AV is detected through WMI or 'HKLM:\SOFTWARE\Microsoft\Security Center\Monitoring\'; attempt to validate each of the supported Vendor AV Products
     Need to create a 'Get-AVProducts' function and move looped 'detection' code into a function to call
 #> 
 
 #REGION ----- DECLARATIONS ----
+  #BELOW PARAM() MUST BE COMMENTED OUT FOR USE WITHIN NABLE NCENTRAL RMM
   Param(
     [Parameter(Mandatory=$true)]$i_PAV
   )
-  $global:bitarch = ""
-  $global:OSCaption = ""
-  $global:OSVersion = ""
-  $global:producttype = ""
-  $global:computername = ""
+  $global:bitarch = $null
+  $global:OSCaption = $null
+  $global:OSVersion = $null
+  $global:producttype = $null
+  $global:computername = $null
   $global:blnWMI = $true
   $global:blnPAV = $false
   $global:blnAVXML = $true
@@ -95,12 +98,12 @@
   $global:o_RTstate = "Unknown"
   $global:defstatus = "Unknown"
   $global:o_DefStatus = "Unknown"
-  $global:o_Infect = ""
-  $global:o_Threats = ""
+  $global:o_Infect = $null
+  $global:o_Threats = $null
   $global:o_AVcon = 0
-  $global:o_CompAV = ""
-  $global:o_CompPath = ""
-  $global:o_CompState = ""
+  $global:o_CompAV = $null
+  $global:o_CompPath = $null
+  $global:o_CompState = $null
   #SUPPORTED AV VENDORS
   $global:avVendors = @(
     "Sophos"
@@ -807,6 +810,8 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_verkey' -name '$i_verval'" -foregroundcolor red
             $global:o_AVVersion = "."
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           $global:o_AVVersion = $global:o_AVVersion.$i_verval
           #GET PRIMARY AV PRODUCT COMPONENT VERSIONS
@@ -843,6 +848,8 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_source' -name '$i_sourceval'" -foregroundcolor red
             $global:o_AVStatus = "Update Source : Unknown`r`n"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           #GET PRIMARY AV PRODUCT STATUS VIA REGISTRY
           try {
@@ -867,6 +874,8 @@ if (-not ($global:blnAVXML)) {
           } catch {
             write-host "Could not validate Registry data : -path 'HKLM:$i_statkey' -name '$i_statval'" -foregroundcolor red
             $global:o_AVStatus = "Up-to-Date : Unknown (REG Check)`r`n"
+            write-host $_.scriptstacktrace
+            write-host $_
           }
           #GET PRIMARY AV PRODUCT LAST UPDATE TIMESTAMP VIA REGISTRY
           try {
@@ -1103,7 +1112,7 @@ if (-not ($global:blnAVXML)) {
             }
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : $($age.tostring("dd\:hh\:mm"))"
           } catch {
-            write-host "Could not validate Registry data : -path 'HKLM:$i_defupdate' -name '$i_defupdateval'" -foregroundcolor red
+            write-host "Could not validate Registry data : -path 'HKLM:$($i_defupdate)' -name '$($i_defupdateval)'" -foregroundcolor red
             $global:o_DefStatus += "Status : Out of date (REG Check)`r`n"
             $global:o_DefStatus += "Last Definition Update : N/A`r`n"
             $global:o_DefStatus += "Definition Age (DD:HH:MM) : N/A"
@@ -1114,7 +1123,7 @@ if (-not ($global:blnAVXML)) {
           if ($global:zNoAlert -notcontains $i_PAV) {
             try {
               if ($i_PAV -match "Sophos") {
-                write-host "Reading : -path 'HKLM:$i_alert'" -foregroundcolor yellow
+                write-host "Reading : -path 'HKLM:$($i_alert)'" -foregroundcolor yellow
                 $alertkey = get-ItemProperty -path "HKLM:$i_alert" -erroraction silentlycontinue
                 foreach ($alert in $alertkey.psobject.Properties) {
                   if (($alert.name -notlike "PS*") -and ($alert.name -notlike "(default)")) {
@@ -1148,15 +1157,17 @@ if (-not ($global:blnAVXML)) {
               #  }
               #}
             } catch {
-              write-host "Could not validate Registry data : 'HKLM:$i_alert'" -foregroundcolor red
+              write-host "Could not validate Registry data : 'HKLM:$($i_alert)'" -foregroundcolor red
               $global:o_Infect = "N/A`r`n"
+              write-host $_.scriptstacktrace
+              write-host $_
             }
           }
           #GET PRIMARY AV PRODUCT DETECTED INFECTIONS VIA REGISTRY
           if ($global:zNoInfect -notcontains $i_PAV) {
             if ($i_PAV -match "Sophos") {                                                           #SOPHOS DETECTED INFECTIONS
               try {
-                write-host "Reading : -path 'HKLM:$i_infect'" -foregroundcolor yellow
+                write-host "Reading : -path 'HKLM:$($i_infect)'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -erroraction silentlycontinue
                 foreach ($infect in $infectkey.psobject.Properties) {                               #ENUMERATE EACH DETECTED INFECTION
                   if (($infect.name -notlike "PS*") -and ($infect.name -notlike "(default)")) {
@@ -1168,12 +1179,14 @@ if (-not ($global:blnAVXML)) {
                   }
                 }
               } catch {
-                write-host "Could not validate Registry data : 'HKLM:$i_infect'" -foregroundcolor red
+                write-host "Could not validate Registry data : 'HKLM:$($i_infect)'" -foregroundcolor red
                 $global:o_Infect += "Virus/Malware Present : N/A`r`n"
+                write-host $_.scriptstacktrace
+                write-host $_
               }
             } elseif ($i_PAV -match "Trend Micro") {                                                #TREND MICRO DETECTED INFECTIONS
               try {
-                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
+                write-host "Reading : -path 'HKLM:$($i_infect)' -name '$($i_infectval)'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
                 if ($infectkey.$i_infectval -eq 0) {                                                #NO DETECTED INFECTIONS
                   $global:o_Infect += "Virus/Malware Present : $false`r`nVirus/Malware Count : $($infectkey.$i_infectval)`r`n"
@@ -1181,22 +1194,24 @@ if (-not ($global:blnAVXML)) {
                   $global:o_Infect += "Virus/Malware Present : $true`r`nVirus/Malware Count - $($infectkey.$i_infectval)`r`n"
                 }
               } catch {
-                write-host "Could not validate Registry data : 'HKLM:$i_infect' -name 'i_infectval'" -foregroundcolor red
+                write-host "Could not validate Registry data : 'HKLM:$($i_infect)' -name '$($i_infectval)'" -foregroundcolor red
                 $global:o_Infect += "Virus/Malware Present : N/A`r`n"
+                write-host $_.scriptstacktrace
+                write-host $_
               }
             } elseif ($i_PAV -match "Symantec") {                                                   #SYMANTEC DETECTED INFECTIONS
               try {
-                write-host "Reading : -path 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor yellow
+                write-host "Reading : -path 'HKLM:$($i_infect)' -name '$($i_infectval)'" -foregroundcolor yellow
                 $infectkey = get-ItemProperty -path "HKLM:$i_infect" -name "$i_infectval" -erroraction silentlycontinue
                 if ($infectkey.$i_infectval -gt 0) {                                                #NO DETECTED INFECTIONS
                   $global:o_Infect += "Virus/Malware Present : $false`r`n"
                 } elseif ($infectkey.$i_infectval -eq 0) {                                          #DETECTED INFECTIONS
                   try {
-                    write-host "Reading : -path 'HKLM:$i_scan' -name 'WorstInfectionType'" -foregroundcolor yellow
+                    write-host "Reading : -path 'HKLM:$($i_scan)' -name 'WorstInfectionType'" -foregroundcolor yellow
                     $worstkey = get-ItemProperty -path "HKLM:$i_scan" -name "WorstInfectionType" -erroraction silentlycontinue
                     $worst = SEP-Map($worstkey.WorstInfectionType)
                   } catch {
-                    write-host "Could not validate Registry data : 'HKLM:$i_scan' -name 'WorstInfectionType'" -foregroundcolor red
+                    write-host "Could not validate Registry data : 'HKLM:$($i_scan)' -name 'WorstInfectionType'" -foregroundcolor red
                     $worst = "N/A"
                     write-host $_.scriptstacktrace
                     write-host $_
@@ -1204,7 +1219,7 @@ if (-not ($global:blnAVXML)) {
                   $global:o_Infect += "Virus/Malware Present : $true`r`nWorst Infection Type : $worst`r`n"
                 }
               } catch {
-                write-host "Could not validate Registry data : 'HKLM:$i_infect' -name '$i_infectval'" -foregroundcolor red
+                write-host "Could not validate Registry data : 'HKLM:$($i_infect)' -name '$($i_infectval)'" -foregroundcolor red
                 $global:o_Infect += "Virus/Malware Present : N/A`r`nWorst Infection Type : N/A`r`n"
                 write-host $_.scriptstacktrace
                 write-host $_
@@ -1214,7 +1229,7 @@ if (-not ($global:blnAVXML)) {
           #GET PRIMARY AV PRODUCT DETECTED THREATS VIA REGISTRY
           if ($global:zNoThreat -notcontains $i_PAV) {
             try {
-              write-host "Reading : -path 'HKLM:$i_threat'" -foregroundcolor yellow
+              write-host "Reading : -path 'HKLM:$($i_threat)'" -foregroundcolor yellow
               $threatkey = get-childitem -path "HKLM:$i_threat" -erroraction silentlycontinue
               if ($i_PAV -match "Sophos") {
                 if ($threatkey.count -gt 0) {
@@ -1239,8 +1254,10 @@ if (-not ($global:blnAVXML)) {
                 }
               }
             } catch {
-              write-host "Could not validate Registry data : 'HKLM:$i_threat'" -foregroundcolor red
+              write-host "Could not validate Registry data : 'HKLM:$($i_threat)'" -foregroundcolor red
               $global:o_Threats = "N/A`r`n"
+              write-host $_.scriptstacktrace
+              write-host $_
             }
           }
         #SAVE WINDOWS DEFENDER FOR LAST - TO PREVENT SCRIPT CONSIDERING IT 'COMPETITOR AV' WHEN SET AS PRIMARY AV
@@ -1266,33 +1283,33 @@ if (($global:o_AVname -match "No AV Product Found") -or ($global:o_AVname -match
 }
 #DEVICE INFO
 write-host "`r`nDevice Info :" -foregroundcolor yellow
-write-host "Device : $global:computername" -foregroundcolor $ccode
-write-host "Operating System : $global:OSCaption ($global:OSVersion)" -foregroundcolor $ccode
+write-host "Device : $($global:computername)" -foregroundcolor $ccode
+write-host "Operating System : $($global:OSCaption) ($($global:OSVersion))" -foregroundcolor $ccode
 #AV DETAILS
 write-host "`r`nAV Details :" -foregroundcolor yellow
-write-host "AV Display Name : $global:o_AVname" -foregroundcolor $ccode
-write-host "AV Path : $global:o_AVpath" -foregroundcolor $ccode
+write-host "AV Display Name : $($global:o_AVname)" -foregroundcolor $ccode
+write-host "AV Path : $($global:o_AVpath)" -foregroundcolor $ccode
 write-host "`r`nAV Status :" -foregroundcolor yellow
-write-host "$global:o_AVStatus" -foregroundcolor $ccode
+write-host "$($global:o_AVStatus)" -foregroundcolor $ccode
 write-host "`r`nComponent Versions :" -foregroundcolor yellow
-write-host "$o_compver" -foregroundcolor $ccode
-$global:o_AVStatus += "`r`n`r`n$o_compver`r`n"
+write-host "$($o_compver)" -foregroundcolor $ccode
+$global:o_AVStatus += "`r`n`r`n$($o_compver)`r`n"
 #REAL-TIME SCANNING & DEFINITIONS
 write-host "Definitions :" -foregroundcolor yellow
-write-host "Status : $global:o_DefStatus" -foregroundcolor $ccode
+write-host "Status : $($global:o_DefStatus)" -foregroundcolor $ccode
 #THREATS
 write-host "`r`nActive Detections :" -foregroundcolor yellow
-write-host "$global:o_Infect" -foregroundcolor $ccode
+write-host "$($global:o_Infect)" -foregroundcolor $ccode
 write-host "Detected Threats :" -foregroundcolor yellow
-write-host "$global:o_Threats" -foregroundcolor $ccode
+write-host "$($global:o_Threats)" -foregroundcolor $ccode
 #COMPETITOR AV
 write-host "Competitor AV :" -foregroundcolor yellow
-write-host "AV Conflict : $global:o_AVcon" -foregroundcolor $ccode
-write-host "$global:o_CompAV" -foregroundcolor $ccode
+write-host "AV Conflict : $($global:o_AVcon)" -foregroundcolor $ccode
+write-host "$($global:o_CompAV)" -foregroundcolor $ccode
 write-host "Competitor Path :" -foregroundcolor yellow
-write-host "$global:o_CompPath" -foregroundcolor $ccode
+write-host "$($global:o_CompPath)" -foregroundcolor $ccode
 write-host "Competitor State :" -foregroundcolor yellow
-write-host "$global:o_CompState" -foregroundcolor $ccode
+write-host "$($global:o_CompState)" -foregroundcolor $ccode
 #REFORMAT OUTPUT METRICS FOR LEGIBILITY IN NCENTRAL
 #AV DETAILS
 $global:o_AVname = $global:o_AVname.replace("`r`n", "<br>")
