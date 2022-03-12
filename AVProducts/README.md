@@ -1,13 +1,13 @@
 ***
 # **AVHealth**
   * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
-  * **Current Validation : [Validated - v0.1.9]**
-  * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master) (Validated)**
+  * **Current Validation : [Validated - v0.2.0]**
+  * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master/AVProducts) (Validated)**
 ***
 ## **Script Details :**
-  * **NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AV%20Health.amp)**
-  * **PS1 Script - [AVHealth_0.1.9.ps1](https://github.com/CW-Khristos/scripts/blob/master/AVProducts/AVHealth_0.1.9.ps1)**
-  * **Command :** `powershell -file .\AVHealth_0.1.9.ps1 -i_PAV "[AV Vendor]"`
+  * **NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AV%20Health.amp)**
+  * **PS1 Script - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AVHealth_0.2.0.ps1)**
+  * **Command :** `powershell -file .\AVHealth_0.2.0.ps1 -i_PAV "[AV Vendor]"`
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
 ***
@@ -23,10 +23,10 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
 ***
 ## .NOTES
-    Version        : 0.1.9 (22 February 2022)
+    Version        : 0.2.0 (04 March 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.1.9.ps1 
+    File Name      : AVHealth_0.2.0.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -34,6 +34,10 @@
                      Remco for helping test and validate and assistance with Symantec
     Requires       : PowerShell Version 2.0+ installed
 ***
+## .KNOWN ISSUES
+ - Sophos is currently the only AV Product fully supporting the "Active Detections" and "Detected Threats" metrics; Trend Micro will at least indicate infection status in "Active Detections
+ - Trend Micro continues to cause issues with properly evaluating if the core AV Client itself is up to date due to the number of 'duplicate' and inconsistent Registry Keys / Values that clutter their Registry Hive
+*** 
 ## .OS COMPATIBILITY
  - Because this script will be making a secure SSL connection to GitHub; older OSes prior to Windows 10 may not successfully execute the script and you may receive a return of "Selected AV Product Not Found, Unable to download AV Vendor XML"
  - This is due to the OS SSL Cipher support not supporting TLS 1.2; for more information :
