@@ -38,7 +38,7 @@
     Requires       : PowerShell Version 2.0+ installed
 ***
 ## .KNOWN ISSUES
- - Sophos is currently the only AV Product fully supporting the "Active Detections" and "Detected Threats" metrics; Trend Micro will at least indicate infection status in "Active Detections
+ - Sophos is currently the only AV Product fully supporting the "Active Detections" and "Detected Threats" metrics; Symantec and Trend Micro will at least indicate infection status in "Active Detections
  - Trend Micro continues to cause issues with properly evaluating if the core AV Client itself is up to date due to the number of 'duplicate' and inconsistent Registry Keys / Values that clutter their Registry Hive
 *** 
 ## .OS COMPATIBILITY
