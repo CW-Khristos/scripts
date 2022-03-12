@@ -1,0 +1,73 @@
+<NODE>
+  <!--AVG IS 2012 AV / CrowdStrike / Kaspersky-->
+  <262144>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </262144>
+  <266240>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </266240>
+  <!--AVG IS 2012 FW-->
+  <266256>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </266256>
+  <262160>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </262160>
+  <!--MSSE-->
+  <393216>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </393216>
+  <397312>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </397312>
+  <!--Windows Defender-->
+  <393472>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </393472>
+  <397584>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </397584>
+  <397568>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </397568>
+  <401664>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </401664>
+  <!---->
+  <393232>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </393232>
+  <393488>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </393488>
+  <397328>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </397328>
+  <!--Sophos-->
+  <331776>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </331776>
+  <335872>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </335872>
+  <!--Norton Security-->
+  <327696>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </327696>
+</NODE>
