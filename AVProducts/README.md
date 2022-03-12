@@ -5,11 +5,11 @@
   * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master/AVProducts) (Validated)**
 ***
 ## **Script Details :**
-  * **PS1 Scripts :
-    Datto - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Datto/AVProducts/AVHealth_0.2.0.ps1)**
-    NCentral - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AVHealth_0.2.0.ps1)**
-    NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AV%20Health.amp)**
-    Syncro - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Syncro/AVProducts/AVHealth_0.2.0.ps1)**
+  * **Script Files :**
+    * Datto - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Datto/AVProducts/AVHealth_0.2.0.ps1)
+    * NCentral - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AVHealth_0.2.0.ps1)
+    * NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AV%20Health.amp)
+    * Syncro - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Syncro/AVProducts/AVHealth_0.2.0.ps1)
   * **Command :** `powershell -file .\AVHealth_0.2.0.ps1 -i_PAV "[AV Vendor]"`
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
@@ -144,6 +144,10 @@ After creating the desired Custom Services; create Service Templates for your Wi
     - Began adding in checks for AV Components' Versions, Tamper Protection, Last Software Update Timestamp, Last Definition Update Timestamp, and Last Scan Timestamp
     - Added '$global:ncxml<vendor>' variables for assigning static 'fallback' sources for AV Product XMLs; XMLs should be uploaded to NC Script Repository and URLs updated (Begin Ln148)
       - The above 'Fallback' method is to allow for uploading AV Product XML files to NCentral Script Repository to attempt to support older OSes which cannot securely connect to GitHub (Requires using "Compatibility" mode for NC Network Security)
+ - 0.2.0
+    - Optimization and more bugfixes
+    - Forked script to implement 'AV Health' script into Datto RMM
+    - Planning to re-organize repo to account for implementation of scripts to multiple RMM platforms
 ***
 # .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
