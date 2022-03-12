@@ -1,7 +1,7 @@
 ***
 # **AVHealth**
   * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
-  * **Current Validation : [Validated - v0.2.1]**
+  * **Current Validation : [Testing - v0.2.1]**
   * **Current Branch : [dev](https://github.com/CW-Khristos/scripts/tree/dev/AVProducts) (Testing)**
 ***
 ## **Script Details :**
