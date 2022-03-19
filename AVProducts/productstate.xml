@@ -1,0 +1,73 @@
+<NODE>
+  <!--AVG IS 2012 AV / CrowdStrike / Kaspersky-->
+  <ps262144>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps262144>
+  <ps266240>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps266240>
+  <!--AVG IS 2012 FW-->
+  <ps266256>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps266256>
+  <ps262160>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps262160>
+  <!--MSSE-->
+  <ps393216>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps393216>
+  <ps397312>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps397312>
+  <!--Windows Defender-->
+  <ps393472>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps393472>
+  <ps397584>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps397584>
+  <ps397568>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps397568>
+  <ps401664>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps401664>
+  <!---->
+  <ps393232>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps393232>
+  <ps393488>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps393488>
+  <ps397328>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps397328>
+  <!--Sophos-->
+  <ps331776>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Enabled (WMI Check)</rtstatus>
+  </ps331776>
+  <ps335872>
+    <defstatus>Up to date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps335872>
+  <!--Norton Security-->
+  <ps327696>
+    <defstatus>Out of date (WMI Check)</defstatus>
+    <rtstatus>Disabled (WMI Check)</rtstatus>
+  </ps327696>
+</NODE>
