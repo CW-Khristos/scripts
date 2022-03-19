@@ -140,11 +140,11 @@
       <path>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</path>
       <pathval>Path</pathval>
       <!--AV Versions-->
-      <corever>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</corever>
+      <corever>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</corever>
       <coreverval>Version</coreverval>
-      <vcver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</vcver>
+      <vcver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</vcver>
       <vcverval>VCVersion</vcverval>
-      <compver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</compver>
+      <compver>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</compver>
       <compverval>UpgradeVersion</compverval>
       <!--AV Status-->
       <stat>\SOFTWARE\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
