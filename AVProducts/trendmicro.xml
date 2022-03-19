@@ -10,7 +10,8 @@
       <!--AV Versions-->
       <ver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\</ver>
       <verval>Version</verval>
-      <compver>\PLACEHOLDER\</compver>
+      <compver>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\HostedAgent\RUpdate\</compver>
+      <compverval>UpgradeVersion</compverval>
       <!--AV Status-->
       <stat>\SOFTWARE\WOW6432Node\TrendMicro\PC-cillinNTCorp\CurrentVersion\Misc.\</stat>
       <statval>ClientUpgradeStatus</statval>
