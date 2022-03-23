@@ -1,13 +1,12 @@
 ''VULTR_SETUP.VBS
 ''DESIGNED TO AUTOMATE SETUP OF VULTR PBX ACCOUNTS USING VULTR-CLI CMD UTILITY : https://github.com/vultr/vultr-cli
-
 ''ACCEPTS 1 PARAMETER , REQUIRES 1 PARAMETER
 ''REQUIRED PARAMETER 'STRAPI' ; STRING VALUE FOR API KEY FOR AUTHENTICATION WITH VULTR
 ''OPTIONAL PARAMETER 'STRFILTER' ; STRING VALUE TO HOLD PASSED 'FILTERS' ; SEPARATE MULTIPLE 'FILTERS' VIA '|'
 ''OPTIONAL PARAMETER 'STRINCL' ; STRING VALUE TO HOLD PASSED 'INCLUSIONS' ; SEPARATE MULTIPLE 'INCLUSIONS' VIA '|'
 ''OPTIONAL PARAMETER 'STRUSR' ; STRING VALUE TO HOLD PASSED 'USER ACCOUNT' TO EXCLUDE
 ''WRITTEN BY : CJ BLEDSOE / CBLEDSOE<@>IPMCOMPUTERS.COM
-'on error resume next
+on error resume next
 ''SCRIPT VARIABLES
 dim errRET, strVER
 dim strREPO, strBRCH, strDIR
@@ -238,14 +237,16 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           wend
           set objTMP = nothing
           for intPBX = 1 to ubound(arrPBX)
-            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(0)
-            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(1)
-            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(2)
-            objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(3)
-            strLBL = split(arrPBX(intPBX), vbtab)(3)
-            if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
-              strIP = split(arrPBX(intPBX), vbtab)(1)
-              exit for
+            if (split(arrPBX(intPBX), vbtab)(0) <> vbnullstring) then
+              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(0)
+              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(1)
+              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(2)
+              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(3)
+              strLBL = split(arrPBX(intPBX), vbtab)(3)
+              if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
+                strIP = split(arrPBX(intPBX), vbtab)(1)
+                exit for
+              end if
             end if
           next
           set objTMP = objFSO.opentextfile("C:\Users\CBledsoe\IPM-Github\pbxlist.txt", 8)
