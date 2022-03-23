@@ -26,7 +26,7 @@ strDIR = "VULTR"
 redim arrPBX(1)
 strSCP = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com"
 ''VULTR DETAILS
-strAPI = "QLD7MNZAYSXP2LTYVZMUCKPRC7NRDBSDQ7PQ"
+strAPI = ""
 strISO = "8d43bdea-a130-4e02-bbde-82bb863a71c3"
 strFW = "1acf6e7e-268f-4108-b5f8-9fd00607f492"
 strPNET = "ba609e8d-6564-4106-960b-c1f37d81751c"
