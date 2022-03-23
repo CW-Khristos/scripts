@@ -291,7 +291,6 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             strUSR = objIN.readline
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-            objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             strXML = "C:\IT\3cx\upload\setupconfig.xml"
             strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\3cx\setupconfig_vultr.xml " & strXML
@@ -347,7 +346,6 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             strUSR = objIN.readline
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
-            objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             ''DOWNLOAD PBXUPLOAD.VBS SCRIPT
             objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
