@@ -1,16 +1,16 @@
 ***
 # **AVHealth**
   * **[AVHealth Project](https://github.com/CW-Khristos/scripts/projects/26)**
-  * **Current Validation : [Testing - v0.2.1]**
-  * **Current Branch : [dev](https://github.com/CW-Khristos/scripts/tree/dev/AVProducts) (Testing)**
+  * **Current Validation : [Validated - v0.2.0]**
+  * **Current Branch : [master](https://github.com/CW-Khristos/scripts/tree/master/AVProducts) (Validated)**
 ***
 ## **Script Details :**
   * **Script Files :**
-    * Datto - [AVHealth_0.2.1.ps1](https://github.com/CW-Khristos/RMM/blob/dev/Datto/AVProducts/AVHealth_0.2.1.ps1)
-    * NCentral - [AVHealth_0.2.1.ps1](https://github.com/CW-Khristos/RMM/blob/dev/NAble/AVProducts/AVHealth_0.2.1.ps1)
-    * NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/RMM/blob/dev/NAble/AVProducts/AV%20Health.amp)
-    * Syncro - [AVHealth_0.2.1.ps1](https://github.com/CW-Khristos/RMM/blob/dev/Syncro/AVProducts/AVHealth_0.2.1.ps1)
-  * **Command :** `powershell -file .\AVHealth_0.2.1.ps1 -i_PAV "[AV Vendor]"`
+    * Datto - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Datto/AVProducts/AVHealth_0.2.0.ps1)
+    * NCentral - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AVHealth_0.2.0.ps1)
+    * NCentral AMP - [AVHealth.amp](https://github.com/CW-Khristos/RMM/blob/main/NAble/AVProducts/AV%20Health.amp)
+    * Syncro - [AVHealth_0.2.0.ps1](https://github.com/CW-Khristos/RMM/blob/main/Syncro/AVProducts/AVHealth_0.2.0.ps1)
+  * **Command :** `powershell -file .\AVHealth_0.2.0.ps1 -i_PAV "[AV Vendor]"`
   * **Arguments :** 1, Required 1
     * **[i_PAV] - REQUIRED** - String, String to set AV Vendor to monitor for AV Health
 ***
@@ -26,10 +26,10 @@
     Script is intended to replace 'AV Status' VBS Monitoring Script
 ***
 ## .NOTES
-    Version        : 0.2.1 (12 March 2022)
+    Version        : 0.2.0 (04 March 2022)
     Creation Date  : 14 December 2021
     Purpose/Change : Provide Primary AV Product Status and Report Possible AV Conflicts
-    File Name      : AVHealth_0.2.1.ps1 
+    File Name      : AVHealth_0.2.0.ps1 
     Author         : Christopher Bledsoe - cbledsoe@ipmcomputers.com
     Thanks         : Chris Reid (NAble) for the original 'AV Status' Script and sanity checks
                      Prejay Shah (Doherty Associates) for sanity checks and a second pair of eyes
@@ -148,11 +148,6 @@ After creating the desired Custom Services; create Service Templates for your Wi
     - Optimization and more bugfixes
     - Forked script to implement 'AV Health' script into Datto RMM
     - Planning to re-organize repo to account for implementation of scripts to multiple RMM platforms
- - 0.2.1
-    - Optimization and more bugfixes; namely putting an end to populating the key '#comment' into Vendor AV Product and Product State hashtables due to how PS parses XML natively
-    - Copied and modified code to retrieve Vendor AV Product XML into 'Get-AVState' function to replace the hard-coded 'swtich' to interpret WMI AV Product States
-      - This implements similar XML method to interpret WMI AV Product States as with retrieving Vendor AV Product details
-      - This should facilitate easier community contributions to WMI AV Product States and with this change plan to leave the WMI checks in place
 ***
 # .TODO
     Still need more AV Product registry samples for identifying keys to monitor for relevant data
