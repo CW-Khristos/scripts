@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+
+<!-- This template is for writing a bulletin to document any software
+     released in the form of VIBs, or vSphere Installation Bundles.
+     Every VIB must have at least one bulletin associated with it.
+     The metadata in the bulletin is required to produce the
+     publishable formats of software, namely hosted depots, offline
+     bundles, and driver update CDs.  -->
+
+<!-- This file 
+     should be treated the same as any other source file and will be
+     needed any time that the metadata for this bulletin or any derived
+     metadata (e.g. metadata.zip) needs to change.  If additional
+     bulletins are needed, they should be in separate files. -->
+
+<bulletin>
+
+	<!-- The bulletin ID must be globally unique.  To facilitate
+	     this, the ID must begin with the designated vendor code.
+	     The vendor code will be assigned by VMware.  The rest of
+	     the bulletin ID must be locally unique within that vendor
+	     code.  The bulletin ID may incorporate information such
+	     as product/component and version information, if
+	     applicable.  The bulletin ID must not contain spaces. -->
+
+	<id>vmware-esx-6.0.0-storcli-007.1508.0000.0000</id>
+
+	<!-- The name of your company. -->
+
+	<vendor>BCM</vendor>
+
+	<!-- A short (1 line) summary of this bulletin. -->
+
+	<summary>storcli: Storage Command Line Tool for ESX Server</summary>
+
+	<severity>general</severity>
+	<category>Enhancement</category>
+
+	<releaseType>extension</releaseType>
+
+	<!-- A much more detailed explanation of the bulletin
+	    contents. -->
+
+	<description>Storage Command Line Tool for ESX Server</description>
+
+	<!-- A URL link to a KnowledgeBase article or similar online
+	     documentation about this issue.  This field must contain
+	     text, but may indicate that no URL is available. -->
+
+	<kbUrl></kbUrl>
+
+	<!-- An email address to which end users should submit queries
+	     if they have an issue with this software. -->
+
+	<contact>bangalore-mr-osutils.pdl@broadcom.com</contact>
+
+	<releaseDate>2020-10-14</releaseDate>
+
+	<!-- List the platforms to which this software will apply.
+	     List each platform separately.
+
+ 	     Attributes:
+
+		productLineID - Either esx or embeddedEsx
+		version - ESX version X.Y.Z.  Last field (Y or Z) can
+		    be a wildcard '*'.
+		locale - optional
+
+	     The platform information specified here also needs to be
+	     entered when grouping bulletins and VIBs into a
+	     metadata.zip file (using the -t option to vibpublish). -->
+
+	<platforms>
+		<softwarePlatform productLineID="esx" version="6.0.0" locale="" />
+		<softwarePlatform productLineID="embeddedEsx" version="6.0.0" locale="" />
+	</platforms>
+
+	<!-- The following is a list of the individual VIB packages
+	     which address the content or issue solved by this
+	     bulletin.  Each VIB must be listed inside its own tag.
+	     The VIB ID, if not known, can be retrieved by running the
+	     vibauthor tool with the -i switch. -->
+
+	<vibList>
+		<vibID/>
+	</vibList>
+
+	<!-- Valid values for urgency tags are Critical, Important,
+	     Moderate and Low -->
+	<urgency>Important</urgency>
+</bulletin>
