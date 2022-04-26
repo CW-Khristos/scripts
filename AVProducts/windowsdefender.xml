@@ -21,7 +21,7 @@
       <sourceval>PLACEHOLDER</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection\</rt>
-      <rtval>DisableRealtimeMonitoring</rtval>
+      <rtval>DpaDisabled</rtval>
       <!--AV Definition Updates-->
       <defupdate>\SOFTWARE\Microsoft\Windows Defender\Signature Updates\</defupdate>
       <defupdateval>SignaturesLastUpdated</defupdateval>
