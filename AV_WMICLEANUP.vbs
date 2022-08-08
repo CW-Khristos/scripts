@@ -102,7 +102,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           blnFND = true
         end if
       elseif (strAVP = vbnullstring) then
-        if ((instr(1, ucase(AV.displayname), "SOPHOS") = 0) and (instr(1, ucase(AV.displayname), "AV DEFENDER") = 0) and (instr(1, ucase(AV.displayname), "WINDOWS DEFENDER") = 0)) then
+        if ((instr(1, ucase(AV.displayname), "WINDOWS DEFENDER") = 0)) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & AV.displayname
           objLOG.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & AV.displayname
           call delWMI(AV)
@@ -120,7 +120,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           blnFND = true
         end if
       elseif (strAVP = vbnullstring) then
-        if ((instr(1, ucase(FW.displayname), "SOPHOS") = 0) and (instr(1, ucase(FW.displayname), "AV DEFENDER") = 0) and (instr(1, ucase(FW.displayname), "WINDOWS DEFENDER") = 0)) then
+        if ((instr(1, ucase(FW.displayname), "WINDOWS DEFENDER") = 0)) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & FW.displayname
           objLOG.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & FW.displayname
           call delWMI(FW)
@@ -142,7 +142,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           blnFND = true
         end if
       elseif (strAVP = vbnullstring) then
-        if ((instr(1, ucase(AV.displayname), "SOPHOS") = 0) and (instr(1, ucase(AV.displayname), "AV DEFENDER") = 0) and (instr(1, ucase(AV.displayname), "WINDOWS DEFENDER") = 0)) then
+        if ((instr(1, ucase(AV.displayname), "WINDOWS DEFENDER") = 0)) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & AV.displayname
           objLOG.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & AV.displayname
           call delWMI(AV)
@@ -160,7 +160,7 @@ if (errRET = 0) then                                        ''NO ERRORS DURING I
           blnFND = true
         end if
       elseif (strAVP = vbnullstring) then
-        if ((instr(1, ucase(FW.displayname), "SOPHOS") = 0) and (instr(1, ucase(FW.displayname), "AV DEFENDER") = 0) and (instr(1, ucase(FW.displayname), "WINDOWS DEFENDER") = 0)) then
+        if ((instr(1, ucase(FW.displayname), "WINDOWS DEFENDER") = 0)) then
           objOUT.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & FW.displayname
           objLOG.write vbnewline & now & vbtab & vbtab & " - FOUND TARGET : " & FW.displayname
           call delWMI(FW)

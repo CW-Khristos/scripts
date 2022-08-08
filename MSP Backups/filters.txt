@@ -68,9 +68,6 @@ C:\wu_output|
 %PROGRAMDATA%\Malwarebytes\Malwarebytes Anti-Malware\Logs|
 %PROGRAMDATA%\McAfee\MCLOGS|
 %PROGRAMDATA%\Microsoft\Search\Data\Temp|
-%PROGRAMDATA%\Microsoft\Windows\Caches|
-%PROGRAMDATA%\Microsoft\Windows\AppRepository|
-%PROGRAMDATA%\Microsoft\Windows\DeviceMetadataCache|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\Groups Cache|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\Planned Snapshots Cache|
 %PROGRAMDATA%\Microsoft\Windows\Hyper-V\Planned Virtual Machines Cache|
@@ -171,14 +168,9 @@ C:\wu_output|
 %SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Temp|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\INetCache|
-%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\SchCache|
 %SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Temp|
 %SystemRoot%\SoftwareDistribution|
 %SystemRoot%\System32\LogFiles|
-%SystemRoot%\System32\config\systemprofile\AppData\Local\D3DSCache|
-%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\Caches|
-%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\CloudAPCache|
-%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\PRICache|
 %SystemRoot%\Temp|
 %SystemRoot%\Users\All Users\GetSupportService|
 %SystemRoot%\Users\All Users\GetSupportService_N-Central|
@@ -225,7 +217,6 @@ C:\wu_output|
 %LOCALAPPDATA%\Microsoft\OneDrive\Update|
 %LOCALAPPDATA%\Microsoft\Windows\ActionCenterCache|
 %LOCALAPPDATA%\Microsoft\Windows\AppCache|
-%LOCALAPPDATA%\Microsoft\Windows\Caches|
 %LOCALAPPDATA%\Microsoft\Windows\Explorer\ThumbCacheToDelete|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatCache|
 %LOCALAPPDATA%\Microsoft\Windows\IECompatUaCache|
@@ -235,7 +226,6 @@ C:\wu_output|
 %LOCALAPPDATA%\Microsoft\Windows\INetCookies|
 %LOCALAPPDATA%\Microsoft\Windows\PPBCompatCache|
 %LOCALAPPDATA%\Microsoft\Windows\PPBCompatUaCache|
-%LOCALAPPDATA%\Microsoft\Windows\PriCache|
 %LOCALAPPDATA%\Microsoft\Windows\TemporaryInternetFiles|
 %LOCALAPPDATA%\Microsoft\Windows\WER|
 %LOCALAPPDATA%\Microsoft\Windows\WebCache|
