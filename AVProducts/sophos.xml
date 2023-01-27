@@ -28,6 +28,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -68,6 +72,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -111,6 +119,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -151,6 +163,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -193,6 +209,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -233,6 +253,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\Management\Policy\Driver\</tamper>
       <tamperval>tamper_protection_enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -276,6 +300,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\WOW6432Node\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
@@ -305,7 +333,7 @@
       <!--AV Product Updates-->
       <update>\SOFTWARE\Sophos\SAVService\Telemetry\MajorUpdate\</update>
       <updateval>LastSuccessUtc</updateval>
-      <source>\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\</source>
+      <source>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\</source>
       <sourceval>UpdateSource</sourceval>
       <!--AV Real-Time Scanning-->
       <rt>\SOFTWARE\Sophos\Sophos Network Threat Protection\Adapter Notifications\</rt>
@@ -316,6 +344,10 @@
       <!--AV Tamper Protection-->
       <tamper>\SOFTWARE\Sophos\SAVService\TamperProtection\</tamper>
       <tamperval>Enabled</tamperval>
+      <!--Pending Reboot-->
+      <reboot>\SOFTWARE\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\</reboot>
+      <rebootval1>RebootRequired</rebootval1>
+      <rebootval2>UrgentRebootRequired</rebootval2>
       <!--AV Is Managed-->
       <managed>\SOFTWARE\Sophos\AutoUpdate\</managed>
       <managedval>IsManaged</managedval>
