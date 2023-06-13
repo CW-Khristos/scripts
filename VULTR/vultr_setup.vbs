@@ -26,7 +26,7 @@ redim arrPBX(1)
 strSCP = "C:\Users\CBledsoe\AppData\Local\Programs\WinSCP\winscp.com"
 ''VULTR DETAILS
 strAPI = ""
-strISO = "8d43bdea-a130-4e02-bbde-82bb863a71c3"
+strISO = "10bb8bd7-08de-4fa9-9fa3-12b41fe45123"
 strFW = "1acf6e7e-268f-4108-b5f8-9fd00607f492"
 strPNET = "ba609e8d-6564-4106-960b-c1f37d81751c"
 strDMN = ".ipmrms.com"
@@ -134,9 +134,15 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
       
       objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPDATE A VULTR DNS DOMAIN"
       objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(6) - UPDATE A VULTR DNS DOMAIN"
+
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - SET BACKUPS ON PBX"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - SET BACKUPS ON PBX"
+
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(8) - GET BACKUPS ON PBXS"
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(8) - GET BACKUPS ON PBXS"
       
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(7) - QUIT, END SCRIPT" & vbnewline
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & "(9) - QUIT, END SCRIPT" & vbnewline
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & "(9) - QUIT, END SCRIPT" & vbnewline
       strIN = objIN.readline
       select case strIN
         case 1
@@ -147,11 +153,11 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
-            strIN = objTMP.stdout.readline
-            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
-              arrPBX(intPBX) = strIN
-              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
-              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
+            strOUT = objTMP.stdout.readline
+            if ((strOUT <> vbnullstring) and (instr(1, strOUT, "active"))) then
+              arrPBX(intPBX) = strOUT
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT
               redim preserve arrPBX(intPBX + 1)
               intPBX = intPBX + 1
             end if
@@ -175,6 +181,9 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objTMP.close
           set objTMP = nothing
         case 2
+          strIP = vbnullstring
+          strHOST = vbnullstring
+          strDMN = vbnullstring
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : "
           objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : "
           objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SET REGION ID :" & vbnewline
@@ -213,14 +222,14 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
             objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
               " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --notify=true"
             call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
-              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --notify=true")
+              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --auto-backup true --notify=true")
           elseif (ucase(strIN) = "N") then
             objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
               " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW
             objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR INSTANCE : C:\IT\vultr-cli.exe instance create --region " & strREG & _
               " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW
             call HOOK("C:\IT\vultr-cli.exe instance create --region " & strREG & " --plan " & strPLN & " --iso " & strISO & " --host " & strHOST & strDMN & _
-              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW)
+              " --label " & chr(34) & strHOST & strDMN & " - " & strCST & chr(34) & " --firewall-group " & strFW & " --auto-backup true")
           end if
           intPBX = 1
           erase arrPBX
@@ -228,9 +237,11 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           wscript.sleep 20000
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
-            strIN = objTMP.stdout.readline
-            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
-              arrPBX(intPBX) = strIN
+            strOUT = objTMP.stdout.readline
+            if ((strOUT <> vbnullstring) and (instr(1, strOUT, "active"))) then
+              arrPBX(intPBX) = strOUT
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT
               redim preserve arrPBX(intPBX + 1)
               intPBX = intPBX + 1
             end if
@@ -238,12 +249,10 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           set objTMP = nothing
           for intPBX = 1 to ubound(arrPBX)
             if (split(arrPBX(intPBX), vbtab)(0) <> vbnullstring) then
-              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(0)
-              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(1)
-              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(2)
-              objOUT.writeline vbnewline & vbtab & split(arrPBX(intPBX), vbtab)(3)
               strLBL = split(arrPBX(intPBX), vbtab)(3)
-              if (ucase(strLBL) = ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST)) then
+              if (ucase(strLBL) = ucase(strHOST & strDMN & " - " & strCST)) then
+                objOUT.write vbnewline & vbnewline & "MATCHED : " & strLBL & ":" & split(arrPBX(intPBX), vbtab)(0)
+                strID = split(arrPBX(intPBX), vbtab)(0)
                 strIP = split(arrPBX(intPBX), vbtab)(1)
                 exit for
               end if
@@ -253,45 +262,71 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           objTMP.writeline strIP & "|" & strHOST & strDMN
           objTMP.close
           set objTMP = nothing
-          objOUT.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST) & chr(34) & " CREATED"
-          objLOG.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST) & ucase(strDMN) & " - " & ucase(strCST) & chr(34) & " CREATED"
+          objOUT.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST & strDMN & " - " & strCST) & chr(34) & " CREATED"
+          objLOG.write vbnewline & now & vbtab & vbtab & " - PBX " & chr(34) & ucase(strHOST & strDMN & " - " & strCST) & chr(34) & " CREATED"
           objOUT.write vbnewline & now & vbtab & vbtab & " - PLEASE LOGIN TO VULTR DASHBOARD AND ACCESS PBX CONSOLE TO COMPLETE 3CX DEBIAN INSTALLATION"
           objLOG.write vbnewline & now & vbtab & vbtab & " - PLEASE LOGIN TO VULTR DASHBOARD AND ACCESS PBX CONSOLE TO COMPLETE 3CX DEBIAN INSTALLATION"
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SETUP BACKUPS (Y/N) :" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SETUP BACKUPS (Y/N) :" & vbnewline
+          objWSH.sendkeys "Y"
+          strIN = objIN.readline
+          if ((ucase(strIN) <> "N") or (ucase(strIN) <> "NO")) then
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER BACKUP FREQUENCY (DAILY/WEEKLY/MONTHLY/DAILY_ALT_EVEN/DAILY_ALT_ODD) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER BACKUP FREQUENCY (DAILY/WEEKLY/MONTHLY/DAILY_ALT_EVEN/DAILY_ALT_ODD) :" & vbnewline
+            strCRON = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF MONTH (1-28; APPLICABLE TO 'MONTHLY' BACKUPS) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF MONTH (1-28; APPLICABLE TO 'MONTHLY' BACKUPS) :" & vbnewline
+            strDOM = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF WEEK (0-6; APPLICABLE TO 'WEEKLY' BACKUPS) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF WEEK (0-6; APPLICABLE TO 'WEEKLY' BACKUPS) :" & vbnewline
+            strDOW = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER HOUR TO START (0-23) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER HOUR TO START (0-23) :" & vbnewline
+            strHR = objIN.readline
+            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING BACKUP SCHEDULE : "
+            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING BACKUP SCHEDULE : "
+            strRCMD = "C:\IT\vultr-cli instance backup create " & strID & " --type " & strCRON & " --dom " & strDOM & " --dow " & strDOW & " --hour " & strHR
+            call HOOK(strRCMD)
+            objOUT.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : "
+            objLOG.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : "
+            strRCMD = "C:\IT\vultr-cli instance backup get " & strID
+            call HOOK(strRCMD)
+          end if
         case 3
           intPBX = 1
           erase arrPBX
           redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
-            strIN = objTMP.stdout.readline
-            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
-              arrPBX(intPBX) = strIN
-              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
-              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
+            strOUT = objTMP.stdout.readline
+            if ((strOUT <> vbnullstring) and (instr(1, strOUT, "active"))) then
+              arrPBX(intPBX) = strOUT
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT
               redim preserve arrPBX(intPBX + 1)
               intPBX = intPBX + 1
             else
-              objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-              objLOG.write vbnewline & now & vbtab & vbtab & strIN
+              objOUT.write vbnewline & now & vbtab & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & vbtab & strOUT
             end if
           wend
           set objTMP = nothing
           objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD SETUPCONFIG : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
-          objWSH.sendkeys "1"
           strIN = objIN.readline
           if (ucase(strIN) <> "!Q") then
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
+            strPBX = split(arrPBX(strIN), vbtab)(1)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-            strPBX = split(arrPBX(strIN), vbtab)(1)
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
             objWSH.sendkeys "root"
             strUSR = objIN.readline
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             strXML = "C:\IT\3cx\upload\setupconfig.xml"
             strRCMD = "cmd.exe /c copy /Y C:\Users\CBledsoe\IPM-Github\3cx\setupconfig_vultr.xml " & strXML
@@ -318,42 +353,43 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
           redim arrPBX(1)
           set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
           while (not objTMP.stdout.atendofstream)
-            strIN = objTMP.stdout.readline
-            if ((strIN <> vbnullstring) and (instr(1, strIN, "active"))) then
-              arrPBX(intPBX) = strIN
-              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN 
-              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strIN
+            strOUT = objTMP.stdout.readline
+            if ((strOUT <> vbnullstring) and (instr(1, strOUT, "active"))) then
+              arrPBX(intPBX) = strOUT
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT
               redim preserve arrPBX(intPBX + 1)
               intPBX = intPBX + 1
             else
-              objOUT.write vbnewline & now & vbtab & vbtab & strIN 
-              objLOG.write vbnewline & now & vbtab & vbtab & strIN
+              objOUT.write vbnewline & now & vbtab & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & vbtab & strOUT
             end if
           wend
           set objTMP = nothing
           objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
           objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO UPLOAD CERT : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
-          objWSH.sendkeys "1"
           strIN = objIN.readline
           if (ucase(strIN) <> "!Q") then
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & arrPBX(strIN)
-            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & split(arrPBX(strIN), vbtab)(1)
-            strPBX = split(arrPBX(strIN), vbtab)(1)
+            strIP = split(arrPBX(strIN), vbtab)(1)
+            strPBX = split(arrPBX(strIN), vbtab)(3)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & strIP
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED IP : " & vbnewline & vbtab & vbtab & vbtab & strIP
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER LOGIN :" & vbnewline
             objWSH.sendkeys "root"
             strUSR = objIN.readline
             objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
             objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER SELECTED PBX USER PASSWORD :" & vbnewline
+            objWSH.sendkeys "Ipmcomputers1"
             strPWD = objIN.readline
             ''DOWNLOAD PBXUPLOAD.VBS SCRIPT
             objOUT.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
             objLOG.write vbnewline & now & vbtab & vbtab & " - DOWNLOADING SCRIPT : PBXUPLOAD : "
             call FILEDL("https://raw.githubusercontent.com/CW-Khristos/scripts/dev/VULTR/PBXupload.vbs", "C:\IT\Scripts", "PBXupload.vbs")
             ''EXECUTE PBXUPLOAD.VBS SCRIPT
-            call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strPBX & chr(34))
+            call HOOK("cscript.exe " & chr(34) & "C:\IT\Scripts\PBXupload.vbs" & chr(34) & " " & chr(34) & strUSR & chr(34) & " " & chr(34) & strPWD & chr(34) & " " & chr(34) & strIP & chr(34))
           end if
         case 5
           objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING NEW VULTR DNS DOMAIN : "
@@ -370,6 +406,67 @@ if (errRET = 0) then                                          ''ARGUMENTS PASSED
         case 6
 
         case 7
+          intPBX = 1
+          erase arrPBX
+          redim arrPBX(1)
+          set objTMP = objWSH.exec("C:\IT\vultr-cli.exe instance list")
+          while (not objTMP.stdout.atendofstream)
+            strOUT = objTMP.stdout.readline
+            if ((strOUT <> vbnullstring) and (instr(1, strOUT, "active"))) then
+              arrPBX(intPBX) = strOUT
+              objOUT.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & "(" & intPBX & ")" & vbtab & strOUT
+              redim preserve arrPBX(intPBX + 1)
+              intPBX = intPBX + 1
+            else
+              objOUT.write vbnewline & now & vbtab & vbtab & strOUT 
+              objLOG.write vbnewline & now & vbtab & vbtab & strOUT
+            end if
+          wend
+          set objTMP = nothing
+          objOUT.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO ADD BACKUPS : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
+          objLOG.write vbnewline & now & vbtab & vbtab & " - SELECT PBX TO ADD BACKUPS : (1 - " & (intPBX - 1) & ") OR '!Q' TO RETURN TO MAIN MENU" & vbnewline
+          strIN = objIN.readline
+          if (ucase(strIN) <> "!Q") then
+            strID = split(arrPBX(strIN), vbtab)(0)
+            strPBX = split(arrPBX(strIN), vbtab)(3)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - SELECTED PBX : " & vbnewline & vbtab & vbtab & vbtab & strPBX
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER BACKUP FREQUENCY (DAILY/WEEKLY/MONTHLY/DAILY_ALT_EVEN/DAILY_ALT_ODD) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER BACKUP FREQUENCY (DAILY/WEEKLY/MONTHLY/DAILY_ALT_EVEN/DAILY_ALT_ODD) :" & vbnewline
+            strCRON = lcase(objIN.readline)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF MONTH (0/1-28; APPLICABLE TO 'MONTHLY' BACKUPS) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF MONTH (0/1-28; APPLICABLE TO 'MONTHLY' BACKUPS) :" & vbnewline
+            strDOM = lcase(objIN.readline)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF WEEK (0-6; APPLICABLE TO 'WEEKLY' BACKUPS) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER DAY OF WEEK (0-6; APPLICABLE TO 'WEEKLY' BACKUPS) :" & vbnewline
+            strDOW = lcase(objIN.readline)
+            objOUT.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER HOUR TO START (0-23) :" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & vbtab & " - ENTER HOUR TO START (0-23) :" & vbnewline
+            strHR = lcase(objIN.readline)
+            objOUT.write vbnewline & now & vbtab & vbtab & " - CREATING BACKUP SCHEDULE : "
+            objLOG.write vbnewline & now & vbtab & vbtab & " - CREATING BACKUP SCHEDULE : "
+            strRCMD = "C:\IT\vultr-cli instance backup create " & strID & " --type " & strCRON & " --dom " & strDOM & " --dow " & strDOW & " --hour " & strHR
+            call HOOK(strRCMD)
+            objOUT.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : "
+            objLOG.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : "
+            strRCMD = "C:\IT\vultr-cli instance backup get " & strID
+            call HOOK(strRCMD)
+          end if
+        case 8
+          if (ucase(strIN) <> "!Q") then
+            objOUT.write vbnewline & now & vbtab & vbtab & " - RETRIEVING PBX BACKUP CONFIGURATIONS" & vbnewline
+            objLOG.write vbnewline & now & vbtab & vbtab & " - RETRIEVING PBX BACKUP CONFIGURATIONS" & vbnewline
+            for intPBX = 1 to (ubound(arrPBX) - 1)
+              strID = split(arrPBX(intPBX), vbtab)(0)
+              strPBX = split(arrPBX(intPBX), vbtab)(3)
+              objOUT.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : " & strPBX & " :"
+              objLOG.write vbnewline & now & vbtab & vbtab & " - VERIFYING BACKUP SCHEDULE : " & strPBX & " :"
+              strRCMD = "C:\IT\vultr-cli instance backup get " & strID
+              call HOOK(strRCMD)
+            next
+          end if
+        case 9
           blnLOOP = false
       end select
     wend
@@ -434,17 +531,17 @@ sub HOOK(strCMD)                                            ''CALL HOOK TO MONIT
   set objHOOK = objWSH.exec(strCMD)
   if (instr(1, strCMD, "takeown /F ") = 0) then             ''SUPPRESS 'TAKEOWN' SUCCESS MESSAGES
     while (not objHOOK.stdout.atendofstream)
-      strIN = objHOOK.stdout.readline
-      if (strIN <> vbnullstring) then
-        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+      strOUT = objHOOK.stdout.readline
+      if (strOUT <> vbnullstring) then
+        objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strOUT 
+        objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strOUT 
       end if
     wend
     wscript.sleep 10
-    strIN = objHOOK.stdout.readall
-    if (strIN <> vbnullstring) then
-      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
-      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strIN 
+    strOUT = objHOOK.stdout.readall
+    if (strOUT <> vbnullstring) then
+      objOUT.write vbnewline & now & vbtab & vbtab & vbtab & strOUT 
+      objLOG.write vbnewline & now & vbtab & vbtab & vbtab & strOUT 
     end if
   end if
   set objHOOK = nothing

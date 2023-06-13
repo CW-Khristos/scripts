@@ -146,6 +146,17 @@ if (errRET = 0) then                                        ''ARGUMENTS PASSED ,
             objLSV.write ucase(strTMP)
             exit for
           end if
+      ''SLIGHT MODIFICATION TO ALLOW FOR LSV PATHS ON C:
+      elseif ((instr(1, lcase(arrIN(intIN)), "c:\") <> 0) and _
+        (instr(1,lcase(arrIN(intIN)), "\temp") = 0)) then
+          ''EXCLUDE ALL OUTPUT EXCEPT FOR LSV LOCATION
+          if (instr(1, lcase(arrIN(intIN)),"localspeedvaultlocation")) then
+            ''REMOVE LOCALSPEEDVAULTLOCATION 'LABEL', OUTPUT ONLY THE ACTUAL LSV DIRECTORY
+            strTMP = split(lcase(arrIN(intIN)), "localspeedvaultlocation ")(1)
+            objOUT.write vbnewline & now & vbtab & arrIN(intIN) & " - WRITTEN TO LSV.TXT"
+            objLSV.write ucase(strTMP)
+            exit for
+          end if
       end if
     next
     set objHOOK = nothing
